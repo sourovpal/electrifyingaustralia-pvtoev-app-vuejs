@@ -20,10 +20,19 @@ export default {
 },
   data() {
     return {
+      selectAllIds:[],
     }
   },
   methods: {
-    
+    selectAll(){
+      if(this.selectAllIds.length > 0){
+        this.selectAllIds = [];
+      }else{
+        this.selectAllIds = Array.from(Array(100).keys());
+      }
+    }
+  },
+  watch:{
   }
 }
 </script>
@@ -39,8 +48,8 @@ export default {
       <left-action-bar>
         <div class="item d-flex justify-content-center align-item-start wh-40" style="margin-left: 10px;">
             <label class="checkbox">
-                <input class="checkbox__input" type="checkbox">
-                <svg style="width:19px;height: 19px;" class="checkbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><rect width="21" height="21" x=".5" y=".5" fill="#FFF" stroke="#c6c6c6" rx="3" /><path class="tick" stroke="#1968ff" fill="none" stroke-linecap="round" stroke-width="4" d="M4 10l5 5 9-9" /></svg>
+                <input @click="selectAll" class="checkbox__input" type="checkbox">
+                <svg style="width:19px;height: 19px;" class="checkbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><rect width="21" height="21" x=".5" y=".5" fill="#FFF" stroke="#c6c6c6" rx="3" /><path class="tick" stroke="#afafaf" fill="none" stroke-linecap="round" stroke-width="4" d="M4 10l5 5 9-9" /></svg>
             </label>
         </div>
         <div class="item wh-40">
@@ -111,8 +120,8 @@ export default {
 
           <div style="width:3rem;" class="tbl-td">
             <label class="checkbox">
-                <input class="checkbox__input" type="checkbox">
-                <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><rect width="21" height="21" x=".5" y=".5" fill="#FFF" stroke="#c6c6c6" rx="3" /><path class="tick" stroke="#1968ff" fill="none" stroke-linecap="round" stroke-width="4" d="M4 10l5 5 9-9" /></svg>
+                <input v-model="selectAllIds" :value="index" class="checkbox__input" type="checkbox">
+                <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><rect width="21" height="21" x=".5" y=".5" fill="#FFF" stroke="#c6c6c6" rx="3" /><path class="tick" stroke="#afafaf" fill="none" stroke-linecap="round" stroke-width="4" d="M4 10l5 5 9-9" /></svg>
             </label>
           </div>
 

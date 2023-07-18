@@ -1,27 +1,30 @@
 <script>
-
+export default{
+    
+}
 </script>
 
 <template>
-    <nav class="navbar navbar-vertical d-none d-md-flex">
+    <nav class="navbar navbar-vertical d-none d-md-flex shadow-none">
         <div class="navbar-top">
 
             <div class="nav-item">
-                <a href="" class="navbar-brand nav-link router-link-active">
-                    <svg  width="24" height="24"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,11H11V3H3M3,21H11V13H3M13,21H21V13H13M13,3V11H21V3" /></svg>
-                </a>
+                <router-link to="/app" class="navbar-brand nav-link" data-mdb-toggle="tooltip" data-mdb-placement="right" title="Tooltip on right">
+                    <!-- <svg  width="24" height="24"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,11H11V3H3M3,21H11V13H3M13,21H21V13H13M13,3V11H21V3" /></svg> -->
+                    <svg  width="26" height="26" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>home-lightning-bolt</title><path d="M12 3L2 12H5V20H19V12H22L12 3M11.5 18V14H9L12.5 7V11H15L11.5 18Z" /></svg>
+                </router-link>
             </div>
             
             <div class="nav-item">
-                <a href="" class="navbar-brand nav-link">
+                <router-link to="/platform" class="navbar-brand nav-link">
                     <svg  xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M7.5,21H2V9h5.5V21z M14.75,3h-5.5v18h5.5V3z M22,11h-5.5v10H22V11z"></path></svg>
-                </a>
+                </router-link>
             </div>
 
             <div class="nav-item">
-                <a href="" class="navbar-brand nav-link">
+                <router-link to="/map" class="navbar-brand nav-link">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 10.9c-.61 0-1.1.49-1.1 1.1s.49 1.1 1.1 1.1c.61 0 1.1-.49 1.1-1.1s-.49-1.1-1.1-1.1zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm2.19 12.19L6 18l3.81-8.19L18 6l-3.81 8.19z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
-                </a>
+                </router-link>
             </div>
 
             <div class="nav-item">
@@ -94,6 +97,9 @@
     align-items: center;
     flex-wrap: nowrap;
     z-index: 999;
+    @media screen and (max-width:991px) {
+        width:3rem;
+    }
     .navbar-top,
     .navbar-bottom{
 

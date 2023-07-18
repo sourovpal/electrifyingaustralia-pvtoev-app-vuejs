@@ -14,13 +14,7 @@ export default {
 </script>
 
 <template>
-  <SidebarNav/>
-  <MobileHeader/>
-  <section class="">
-    <Menu />
-    <Dashboard />
-  </section>
-
+  <router-view></router-view>
 </template>
 
 <style lang="scss">
@@ -30,6 +24,18 @@ export default {
   font-family: 'Source Sans Pro', sans-serif !important;
   margin:0px;
   padding:0px;
+}
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: rgb(237, 237, 237);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(165, 165, 165);
+  border-radius: 10px;
 }
 html{
   scroll-behavior: smooth;
@@ -51,8 +57,11 @@ html{
     padding-left: 22rem;
   }
 }
+.svg-disabled{
+  fill:#a2a2a2 !important;
+}
 .svg-5{
-  fill:#949393 !important;
+  fill:#575757 !important;
 }
 .dropdown > button{
   border-radius:3px !important;
@@ -70,4 +79,5 @@ html{
       color: #1f2933 !important;
     }
 }
+
 </style>

@@ -59,6 +59,8 @@ export default{
         box-shadow: 0 3px 3px -2px rgba(0,0,0,.2), 0 3px 4px 0 rgba(0,0,0,.14), 0 1px 8px 0 rgba(0,0,0,.12);
         padding: 6px 0px;
         border-radius: 3px;
+        inset: 0px 0px auto auto !important;
+        transform: translate3d(0px, 38.4px, 0px) !important;
         &::after{
             content: "";
             position: absolute;

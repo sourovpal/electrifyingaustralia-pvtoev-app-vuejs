@@ -67,6 +67,6 @@ export default {
   width:100%;
   overflow: hidden;
   overflow-x: auto;
-  height: calc(100vh - 125px);
+  height: calc(100vh - 115px);
 }
 </style>

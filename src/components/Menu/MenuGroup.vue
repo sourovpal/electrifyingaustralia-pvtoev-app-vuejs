@@ -7,6 +7,17 @@ export default {
     }
   },
   props:['menu'],
+  created(){
+    if(this.menu.path == this.$route.path){
+      this.submenuHeight = 'fit-content';
+      this.showChildren = true;
+    }
+  },
+  watch:{
+    '$route'(){
+
+    }
+  },
   methods:{
     menubarToggle(state = true){
 
@@ -51,15 +62,19 @@ export default {
 <template>
 
     <div :class="`submenu-group ${showChildren?'active-group':''}` ">
-      <a class="submenu-heading" href="" @click.prevent="menubarToggle">
+      <router-link class="submenu-heading" :to="menu.path" @click="menubarToggle">
         {{  menu.label }}
         <div class="icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
         </div>
-      </a>
-      <div class="submenu-list" v-if="showChildren" :style="{height:submenuHeight}" ref="submenu">
+      </router-link>
+      <div class="submenu-list" :style="{height:submenuHeight}" ref="submenu">
 
-        <a v-for="sub in menu.children" :key="sub" class="submenu-link" >{{ sub.label }}</a>
+        <router-link :to="{path:sub.path, query:sub.query}" v-for="sub in menu.children" v-slot="{route}" :key="sub" class="submenu-link" >
+          <span :class="(route.fullPath == $route.fullPath)?'active':''">
+            {{ sub.label }}
+          </span>
+        </router-link>
 
       </div>
     </div>
@@ -68,6 +83,11 @@ export default {
 
 <style scoped lang="scss">
 
+.submenu-heading {
+  &.router-link-active ~ .submenu-list{
+    // height: fit-content !important;
+  }
+}
   .submenu-group{
 
     &.active-group{
@@ -126,7 +146,7 @@ export default {
         font-weight: 600;
         transition:all 0.2s;
         &:hover,
-        &.router-link-active{
+        &.router-link-active .active{
           color:#007bff;
         }
       }

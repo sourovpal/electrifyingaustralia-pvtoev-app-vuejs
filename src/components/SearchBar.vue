@@ -113,7 +113,7 @@ export default{
         align-items: center;
         margin-left: auto;
         .item{
-            padding:10px 10px 10px 10px;
+            padding:8px 10px 8px 10px;
             display: flex;
             justify-content: flex-start;
             align-items: center;

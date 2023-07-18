@@ -7,100 +7,10 @@ export default {
     },
     data(){
         return{
-        menus:[
-            {
-                label:'Dashboard',
-                icon:'',
-                children:[
-                    {
-                        label:'All',
-                        icon:'',
-                    },
-                    {
-                        label:'New',
-                        icon:'',
-                    },
-                    {
-                        label:'Processing',
-                        icon:'',
-                    },
-                    {
-                        label:'Today',
-                        icon:'',
-                    },
-                    {
-                        label:'Future',
-                        icon:'',
-                    },
-                    {
-                        label:'Unassigned',
-                        icon:'',
-                    },
-                ]
-            },
-            {
-                label:'Leads',
-                icon:'',
-                children:[
-                    {
-                        label:'All',
-                        icon:'',
-                    },
-                    {
-                        label:'New',
-                        icon:'',
-                    },
-                    {
-                        label:'Processing',
-                        icon:'',
-                    },
-                    {
-                        label:'Today',
-                        icon:'',
-                    },
-                    {
-                        label:'Future',
-                        icon:'',
-                    },
-                    {
-                        label:'Unassigned',
-                        icon:'',
-                    },
-                ]
-            },
-            {
-                label:'Admin',
-                icon:'',
-                children:[
-                    {
-                        label:'All',
-                        icon:'',
-                    },
-                    {
-                        label:'New',
-                        icon:'',
-                    },
-                    {
-                        label:'Processing',
-                        icon:'',
-                    },
-                    {
-                        label:'Today',
-                        icon:'',
-                    },
-                    {
-                        label:'Future',
-                        icon:'',
-                    },
-                    {
-                        label:'Unassigned',
-                        icon:'',
-                    },
-                ]
-            }
-        ]
+        
         }
     },
+    props:['menus', 'title'],
     methods:{
         toggle(i){
             this.$refs.menugroup.forEach((item, index)=>{
@@ -117,7 +27,7 @@ export default {
     <section class="sidebar--submenu d-none d-md-block">
 
         <div class="submenu-header">
-        <h1>Platform</h1>
+        <h1>{{ title }}</h1>
         </div>
 
         <div class="submenu-body">

@@ -1,13 +1,21 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Master from '../components/Master.vue';
 import PlatformIndex from '../views/platform/PlatformIndex.vue';
-import DashboardVue from "../components/Datatable/Dashboard.vue";
 import MapIndex from '../views/map/MapIndex.vue';
 import HomeIndex from '../views/home/HomeIndex.vue';
+import LibraryIndex from '../views/library/LibraryIndex.vue';
+import WebSite from '../components/WebSite.vue';
+import DataTableVue from "../views/platform/components/DataTable.vue";
 
 const routes = [
+    {
+        name:'Website',
+        path:'/',
+        component:WebSite,
+    },
     { 
         name:"root",
+        path:'/',
         component: Master,
         children: [
             { 
@@ -26,7 +34,7 @@ const routes = [
                     {
                         name:"leads",
                         path:'leads',
-                        component: DashboardVue,
+                        component: DataTableVue,
                         children:[],
                     }
                 ]
@@ -35,6 +43,13 @@ const routes = [
                 name:"MapIndex",
                 path: '/map',
                 component: MapIndex,
+                children: [
+                ]
+            },
+            { 
+                name:"LibraryIndex",
+                path: '/library',
+                component: LibraryIndex,
                 children: [
                 ]
             },

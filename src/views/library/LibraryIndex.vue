@@ -2,10 +2,10 @@
 
 import MobileHeader from '../../components/MobileHeader.vue';
 import Menu from '../../components/Menu/Menu.vue';
-
+import DataTable from "./components/DataTable.vue";
 import {title, menus} from './menu';
 export default {
-  name:'PlatformIndex',
+  name:'LibraryIndex',
     data() {
       return{
         title,
@@ -15,6 +15,7 @@ export default {
     components:{
       MobileHeader,
       Menu,
+      DataTable,
     },
   }
   
@@ -26,8 +27,7 @@ export default {
   <section class="">
     <Menu :menus="menus" :title="title" />
   </section>
-  <router-view></router-view>
-
+  <DataTable></DataTable>
 </template>
 
 <style>

@@ -13,9 +13,9 @@ export default{
 
 <template>
 
-<section class="tbl-body">
+<div class="tbl-body">
     <slot></slot>
-</section>
+</div>
 
 </template>
 
@@ -23,13 +23,17 @@ export default{
 .tbl-body{
     display: inline-block;
     padding-bottom:100px;
+    margin-top: -5px;
   }
   .tbl-body .tbl-tr{
     display:inline-flex;
     flex-direction: row;
+    border-bottom: 1px solid rgba(182, 182, 182, 0.4);
+    width: 100%;
+    background-color: #ffffff;
   }
   .tbl-body .tbl-tr .tbl-td{
-    border-bottom: 1px solid rgb(182 182 182 / 40%);
+    // border-bottom: 1px solid rgb(182 182 182 / 40%);
     padding: 6px 10px 6px 20px;
     display: flex;
     flex-direction: row;

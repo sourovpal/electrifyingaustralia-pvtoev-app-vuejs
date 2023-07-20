@@ -61,7 +61,12 @@ export default {
 
 <template>
 
-    <div :class="`submenu-group ${showChildren?'active-group':''}` ">
+    <div v-if="menu.separator">
+      <hr class="mx-4">
+    </div>
+
+
+    <div v-if="!menu.separator" :class="`submenu-group ${showChildren?'active-group':''}` ">
       <router-link class="submenu-heading" :to="menu.path" @click="menubarToggle">
         {{  menu.label }}
         <div class="icon">
@@ -82,7 +87,8 @@ export default {
 </template>
 
 <style scoped lang="scss">
-
+hr{
+}
 .submenu-heading {
   &.router-link-active ~ .submenu-list{
     // height: fit-content !important;

@@ -28,9 +28,9 @@ export default{
             </div>
 
             <div class="nav-item">
-                <a href="" class="navbar-brand nav-link">
+                <router-link to="/library" class="navbar-brand nav-link">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"></path> <path opacity="0.3" d="M6,6v10h16V6H6z"></path> <path d="M2,6H0v5h0l0,9c0,1.1,0.9,2,2,2h18v-2H2V6z M22,4h-8l-2-2H6C4.9,2,4,2.9,4,4l0,12c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V6C24,4.9,23.1,4,22,4z M22,6v10H6V6H22z"></path></svg>
-                </a>
+                </router-link>
             </div>
 
             <div class="nav-item">

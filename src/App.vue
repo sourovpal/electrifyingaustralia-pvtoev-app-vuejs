@@ -40,8 +40,8 @@ export default {
 html{
   scroll-behavior: smooth;
 }
-.ps__thumb-y{
-  transition:all 0.1s ease-in-out;
+.cursor-pointer{
+  cursor: pointer;
 }
 .content{
   position: absolute;
@@ -61,7 +61,7 @@ html{
   fill:#a2a2a2 !important;
 }
 .svg-5{
-  fill:#575757 !important;
+  fill:#919191 !important;
 }
 .dropdown > button{
   border-radius:3px !important;

@@ -11,7 +11,8 @@ export default {
       settings: {
         suppressScrollY: false,
         suppressScrollX: false,
-        wheelPropagation: false
+        wheelPropagation: false,
+        wheelSpeed:0.4,
       }
     }
   },

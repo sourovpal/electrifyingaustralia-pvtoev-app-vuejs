@@ -1,17 +1,18 @@
 <script>
+import ProfileDropdown from './ProfileDropdown.vue';
+import NotificationsDropdown from './NotificationsDropdown.vue';
+
 export default{
-    
+    components: { ProfileDropdown, NotificationsDropdown }
 }
 </script>
 
 <template>
     <nav class="navbar navbar-vertical d-none d-md-flex shadow-none">
         <div class="navbar-top">
-
             <div class="nav-item">
                 <router-link to="/app" class="navbar-brand nav-link" data-mdb-toggle="tooltip" data-mdb-placement="right" title="Tooltip on right">
-                    <!-- <svg  width="24" height="24"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3,11H11V3H3M3,21H11V13H3M13,21H21V13H13M13,3V11H21V3" /></svg> -->
-                    <svg  width="26" height="26" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>home-lightning-bolt</title><path d="M12 3L2 12H5V20H19V12H22L12 3M11.5 18V14H9L12.5 7V11H15L11.5 18Z" /></svg>
+                    <svg  width="26" height="26" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3L2 12H5V20H19V12H22L12 3M11.5 18V14H9L12.5 7V11H15L11.5 18Z" /></svg>
                 </router-link>
             </div>
             
@@ -32,11 +33,11 @@ export default{
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"></path> <path opacity="0.3" d="M6,6v10h16V6H6z"></path> <path d="M2,6H0v5h0l0,9c0,1.1,0.9,2,2,2h18v-2H2V6z M22,4h-8l-2-2H6C4.9,2,4,2.9,4,4l0,12c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V6C24,4.9,23.1,4,22,4z M22,6v10H6V6H22z"></path></svg>
                 </router-link>
             </div>
-
+            
             <div class="nav-item">
-                <a href="" class="navbar-brand nav-link">
+                <router-link to="/payments" class="navbar-brand nav-link">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 14V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zm-9-1c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm13-6v11c0 1.1-.9 2-2 2H4v-2h17V7h2z"></path></svg>
-                </a>
+                </router-link>
             </div>
 
         </div>
@@ -66,23 +67,40 @@ export default{
                 </a>
             </div>
 
-            <div class="nav-item">
-                <a href="" class="navbar-brand nav-link">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"></path> <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"></path></svg>
-                </a>
+            <div class="position-relative">
+                <div class="notifications__main-marker"></div>
+                <div class="nav-item" data-mdb-toggle="dropdown" aria-expanded="false">
+                    <a class="navbar-brand nav-link cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="#000000"><path fill="none" d="M0 0h24v24H0V0z"></path> <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"></path></svg>
+                    </a>
+                </div>
+                <NotificationsDropdown class="dropdown-menu dropdown-menu-end" />
             </div>
 
-            <div class="nav-item">
-                <a href="" class="navbar-brand nav-link">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
-                </a>
+            <div class="position-relative">
+                <div class="nav-item" data-mdb-toggle="dropdown" aria-expanded="false">
+                    <a class="navbar-brand nav-link cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
+                    </a>
+                </div>
+                <ProfileDropdown class="dropdown-menu dropdown-menu-end" />
             </div>
-
         </div>
     </nav>
 </template>
 
 <style lang="scss">
+.notifications__main-marker {
+    background-color: #007ee5;
+    display: block;
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    width: 0.75rem;
+    z-index: 2;
+}
 .navbar.navbar-vertical{
     position: fixed;
     top: 0;

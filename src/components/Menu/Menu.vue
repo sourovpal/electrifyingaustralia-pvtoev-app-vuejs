@@ -27,7 +27,7 @@ export default {
     <section class="sidebar--submenu d-none d-md-block">
 
         <div class="submenu-header">
-        <h1>{{ title }}</h1>
+            <h1>{{ title }}</h1>
         </div>
 
         <div class="submenu-body">
@@ -51,7 +51,7 @@ export default {
   overflow: hidden;
   border-right:1px solid #dddddd;
   position: relative;
-  z-index: 999;
+  z-index: 99;
     @media (min-width: 767px){
         width:13rem;
     }

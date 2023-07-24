@@ -1,11 +1,23 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Master from '../components/Master.vue';
+
 import PlatformIndex from '../views/platform/PlatformIndex.vue';
+
 import MapIndex from '../views/map/MapIndex.vue';
+
 import HomeIndex from '../views/home/HomeIndex.vue';
+
+import PaymentIndex from '../views/payment/PaymentIndex.vue';
+
 import LibraryIndex from '../views/library/LibraryIndex.vue';
+
 import WebSite from '../components/WebSite.vue';
+
 import DataTableVue from "../views/platform/components/DataTable.vue";
+
+import SettingsIndex from "../views/settings/SettingsIndex.vue";
+
+
 
 const routes = [
     {
@@ -50,6 +62,20 @@ const routes = [
                 name:"LibraryIndex",
                 path: '/library',
                 component: LibraryIndex,
+                children: [
+                ]
+            },
+            { 
+                name:"PaymentIndex",
+                path: '/payments',
+                component: PaymentIndex,
+                children: [
+                ]
+            },
+            { 
+                name:"SettingsIndex",
+                path: '/settings',
+                component: SettingsIndex,
                 children: [
                 ]
             },

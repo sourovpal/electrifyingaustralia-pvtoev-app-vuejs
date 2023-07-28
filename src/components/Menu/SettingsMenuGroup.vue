@@ -119,7 +119,7 @@ export default {
 
         &:hover,
         &:focus,
-        &.router-link-active .active{
+        &.router-link-active{
             background: rgba(0,126,229,.12);
             color: #007ee5;
         }

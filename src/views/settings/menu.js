@@ -45,7 +45,7 @@ export const menus =[
                 icon:'',
             },
             {
-                label:'Company details',
+                label:'Localization',
                 path:'/settings/localization',
                 query:{},
                 icon:'',

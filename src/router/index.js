@@ -17,6 +17,19 @@ import DataTableVue from "../views/platform/components/DataTable.vue";
 
 import SettingsIndex from "../views/settings/SettingsIndex.vue";
 
+import SettingsProfileIndex from '../views/settings/profile/ProfileIndex.vue';
+
+import SettingsAccountIndex from '../views/settings/account/AccountIndex.vue';
+
+import SettingsNotificationIndex from '../views/settings/notifications/NotificationsIndex.vue';
+
+import SettingsReferIndex from '../views/settings/refer/ReferIndex.vue';
+
+import SettingsCompanyDetailsIndex from '../views/settings/company/CompanyDetailsIndex.vue';
+
+import SettingsLocalizationIndex from '../views/settings/localization/LocalizationIndex.vue';
+
+import SettingsInstallersIndex from '../views/settings/installers/InstallersIndex.vue';
 
 
 const routes = [
@@ -77,6 +90,41 @@ const routes = [
                 path: '/settings',
                 component: SettingsIndex,
                 children: [
+                    {
+                        name:'ProfileSettingPage',
+                        path:'profile',
+                        component: SettingsProfileIndex,
+                    },
+                    {
+                        name:'SettingsAccountPage',
+                        path:'account',
+                        component: SettingsAccountIndex,
+                    },
+                    {
+                        name:'SettingsNotificationPage',
+                        path:'notifications',
+                        component: SettingsNotificationIndex,
+                    },
+                    {
+                        name:'SettingsReferPage',
+                        path:'refer',
+                        component: SettingsReferIndex,
+                    },
+                    {
+                        name:'SettingsCompanyDetailsPage',
+                        path:'company',
+                        component: SettingsCompanyDetailsIndex,
+                    },
+                    {
+                        name:'SettingsLocalizationPage',
+                        path:'Localization',
+                        component: SettingsLocalizationIndex,
+                    },
+                    {
+                        name:'SettingsInstallersPage',
+                        path:'installers',
+                        component: SettingsInstallersIndex,
+                    },
                 ]
             },
         ],

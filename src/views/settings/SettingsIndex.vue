@@ -29,7 +29,6 @@ export default {
     <SettingsMenuGroup :menus="menus" :title="title" />
   </section>
   <router-view></router-view>
-
 </template>
 
 <style>

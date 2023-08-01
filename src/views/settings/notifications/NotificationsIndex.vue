@@ -39,7 +39,7 @@ export default {
                             <span class="sub-title">Weekly emails will be sent on Monday mornings.</span>
                         </div>
                         <div>
-                            <input type="checkbox" value="">
+                            <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                         </div>
                     </div>
                 </div>
@@ -72,10 +72,10 @@ export default {
                                     </div>
                                 </td>
                                 <td class="text-center" width="10%">
-                                    <input type="checkbox" name="" id="">
+                                    <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </td>
                                 <td class="text-center" width="10%">
-                                    <input type="checkbox" name="" id="">
+                                    <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </td>
                             </tr>
                             <tr>
@@ -86,10 +86,10 @@ export default {
                                     </div>
                                 </td>
                                 <td class="text-center" width="10%">
-                                    <input type="checkbox" name="" id="">
+                                    <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </td>
                                 <td class="text-center" width="10%">
-                                    <input type="checkbox" name="" id="">
+                                    <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </td>
                             </tr>
                             <tr>
@@ -100,10 +100,10 @@ export default {
                                     </div>
                                 </td>
                                 <td class="text-center" width="10%">
-                                    <input type="checkbox" name="" id="">
+                                    <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </td>
                                 <td class="text-center" width="10%">
-                                    <input type="checkbox" name="" id="">
+                                    <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </td>
                             </tr>
                             <tr>
@@ -114,10 +114,10 @@ export default {
                                     </div>
                                 </td>
                                 <td class="text-center" width="10%">
-                                    <input type="checkbox" name="" id="">
+                                    <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </td>
                                 <td class="text-center" width="10%">
-                                    <input type="checkbox" name="" id="">
+                                    <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </td>
                             </tr>
                             <tr>
@@ -128,10 +128,10 @@ export default {
                                     </div>
                                 </td>
                                 <td class="text-center" width="10%">
-                                    <input type="checkbox" name="" id="">
+                                    <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </td>
                                 <td class="text-center" width="10%">
-                                    <input type="checkbox" name="" id="">
+                                    <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </td>
                             </tr>
                             <tr>
@@ -142,10 +142,10 @@ export default {
                                     </div>
                                 </td>
                                 <td class="text-center" width="10%">
-                                    <input type="checkbox" name="" id="">
+                                    <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </td>
                                 <td class="text-center" width="10%">
-                                    <input type="checkbox" name="" id="">
+                                    <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </td>
                             </tr>
                             <tr>
@@ -156,10 +156,10 @@ export default {
                                     </div>
                                 </td>
                                 <td class="text-center" width="10%">
-                                    <input type="checkbox" name="" id="">
+                                    <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </td>
                                 <td class="text-center" width="10%">
-                                    <input type="checkbox" name="" id="">
+                                    <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </td>
                             </tr>
                             <tr>
@@ -170,10 +170,10 @@ export default {
                                     </div>
                                 </td>
                                 <td class="text-center" width="10%">
-                                    <input type="checkbox" name="" id="">
+                                    <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </td>
                                 <td class="text-center" width="10%">
-                                    <input type="checkbox" name="" id="">
+                                    <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </td>
                             </tr>
                         </tbody>

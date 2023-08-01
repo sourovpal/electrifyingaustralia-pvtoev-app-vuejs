@@ -45,11 +45,8 @@ export default {
     <action-bar>
 
     <left-action-bar>
-        <div class="item d-flex justify-content-center align-item-start wh-40" style="margin-left: 10px;">
-            <label class="checkbox">
-                <input @click="selectAll" class="checkbox__input" type="checkbox">
-                <svg style="width:19px;height: 19px;" class="checkbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><rect width="21" height="21" x=".5" y=".5" fill="#FFF" stroke="#c6c6c6" rx="3" /><path class="tick" stroke="#afafaf" fill="none" stroke-linecap="round" stroke-width="4" d="M4 10l5 5 9-9" /></svg>
-            </label>
+        <div class=" d-flex justify-content-center align-item-start" style="margin-left: 20px;">
+            <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
         </div>
         <div class="item wh-40">
             <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
@@ -98,7 +95,7 @@ export default {
 
         <datatable-header class="d-none d-md-inline-block">
 
-            <div class="tbl-th" style="width:3rem;padding-right: 25px;"></div>
+            <div class="tbl-th" style="width:4rem;padding-right: 42px;"></div>
             <div class="d-flex flex-direction-row justify-content-between w-100">
 
                 <div class="d-flex flex-direction-row">
@@ -125,11 +122,8 @@ export default {
 
             <div class="tbl-tr full-width" v-for="(item, index) in Array.from(Array(100).keys())" :key="index">
 
-            <div style="width:3rem;" class="tbl-td">
-                <label class="checkbox">
-                    <input v-model="selectAllIds" :value="index" class="checkbox__input" type="checkbox">
-                    <svg class="checkbox__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22"><rect width="21" height="21" x=".5" y=".5" fill="#FFF" stroke="#c6c6c6" rx="3" /><path class="tick" stroke="#afafaf" fill="none" stroke-linecap="round" stroke-width="4" d="M4 10l5 5 9-9" /></svg>
-                </label>
+            <div style="width:4rem;" class="tbl-td">
+                <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
             </div>
 
             <div class="d-flex flex-direction-row justify-content-between w-100">

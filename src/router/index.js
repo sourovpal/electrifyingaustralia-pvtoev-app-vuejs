@@ -31,6 +31,11 @@ import SettingsLocalizationIndex from '../views/settings/localization/Localizati
 
 import SettingsInstallersIndex from '../views/settings/installers/InstallersIndex.vue';
 
+import SettingsAboutIndex from '../views/settings/about/AboutIndex.vue';
+
+import SettingsPreferenceIndex from '../views/settings/proposal/PreferenceIndex.vue';
+
+import LegalsIndex from '../views/settings/proposal/LegalsIndex.vue';
 
 const routes = [
     {
@@ -124,6 +129,21 @@ const routes = [
                         name:'SettingsInstallersPage',
                         path:'installers',
                         component: SettingsInstallersIndex,
+                    },
+                    {
+                        name:'SettingsProposalPage',
+                        path:'proposals',
+                        component: SettingsPreferenceIndex,
+                    },
+                    {
+                        name:'SettingsAboutPage',
+                        path:'about-us',
+                        component: SettingsAboutIndex,
+                    },
+                    {
+                        name:'SettingsLegalsPage',
+                        path:'proposal-legals',
+                        component: LegalsIndex,
                     },
                 ]
             },

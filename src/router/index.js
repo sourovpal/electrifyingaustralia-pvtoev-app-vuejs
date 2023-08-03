@@ -36,6 +36,7 @@ import SettingsAboutIndex from '../views/settings/about/AboutIndex.vue';
 import SettingsPreferenceIndex from '../views/settings/proposal/PreferenceIndex.vue';
 
 import LegalsIndex from '../views/settings/proposal/LegalsIndex.vue';
+import SolarDesignIndex from '../views/settings/solardesign/SolarDesignIndex.vue';
 
 const routes = [
     {
@@ -144,6 +145,11 @@ const routes = [
                         name:'SettingsLegalsPage',
                         path:'proposal-legals',
                         component: LegalsIndex,
+                    },
+                    {
+                        name:'SolarDesignIndex',
+                        path:'design',
+                        component: SolarDesignIndex,
                     },
                 ]
             },

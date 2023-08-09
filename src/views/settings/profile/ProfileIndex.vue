@@ -139,7 +139,7 @@ export default {
                         
                         <div class="col-lg-3 col-4 text-center">
                             <div class="">
-                                <img class="img-thumbnail" style="width:100px;height:100px;" src="https:via.placeholder.com/100x100" alt="">
+                                <img class="img-thumbnail" style="width:100px;height:100px;" src="" alt="">
                             </div>
                         </div>
                     </div>

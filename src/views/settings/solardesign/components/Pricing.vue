@@ -9,58 +9,80 @@
         </div>
         <div class="col-lg-8 col-9">
                 <div class="list-group pricing-list-group">
-                    <draggable tag="div" :list="element" item-key="name" class="" handle=".handle" @start="dragging=true" @end="dragging=false">
-                        <template #item="{ element }" >
-                            <div class="list-group-item " :key="element.name">
-                                <div class="handle">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path></svg>
-                                </div>
-                                <div class="list-item-body">
-                                    <div class="row">
-                                        <div contenteditable="true" data-placeholder="Description" class=" col-lg-6"></div>
-                                        <div contenteditable="true" data-placeholder="Quantity" class="placeholder-right col-lg-2"></div>
-                                        <div contenteditable="true" data-placeholder="Unit price" class="placeholder-right col-lg-2"></div>
-                                        <div contenteditable="true" data-placeholder="Total price" class="placeholder-right col-lg-2"></div>
-                                    </div>
-                                </div>
-                                <div class="list-item-action">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"></path><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path></svg>
-                                </div>
-                            </div>
-                        </template>
-                    </draggable>
+                    
+                    <transition-group name="flip-list" tag="div">
+                        <PricingRow @dragstart="(e) => startDrag(item, i, e)"
+                            @dragover="(e) => onDragOver(item, i, e)" 
+                            @dragend="(e) => finishDrag(item, i, e)"
+                            v-for="(item, i) in items" :key="item.id" :item="item"
+                            class="item" :draggable="dragging">
+                        </PricingRow>
+                    </transition-group>
+
+
                     <div class="list-group-item border-top add-new-item-btn">
                         <div contenteditable="true" class="list-item-body text-muted">
                             Add New
                         </div>
                     </div>
                 </div>
-            
+            {{ users }}
             <div class="mt-5">
-                <button class="btn btn-primary fw-bold">Save Settings</button>
+                <button class="btn btn-primary fw-bold" @click="submitForm">Save Settings</button>
             </div>
         </div>
     </div>
 </template>
 <script>
 import draggable from "vuedraggable";
+import PricingRow from "./PricingRow.vue";
 export default {
     components: {
-        draggable
-    },
+    draggable,
+    PricingRow
+},
     data() {
         return {
-            element:[
-                { name: "Google", text: "", id: 0 },
-                { name: "Facebook", text: "", id: 1 },
-                { name: "Youtube", text: "", id: 2 }
+            items: [
+                {
+                    id:1,
+                    description:'',
+                    quantity:'',
+                    unit_price:'',
+                    total_price:'',
+                },
+                {
+                    id:1,
+                    description:'',
+                    quantity:'',
+                    unit_price:'',
+                    total_price:'',
+                },
             ],
-            dragging: false
-        };
+            over: {},
+            startLoc: 0,
+            dragging: false,
+            dragFrom: {} 
+        }
     },
-
-
-  }
+    methods: {
+        startDrag(item, i, e) {
+            this.startLoc = e.clientY;
+            this.dragFrom = item;
+        },
+        finishDrag(item, pos) {
+            this.items.splice(pos, 1);
+            this.items.splice(this.over.pos, 0, item);
+            this.over.item = this.dragFrom;
+        },
+        onDragOver(item, pos, e) {
+            const dir = this.startLoc < e.clientY ? 'down' : 'up';
+            setTimeout(() => {
+                this.over = { item, pos, dir };
+            }, 50);
+        } 
+    }
+}
   
 </script>
 
@@ -112,39 +134,6 @@ export default {
         }
         .list-item-body{
             cursor: text;
-            .row{
-                div{
-                    outline: none;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    position: relative;
-                    border-right:1px solid transparent;
-                    padding-top: 10px;
-                    padding-bottom: 10px;
-                    &:last-child{
-                        border-right:0px;
-                    }
-                    &::before{
-                        content: attr(data-placeholder);
-                        position: absolute;
-                        left:12px;
-                        top:50%;
-                        transform: translateY(-50%);
-                        color:#b8babb;
-                        font-size:15px;
-                    }
-                    &.placeholder-right{
-                        text-align: right;
-                        &::before{
-                            right:12px !important;
-                            text-align: right;
-                        }
-                    }
-                    &:focus:before{
-                        opacity: 0;
-                    }
-                }
-            }
         }
         &:hover{
             .list-item-action,

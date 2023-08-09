@@ -36,7 +36,22 @@ import SettingsAboutIndex from '../views/settings/about/AboutIndex.vue';
 import SettingsPreferenceIndex from '../views/settings/proposal/PreferenceIndex.vue';
 
 import LegalsIndex from '../views/settings/proposal/LegalsIndex.vue';
+
 import SolarDesignIndex from '../views/settings/solardesign/SolarDesignIndex.vue';
+
+import ComponentPriceIndex from '../views/settings/component/ComponentPriceIndex.vue';
+
+import PackageIndex from '../views/settings/packages/PackageIndex.vue';
+
+import JobSheetsIndex from '../views/settings/job/JobSheetsIndex.vue';
+
+import FinancingIndex from '../views/settings/financing/FinancingIndex.vue';
+
+import EmailTemplatesIndex from '../views/settings/email-templates/EmailTemplatesIndex.vue';
+
+import EmailIndex from '../views/settings/crm/EmailIndex.vue';
+
+import LeadProviderEmailIndex from '../views/settings/crm/LeadProviderEmailIndex.vue';
 
 const routes = [
     {
@@ -150,6 +165,48 @@ const routes = [
                         name:'SolarDesignIndex',
                         path:'design',
                         component: SolarDesignIndex,
+                    },
+                    {
+                        name:'ComponentPriceIndex',
+                        path:'component-prices',
+                        component: ComponentPriceIndex,
+                    },
+                    {
+                        name:'PackageIndex',
+                        path:'packages',
+                        component: PackageIndex,
+                    },
+                    {
+                        name:'JobShootIndex',
+                        path:'job-sheets',
+                        component: JobSheetsIndex,
+                    },
+                    {
+                        name:'FinancingIndex',
+                        path:'financing',
+                        component: FinancingIndex,
+                    },
+                    {
+                        name:'EmailTemplatesIndex',
+                        path:'email-templates',
+                        component: EmailTemplatesIndex,
+                    },
+                ]
+            },
+            { 
+                name:"CrmIndex",
+                path: '/crm',
+                component: SettingsIndex,
+                children: [
+                    {
+                        name:'EmailIndex',
+                        path:'email',
+                        component: EmailIndex,
+                    },
+                    {
+                        name:'LeadProviderEmailIndex',
+                        path:'lead-provider-emails',
+                        component: LeadProviderEmailIndex,
                     },
                 ]
             },

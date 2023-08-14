@@ -53,6 +53,8 @@ import EmailIndex from '../views/settings/crm/EmailIndex.vue';
 
 import LeadProviderEmailIndex from '../views/settings/crm/LeadProviderEmailIndex.vue';
 
+import LeadsIndex from '../views/settings/crm/LeadsIndex.vue';
+
 const routes = [
     {
         name:'Website',
@@ -207,6 +209,11 @@ const routes = [
                         name:'LeadProviderEmailIndex',
                         path:'lead-provider-emails',
                         component: LeadProviderEmailIndex,
+                    },
+                    {
+                        name:'LeadsIndex',
+                        path:'leads',
+                        component: LeadsIndex,
                     },
                 ]
             },

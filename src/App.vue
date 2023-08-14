@@ -40,6 +40,24 @@ export default {
 html{
   scroll-behavior: smooth;
 }
+.fs-10px{
+  font-size:10px !important;
+}
+.fs-11px{
+  font-size:11px !important;
+}
+.fs-12px{
+  font-size:12px !important;
+}
+.fs-13px{
+  font-size:13px !important;
+}
+.fs-14px{
+  font-size:14px !important;
+}
+.fs-15px{
+  font-size:15px !important;
+}
 .cursor-pointer{
   cursor: pointer;
 }

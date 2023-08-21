@@ -39,7 +39,7 @@ export default {
                     {{ menu.label }}
                 </a>
                 <div class="submenu-list">
-                    <router-link class="submenu-link" v-for="sub in menu.children" :to="sub.path"  :key="sub.label">{{ sub.label }}</router-link>
+                    <router-link class="submenu-link" v-for="sub in menu.children" :to="sub.path"  :key="sub.label" v-html="sub.label"></router-link>
                 </div>
             </div>
 
@@ -102,7 +102,7 @@ export default {
         display: flex;
         gap: 0.375rem;
       .icon{
-        width:18px;
+        width:20px;
       }
     }
     .submenu-list{

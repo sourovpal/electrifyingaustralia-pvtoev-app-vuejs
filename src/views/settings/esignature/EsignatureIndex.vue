@@ -1,25 +1,19 @@
 <script>
 import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
 import "vue-custom-scrollbar/dist/vueScrollbar.css";
-
-
-import { QuillEditor } from '@vueup/vue-quill'
-import '@vueup/vue-quill/dist/vue-quill.snow.css';
-import '@vueup/vue-quill/dist/vue-quill.bubble.css';
-
+import { SmartTagz } from "smart-tagz";
+import "smart-tagz/dist/smart-tagz.css";
 
 export default {
   name:'ProfileIndex',
     data() {
       return{
-        content: '<h2>I am Example</h2>',
-        editorOption:{
-        }
+        sources:{}
       }
     },
     components:{
         vueCustomScrollbar,
-        QuillEditor
+        SmartTagz
     }
   }
   
@@ -30,113 +24,91 @@ export default {
   <vue-custom-scrollbar :settings="{ suppressScrollY: false, suppressScrollX: false, wheelPropagation: false, wheelSpeed:0.5 }" class="content">
     
     <div class="content-header">
-        <h1>Email & SMS sending</h1>
+        <h1>E-signature requests</h1>
     </div>
 
     <div class="content-body">
         <section class="">
 
             <div class="row">
-
                 <div class="col-lg-3 col-3">
                     <div class="settings-group-header">
-                        <h2>Connected email account</h2>
-                        <span class="sub-title">Sync your inbox and see your conversations in Pylon CRM.</span>
+                        <h2>Successful signatures</h2>
+                        <span class="sub-title">These settings define what happens when a customer signs one of your proposals.</span>
                     </div>
                 </div>
+                <div class="col-lg-5 col-9">
 
-                <div class="col-lg-6 col-9">
-                    <p class="">Your email address <span class="mx-1 fw-bold">connections@electrifyingaustralia.com.au</span> is not yet connected.</p>
+                    <div class="settings-group-item">
+                        <div class="">
+                            <p class="sub-title d-block">
+                                The <span class="fw-bold d-inlice">project owner</span> 
+                                and the user who sends the e-signature request will automatically receive emails when proposals are signed. If you want additional people to be notified, add them here.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="settings-group-item">
+                        <label class="form-label-title" for="">CC</label>
+                        <smart-tagz
+                            style="background: #f5f7fa !important;"
+                            autosuggest
+                            editable
+                            inputPlaceholder="Type email address..."
+                            :allowPaste="{delimiter: ','}"
+                            :allowDuplicates="false"
+                            :maxTags="20"
+                            :defaultTags="['cc.example@gmail.com']"
+                        />
+                    </div>
+
+                    <div class="settings-group-item">
+                        <label class="form-label-title" for="">BCC</label>
+                        <smart-tagz
+                            style="background: #f5f7fa !important;"
+                            autosuggest
+                            editable
+                            inputPlaceholder="Type email address..."
+                            :allowPaste="{delimiter: ','}"
+                            :allowDuplicates="false"
+                            :maxTags="20"
+                            :defaultTags="['bcc.example@gmail.com']"
+                        />
+                        <span class="text-muted form-input-commant pt-3">
+                            Users emailed via BCC will not be visible to other recipients of the email. Note that your customers will not see this email at all.
+                        </span>
+                    </div>
                     <div>
-                        <button class="btn btn-primary fw-bold">Connect your email</button>
-                    </div>
-                </div>
-
-            </div>
-
-            <hr class="mt-4 mb-5">
-
-            <div class="row">
-
-                <div class="col-lg-3 col-3">
-                    <div class="settings-group-header">
-                        <h2>SMS sending</h2>
-                        <span class="sub-title">Chat with your customers in Pylon CRM.</span>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 col-9">
-                    <p class="">SMS integration coming soon.</p>
-                </div>
-
-            </div>
-
-
-            <hr class="mt-4 mb-5">
-
-
-            <div class="row">
-
-                <div class="col-lg-3 col-3">
-                    <div class="settings-group-header">
-                        <h2>SMS sending</h2>
-                        <span class="sub-title">Chat with your customers in Pylon CRM.</span>
-                    </div>
-                </div>
-
-                <div class="col-lg-5 col-9">
-                    <QuillEditor theme="snow" placeholder="Insert text here ..." />
-                    <div class="mt-3">
                         <button class="btn btn-primary fw-bold">Save Settings</button>
                     </div>
                 </div>
-
             </div>
 
-            <hr class="mt-4 mb-5">
 
-            <div class="row">
-
+            <div class="row mt-4">
                 <div class="col-lg-3 col-3">
                     <div class="settings-group-header">
-                        <h2>User Email Signature</h2>
-                        <span class="sub-title">This will be be used instead of your company wide email signature.</span>
+                        <h2>Templates</h2>
+                        <span class="sub-title">These templates will be available in the email composer when sharing a proposal.</span>
                     </div>
                 </div>
-
-                <div class="col-lg-5 col-9">
-                    <QuillEditor theme="snow" placeholder="Insert text here ..." />
-                    <div class="mt-3">
-                        <button class="btn btn-primary fw-bold">Save Settings</button>
-                    </div>
-                </div>
-
-            </div>
-
-            <hr class="mt-4 mb-5">
-
-            <div class="row">
-
-                <div class="col-lg-3 col-3">
-                    <div class="settings-group-header">
-                        <h2>Email Templates</h2>
-                        <span class="sub-title">Setup email templates so you quickly send out emails to your customers</span>
-                    </div>
-                </div>
-
                 <div class="col-lg-8 col-9">
-                    <table class="table table-sm table-striped table-hover">
+                    <table class="table table-sm table-striped- table-hover">
                         <thead>
                             <tr>
-                                <th class="fw-bold" width="35%" scope="col">Name</th>
-                                <th class="fw-bold" width="40%" scope="col">Subject</th>
-                                <th class="fw-bold" width="25%" scope="col"><span class="d-none">Action</span></th>
+                                <th class="fw-bold" width="30%" scope="col">Name</th>
+                                <th class="fw-bold" width="30%" scope="col">Subject</th>
+                                <th class="fw-bold" width="20%" scope="col"><span class="d-none">Make Default</span></th>
+                                <th class="fw-bold" width="15%" scope="col"><span class="d-none">Action</span></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>353420c</td>
-                                <td>A1486311</td>
+                                <td>Templates</td>
+                                <td>Templates E-Templates</td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-light fw-bold">Make default</button>
+                                </td>
                                 <td class="text-end">
                                     <a class="me-1 btn btn-info btn-sm px-2" href="">
                                         <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
@@ -147,8 +119,11 @@ export default {
                                 </td>
                             </tr>
                             <tr>
-                                <td>353420c</td>
-                                <td>A1486311</td>
+                                <td>Templates</td>
+                                <td>Templates E-Templates</td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-light fw-bold">Make default</button>
+                                </td>
                                 <td class="text-end">
                                     <a class="me-1 btn btn-info btn-sm px-2" href="">
                                         <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
@@ -159,8 +134,11 @@ export default {
                                 </td>
                             </tr>
                             <tr>
-                                <td>353420c</td>
-                                <td>A1486311</td>
+                                <td>Templates</td>
+                                <td>Templates E-Templates</td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-light fw-bold">Make default</button>
+                                </td>
                                 <td class="text-end">
                                     <a class="me-1 btn btn-info btn-sm px-2" href="">
                                         <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
@@ -171,8 +149,11 @@ export default {
                                 </td>
                             </tr>
                             <tr>
-                                <td>353420c</td>
-                                <td>A1486311</td>
+                                <td>Templates</td>
+                                <td>Templates E-Templates</td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-light fw-bold">Make default</button>
+                                </td>
                                 <td class="text-end">
                                     <a class="me-1 btn btn-info btn-sm px-2" href="">
                                         <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
@@ -183,8 +164,41 @@ export default {
                                 </td>
                             </tr>
                             <tr>
-                                <td>353420c</td>
-                                <td>A1486311</td>
+                                <td>Templates</td>
+                                <td>Templates E-Templates</td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-light fw-bold">Make default</button>
+                                </td>
+                                <td class="text-end">
+                                    <a class="me-1 btn btn-info btn-sm px-2" href="">
+                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
+                                    </a>
+                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
+                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Templates</td>
+                                <td>Templates E-Templates</td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-light fw-bold">Make default</button>
+                                </td>
+                                <td class="text-end">
+                                    <a class="me-1 btn btn-info btn-sm px-2" href="">
+                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
+                                    </a>
+                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
+                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Templates</td>
+                                <td>Templates E-Templates</td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-light fw-bold">Make default</button>
+                                </td>
                                 <td class="text-end">
                                     <a class="me-1 btn btn-info btn-sm px-2" href="">
                                         <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
@@ -196,97 +210,7 @@ export default {
                             </tr>
                         </tbody>
                     </table>
-                    <div class="mt-3">
-                        <button class="btn btn-primary fw-bold">Add new template</button>
-                    </div>
-                </div>
-
-            </div>
-
-
-            <hr class="mt-4 mb-5">
-
-
-            <div class="row">
-                <div class="col-lg-3 col-3">
-                    <div class="settings-group-header">
-                        <h2>SMS Templates</h2>
-                        <span class="sub-title">Setup sms templates so you quickly send out text messages to your customers</span>
-                    </div>
-                </div>
-                <div class="col-lg-8 col-9">
-                    <table class="table table-sm table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th class="fw-bold" width="35%" scope="col">Name</th>
-                                <th class="fw-bold" width="40%" scope="col">Subject</th>
-                                <th class="fw-bold" width="25%" scope="col"><span class="d-none">Action</span></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>353420c</td>
-                                <td>A1486311</td>
-                                <td class="text-end">
-                                    <a class="me-1 btn btn-info btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
-                                    </a>
-                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>353420c</td>
-                                <td>A1486311</td>
-                                <td class="text-end">
-                                    <a class="me-1 btn btn-info btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
-                                    </a>
-                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>353420c</td>
-                                <td>A1486311</td>
-                                <td class="text-end">
-                                    <a class="me-1 btn btn-info btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
-                                    </a>
-                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>353420c</td>
-                                <td>A1486311</td>
-                                <td class="text-end">
-                                    <a class="me-1 btn btn-info btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
-                                    </a>
-                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>353420c</td>
-                                <td>A1486311</td>
-                                <td class="text-end">
-                                    <a class="me-1 btn btn-info btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
-                                    </a>
-                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="mt-3">
+                    <div>
                         <button class="btn btn-primary fw-bold">Add new template</button>
                     </div>
                 </div>
@@ -299,12 +223,11 @@ export default {
   </vue-custom-scrollbar>
 
 </template>
-<style>
-.ql-container{
-    height:250px;
-}
-</style>
+
 <style lang="scss" scoped>
+.tbl-bg-tp{
+    background-color: #f6f6f6;
+}
 .content{
     .content-header{
         margin-top: 1.5rem;
@@ -333,13 +256,6 @@ export default {
             h2{
                 font-weight: 600;
                 font-size: 1rem;
-            }
-            .sub-title{
-                font-size: 13px;
-                padding: 4px 0px;
-                display: block;
-                color: #616e7c;
-                line-height: 1rem;
             }
         }
         .settings-group-item{
@@ -394,11 +310,37 @@ export default {
                 }
             } 
             .form-input-commant{
-                font-size: 12px;
-                padding: 6px 0px;
+                font-size: 13px;
+                padding: 4px 0px;
                 display: block;
                 color: #616e7c;
                 line-height: 1rem;
+            }
+            .title{
+                line-height: 1rem;
+                font-weight: 600;
+                color: #3e4c59;
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                -webkit-box-pack: start;
+                -ms-flex-pack: start;
+                justify-content: flex-start;
+                font-size:15px;
+                margin-bottom: 0px;
+            }
+            .sub-title{
+                display: flex;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                margin-top: 0;
+                font-weight: 400;
+                color: #616e7c;
+                font-size: 14px;
             }
         }
     }

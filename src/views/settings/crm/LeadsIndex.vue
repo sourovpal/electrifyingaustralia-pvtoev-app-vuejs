@@ -67,12 +67,12 @@ export default {
         <section class="">
 
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-3 mb-3">
                     <div class="settings-group-header">
                         <h2>Deal Pipelines</h2>
                     </div>
                 </div>
-                <div class="col-lg-6 col-9">
+                <div class="col-lg-6">
 
                     <div class="section-box d-flex justify-content-start align-items-center" v-for="(item, index) in items" :key="item.id">
                         <div class="card pipeline-card">
@@ -112,17 +112,17 @@ export default {
                     </div>
                 </div>
             </div>
+
             <hr class="mt-4 mb-5">
+
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-3 mb-3">
                     <div class="settings-group-header">
                         <h2>Lead Statuses</h2>
                     </div>
                 </div>
-                <div class="col-lg-5 col-9">
-                    <div class="settings-group-header">
-                        <p class="mb-2 fw-bold">Change order or name of statuses</p>
-                    </div>
+                <div class="col-lg-5">
+                    <p class="mb-2 fw-bold fs-14px">Change order or name of statuses</p>
                     <div class="list-group ">
                         <vue-draggable-next class="lead-status-list" tag="div" :list="list_items" handle=".handle">
                             <div class="list-group-item py-0" :class="item.status == 0?'is-lost':null" v-for="(item, index) in list_items" :key="item.id">
@@ -372,6 +372,18 @@ export default {
                     }
                 }
                 &::before{
+                    content: "";
+                    position: absolute;
+                    top: -7px;
+                    right: 15px;
+                    border: 7px solid #e6e6e6;
+                    border-right-color: white;
+                    border-bottom-color: white;
+                    transform: rotate(45deg);
+                    border-bottom-color: transparent;
+                    border-right-color: transparent;
+                }
+                &::after{
                     content: "";
                     position: absolute;
                     top: -6px;

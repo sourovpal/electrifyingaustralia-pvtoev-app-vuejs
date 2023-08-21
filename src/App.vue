@@ -25,6 +25,9 @@ export default {
   margin:0px;
   padding:0px;
 }
+body{
+  color:#1f2933;
+}
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -57,6 +60,9 @@ html{
 }
 .fs-15px{
   font-size:15px !important;
+}
+.line-height-22px{
+  line-height: 22px;
 }
 .cursor-pointer{
   cursor: pointer;

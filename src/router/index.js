@@ -55,6 +55,26 @@ import LeadProviderEmailIndex from '../views/settings/crm/LeadProviderEmailIndex
 
 import LeadsIndex from '../views/settings/crm/LeadsIndex.vue';
 
+import WorkflowIndex from '../views/settings/crm/workflow/WorkflowIndex.vue';
+
+import AutomationIndex from '../views/settings/crm/automation/AutomationIndex.vue';
+
+import TagIndex from '../views/settings/crm/tag/TagIndex.vue';
+
+import LeadCaptureFormIndex from '../views/settings/crm/lead-capture-forms/LeadCaptureFormIndex.vue';
+
+import RolesIndex from '../views/settings/roles/RolesIndex.vue';
+
+import TeamIndex from '../views/settings/team/TeamIndex.vue';
+
+import BillingIndex from '../views/settings/billing/BillingIndex.vue';
+
+import ApiIndex from '../views/settings/api/ApiIndex.vue';
+
+import IntegrationsIndex from '../views/settings/integrations/IntegrationsIndex.vue';
+
+import EsignatureIndex from '../views/settings/esignature/EsignatureIndex.vue';
+
 const routes = [
     {
         name:'Website',
@@ -193,6 +213,36 @@ const routes = [
                         path:'email-templates',
                         component: EmailTemplatesIndex,
                     },
+                    {
+                        name:'RolesIndex',
+                        path:'roles',
+                        component: RolesIndex,
+                    },
+                    {
+                        name:'TeamIndex',
+                        path:'team',
+                        component: TeamIndex,
+                    },
+                    {
+                        name:'BillingIndex',
+                        path:'billing',
+                        component: BillingIndex,
+                    },
+                    {
+                        name:'ApiIndex',
+                        path:'api',
+                        component: ApiIndex,
+                    },
+                    {
+                        name:'IntegrationsIndex',
+                        path:'integrations',
+                        component: IntegrationsIndex,
+                    },
+                    {
+                        name:'EsignatureIndex',
+                        path:'esignature',
+                        component: EsignatureIndex,
+                    },
                 ]
             },
             { 
@@ -214,6 +264,26 @@ const routes = [
                         name:'LeadsIndex',
                         path:'leads',
                         component: LeadsIndex,
+                    },
+                    {
+                        name:'WorkflowIndex',
+                        path:'workflows',
+                        component: WorkflowIndex,
+                    },
+                    {
+                        name:'AutomationIndex',
+                        path:'automations',
+                        component: AutomationIndex,
+                    },
+                    {
+                        name:'TagIndex',
+                        path:'tags',
+                        component: TagIndex,
+                    },
+                    {
+                        name:'LeadCaptureFormIndex',
+                        path:'lead-capture-forms',
+                        component: LeadCaptureFormIndex,
                     },
                 ]
             },

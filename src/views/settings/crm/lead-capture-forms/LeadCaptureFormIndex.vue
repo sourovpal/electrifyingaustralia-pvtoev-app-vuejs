@@ -40,7 +40,7 @@ export default {
                         <tbody>
                             <tr>
                                 <td>Sign Up</td>
-                                <td><a href="">https://app.getpylon.com/lead-form/xD59yNqQ</a></td>
+                                <td><a class="fs-13px" href="">https://app.getpylon.com/lead-form/xD59yNqQ</a></td>
                                 <td>a month ago</td>
                                 <td class="text-end">
                                     <a class="me-1 btn btn-info btn-sm px-2" href="">
@@ -53,7 +53,7 @@ export default {
                             </tr>
                             <tr>
                                 <td>Sign In</td>
-                                <td><a href="">https://app.getpylon.com/lead-form/xD59yNqQ</a></td>
+                                <td><a class="fs-13px" href="">https://app.getpylon.com/lead-form/xD59yNqQ</a></td>
                                 <td>a month ago</td>
                                 <td class="text-end">
                                     <a class="me-1 btn btn-info btn-sm px-2" href="">
@@ -66,7 +66,7 @@ export default {
                             </tr>
                             <tr>
                                 <td>Contact Us</td>
-                                <td><a href="">https://app.getpylon.com/lead-form/xD59yNqQ</a></td>
+                                <td><a class="fs-13px" href="">https://app.getpylon.com/lead-form/xD59yNqQ</a></td>
                                 <td>a month ago</td>
                                 <td class="text-end">
                                     <a class="me-1 btn btn-info btn-sm px-2" href="">
@@ -94,50 +94,4 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-.fw-initial{
-    font-weight:inherit !important;
-}
-.settings__item--wide{
-    background: #f2f5fa !important;
-    border: 1px solid #007ee5 !important;
-    margin-bottom: 1.5rem;
-    .title{
-        font-size:1.125rem;
-        font-weight: bold;
-        color: #007ee5;
-    }
-    .sub-title{
-        color: #004680;
-        font-size: .875rem;
-        opacity: .87;
-    }
-}
-.content{
-    .content-header{
-        margin-top: 1.5rem;
-        margin-bottom: 3rem;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-        line-height: 1.1;
-        h1{
-            height: 2rem;
-            -webkit-box-align: center;
-            -ms-flex-align: center;
-            align-items: center;
-            font-size: 1.5rem;
-            color: #1f2933;
-            line-height: 1;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            font-weight: 600;
-        }
-    }
-    .content-body{
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-    }
-
-}
-
 </style>

@@ -84,83 +84,9 @@
     
     </template>
     
-    <style lang="scss" scoped>
+<style lang="scss" scoped>
     .card-shadow{
         // box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
         box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgb(209, 213, 219) 0px 0px 0px 1px inset;
     }
-    .select-box{
-        position: relative;
-        &::before{
-            content: "";
-            position: absolute;
-            top: 47%;
-            right: 15px;
-            border: 4px solid rgb(166 167 170 / 62%);
-            transform: translateY(-50%) rotate(-135deg);
-            border-top-color: transparent;
-            border-left-color: transparent;
-        }
-        &::after{
-            content: "";
-            position: absolute;
-            top: 53%;
-            right: 15px;
-            border: 4px solid rgb(166 167 170 / 62%);
-            transform: translateY(-50%) rotate(45deg);
-            border-top-color: transparent;
-            border-left-color: transparent;
-        }
-    } 
-    .card{
-        svg{
-            fill:#3b6dc1;
-        }
-    }
-    .card-shadow{
-        box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-    }
-    .settings__item--wide{
-        background: #f2f5fa !important;
-        border: 1px solid #007ee5 !important;
-        margin-bottom: 1.5rem;
-        .title{
-            font-size:1.125rem;
-            font-weight: bold;
-            color: #007ee5;
-        }
-        .sub-title{
-            color: #004680;
-            font-size: .875rem;
-            opacity: .87;
-        }
-    }
-    .content{
-        .content-header{
-            margin-top: 1.5rem;
-            margin-bottom: 3rem;
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-            line-height: 1.1;
-            h1{
-                height: 2rem;
-                -webkit-box-align: center;
-                -ms-flex-align: center;
-                align-items: center;
-                font-size: 1.5rem;
-                color: #1f2933;
-                line-height: 1;
-                display: -webkit-box;
-                display: -ms-flexbox;
-                display: flex;
-                font-weight: 600;
-            }
-        }
-        .content-body{
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-        }
-    
-    }
-    
-    </style>
+</style>

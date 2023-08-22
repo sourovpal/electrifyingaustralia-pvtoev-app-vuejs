@@ -417,33 +417,4 @@ export default {
         }
     }
 }
-
-.content{
-    .content-header{
-        margin-top: 1.5rem;
-        margin-bottom: 3rem;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-        line-height: 1.1;
-        h1{
-            height: 2rem;
-            -webkit-box-align: center;
-            -ms-flex-align: center;
-            align-items: center;
-            font-size: 1.5rem;
-            color: #1f2933;
-            line-height: 1;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            font-weight: 600;
-        }
-    }
-    .content-body{
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-    }
-
-}
-
 </style>

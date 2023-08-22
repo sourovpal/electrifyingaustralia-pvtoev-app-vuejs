@@ -75,6 +75,8 @@ import IntegrationsIndex from '../views/settings/integrations/IntegrationsIndex.
 
 import EsignatureIndex from '../views/settings/esignature/EsignatureIndex.vue';
 
+import AccreditationIndex from '../views/settings/accreditation/AccreditationIndex.vue';
+
 const routes = [
     {
         name:'Website',
@@ -131,6 +133,7 @@ const routes = [
             { 
                 name:"SettingsIndex",
                 path: '/settings',
+                redirect: "/settings/profile",
                 component: SettingsIndex,
                 children: [
                     {
@@ -242,6 +245,11 @@ const routes = [
                         name:'EsignatureIndex',
                         path:'esignature',
                         component: EsignatureIndex,
+                    },
+                    {
+                        name:'AccreditationIndex',
+                        path:'accreditations',
+                        component: AccreditationIndex,
                     },
                 ]
             },

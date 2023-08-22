@@ -4,7 +4,7 @@ import MobileHeader from '../../components/MobileHeader.vue';
 import Menu from '../../components/Menu/Menu.vue';
 import {title, menus} from './menu';
 import SettingsMenuGroup from '../../components/Menu/SettingsMenuGroup.vue';
-
+import './style.scss';
 export default {
   name:'SettingsIndex',
     data() {

@@ -167,6 +167,154 @@ export default {
                 </div>
             </div>
 
+            <hr class="mt-4 mb-5">
+
+            <div class="row">
+                <div class="col-lg-8 col-3">
+                    <div class="settings-group-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h2 class="mb-3">Invoice history</h2>
+                            <div>
+                                <select class="form-control form-control-sm" name="" id="">
+                                    <option value="">30 Days</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row mt-2">
+                <div class="col-lg-8">
+                    <table class="table table-sm table-striped- table-hover">
+                        <thead>
+                            <tr>
+                                <th class="fw-bold" width="15%" scope="col">Date</th>
+                                <th class="fw-bold text-center" width="15%" scope="col">Payment Method</th>
+                                <th class="fw-bold text-center" width="10%" scope="col">Amount Paid</th>
+                                <th class="fw-bold text-center" width="10%" scope="col">Credits</th>
+                                <th class="fw-bold text-center" width="15%" scope="col">Tax Invoice / Receipt</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>August 19th 2023</td>
+                                <td class="text-center">Free credits</td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">150</td>
+                                <td class="text-center">
+                                    <div class="icon">
+                                        <svg fill="#3b71ca" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>August 19th 2023</td>
+                                <td class="text-center">Free credits</td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">150</td>
+                                <td class="text-center">
+                                    <div class="icon">
+                                        <svg fill="#3b71ca" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>August 19th 2023</td>
+                                <td class="text-center">Free credits</td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">150</td>
+                                <td class="text-center">
+                                    <div class="icon">
+                                        <svg fill="#3b71ca" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>August 19th 2023</td>
+                                <td class="text-center">Free credits</td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">150</td>
+                                <td class="text-center">
+                                    <div class="icon">
+                                        <svg fill="#3b71ca" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>August 19th 2023</td>
+                                <td class="text-center">Free credits</td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">150</td>
+                                <td class="text-center">
+                                    <div class="icon">
+                                        <svg fill="#3b71ca" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>August 19th 2023</td>
+                                <td class="text-center">Free credits</td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">150</td>
+                                <td class="text-center">
+                                    <div class="icon">
+                                        <svg fill="#3b71ca" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-lg-12 mt-3">
+                    <a class="btn btn-primary" href="">Add new installer</a>
+                </div>
+            </div>
+
+            <hr class="mt-4 mb-5">
+
+            <div class="row">
+                <div class="col-lg-3 col-3">
+                    <div class="settings-group-header">
+                        <h2>Billing Information</h2>
+                        <span class="sub-title">These details will appear on your invoices, and can be different to the company details on your proposals.</span>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-9">
+
+                    <div class="settings-group-item">
+                        <label class="form-label-title" for="">Billing contact name</label>
+                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                    </div>
+
+                    <div class="settings-group-item">
+                        <label class="form-label-title" for="">Billing company name</label>
+                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                    </div>
+
+                    <div class="settings-group-item">
+                        <label class="form-label-title" for="">Billing contact email</label>
+                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                    </div>
+
+                    <div class="settings-group-item">
+                        <label class="form-label-title" for="">Address</label>
+                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg mb-2">
+                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg mb-2">
+                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg mb-2">
+                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg mb-2">
+                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg mb-2">
+                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg mb-2">
+                    </div>
+                    
+                    <div>
+                        <button class="btn btn-primary fw-bold">Save Settings</button>
+                    </div>
+                </div>
+            </div>
+
+
             <br><br><br>
         </section>
     </div>

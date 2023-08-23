@@ -49,11 +49,11 @@ import FinancingIndex from '../views/settings/financing/FinancingIndex.vue';
 
 import EmailTemplatesIndex from '../views/settings/email-templates/EmailTemplatesIndex.vue';
 
-import EmailIndex from '../views/settings/crm/EmailIndex.vue';
+import EmailIndex from '../views/settings/crm/email/EmailIndex.vue';
 
-import LeadProviderEmailIndex from '../views/settings/crm/LeadProviderEmailIndex.vue';
+import LeadProviderEmailIndex from '../views/settings/crm/lead-provider-email/LeadProviderEmailIndex.vue';
 
-import LeadsIndex from '../views/settings/crm/LeadsIndex.vue';
+import LeadsIndex from '../views/settings/crm/leads/LeadsIndex.vue';
 
 import WorkflowIndex from '../views/settings/crm/workflow/WorkflowIndex.vue';
 
@@ -82,6 +82,7 @@ const routes = [
         name:'Website',
         path:'/',
         component:WebSite,
+        redirect: "/app",
     },
     { 
         name:"root",

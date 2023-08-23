@@ -40,7 +40,7 @@ export default{
         </div>
         <div class="right-bar d-flex">
             <div class="item">
-                <button class="btn fw-bold shadow-none"><img class="me-1" src="https://app.getpylon.com/img/gem.png" alt="">  Credits: 412</button>
+                <button class="btn bg-light fw-bold shadow-none"><img class="me-1" src="https://app.getpylon.com/img/gem.png" alt="">  Credits: 412</button>
             </div>
         </div>
     </section>

@@ -95,7 +95,6 @@ hr{
   }
 }
   .submenu-group{
-
     &.active-group{
       .icon{
         svg{

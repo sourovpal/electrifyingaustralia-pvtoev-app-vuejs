@@ -114,7 +114,7 @@ export default{
     flex-direction: column;
     align-items: center;
     flex-wrap: nowrap;
-    z-index: 999;
+    z-index: 9999999999;
     @media screen and (max-width:991px) {
         width:3rem;
     }
@@ -161,12 +161,6 @@ export default{
                 }
             }
         }
-    }
-    .navbar-top{
-
-    }
-    .navbar-bottom{
-
     }
 }
 

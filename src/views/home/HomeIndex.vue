@@ -41,7 +41,7 @@ export default {
                     </div>
 
                     <div class="d-none d-md-flex">
-                        <button class="btn px-1 fw-bold shadow-none" style=""><img class="me-1" src="https://app.getpylon.com/img/gem.png" alt=""> Credits: 412</button>
+                        <button class="btn px-3 btn-light fw-bold shadow-none" style=""><img class="me-1" src="https://app.getpylon.com/img/gem.png" alt=""> Credits: 412</button>
                     </div>
 
                 </div>
@@ -167,97 +167,6 @@ export default {
 </template>
 
 <style lang="scss">
-
-.navbar.navbar-mobile{
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    background-color: #ffffff;
-    width: 100%;
-    height:3rem;
-    padding: 0;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: nowrap;
-    padding: 8px 16px;
-    z-index: 0;
-    @media screen and (max-width:767px) {
-        height:4rem;
-        z-index: 999999;
-    }
-    .navbar-left{
-
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        
-        .nav-item{
-
-            width: 2.5rem;
-            height: 3rem;
-
-            .nav-link{
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                width: 100%;
-                height:100%;
-                position: relative;
-                svg{
-                    fill:#0d1620;
-                }
-            }
-        }
-
-        
-        .title{
-
-            font-size:1.375rem;
-            font-weight: 600;
-            
-        }
-    }
-
-    .navbar-right{
-        
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        
-        .nav-item{
-
-            width: 3rem;
-            height: 3rem;
-
-            .nav-link{
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                width: 100%;
-                height:100%;
-                position: relative;
-                svg{
-                    fill:#0d1620;
-                }
-            }
-        }
-        
-        .title{
-
-            font-size:1.375rem;
-            font-weight: 600;
-            
-        }
-    }
-}
-
-
-
-
 
 .home-section{
     height:120vh;

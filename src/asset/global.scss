@@ -23,6 +23,32 @@ body{
 html{
   scroll-behavior: smooth;
 }
+.btn{
+  text-transform: capitalize !important;
+  font-size: 14px !important;
+  letter-spacing: 0.2px;
+}
+.modal-content{
+  border-radius:3px !important;
+  .modal-header{
+    padding-top:10px;
+    border-bottom:1px solid #dddddd;
+    padding-bottom:10px;
+    .modal-title{
+      font-size:16px;
+    }
+  }
+  .modal-footer{
+    padding-top:8px;
+    border-top:1px solid #dddddd;
+    padding-bottom:8px;
+    &.flex-between-center{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+}
 .fs-10px{
   font-size:10px !important;
 }
@@ -82,4 +108,44 @@ html{
       background-color: #e4e7eb !important;
       color: #1f2933 !important;
     }
+}
+
+
+
+.toggle-checkbox{
+  position: relative;
+  display: inline-block;
+  width: 2.625rem;
+  height: 1.5rem;
+  border-radius: 0.75rem;
+  background-color: #cbd2d9;
+  cursor: pointer;
+  &.toggle-active{
+      background-color: #007ee5;
+      .toggle-slider{
+          transform: translateX(1.125rem);
+          svg {
+              opacity: 1 !important;
+          }
+      } 
+  }
+  .toggle-slider{
+      position: absolute;
+      top: 0.1875rem;
+      left: 0.1875rem;
+      width: 1.125rem;
+      height: 1.125rem;
+      background-color: #fff;
+      border-radius: 50%;
+      transition: -webkit-transform .2s ease;
+      transition: transform .2s ease;
+      transition: transform .2s ease,-webkit-transform .2s ease;
+      svg {
+          opacity: 0;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+      }
+  }
 }

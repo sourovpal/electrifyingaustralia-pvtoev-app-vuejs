@@ -1,7 +1,7 @@
 <script>
 import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
 import "vue-custom-scrollbar/dist/vueScrollbar.css";
-
+import InviteNewMemberModalVue from './components/InviteNewMemberModal.vue';
 export default {
   name:'AccountIndex',
     data() {
@@ -10,6 +10,7 @@ export default {
     },
     components:{
         vueCustomScrollbar,
+        InviteNewMemberModalVue
     }
   }
   
@@ -54,7 +55,7 @@ export default {
                                     </span>
                                 </td>
                                 <td>
-                                    <div class="toggle toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
+                                    <div class="toggle-checkbox toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
                                         <div class="toggle-slider">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="14px" viewBox="0 0 24 24" width="14px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path> <path fill="#007ee5" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
                                         </div>
@@ -84,7 +85,7 @@ export default {
                                     </span>
                                 </td>
                                 <td>
-                                    <div class="toggle toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
+                                    <div class="toggle-checkbox toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
                                         <div class="toggle-slider">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="14px" viewBox="0 0 24 24" width="14px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path> <path fill="#007ee5" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
                                         </div>
@@ -114,7 +115,7 @@ export default {
                                     </span>
                                 </td>
                                 <td>
-                                    <div class="toggle toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
+                                    <div class="toggle-checkbox toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
                                         <div class="toggle-slider">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="14px" viewBox="0 0 24 24" width="14px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path> <path fill="#007ee5" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
                                         </div>
@@ -144,7 +145,7 @@ export default {
                                     </span>
                                 </td>
                                 <td>
-                                    <div class="toggle toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
+                                    <div class="toggle-checkbox toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
                                         <div class="toggle-slider">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="14px" viewBox="0 0 24 24" width="14px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path> <path fill="#007ee5" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
                                         </div>
@@ -174,7 +175,7 @@ export default {
                                     </span>
                                 </td>
                                 <td>
-                                    <div class="toggle toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
+                                    <div class="toggle-checkbox toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
                                         <div class="toggle-slider">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="14px" viewBox="0 0 24 24" width="14px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path> <path fill="#007ee5" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
                                         </div>
@@ -204,7 +205,7 @@ export default {
                                     </span>
                                 </td>
                                 <td>
-                                    <div class="toggle toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
+                                    <div class="toggle-checkbox toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
                                         <div class="toggle-slider">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="14px" viewBox="0 0 24 24" width="14px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path> <path fill="#007ee5" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
                                         </div>
@@ -234,7 +235,7 @@ export default {
                                     </span>
                                 </td>
                                 <td>
-                                    <div class="toggle toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
+                                    <div class="toggle-checkbox toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
                                         <div class="toggle-slider">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="14px" viewBox="0 0 24 24" width="14px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path> <path fill="#007ee5" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
                                         </div>
@@ -264,7 +265,7 @@ export default {
                                     </span>
                                 </td>
                                 <td>
-                                    <div class="toggle toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
+                                    <div class="toggle-checkbox toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
                                         <div class="toggle-slider">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="14px" viewBox="0 0 24 24" width="14px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path> <path fill="#007ee5" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
                                         </div>
@@ -294,7 +295,7 @@ export default {
                                     </span>
                                 </td>
                                 <td>
-                                    <div class="toggle toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
+                                    <div class="toggle-checkbox toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
                                         <div class="toggle-slider">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="14px" viewBox="0 0 24 24" width="14px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path> <path fill="#007ee5" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
                                         </div>
@@ -324,7 +325,7 @@ export default {
                                     </span>
                                 </td>
                                 <td>
-                                    <div class="toggle toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
+                                    <div class="toggle-checkbox toggle-active" @click="(e)=>e.target.classList.toggle('toggle-active')">
                                         <div class="toggle-slider">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="14px" viewBox="0 0 24 24" width="14px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path> <path fill="#007ee5" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"></path></svg>
                                         </div>
@@ -343,14 +344,20 @@ export default {
                     </table>
                 </div>
                 <div class="col-lg-12 mt-3">
-                    <a class="btn btn-primary fw-bold" href="">Add new installer</a>
+                    <InviteNewMemberModalVue/>
+                    <button 
+                    class="btn btn-primary fw-bold" 
+                    type="button"
+                    data-mdb-toggle="modal" 
+                    data-mdb-target="#InviteNewMemberModal"
+                    >Invite new member</button>
+                    <router-link class="btn btn-warning fw-bold ms-3" to="/settings/roles">Edit Roles</router-link>
                 </div>
             </div>
 
             <br><br><br>
         </section>
     </div>
-
   </vue-custom-scrollbar>
 
 </template>
@@ -377,43 +384,6 @@ export default {
             display: block;
             color: #616e7c;
             line-height: 1.25;
-        }
-    }
-}
-.toggle{
-    position: relative;
-    display: inline-block;
-    width: 2.625rem;
-    height: 1.5rem;
-    border-radius: 0.75rem;
-    background-color: #cbd2d9;
-    cursor: pointer;
-    &.toggle-active{
-        background-color: #007ee5;
-        .toggle-slider{
-            transform: translateX(1.125rem);
-            svg {
-                opacity: 1 !important;
-            }
-        } 
-    }
-    .toggle-slider{
-        position: absolute;
-        top: 0.1875rem;
-        left: 0.1875rem;
-        width: 1.125rem;
-        height: 1.125rem;
-        background-color: #fff;
-        border-radius: 50%;
-        transition: -webkit-transform .2s ease;
-        transition: transform .2s ease;
-        transition: transform .2s ease,-webkit-transform .2s ease;
-        svg {
-            opacity: 0;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
         }
     }
 }

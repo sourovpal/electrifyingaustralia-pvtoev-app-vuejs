@@ -10,14 +10,10 @@
         <div class="col-lg-8 col-9">
                 <div class="list-group pricing-list-group">
                     
-                    <transition-group name="flip-list" tag="div">
-                        <PricingRow @dragstart="(e) => startDrag(item, i, e)"
-                            @dragover="(e) => onDragOver(item, i, e)" 
-                            @dragend="(e) => finishDrag(item, i, e)"
-                            v-for="(item, i) in items" :key="item.id" :item="item"
-                            class="item" :draggable="dragging">
+                    <!-- <transition-group name="flip-list" tag="div">
+                        <PricingRow>
                         </PricingRow>
-                    </transition-group>
+                    </transition-group> -->
 
 
                     <div class="list-group-item border-top add-new-item-btn">
@@ -26,7 +22,6 @@
                         </div>
                     </div>
                 </div>
-            {{ users }}
             <div class="mt-5">
                 <button class="btn btn-primary fw-bold" @click="submitForm">Save Settings</button>
             </div>
@@ -34,13 +29,11 @@
     </div>
 </template>
 <script>
-import draggable from "vuedraggable";
 import PricingRow from "./PricingRow.vue";
 export default {
     components: {
-    draggable,
-    PricingRow
-},
+        PricingRow
+    },
     data() {
         return {
             items: [

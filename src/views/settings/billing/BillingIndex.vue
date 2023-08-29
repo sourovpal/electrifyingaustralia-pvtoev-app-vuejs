@@ -1,6 +1,7 @@
 <script>
 import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
 import "vue-custom-scrollbar/dist/vueScrollbar.css";
+import ConfigAutoRechargeModal from './components/ConfigAutoRechargeModal.vue';
 
 export default {
   name:'AccountIndex',
@@ -9,8 +10,9 @@ export default {
       }
     },
     components:{
-        vueCustomScrollbar,
-    }
+    vueCustomScrollbar,
+    ConfigAutoRechargeModal
+}
   }
   
 </script>
@@ -51,7 +53,13 @@ export default {
                             <div class="">
                                 <span class="text-muted">Disabled</span>
                             </div> 
-                            <button class="btn btn-secondary py-2 btn-sm fw-bold ms-4">Configure auto-recharge</button>
+                            <button 
+                            class="btn btn-secondary py-2 btn-sm fw-bold ms-4"
+                            type="button"
+                            data-mdb-toggle="modal" 
+                            data-mdb-target="#ConfigAutoRechargeModal"
+                            >Configure auto-recharge</button>
+                            <config-auto-recharge-modal/>
                         </div>
                     </div>
                 </div>

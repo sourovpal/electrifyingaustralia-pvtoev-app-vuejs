@@ -1,7 +1,8 @@
 <script>
 import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
 import "vue-custom-scrollbar/dist/vueScrollbar.css";
-
+import CreateApiTokenModal from './components/CreateApiTokenModal.vue';
+import AddADestinationModal from './components/AddADestinationModal.vue';
 export default {
   name:'AccountIndex',
     data() {
@@ -10,6 +11,8 @@ export default {
     },
     components:{
         vueCustomScrollbar,
+        CreateApiTokenModal,
+        AddADestinationModal
     }
   }
   
@@ -58,12 +61,12 @@ export default {
                     <div class="settings-group-header">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h2 class="fw-bold">API tokens</h2>
-                            <a class="fw-bold d-flex justify-content-start align-items-center fs-14px" href="">
+                            <router-link class="fw-bold d-flex justify-content-start align-items-center fs-14px" to="/settings/api/logs">
                                 View request logs
                                 <div class="icon ms-1">
                                     <svg fill="#386bc0" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg>
                                 </div>
-                            </a>
+                            </router-link>
                         </div>
                         <div class="card shadow-0 border">
                             <div class="card-body">
@@ -72,7 +75,8 @@ export default {
                                     You don't have any API tokens yet!
                                 </p>
                                 <div class="text-center">
-                                    <button class="btn btn-primary fw-bold">Create API token</button>
+                                    <button class="btn btn-primary fw-bold" data-mdb-toggle="modal" data-mdb-target="#CreateApiTokenModal">Create API token</button>
+                                    <create-api-token-modal></create-api-token-modal>
                                 </div>
                             </div>
                         </div>
@@ -86,12 +90,12 @@ export default {
                     <div class="settings-group-header">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h2 class="fw-bold">Webhook destinations</h2>
-                            <a class="fw-bold d-flex justify-content-start align-items-center fs-14px" href="">
+                            <router-link class="fw-bold d-flex justify-content-start align-items-center fs-14px" to="/settings/api/event-logs">
                                 View event logs
                                 <div class="icon ms-1">
                                     <svg fill="#386bc0" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg>
                                 </div>
-                            </a>
+                            </router-link>
                         </div>
                         <div class="card shadow-0 border">
                             <div class="card-body">
@@ -100,7 +104,8 @@ export default {
                                     You don't have any webhook destinations yet!
                                 </p>
                                 <div class="text-center">
-                                    <button class="btn btn-primary fw-bold">Add a destination</button>
+                                    <button class="btn btn-primary fw-bold" data-mdb-toggle="modal" data-mdb-target="#AddADestinationModal">Add a destination</button>
+                                    <add-a-destination-modal></add-a-destination-modal>
                                 </div>
                             </div>
                         </div>

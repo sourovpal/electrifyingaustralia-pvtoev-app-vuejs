@@ -8,7 +8,8 @@ export default{
     },
     data(){
         return{
-            status:false,
+            search:'',
+            searchModel:false,
             settings: {
                 suppressScrollY: false,
                 suppressScrollX: false,
@@ -17,21 +18,38 @@ export default{
         }
     },
     methods:{
-        focus(){
-            console.log('Hello');
-            this.status = !this.status;
+        searchModelHandle(event){
+            if(!event.target.closest('.search-area')){
+                this.searchModel = false;
+            }else if(this.search.length > 0){
+                this.searchModel = true;
+            }
         }
+    },
+    watch:{
+        search:function(current){
+            (current.length > 0)?this.searchModel=true:this.searchModel=false;
+        },
+    },
+    mounted() {
+        this.$el.addEventListener('click', this.searchModelHandle);
+    },
+    destroyed() {
+        this.$el.removeEventListener('click', this.searchModelHandle);
     }
-    
 }
 </script>
 
 <template>
 
     <section class="search-bar position-relative d-none d-md-flex">
-        <div :class="`search-area search-bar-width ${ status?'active':''}` " @click="focus">
-            <input class="form-control shadow-none search-bar-width" type="text" placeholder="Search for a lead or deal">
-            <svg class="search-icon" fill="#515253" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+        <div :class="`search-area search-bar-width ${ searchModel?'active':''}` ">
+            <input 
+            v-model="search"
+            class="form-control shadow-none search-bar-width" 
+            type="text" 
+            placeholder="Search for a lead or deal">
+            <svg class="search-icon svg-5" fill="#515253" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
             <vue-custom-scrollbar class="search-output"  :settings="settings">
                 <div class="px-3">
                     
@@ -74,7 +92,7 @@ export default{
         left: 0;
         right: 0;
         top: 0;
-        margin-top:6px;
+        margin-top:8px;
         transition: all 0.3s;
         margin-left: 20px;
         &.active{
@@ -96,12 +114,12 @@ export default{
             background: rgba(217, 229, 235, 0.3215686275);
             border: none;
             font-size: 1rem;
-            padding: 11px 15px;
+            padding: 8px 15px;
         }
         .search-icon{
             position: absolute;
             right: 20px;
-            top: 12px;
+            top: 9px;
         }
         .search-output{
             display: none;

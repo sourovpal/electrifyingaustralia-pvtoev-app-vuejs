@@ -23,6 +23,11 @@ body{
 html{
   scroll-behavior: smooth;
 }
+.modal-title{
+  color: #333;
+  font-weight: 600;
+  letter-spacing: 0.01rem;
+}
 .btn{
   text-transform: capitalize !important;
   font-size: 14px !important;
@@ -49,6 +54,12 @@ html{
     }
   }
 }
+.soft-text{
+  color: #8094ae!important;
+}
+.title-dark{
+  color: #0c213c!important;
+}
 .fs-10px{
   font-size:10px !important;
 }
@@ -66,6 +77,39 @@ html{
 }
 .fs-15px{
   font-size:15px !important;
+}
+.fs-16px{
+  font-size:16px !important;
+}
+.fs-17px{
+  font-size:17px !important;
+}
+.fs-18px{
+  font-size:18px !important;
+}
+.fs-19px{
+  font-size:19px !important;
+}
+.fs-20px{
+  font-size:20px !important;
+}
+.fs-21px{
+  font-size:21px !important;
+}
+.fs-22px{
+  font-size:22px !important;
+}
+.fs-23px{
+  font-size:23px !important;
+}
+.fs-24px{
+  font-size:24px !important;
+}
+.fs-24px{
+  font-size:24px !important;
+}
+.fs-25px{
+  font-size:25px !important;
 }
 .line-height-22px{
   line-height: 22px;
@@ -87,12 +131,21 @@ html{
     padding-left: 22rem;
   }
 }
+
+
+
 .svg-disabled{
-  fill:#a2a2a2 !important;
+  fill:#bbc8da !important;
 }
 .svg-5{
-  fill:#919191 !important;
+  fill:#484e56 !important;
 }
+.svg-dark{
+  fill:#61758e !important;
+}
+
+
+
 .dropdown > button{
   border-radius:3px !important;
   transition: all 0.2s !important;
@@ -109,6 +162,7 @@ html{
       color: #1f2933 !important;
     }
 }
+
 
 
 

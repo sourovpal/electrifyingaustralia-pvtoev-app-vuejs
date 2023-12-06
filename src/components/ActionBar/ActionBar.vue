@@ -59,7 +59,7 @@
         justify-content:flex-start;
         align-items: center;
         .item{
-            padding:10px 10px 10px 10px;
+            padding:5px 10px 5px 10px;
             display: flex;
             justify-content: flex-start;
             align-items: center;

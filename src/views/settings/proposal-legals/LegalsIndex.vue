@@ -144,7 +144,7 @@ export default {
                 <div class="col-lg-5 col-9">
                     <div class="settings-group-item">
                         <label class="form-label-title" for="">Warranty content</label>
-                        <a href="/settings/proposal-legals/warranty" class="fw-bold py-3 d-flex">
+                        <router-link to="/settings/proposal-legals/warranty" class="fw-bold py-3 d-flex">
                             <span>Edit warranty</span>
                             <div class="icon icon--18 icon--brand-primary">
                                 <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
@@ -152,7 +152,7 @@ export default {
                                     <path d="M0 0h24v24H0z" fill="none"></path>
                                 </svg>
                             </div>
-                        </a>
+                        </router-link>
                         <span class="form-input-commant">Your warranty information will be appended to the end of your proposal after your Terms & Conditions.</span>
                     </div>
                     <div class="settings-group-item">

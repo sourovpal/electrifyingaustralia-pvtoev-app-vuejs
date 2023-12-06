@@ -114,7 +114,7 @@ export default{
     flex-direction: column;
     align-items: center;
     flex-wrap: nowrap;
-    z-index: 9999999999;
+    z-index: 99999999999;
     @media screen and (max-width:991px) {
         width:3rem;
     }

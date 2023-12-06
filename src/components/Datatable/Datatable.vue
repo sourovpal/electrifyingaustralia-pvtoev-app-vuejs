@@ -1,7 +1,6 @@
 <script>
 
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
+import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue';
 export default {
   components: {
     vueCustomScrollbar,
@@ -39,6 +38,8 @@ export default {
   width:100%;
   overflow: hidden;
   overflow-x: auto;
-  height: calc(100vh - 115px);
+  height: calc(100vh - 105px);
+  display: flex;
+  flex-direction: column;
 }
 </style>

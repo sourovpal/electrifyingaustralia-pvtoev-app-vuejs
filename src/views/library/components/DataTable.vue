@@ -74,81 +74,62 @@ export default {
 
     <Datatable>
 
-      <datatable-header class="d-none d-md-inline-block">
+      <datatable-header class="d-none d-lg-table">
 
-        <div class="tbl-th" style="width:4rem;padding-right: 42px;"></div>
-        <div class="d-flex flex-direction-row w-100">
-            <div class="d-flex flex-direction-row">
-                <div class="tbl-th" style="width:calc(28rem - 18px);">Project</div>
-                <div class="tbl-th" style="width:12rem;"></div>
-                <div class="tbl-th" style="width:12rem;"></div>
-            </div>
-            <div class="tbl-th space"></div>
-            <div class="d-flex flex-direction-row">
-                <div class="tbl-th">Last Update</div>
-                <div class="tbl-th">Created At</div>
-            </div>
-        </div>
+        <div class="tbl-th" style="width:3rem;padding:0px;"></div>
+        <div class="tbl-th" style="width:25vw;">Project</div>
+        <div class="tbl-th" style="width:10vw;"></div>
+        <div class="tbl-th" style="width:10vw;flex-grow: 1;"></div>
+        <div class="tbl-th" style="width:10vw;">Last Update</div>
+        <div class="tbl-th" style="width:10vw;">Created At</div>
 
       </datatable-header>
 
       <datatable-body>
 
         <div class="tbl-tr full-width" v-for="(item, index) in Array.from(Array(100).keys())" :key="index">
-
-          <div style="width:4rem;" class="tbl-td">
-            <input class="form-check-input" type="checkbox"  value="" aria-label="..." />
-          </div>
-
-          <div class="d-flex flex-direction-row w-100 justify-content-between">
-
-              <div class="d-flex flex-direction-row">
-                  <div style="width:calc(28rem - 18px);" class="tbl-td full-width">
-                    <div class="browse__project-primary">
-                        <div title="51 Dalmar St, Croydon New South Wales 2132" class="fw-bold">
-                            <span class="browse__street">51 Dalmar St, Croydon</span> 
-                            <span class="browse__state">New South Wales 2132</span>
-                        </div>
-                        <div class="browse__address" style="display: none;">
-                            <span class="browse__state">Unknown address</span>
-                        </div>
-                        <div class="text-muted">
-                            <span>Customer name</span> ·
-                            <span>Contact number</span> ·
-                            <span>Email</span>
-                        </div>
-                    </div>
+            <div style="width:3rem;padding:0px 0px 0px 20px;" class="tbl-td">
+              <input class="form-check-input" type="checkbox"  value="" aria-label="..." />
+            </div>
+            <div style="width:25vw;" class="tbl-td full-width">
+              <div class="">
+                  <div title="51 Dalmar St, Croydon New South Wales 2132" class="fw-bold">
+                      <span class="">51 Dalmar St, Croydon</span> 
+                      <span class="soft-text ms-2">New South Wales 2132</span>
                   </div>
-        
-                  <div style="width:12rem;" class="tbl-td full-width">
-                    <data value="">
-                        <span class="d-block fw-bold">$6,000.00</span>
-                        <div class="d-block">
-                            <span>5.92kW · Canadian</span>
-                        </div>
-                    </data>
+                  <div class="browse-address" style="display: none;">
+                      <span class="browse-state">Unknown address</span>
                   </div>
-        
-                  <div style="width:12rem;" class="tbl-td full-width">
-                    <div class="">
-                        <div class="d-block">
-                            <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
-                                <path d="M4.59 6.89c.7-.71 1.4-1.35 1.71-1.22.5.2 0 1.03-.3 1.52-.25.42-2.86 3.89-2.86 6.31 0 1.28.48 2.34 1.34 2.98.75.56 1.74.73 2.64.46 1.07-.31 1.95-1.4 3.06-2.77 1.21-1.49 2.83-3.44 4.08-3.44 1.63 0 1.65 1.01 1.76 1.79-3.78.64-5.38 3.67-5.38 5.37 0 1.7 1.44 3.09 3.21 3.09 1.63 0 4.29-1.33 4.69-6.1H21v-2.5h-2.47c-.15-1.65-1.09-4.2-4.03-4.2-2.25 0-4.18 1.91-4.94 2.84-.58.73-2.06 2.48-2.29 2.72-.25.3-.68.84-1.11.84-.45 0-.72-.83-.36-1.92.35-1.09 1.4-2.86 1.85-3.52.78-1.14 1.3-1.92 1.3-3.28C8.95 3.69 7.31 3 6.44 3 5.12 3 3.97 4 3.72 4.25c-.36.36-.66.66-.88.93l1.75 1.71zm9.29 11.66c-.31 0-.74-.26-.74-.72 0-.6.73-2.2 2.87-2.76-.3 2.69-1.43 3.48-2.13 3.48z"></path> 
-                                <path d="M0 0h24v24H0z" fill="none"></path>
-                            </svg>
-                        </div>
-                        <span class="d-block text-muted">sent</span>
-                    </div>
+                  <div class="soft-text">
+                      <span>Customer name</span> ·
+                      <span>Contact number</span> ·
+                      <span>Email</span>
                   </div>
               </div>
-    
-              <div class="d-flex flex-direction-row">
-                  <div class="tbl-td d-none d-md-flex">05/07/2023</div>
-                  <div class="tbl-td d-none d-md-flex">25/07/2023</div>
+            </div>
+
+            <div style="width:10vw;" class="tbl-td full-width d-none d-md-flex">
+              <data value="">
+                  <span class="d-block fw-bold">$6,000.00</span>
+                  <div class="d-block">
+                      <span class="fs-12px soft-text">5.92kW · Canadian</span>
+                  </div>
+              </data>
+            </div>
+
+            <div style="width:10vw;flex-grow: 1;" class="tbl-td full-width d-none d-md-flex">
+              <div class="">
+                  <div class="d-block">
+                      <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                          <path d="M4.59 6.89c.7-.71 1.4-1.35 1.71-1.22.5.2 0 1.03-.3 1.52-.25.42-2.86 3.89-2.86 6.31 0 1.28.48 2.34 1.34 2.98.75.56 1.74.73 2.64.46 1.07-.31 1.95-1.4 3.06-2.77 1.21-1.49 2.83-3.44 4.08-3.44 1.63 0 1.65 1.01 1.76 1.79-3.78.64-5.38 3.67-5.38 5.37 0 1.7 1.44 3.09 3.21 3.09 1.63 0 4.29-1.33 4.69-6.1H21v-2.5h-2.47c-.15-1.65-1.09-4.2-4.03-4.2-2.25 0-4.18 1.91-4.94 2.84-.58.73-2.06 2.48-2.29 2.72-.25.3-.68.84-1.11.84-.45 0-.72-.83-.36-1.92.35-1.09 1.4-2.86 1.85-3.52.78-1.14 1.3-1.92 1.3-3.28C8.95 3.69 7.31 3 6.44 3 5.12 3 3.97 4 3.72 4.25c-.36.36-.66.66-.88.93l1.75 1.71zm9.29 11.66c-.31 0-.74-.26-.74-.72 0-.6.73-2.2 2.87-2.76-.3 2.69-1.43 3.48-2.13 3.48z"></path> 
+                          <path d="M0 0h24v24H0z" fill="none"></path>
+                      </svg>
+                  </div>
+                  <span class="d-block soft-text">sent</span>
               </div>
-
-          </div>
-
+            </div>
+            <div style="width:10vw;" class="tbl-td d-none d-md-flex">05/07/2023</div>
+            <div style="width:10vw;" class="tbl-td d-none d-md-flex">25/07/2023</div>
         </div>
 
       </datatable-body>
@@ -184,6 +165,6 @@ export default {
 
 <style scoped>
  .tbl{
-    height: calc(100vh - 100px) !important;
+    height: calc(100vh - 105px) !important;
  }
 </style>

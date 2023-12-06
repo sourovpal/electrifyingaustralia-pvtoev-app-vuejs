@@ -30,12 +30,15 @@ import SettingsCompanyDetailsIndex from '../views/settings/company/CompanyDetail
 import SettingsLocalizationIndex from '../views/settings/localization/LocalizationIndex.vue';
 
 import SettingsInstallersIndex from '../views/settings/installers/InstallersIndex.vue';
+import SettingsInstallerCreate from '../views/settings/installers/InstallerCreate.vue';
+import SettingsInstallerEdit from '../views/settings/installers/InstallerEdit.vue';
 
 import SettingsAboutIndex from '../views/settings/about/AboutIndex.vue';
 
 import SettingsPreferenceIndex from '../views/settings/proposal/PreferenceIndex.vue';
 
-import LegalsIndex from '../views/settings/proposal/LegalsIndex.vue';
+import LegalsIndex from '../views/settings/proposal-legals/LegalsIndex.vue';
+import ProposalLegalsWarranty from '../views/settings/proposal-legals/ProposalWarranty.vue';
 
 import SolarDesignIndex from '../views/settings/solardesign/SolarDesignIndex.vue';
 
@@ -70,6 +73,9 @@ import TeamIndex from '../views/settings/team/TeamIndex.vue';
 import BillingIndex from '../views/settings/billing/BillingIndex.vue';
 
 import ApiIndex from '../views/settings/api/ApiIndex.vue';
+import Apilogs from '../views/settings/api/Apilogs.vue';
+import ApiEventLogs from '../views/settings/api/EventLogs.vue';
+import ApiEventDetails from '../views/settings/api/EventDetails.vue';
 
 import IntegrationsIndex from '../views/settings/integrations/IntegrationsIndex.vue';
 
@@ -173,6 +179,16 @@ const routes = [
                         component: SettingsInstallersIndex,
                     },
                     {
+                        name:'SettingsInstallerCreate',
+                        path:'installers/new',
+                        component: SettingsInstallerCreate,
+                    },
+                    {
+                        name:'SettingsInstallerEdit',
+                        path:'installers/edit/:id',
+                        component: SettingsInstallerEdit,
+                    },
+                    {
                         name:'SettingsProposalPage',
                         path:'proposals',
                         component: SettingsPreferenceIndex,
@@ -186,6 +202,11 @@ const routes = [
                         name:'SettingsLegalsPage',
                         path:'proposal-legals',
                         component: LegalsIndex,
+                    },
+                    {
+                        name:'ProposalLegalsWarranty',
+                        path:'proposal-legals/warranty',
+                        component: ProposalLegalsWarranty,
                     },
                     {
                         name:'SolarDesignIndex',
@@ -236,6 +257,21 @@ const routes = [
                         name:'ApiIndex',
                         path:'api',
                         component: ApiIndex,
+                    },
+                    {
+                        name:'Apilogs',
+                        path:'api/logs',
+                        component: Apilogs,
+                    },
+                    {
+                        name:'ApiEventLogs',
+                        path:'api/event-logs',
+                        component: ApiEventLogs,
+                    },
+                    {
+                        name:'ApiEventDetails',
+                        path:'api/event-logs/details/:id',
+                        component: ApiEventDetails,
                     },
                     {
                         name:'IntegrationsIndex',

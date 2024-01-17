@@ -1,13 +1,55 @@
 <script>
+import { ref } from 'vue';
+import axios from 'axios';
 export default {
     name:'HomeIndex',
+    setup(props) {
+        const searchBoxRef = ref(null) ;
+        return {searchBoxRef};
+    },
     data(){
         return {
-            status:false,
+            searchLocation:'',
+            searchResult:[],
+            searchProject:[1,2,3,4,5],
+            access_token:'pk.eyJ1IjoiZGFuaWVsLXB5bG9uIiwiYSI6ImNqMGx6c3hjbDAwMjczM3A5aWx6aHhmM3MifQ.cA-6ahyjexJyGrc4xpCO8w',
+        }
+    },
+    watch: {
+        searchLocation(){
+            if(this.searchLocation.length > 0){
+                this.searchBoxRef.classList.add('show');
+                axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${this.searchLocation}.json?access_token=${this.access_token}&proximity=90.4093,23.7272&types=address,locality,postcode&limit=5&language=en`)
+                .then((res)=>{
+                    if(typeof res.data != undefined){
+                        const {features} = res.data;
+                        this.searchResult = features;
+                        console.log(features);
+                        // features.place_name
+                        // features.center[0, 1]
+                    }
+                });
+            }else{
+                this.searchResult=[];
+                this.searchBoxRef.classList.remove('show');
+            }
+
         }
     },
     methods:{
-    }
+    },
+    mounted() {
+        this.$el.addEventListener('click', (e)=>{
+            console.log(e.target.closest('.search-area'))
+            if(e.target.closest('.search-area')){
+                if(this.searchLocation.length > 0){
+                    this.searchBoxRef.classList.add('show');
+                }
+            }else{
+                this.searchBoxRef.classList.remove('show');
+            }
+        });
+    },
 }
 </script>
 
@@ -41,22 +83,67 @@ export default {
                     </div>
 
                     <div class="d-none d-md-flex">
-                        <button class="btn px-3 btn-light fw-bold shadow-none" style=""><img class="me-1" src="https://app.getpylon.com/img/gem.png" alt=""> Credits: 412</button>
+                        <button class="btn px-3 btn-light fw-bold shadow-none"><img class="me-1" src="https://app.getpylon.com/img/gem.png" alt=""> Credits: 412</button>
                     </div>
 
                 </div>
             </nav>
 
-            <div class="row search-row d-none d-md-flex">
+            <div class="row d-none d-md-flex">
                 <div class="col-lg-7 mx-auto position-relative">
-                    <div class="search-area" :class="status?'show':''">
-                        <div class="search-box">
-                            <input @focus="status = true" @blur="status=false" class="form-control form-control-lg" type="text" placeholder="Search for an address or existing projects">
-                            <button class="search-icon">
-                                <svg class="svg-5" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
-                            </button>
-                        </div>
-                    </div>  
+                    <div class="search-row">
+                        <div ref="searchBoxRef" class="search-area">
+                            <div class="search-box">
+                                <input v-model="searchLocation" class="form-control form-control-lg" type="text" placeholder="Search for an address or existing projects">
+                                <button class="search-icon">
+                                    <svg class="svg-5" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                                </button>
+                            </div>
+                            <div class="search-output">
+                                <label class="output-label text-base mb-2">Existing projects</label>
+                                <ul class="project-list">
+                                    <li class="list-item" v-for="(item, index) in searchProject" :key="index">
+                                        <a class="item-link" href="">
+                                            <div class="search-result">
+                                                <div class="search-item text-base">
+                                                    <span>215 Carrolls Road</span> 
+                                                    <span>Menangle</span> 
+                                                    <span>New South Wales</span> 
+                                                    <span>2568</span> 
+                                                    <div class="icon">
+                                                        <svg class="svg-5" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                                                    </div>
+                                                </div>
+                                                <div class="search-item-details soft-text">
+                                                    <span>Mr. Stephen Brennan</span> · <span>0417 668 568</span> ·<span>sbrennan@<em>d</em>ealerdirectfinance.com.au</span> <span>· ###-0000-0267</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="not-found-result soft-text" v-if="!searchProject.length">No existing projects are available.</div>
+                                <label class="output-label text-base mb-2">Start a new project</label>
+                                <ul class="project-list">
+                                    <li class="list-item mb-1" v-for="(item, index) in searchResult" :key="index">
+                                        <a class="item-link" :href="`/map/lat=${item.center[0]+','+item.center[1]}`">
+                                            <div class="search-result map-result">
+                                                <div class="search-item text-base">
+                                                    <span>{{ item.place_name }}</span>
+                                                    <div class="icon map-icon">
+                                                        <svg class="svg-5" fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                                            <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"></path> <path d="M0 0h24v24H0z" fill="none"></path>
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="not-found-result soft-text" v-if="!searchResult.length">No location found.</div>
+
+                            </div>
+                        </div>  
+                    </div>
                 </div>
             </div>
     
@@ -170,6 +257,7 @@ export default {
 
 .home-section{
     height:120vh;
+    padding-top:150px;
     .link{
         font-size:15px;
     }
@@ -180,8 +268,8 @@ export default {
         }
     }
     .search-row{
-        margin-top:150px;
-        margin-bottom:135px;
+        position: relative;
+        min-height:100px;
         .search-area{
             transform: all 0.3s;
             position: absolute;
@@ -190,7 +278,6 @@ export default {
             top: 0;
             z-index: 9999;
             background-color: #ffffff;
-            margin: 0px 10px;
             .search-box{
                 position:relative;
                 
@@ -214,10 +301,82 @@ export default {
             }
             &.show{                
                 border-radius:3px;
-                height:650px;
+                padding-bottom:10px;
                 box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
                 .search-box input{
                     background-color: transparent !important;
+                }
+                .search-output{
+                    display: block;
+                }
+            }
+            .search-output{
+                display: none;
+                .output-label{
+                    padding:10px 12px 3.68px;                
+                    display: inline-block;
+                    font-size: 14px;
+                    font-weight: 600;
+                    display: block;
+                    text-transform: uppercase;
+                }
+                .project-list{
+                    list-style: none;
+                    margin:0;
+                    padding:0;
+                    .list-item{
+                        margin-bottom:10px;
+                        .item-link{
+                            display:block;
+                            :hover{
+                                background-color:rgb(246 246 246);
+                                .icon{
+                                    opacity:1 !important;
+                                }
+                            }
+                            .search-result{
+                                padding:3.68px 12px 3.68px;                
+                                line-height: 20px;
+                                &.map-result{
+                                    padding:13.7px 12px;                
+                                }                                
+                                .search-item{
+                                    position: relative;
+                                    display: flex;
+                                    justify-content: flex-start;
+                                    align-items: center;
+                                    font-size: 14px;
+                                    span{
+                                        white-space: nowrap;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+                                        margin-right:3px;
+                                    }
+                                    .icon{
+                                        position: absolute;
+                                        right: 0;
+                                        top: 100%;
+                                        transform: translateY(-50%);
+                                        opacity: 0;
+                                        transition: opacity ease-in-out 0.1s;
+                                        &.map-icon{
+                                            top: 50%;
+                                        }
+                                    }                                    
+                                }
+                                .search-item-details{
+                                    font-size: 12px;
+                                }
+                            }
+                        }
+                    }
+                }
+                .not-found-result{
+                    height: 260px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 16px;
                 }
             }
         }
@@ -262,7 +421,7 @@ export default {
     }
 
     .recent-project{
-        margin-top:75px;
+        margin-top:50px;
         .header-area{
             display: flex;
             justify-content: space-between;

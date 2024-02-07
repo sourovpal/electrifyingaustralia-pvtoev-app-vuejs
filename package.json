@@ -12,6 +12,7 @@
     "@vueup/vue-quill": "^1.2.0",
     "axios": "^1.6.5",
     "bootstrap": "^5.3.0",
+    "custom-vue-scrollbar": "^0.0.8",
     "keen-ui": "^1.4.0",
     "mapbox-gl-vue": "^2.0.4",
     "mdb-ui-kit": "^6.4.0",

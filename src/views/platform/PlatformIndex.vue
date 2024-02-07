@@ -23,10 +23,10 @@ export default {
 <template>
 
   <MobileHeader/>
-  <section class="">
+  <section class="d-flex flex-row overflow-hidden position-relative">
     <Menu :menus="menus" :title="title" />
+    <router-view></router-view>
   </section>
-  <router-view></router-view>
 
 </template>
 

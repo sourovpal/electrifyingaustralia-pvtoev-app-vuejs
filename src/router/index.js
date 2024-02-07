@@ -83,6 +83,11 @@ import EsignatureIndex from '../views/settings/esignature/EsignatureIndex.vue';
 
 import AccreditationIndex from '../views/settings/accreditation/AccreditationIndex.vue';
 
+import DealsIndexPage from '../views/platform/pages/DealsIndexPage.vue';
+
+
+
+
 const routes = [
     {
         name:'Website',
@@ -112,6 +117,12 @@ const routes = [
                         name:"leads",
                         path:'leads',
                         component: DataTableVue,
+                        children:[],
+                    },
+                    {
+                        name:"deals",
+                        path:'deals',
+                        component: DealsIndexPage,
                         children:[],
                     }
                 ]

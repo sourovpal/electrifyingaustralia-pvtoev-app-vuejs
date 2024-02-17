@@ -96,9 +96,15 @@
                                         <div class="pip-item">
                                             <h5 class="pip-title">2 Muriel Street, Maryborough</h5>
                                             <p class="pip-sub-title">Mrs. CHERYL · Mrs. CHERYL 4650 QLD 21/02/12:00 PM Phone</p>
-                                            <div class="pip-user">
-                                                <img class="pip-user-avatar" src="https://www.gravatar.com/avatar/31abcedd82c87dd621142af7f4dbe722?s=64&d=mp&r=PG" alt="">
-                                                <span class="pip-value">$-</span>
+                                            <div class="pip-user d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <img class="pip-user-avatar" src="https://www.gravatar.com/avatar/31abcedd82c87dd621142af7f4dbe722?s=64&d=mp&r=PG" alt="">
+                                                    <span class="pip-value">$-</span>
+                                                </div>
+                                                <div class="fs-16px star-value d-flex justify-content-start align-items-center">
+                                                    <span class="me-1">1</span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 0 24 24" width="16px" fill="#de911d" class="icon icon--star icon--inline"><path d="M0 0h24v24H0z" fill="none"></path><path d="M0 0h24v24H0z" fill="none"></path> <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>
+                                                </div>
                                             </div>
                                             <div class="pip-source">EA call center</div>
                                         </div>
@@ -237,6 +243,9 @@
                     font-weight: 700;
                     line-height: 1.5rem;
                     margin-left: .5rem;
+                }
+                .star-value{
+                    color: #de911d;
                 }
             }
             .pip-source{

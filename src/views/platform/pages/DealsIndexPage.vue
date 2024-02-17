@@ -75,878 +75,56 @@
             </div><!-- End Row -->
         </section>
         <!-- <vue-custom-scrollbar class="pipline-scrollbar"  :settings="settings" @ps-scroll-y="scrollHanle"> -->
-            <section class="pipline d-table">
-                <div class="piplien-body d-flex flex-row">
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
+            <CustomScrollbar thumbWidth="10" direction="horizontal" :style="{height: '87vh', overflowY:'hidden' }">
+                <section class="pipline d-table">
+                    <div class="piplien-body d-flex flex-row">
+                        
+                        <div class="piplien-state" v-for="(item, index) in [1,2,3,4,5,6,7,8,9,10]" :key="index">
+                            <div class="pip-header px-3 py-2 d-flex flex-column">
+                                <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
+                                <span class="fs-12px text-head">71 Deals</span>
+                            </div>
+                            <div class="py-1 value-bar">
+                                <div class="px-3 d-flex justify-content-between align-items-center">
+                                    <span class="text-head fw-bold fs-12px">Value</span>
+                                    <span class="text-head fw-bold fs-12px">$0.00</span>
+                                </div>
+                            </div>  
+                            <CustomScrollbar thumbWidth="10" direction="horizontal" :style="{height: '100%' }">
+                                <div class="pip-body px-2">
+                                    <a v-for="(item, index) in 10" :key="index" class="" href="">
+                                        <div class="pip-item">
+                                            <h5 class="pip-title">2 Muriel Street, Maryborough</h5>
+                                            <p class="pip-sub-title">Mrs. CHERYL · Mrs. CHERYL 4650 QLD 21/02/12:00 PM Phone</p>
+                                            <div class="pip-user">
+                                                <img class="pip-user-avatar" src="https://www.gravatar.com/avatar/31abcedd82c87dd621142af7f4dbe722?s=64&d=mp&r=PG" alt="">
+                                                <span class="pip-value">$-</span>
+                                            </div>
+                                            <div class="pip-source">EA call center</div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </CustomScrollbar>
                         </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
+
+                        <!-- Empty State -->
+                        <div class="piplien-state">
+                            <div class="pip-header px-3 py-2 d-flex flex-column">
+                                <h3 class="fs-18px text-head fw-bold mb-1" style="opacity: 0;">Newly qualified</h3>
+                                <span class="fs-12px text-head" style="opacity: 0;">71 Deals</span>
                             </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
+                            <div class="py-1 value-bar">
+                                <div class="px-3 d-flex justify-content-between align-items-center">
+                                    <span class="text-head fw-bold fs-12px" style="opacity: 0;">Value</span>
+                                    <span class="text-head fw-bold fs-12px" style="opacity: 0;">$0.00</span>
+                                </div>
+                            </div>  
                         </div>
+                        <!-- End Empty State Col -->
+
                     </div>
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
-                        </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
-                            </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
-                        </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
-                            </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
-                        </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
-                            </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
-                        </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
-                            </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
-                        </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
-                            </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
-                        </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
-                            </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
-                        </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
-                            </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
-                        </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
-                            </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
-                        </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
-                            </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
-                        </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
-                            </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
-                        </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
-                            </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
-                        </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
-                            </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
-                        </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
-                            </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
-                        </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
-                            </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
-                        </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
-                            </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
-                        </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
-                            </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                            <div class="pip-item">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1" style="opacity: 0;">Newly qualified</h3>
-                            <span class="fs-12px text-head" style="opacity: 0;">71 Deals</span>
-                        </div>
-                        <div class="py-1 value-bar">
-                            <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px" style="opacity: 0;">Value</span>
-                                <span class="text-head fw-bold fs-12px" style="opacity: 0;">$0.00</span>
-                            </div>
-                        </div>  
-                        <div class="pip-body px-2">
-                            <div class="pip-item" style="opacity: 0;">
-                                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ea officiis, magnam voluptate nam exercitationem debitis autem unde, assumenda, sint molestiae tenetur reiciendis voluptates. Quae eum itaque fugiat commodi. Reiciendis, beatae.
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-            </section>
+                </section>
+            </CustomScrollbar>
         <!-- </vue-custom-scrollbar> -->
 
 
@@ -963,10 +141,7 @@
     }
     .piplien-body{
         background-color: #f5f7fa;
-        width: 82vw;
-        overflow-y: hidden;
-        display: -webkit-inline-box !important;
-        height: 87.8vh;
+        height: 88vh;        
     }
     .pipline-scrollbar{
         display: flex;
@@ -976,6 +151,15 @@
     .piplien-state{
         width:272px;
         max-width:300px;
+        &:last-child{
+            .pip-header{
+                padding-right:20px;
+                &::before,
+                &::after{
+                    display: none;
+                }
+            }
+        }
     }
     .pip-header{
         background-color: #ffffff;
@@ -1003,46 +187,80 @@
             z-index: 1;
         }
     }
-    .pip-item{
-        background-color: #ffffff;
-        border-radius: 4px;
-        margin: 15px 0px;
-        padding: 13px;
-        height: 125px;
-        overflow: hidden;
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-    }
     .pip-body{
-        height: 80vh;
-        overflow: scroll;
-        padding-bottom:250px;
-    }
-    .pip-body::-webkit-scrollbar,
-    .piplien-body::-webkit-scrollbar
-    {
-        width: 3px;
-        height:8px;
-        border-radius:50%;
-        cursor: pointer;
-    }
-    .pip-body::-webkit-scrollbar-track,
-    .piplien-body::-webkit-scrollbar-track {
-        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
-        background-color:rgba(255, 0, 0, 0);
-        -webkit-border-radius: 10px;
-        border-radius: 10px;
-    }
-    
-    .pip-body::-webkit-scrollbar-thumb,
-    .piplien-body::-webkit-scrollbar-thumb {
-        -webkit-border-radius: 10px;
-        border-radius: 10px;
-        background: rgba(32, 55, 71, 0.509);
-        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
-    }
-    
-    .pip-body::-webkit-scrollbar-thumb:window-inactive,
-    .piplien-body::-webkit-scrollbar-thumb:window-inactive {
-        background: rgb(12, 74, 110);
-    }
+        width:100%;
+        height:100%;
+        padding-bottom: 200px;
+        .pip-item{
+            background-color: #ffffff;
+            border-radius: 4px;
+            margin: 15px 0px;
+            padding: 13px;
+            height: 125px;
+            overflow: hidden;
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+            .pip-title{
+                font-size: 16px;
+                font-weight: 700;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                width: 225px;
+                margin-bottom: 5px;
+                color:#007ee5;
+            }
+            .pip-sub-title{
+                font-size: 14px;
+                line-height: 18px;
+                margin-bottom: 3px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical; 
+            }
+            .pip-user{
+                line-height:18px;
+                .pip-user-avatar{
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    background: #f1f1f1;
+                    object-fit: cover;
+                }
+                .pip-value{
+                    color: #1f2933;
+                    font-size: .875rem;
+                    font-weight: 700;
+                    line-height: 1.5rem;
+                    margin-left: .5rem;
+                }
+            }
+            .pip-source{
+                font-size: 14px;
+                font-weight: 500;
+                color: #696767;
+                line-height: 20px;   
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                width: 225px;
+            }
+        }        
+    } 
+    </style>
+    <style>
+        .piplien-state .scrollbar__wrapper{
+            height: 100% !important;
+        }
+        .piplien-state .scrollbar__thumbPlaceholder{
+            width:3px !important;
+        }
+        .piplien-state .scrollbar__content.scrollbar__content--horizontal{
+            min-height: 75vh;
+            width: 100% !important;
+        }
+        .content > .scrollbar__wrapper > .scrollbar__thumbPlaceholder--vertical{
+            display: none !important;
+        }
     </style>

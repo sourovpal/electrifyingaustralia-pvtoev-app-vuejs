@@ -4,14 +4,17 @@
     import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue';
     import CustomScrollbar from 'custom-vue-scrollbar';
     import 'custom-vue-scrollbar/dist/style.css';
+    import FilterRightSidebar from './pipline/FilterRightSidebar.vue';
     export default {
         components: {
             SearchBar,
             vueCustomScrollbar,
-            CustomScrollbar
+            CustomScrollbar,
+            FilterRightSidebar
         },
         data() {
             return {
+                filterRightSidebar:false,
                 settings: {
                     suppressScrollY: true,
                     suppressScrollX: false,
@@ -66,7 +69,7 @@
                             </a>
                         </div>
                         <div class="ms-2">
-                            <button type="button" class="toolbar-btn btn btn-light btn-md btn-lg btn-floating" data-mdb-ripple-init>
+                            <button @click="filterRightSidebar = !filterRightSidebar" type="button" class="toolbar-btn btn btn-light btn-md btn-lg btn-floating" data-mdb-ripple-init>
                                 <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path data-v-63f5dadc="" d="M0 0h24v24H0z" fill="none"></path> <path data-v-63f5dadc="" d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path></svg>
                             </button>
                         </div>
@@ -79,6 +82,11 @@
                 <section class="pipline d-table">
                     <div class="piplien-body d-flex flex-row">
                         
+                        
+                        <FilterRightSidebar 
+                        :class="filterRightSidebar?'show':''"
+                        @toggle-filter="(e)=> filterRightSidebar = e" />
+
                         <div class="piplien-state" v-for="(item, index) in [1,2,3,4,5,6,7,8,9,10]" :key="index">
                             <div class="pip-header px-3 py-2 d-flex flex-column">
                                 <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>

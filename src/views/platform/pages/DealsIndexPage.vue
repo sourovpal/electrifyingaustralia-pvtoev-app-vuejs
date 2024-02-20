@@ -8,6 +8,7 @@
     import Datatable from '../../../components/Datatable/Datatable.vue';
     import DatatableHeader from '../../../components/Datatable/DatatableHeader.vue';
     import DatatableBody from '../../../components/Datatable/DatatableBody.vue';
+
     export default {
         components: {
             SearchBar,
@@ -22,6 +23,7 @@
             return {
                 filterRightSidebar:false,
                 dataShowTable:false,
+                filterByAscDesc:true, // ASC True
                 settings: {
                     suppressScrollY: true,
                     suppressScrollX: false,
@@ -54,7 +56,7 @@
     }
 </script>
     
-    <template>
+    <template>        
       <section class="content">
     
         <search-bar></search-bar>
@@ -87,17 +89,57 @@
                 </div> <!-- End Col -->
                 <div class="col-md-6">
                     <div class="d-flex flex-row justify-content-end align-items-center">
-                        <div class="">
-                            <a class="btn btn-secondary btn-md fs-14px text-head fw-bold btn-sm" href="#!" role="button">
+                        <div class="dropdown-sorted">
+                            <button 
+                            data-mdb-toggle="dropdown" 
+                            aria-expanded="false"
+                            class="btn btn-secondary btn-md fs-14px text-head fw-bold btn-sm dropdown-toggle">
                                 <span class="me-2">
-                                    <svg data-v-7f87cff1="" xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="#000000"><path data-v-7f87cff1="" d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"></path></svg>
+                                    <svg  xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="#000000"><path  d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"></path></svg>
                                 </span>
                                 Most recently updated first
-                            </a>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end dropdown-sorted-list" @click="(event)=>event.stopPropagation()">
+                                <div class="d-flex justify-content-between align-items-center p-2">
+                                    <button 
+                                    @click="filterByAscDesc = true" 
+                                    class="btn btn-sm" 
+                                    :class="filterByAscDesc?'btn-primary':'btn-outline-secondary'">
+                                        <span class="me-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="currentcolor"><path  d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"></path></svg>
+                                        </span>
+                                        Ascending
+                                    </button>
+                                    <button @click="filterByAscDesc = false" class="btn btn-sm" :class="!filterByAscDesc?'btn-primary':'btn-outline-secondary'">
+                                        <span class="me-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="currentcolor"><path  d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"></path></svg>
+                                        </span>
+                                        Descending
+                                    </button>
+                                </div>
+                                <div class="tab-content" id="ex1-content">
+                                    <ul :class="filterByAscDesc?'fade show active':''" class="list-unstyled mb-0 ascending-menu tab-pane">
+                                        <li class="active"><a class="dropdown-item" href="#">Least recently updated first</a></li>
+                                        <li><a class="dropdown-item" href="#">Least recently created first</a></li>
+                                        <li><a class="dropdown-item" href="#">Least valuable first</a></li>
+                                        <li><a class="dropdown-item" href="#">Least stars first</a></li>
+                                        <li><hr class="dropdown-divider m-0" /></li>
+                                        <li><a class="dropdown-item" href="#">Manual</a></li>
+                                    </ul>
+                                    <ul :class="!filterByAscDesc?'fade show active':''" class="list-unstyled mb-0 descending-menu tab-pane">
+                                        <li><a class="dropdown-item" href="#">Most recently updated first</a></li>
+                                        <li><a class="dropdown-item" href="#">Most recently created first</a></li>
+                                        <li><a class="dropdown-item" href="#">Most valuable first</a></li>
+                                        <li><a class="dropdown-item" href="#">Most stars first</a></li>
+                                        <li><hr class="dropdown-divider m-0" /></li>
+                                        <li><a class="dropdown-item" href="#">Manual</a></li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                         <div class="ms-2">
                             <button @click="filterRightSidebar = !filterRightSidebar" type="button" class="toolbar-btn btn btn-light btn-md btn-lg btn-floating" data-mdb-ripple-init>
-                                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path data-v-63f5dadc="" d="M0 0h24v24H0z" fill="none"></path> <path data-v-63f5dadc="" d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path></svg>
+                                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path  d="M0 0h24v24H0z" fill="none"></path> <path  d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path></svg>
                             </button>
                         </div>
                     </div>
@@ -657,8 +699,57 @@
             }
         }
     }
+    .dropdown-sorted{
+        position: relative;
+        .dropdown-sorted-list{
+            width:calc(100% + 2rem);
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+            border-radius: 4px;
 
-
+            &::before {
+                content: "";
+                position: absolute;
+                top: -7px;
+                right: 18px;
+                border: 7px solid #f1f0f0;
+                border-right-color: white;
+                border-bottom-color: white;
+                transform: rotate(45deg);
+                border-bottom-color: transparent;
+                border-right-color: transparent;
+            }
+            &::after {
+                content: "";
+                position: absolute;
+                top: -6px;
+                right: 18px;
+                border: 7px solid white;
+                border-right-color: white;
+                border-bottom-color: white;
+                transform: rotate(45deg);
+                border-bottom-color: transparent;
+                border-right-color: transparent;
+            }
+            .ascending-menu, 
+            .descending-menu{
+                li.active{
+                    position: relative;
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        left: 0px;
+                        width: 4px;
+                        height: 30px;
+                        background: #3b71ca;
+                        border-top-right-radius: 5px;
+                        border-bottom-right-radius: 5px;
+                    }
+                }
+            }
+        }
+    }
 
 
     </style>

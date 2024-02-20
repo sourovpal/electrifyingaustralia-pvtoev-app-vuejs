@@ -45,7 +45,7 @@ export default {
 </script>
 
 <template>
-  <section class="content">
+  <section class="content lead-list">
 
     <search-bar></search-bar>
 
@@ -240,4 +240,10 @@ export default {
         opacity: 1;
     }
 }
+</style>
+<style>
+    .lead-list .scrollbar__wrapper,
+    .lead-list .scrollbar__scroller{
+        height: 100%;
+    }
 </style>

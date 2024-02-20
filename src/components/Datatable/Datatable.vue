@@ -1,9 +1,14 @@
 <script>
 
 import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue';
+
+import CustomScrollbar from 'custom-vue-scrollbar';
+import 'custom-vue-scrollbar/dist/style.css';
+
 export default {
   components: {
     vueCustomScrollbar,
+    CustomScrollbar
 },
   data() {
     return {
@@ -25,11 +30,13 @@ export default {
 
 <template>
 
-    <vue-custom-scrollbar class="tbl"  :settings="settings" @ps-scroll-y="scrollHanle">
-
-      <slot></slot>
+    <!-- <vue-custom-scrollbar class="tbl"  :settings="settings" @ps-scroll-y="scrollHanle"> -->
+      <CustomScrollbar>
+        <slot></slot>
+        <br><br><br><br>
+      </CustomScrollbar>
       
-    </vue-custom-scrollbar>
+    <!-- </vue-custom-scrollbar> -->
   
 </template>
 
@@ -42,4 +49,8 @@ export default {
   display: flex;
   flex-direction: column;
 }
+/* .scrollbar__wrapper,
+.scrollbar__scroller{
+  height: 100%;
+} */
 </style>

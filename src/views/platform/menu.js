@@ -90,7 +90,7 @@ export const menus =[
     },
     {
         label:'Contacts',
-        path:'/platform/leads',
+        path:'/platform/contacts',
         query:{},
         icon:'',
         children:[

@@ -83,7 +83,8 @@ import EsignatureIndex from '../views/settings/esignature/EsignatureIndex.vue';
 
 import AccreditationIndex from '../views/settings/accreditation/AccreditationIndex.vue';
 
-import DealsIndexPage from '../views/platform/pages/DealsIndexPage.vue';
+import DealsIndexPage from '../views/platform/pages/pipline/DealsIndexPage.vue';
+import ContactsIndexPage from '../views/platform/pages/contacts/ContactsIndexPage.vue';
 
 
 
@@ -123,6 +124,12 @@ const routes = [
                         name:"deals",
                         path:'deals',
                         component: DealsIndexPage,
+                        children:[],
+                    },
+                    {
+                        name:"contacts",
+                        path:'contacts',
+                        component: ContactsIndexPage,
                         children:[],
                     }
                 ]

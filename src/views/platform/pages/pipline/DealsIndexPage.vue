@@ -1,13 +1,10 @@
 <script>
 
-    import SearchBar from '../../../components/SearchBar.vue';
+    import SearchBar from '../../../../components/SearchBar.vue';
     import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue';
     import CustomScrollbar from 'custom-vue-scrollbar';
+    import FilterRightSidebar from './FilterRightSidebar.vue';
     import 'custom-vue-scrollbar/dist/style.css';
-    import FilterRightSidebar from './pipline/FilterRightSidebar.vue';
-    import Datatable from '../../../components/Datatable/Datatable.vue';
-    import DatatableHeader from '../../../components/Datatable/DatatableHeader.vue';
-    import DatatableBody from '../../../components/Datatable/DatatableBody.vue';
 
     export default {
         components: {
@@ -15,9 +12,6 @@
             vueCustomScrollbar,
             CustomScrollbar,
             FilterRightSidebar,
-            Datatable,
-            DatatableHeader,
-            DatatableBody
         },
         data() {
             return {
@@ -57,7 +51,7 @@
 </script>
     
     <template>        
-      <section class="content">
+      <section class="content pipline-list">
     
         <search-bar></search-bar>
 
@@ -230,11 +224,11 @@
                         </div>
                     </div>
                     <div class="row border">
-                        <div class="col-4 text-head fs-12px fw-bold py-1">Deal</div>
-                        <div class="col-2 text-head fs-12px fw-bold py-1">Value</div>
-                        <div class="col-2 text-head fs-12px fw-bold py-1">Last Update</div>
-                        <div class="col-2 text-head fs-12px fw-bold py-1">First Create</div>
-                        <div class="col-2 text-head fs-12px fw-bold py-1">Owner</div>
+                        <div class="col-4 text-head fs-14px fw-bold py-2">Deal</div>
+                        <div class="col-2 text-head fs-14px fw-bold py-2">Value</div>
+                        <div class="col-2 text-head fs-14px fw-bold py-2">Last Update</div>
+                        <div class="col-2 text-head fs-14px fw-bold py-2">First Create</div>
+                        <div class="col-2 text-head fs-14px fw-bold py-2">Owner</div>
                     </div>
     
                     <div class="row border border-top-0" v-for="(item, index) in Array.from(Array(15).keys())" :key="index">
@@ -754,28 +748,28 @@
 
     </style>
     <style>
-        .piplien-body,
-        .pip-body-scrollbar{
+        .pipline-list .piplien-body,
+        .pipline-list .pip-body-scrollbar{
             height:calc(88vh + 5px) !important;        
         }
-        .piplien-state .scrollbar__wrapper{
+        .pipline-list .piplien-state .scrollbar__wrapper{
             height: 100% !important;
         }
-        .piplien-state .scrollbar__thumbPlaceholder{
+        .pipline-list .piplien-state .scrollbar__thumbPlaceholder{
             width:3px !important;
         }
-        .piplien-state .scrollbar__content.scrollbar__content--horizontal{
+        .pipline-list .piplien-state .scrollbar__content.scrollbar__content--horizontal{
             min-height: 75vh;
             width: 100% !important;
         }
-        .content > .scrollbar__wrapper > .scrollbar__thumbPlaceholder--vertical{
+        .pipline-list.content > .scrollbar__wrapper > .scrollbar__thumbPlaceholder--vertical{
             display: none !important;
         }
 
-        .content > .pipline__table > .scrollbar__wrapper > .scrollbar__thumbPlaceholder--vertical{
+        .pipline-list.content > .pipline__table > .scrollbar__wrapper > .scrollbar__thumbPlaceholder--vertical{
             display: block !important;
         }
-        .active-svg-tbl{
+        .pipline-list .active-svg-tbl{
             fill:#3295ff !important;
         }
     </style>

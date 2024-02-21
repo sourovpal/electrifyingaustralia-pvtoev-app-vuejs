@@ -11,6 +11,7 @@ import AddNewLeadModal from './AddNewLeadModal.vue';
 import HeaderPropertiesDropdown from './HeaderPropertiesDropdown.vue';
 import FilterRightSidebar from './FilterRightSidebar.vue';
 
+
 export default {
   components: {
     SearchBar,

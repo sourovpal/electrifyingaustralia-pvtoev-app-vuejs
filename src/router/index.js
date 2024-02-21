@@ -13,7 +13,13 @@ import LibraryIndex from '../views/library/LibraryIndex.vue';
 
 import WebSite from '../components/WebSite.vue';
 
-import DataTableVue from "../views/platform/components/DataTable.vue";
+// Platform
+import LeadIndexPage from "../views/platform/pages/lead/LeadIndexPage.vue";
+import EditLeadPage from "../views/platform/pages/lead/EditLeadPage.vue";
+import DealsIndexPage from '../views/platform/pages/pipline/DealsIndexPage.vue';
+import ContactsIndexPage from '../views/platform/pages/contacts/ContactsIndexPage.vue';
+
+
 
 import SettingsIndex from "../views/settings/SettingsIndex.vue";
 
@@ -83,8 +89,6 @@ import EsignatureIndex from '../views/settings/esignature/EsignatureIndex.vue';
 
 import AccreditationIndex from '../views/settings/accreditation/AccreditationIndex.vue';
 
-import DealsIndexPage from '../views/platform/pages/pipline/DealsIndexPage.vue';
-import ContactsIndexPage from '../views/platform/pages/contacts/ContactsIndexPage.vue';
 
 
 
@@ -117,7 +121,13 @@ const routes = [
                     {
                         name:"leads",
                         path:'leads',
-                        component: DataTableVue,
+                        component: LeadIndexPage,
+                        children:[],
+                    },
+                    {
+                        name:"leadsEdit",
+                        path:'leads/:id',
+                        component: EditLeadPage,
                         children:[],
                     },
                     {

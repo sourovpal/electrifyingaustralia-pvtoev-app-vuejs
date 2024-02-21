@@ -75,8 +75,6 @@
         
             <Datatable>
         
-                <FilterRightSidebar v-if="filterRightSidebar" @toggle-filter="(e)=> filterRightSidebar = e" />
-        
                 <datatable-header class="">
                     <div class="tbl-th" style="width:20rem;">Contact</div>
                     <div class="tbl-th " style="width:20rem;">Phone Number</div>

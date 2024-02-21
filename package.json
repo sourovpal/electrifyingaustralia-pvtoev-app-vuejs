@@ -18,17 +18,20 @@
     "mdb-ui-kit": "^6.4.0",
     "scss": "^0.2.4",
     "smart-tagz": "^0.4.1",
+    "tippy.js": "^6.3.7",
     "vue": "^3.4.14",
     "vue-custom-scrollbar": "^1.4.4",
     "vue-draggable-next": "^2.2.1",
     "vue-json-pretty": "^1.9.4",
     "vue-json-viewer": "^3.0.4",
     "vue-router": "^4.2.4",
+    "vue-tippy": "^6.4.1",
     "vue3-mui": "^2.0.0-beta-12b"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
     "sass": "^1.63.6",
-    "vite": "^4.3.9"
+    "vite": "^4.3.9",
+    "webpack-cli": "^5.1.4"
   }
 }

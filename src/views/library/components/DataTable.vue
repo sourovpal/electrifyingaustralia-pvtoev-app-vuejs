@@ -76,7 +76,7 @@ export default {
 
       <datatable-header class="d-none d-lg-table">
 
-        <div class="tbl-th" style="width:3rem;padding:0px;"></div>
+        <div class="tbl-th" style="width:4rem;padding:0px;"></div>
         <div class="tbl-th" style="width:25vw;">Project</div>
         <div class="tbl-th" style="width:10vw;"></div>
         <div class="tbl-th" style="width:10vw;flex-grow: 1;"></div>
@@ -89,7 +89,7 @@ export default {
 
         <div class="tbl-tr full-width" v-for="(item, index) in Array.from(Array(100).keys())" :key="index">
             <div style="width:4rem;padding:0px 0px 0px 20px;" class="tbl-td">
-              <input style="margin: 0;margin-left: 3px;" class="form-check-input rounded-0" type="checkbox"  value="" aria-label="..." />
+              <input style="margin: 0;margin-left: 5px;" class="form-check-input rounded-0" type="checkbox"  value="" aria-label="..." />
             </div>
             <div style="width:25vw;" class="tbl-td full-width">
               <div class="">

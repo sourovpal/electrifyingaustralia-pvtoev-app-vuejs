@@ -1,5 +1,6 @@
 <script>
 export default {
+  inheritAttrs: false,
   data(){
     return {
       showChildren:false,
@@ -87,13 +88,6 @@ export default {
 </template>
 
 <style scoped lang="scss">
-hr{
-}
-.submenu-heading {
-  &.router-link-active ~ .submenu-list{
-    // height: fit-content !important;
-  }
-}
   .submenu-group{
     &.active-group{
       .icon{

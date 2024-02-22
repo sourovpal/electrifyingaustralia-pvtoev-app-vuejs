@@ -103,7 +103,7 @@ export default {
             <div class="col-left">
                 <CustomScrollbar>
                     <div class="history-area">
-                        <p class="px-3" v-for="(item, index) in 2" :key="index">
+                        <p class="px-3" v-for="(item, index) in 20" :key="index">
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus recusandae sed distinctio ducimus deserunt quam ab doloribus eos veritatis deleniti dolor possimus, dolorum saepe iste laboriosam nesciunt facere voluptatibus porro.
                         </p>
                     </div>
@@ -130,7 +130,222 @@ export default {
                 </div>
             </div>
             <div class="col-right">
+                <CustomScrollbar>
+                    <div class="col-r-header d-flex justify-content-between align-items-center border-bottom">
+                        <div class="left ps-3 py-1 d-flex justify-content-start align-items-center">
+                            <div class="circle-avatar shadow-border">
+                                <!-- <img class="rounded-circle" alt="avatar1" src="https://mdbcdn.b-cdn.net/img/new/avatars/9.webp" /> -->
+                                MS
+                            </div>
+                        </div>
+                        <div class="right pe-3 py-1 d-flex justify-content-end align-items-center">
+                            <button v-tippy='{ content:"Add a contact", placement : "top" }' class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
+                                <svg class="svg-3" height="24" fill="currentcolor" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <!--  -->
+                    <div class="personal-info px-3 py-3 border-bottom">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h3 class="user-name fs-18px fw-bold text-head mb-0">Mae Adams</h3>
+                            <button class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
+                                <svg class="svg-3" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                            </button>
+                        </div>
+                        <div class="">
+                            <table class="tbl-contact-info">
+                                <tr>
+                                    <td class="fs-16px" width="10%">
+                                        <svg class="svg-5" width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z"/></svg>
+                                    </td>
+                                    <td class="fs-16px"><a class="d-block text-primary user-email" href="">sourovpal35@gmail.com</a></td>
+                                    <td class="hover" width="20%">
+                                        <div class="d-flex justify-content-end align-items-center">
+                                            <button class="btn btn-sm btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
+                                                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>
+                                            </button>
+                                            <button class="btn btn-sm btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
+                                                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fs-16px" width="10%">
+                                        <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"></path></svg>
+                                    </td>
+                                    <td class="fs-16px"><a class="d-block text-primary user-phone" href="">+88 01919-852044</a></td>
+                                    <td class="hover" width="20%">
+                                        <div class="d-flex justify-content-end align-items-center">
+                                            <button class="btn btn-sm btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
+                                                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>
+                                            </button>
+                                            <button class="btn btn-sm btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
+                                                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div> <!-- end personal-info  -->
+                    <div class="p-3 border-bottom">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <div class="fs-14px fw-bold text-head mb-0 text-uppercase">lead Properties</div>
+                            <button class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
+                                <svg class="svg-3" xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px"><path d="M0 0h24v24H0z" fill="none"></path><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg>
+                            </button>
+                        </div>
+                        <div class="mb-1">
+                            <div class="fs-12px text-soft mb-0">Address</div>
+                            <div class="d-flex">
+                                <div class="fs-14px fw-bold text-head mb-0">78 Wirrinda Road, Somersby New South Wales 2250</div>
+                                <a href="" class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent ms-auto">
+                                    <svg class="svg-3" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mb-1">
+                            <div class="fs-12px text-soft mb-0">Value</div>
+                            <div class="d-flex">
+                                <div class="fs-14px fw-bold text-head mb-0">$10,245.00</div>
+                            </div>
+                        </div>
+                        <div class="mb-1">
+                            <div class="fs-12px text-soft mb-0">Source</div>
+                            <div class="d-flex">
+                                <div class="fs-14px fw-bold text-head mb-0">-</div>
+                            </div>
+                        </div>
 
+                        <div class="mb-1">
+                            <div class="fs-12px text-soft mb-0">Confidence</div>
+                            <div class="d-flex">
+                                <div class="fs-22px fw-bold text-head mb-0">
+                                    *****
+                                </div>
+                            </div>
+                        </div>
+
+                        <form action="">
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Call Center Agent Name</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+    
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Recording Link</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+    
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Quarter Bill Amount</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+    
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Appointment Date & Time</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+    
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Level of the House</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+    
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Supply Phase</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+    
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Cash/Finance</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+    
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Electricity Retailer</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+    
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Electricity Distributor</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+    
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Panel Name & Number</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+    
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Inverter Brand & Size</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+    
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">System Size</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Battery Brand & Size</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Types of Roof</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">NMI Number</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Optimizer</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Export Limit Device</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Extras</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Power phases </div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Roof material</div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Number of storeys </div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Energy distributor </div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+
+                            <div class="mb-1">
+                                <div class="fs-12px text-soft mb-1">Unsolicited contact </div>
+                                <input class="form-control form-control-sm " type="text">
+                            </div>
+                            <div style="height:10rem;"></div>
+                        </form>
+                    </div>
+                </CustomScrollbar>
             </div>
         </div>
     </section>
@@ -155,7 +370,7 @@ export default {
         .message-box{
             position: absolute;
             width: 100%;
-            min-height: 10.5rem;
+            min-height: 12rem;
             bottom: 105px;
             padding: 1rem;
             background-color: #ffffff;
@@ -171,7 +386,8 @@ export default {
     }
     .col-right{
         flex-grow: 1;
-        min-width: 24rem;
+        width: 24rem;
+        background-color: #f5f7fa;
     }
     .left-hover-action{
         .div-hover-effice{
@@ -185,15 +401,87 @@ export default {
             }
         }
     }
+    .circle-avatar{
+        background-color: #0275d8;
+        width:35px;
+        height: 35px;
+        border-radius:50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        &.shadow-border::before{
+            position: absolute;
+            content: "";
+            width: 35px;
+            height: 2px;
+            background-color: #0275d8;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        &,
+        & > *{
+            font-size:16px;
+            font-weight: bold;
+            color:#ffffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        & > img{
+            width:100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    .personal-info{
+        .user-name{
+            width: 250px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+    .tbl-contact-info{
+        tr{
+            td.hover{
+                opacity:0;
+                transition:opacity 0.3s ease-in-out;
+            }
+            td{
+                a.user-email,
+                a.user-phone{
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    width: 250px;
+                }
+            }
+        }
+        tr:hover{
+            td.hover{
+                opacity:1;
+            }
+        }
+    }
 </style>
 <style>
-    .lead-edit .scrollbar__wrapper{
-        height: calc(100% - 17.5rem);
+    .lead-edit .col-left .scrollbar__wrapper{
+        height: calc(100% - 18.5rem);
     }
-    .lead-edit .scrollbar__scroller{
+    .lead-edit .col-left .scrollbar__scroller{
         height: 100%;
     }
     .lead-edit .col-left .scrollbar__thumbPlaceholder{
+        width:6px !important;
+    }
+    .lead-edit .col-right .scrollbar__wrapper{
+        height: calc(100%);
+    }
+    .lead-edit .col-right .scrollbar__scroller{
+        height: 100%;
+    }
+    .lead-edit .col-right .scrollbar__thumbPlaceholder{
         width:6px !important;
     }
 </style>

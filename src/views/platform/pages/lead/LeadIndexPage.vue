@@ -243,7 +243,9 @@ export default {
 }
 </style>
 <style>
-    .lead-list .scrollbar__wrapper,
+    .lead-list .scrollbar__wrapper{
+        height:calc(100vh - 7rem + 5px);
+    }
     .lead-list .scrollbar__scroller{
         height: 100%;
     }

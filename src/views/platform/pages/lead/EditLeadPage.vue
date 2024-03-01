@@ -113,6 +113,103 @@ export default {
                     </ul>
                 </div>
             </div>
+
+            <div class="settings-group-item owner-list-dropdown mx-2">
+                <button class="owner-dropdown-toggler" data-mdb-toggle="dropdown" aria-expanded="false">
+                    <div class="icon">
+                        <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&d=mm&r=PG" alt="">
+                    </div>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end" @click="(e)=>{e.stopPropagation()}">
+                    <!---->
+                    <div>
+                        <div class="dropdown-body">
+
+                            <div class="dropdown-input">
+                                <input type="text" placeholder="Filter for team members" class="project-owner-filter form-control" />
+                            </div>
+
+                            <div class="dropdown-header">
+                                Owner
+                            </div>
+
+                            <div class="dropdown-item noselect">
+                                <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&amp;d=mm&amp;r=PG" draggable="false" alt="No Owner's avatar" class="project-owner__profile-photo" />
+                                <span class="fs-14px fw-bold">
+                                    No Owner
+                                    <div class="project-owner-email text-muted fs-12px"></div>
+                                </span>
+                            </div>
+
+                            <CustomScrollbar class="project-owner-team-members" style="height:20rem;">
+                                <div class="dropdown-header">
+                                    Change owner
+                                </div>
+                                
+                                <div v-for="(item, index) in 10" :key="index" class="dropdown-item">
+                                    <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&amp;d=mm&amp;r=PG" draggable="false" alt="Susmita Chowdhury's avatar" class="project-owner__profile-photo" />
+                                    <span class="username fs-14px text-overflow-ellipsis">
+                                        Susmita Chowdhury
+                                        <div class="team-member-email text-muted fs-12px text-overflow-ellipsis">
+                                            admin@electrifyingaustralia.com.au
+                                        </div>
+                                    </span>
+                                </div>
+                            </CustomScrollbar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-group-item owner-list-dropdown mx-2">
+                <button class="owner-dropdown-toggler" data-mdb-toggle="dropdown" aria-expanded="false">
+                    <div class="icon">
+                        <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&d=mm&r=PG" alt="">
+                    </div>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end" @click="(e)=>{e.stopPropagation()}">
+                    <!---->
+                    <div>
+                        <div class="dropdown-body">
+
+                            <div class="dropdown-input">
+                                <input type="text" placeholder="Filter for team members" class="project-owner-filter form-control" />
+                            </div>
+
+                            <div class="dropdown-header">
+                                Owner
+                            </div>
+
+                            <div class="dropdown-item noselect">
+                                <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&amp;d=mm&amp;r=PG" draggable="false" alt="No Owner's avatar" class="project-owner__profile-photo" />
+                                <span class="fs-14px fw-bold">
+                                    No Owner
+                                    <div class="project-owner-email text-muted fs-12px"></div>
+                                </span>
+                            </div>
+
+                            <CustomScrollbar class="project-owner-team-members" style="height:20rem;">
+                                <div class="dropdown-header">
+                                    Change owner
+                                </div>
+                                
+                                <div v-for="(item, index) in 10" :key="index" class="dropdown-item">
+                                    <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&amp;d=mm&amp;r=PG" draggable="false" alt="Susmita Chowdhury's avatar" class="project-owner__profile-photo" />
+                                    <span class="username fs-14px text-overflow-ellipsis">
+                                        Susmita Chowdhury
+                                        <div class="team-member-email text-muted fs-12px text-overflow-ellipsis">
+                                            admin@electrifyingaustralia.com.au
+                                        </div>
+                                    </span>
+                                </div>
+                            </CustomScrollbar>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
             <div class="item d-none d-lg-flex wh-40" data-mdb-toggle="dropdown">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"></path> <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5v-3h3.56c.69 1.19 1.97 2 3.45 2s2.75-.81 3.45-2H19v3zm0-5h-4.99c0 1.1-.9 2-2 2s-2-.9-2-2H5V5h14v9z"></path></svg>
             </div>
@@ -902,7 +999,149 @@ export default {
             }
         }
     }
-   
+    .owner-dropdown-toggler{
+        cursor: pointer;
+        width: auto!important;
+        border:none;
+        outline: none;
+        padding:3px 25px 3px 0px;
+        background-color: transparent;
+        position: relative;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &::before{
+            content: '';
+            position: absolute;
+            right:5px;
+            top:45%;
+            transform: translateY(-50%) rotate(45deg);
+            border:0.25rem solid transparent;
+            border-bottom-color: rgb(164, 164, 164);
+            border-right-color: rgb(164, 164, 164);
+        }
+        .icon{
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            img{
+                border-radius: 50%;
+                width:100%;
+                height:100%;
+
+            }
+        }
+    }
+    .owner-list-dropdown{
+        .dropdown-menu{
+            z-index: 1000;
+            max-width: 19rem;
+            width: 16rem;
+            padding: 0.5rem 0;
+            margin: 0.125rem 0 0;
+            font-size: 1rem;
+            color: #292b2c;
+            text-align: left;
+            background-color: #fff;
+            background-clip: padding-box;
+            border-radius: 0.25rem;
+            box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+            &::before{
+                content: "";
+                position: absolute;
+                top: -7px;
+                right: 30px;
+                border: 7px solid #f1f0f0;
+                border-right-color: white;
+                border-bottom-color: white;
+                transform: rotate(45deg);
+                border-bottom-color: transparent;
+                border-right-color: transparent;
+            }
+            &::after{
+                content: "";
+                position: absolute;
+                top: -6px;
+                right: 30px;
+                border: 7px solid white;
+                border-right-color: white;
+                border-bottom-color: white;
+                transform: rotate(45deg);
+                border-bottom-color: transparent;
+                border-right-color: transparent;
+            }
+            @media screen and (max-width: 766px) {
+                &::after,
+                &::before{
+                    left:30px;
+                    right:auto !important;
+                }
+            }
+            .dropdown-header{
+                font-size: .75rem;
+                padding: 0 0.5rem;
+                font-weight: 700;
+                line-height: 1.5rem;
+                margin-bottom: 0;
+                padding-top: 0.5rem;
+            }
+            .dropdown-item.noselect{
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                margin-right: 10px;
+                user-select: none;
+                border-bottom: 1px solid #dddddd;
+                img{
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    border-radius: 50%;
+                    margin-right:10px;
+                }
+                span{
+                    display: inline-block;
+                    line-height: 18px;
+                }
+            }
+            .project-owner-team-members{
+                max-width:19rem;
+                max-height:350px;
+                .dropdown-item{
+                    display: flex;
+                    justify-content: flex-start;
+                    align-items: center;
+                    cursor: pointer;
+                    user-select: none;
+                    img{
+                        width: 1.5rem;
+                        height: 1.5rem;
+                        border-radius: 50%;
+                        margin-right:10px;
+                    }
+                    span{
+                        display: inline-block;
+                        line-height: 18px;
+                    }
+                }
+            }
+        }
+        .dropdown-body{
+            .dropdown-input{
+                .project-owner-filter{
+                    background: #f5f7fa;
+                    font-size: .875rem;
+                    padding: 0.5rem 1rem;
+                    border: 0;
+                    width: 100%;
+                }
+            }
+        }
+    }
+
 </style>
 <style>
     .ql-container.ql-snow{ 

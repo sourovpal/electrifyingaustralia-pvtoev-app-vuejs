@@ -8,13 +8,19 @@ import RightActionBar from '../../../../components/ActionBar/RightActionBar.vue'
 import CustomScrollbar from 'custom-vue-scrollbar';
 import 'custom-vue-scrollbar/dist/style.css';
 
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
+import '@vueup/vue-quill/dist/vue-quill.bubble.css';
+
+
 export default {
   components: {
     SearchBar,
     ActionBar,
     LeftActionBar,
     RightActionBar,
-    CustomScrollbar
+    CustomScrollbar,
+    QuillEditor
 },
   data() {
     return {
@@ -29,6 +35,30 @@ export default {
         this.selectAllIds = Array.from(Array(100).keys());
       }
     },
+
+    toggleRightSidebarDropdownBox(e){
+        e.stopPropagation();
+        var dropdownHeader = e.target.closest('.dropdown-header');
+        if(dropdownHeader){
+            var dropdownBody = dropdownHeader.nextElementSibling;
+            if(dropdownBody){
+                var height = dropdownBody.scrollHeight;
+                if(getComputedStyle(dropdownBody).height == '0px'){
+                    dropdownHeader.classList.add('show');
+                    dropdownBody.style.height = `${height}px`;
+                }else{
+                    dropdownHeader.classList.remove('show');
+                    dropdownBody.style.height = `${height}px`;
+                    this.$nextTick(()=>{
+                        setTimeout(()=>{
+                            dropdownBody.style.height = '0px';
+                        }, 300);
+                    })
+                }
+            }
+        }
+    },
+
   },
   watch:{
   }
@@ -327,6 +357,26 @@ export default {
                             </table>
                         </div>
                     </div> <!-- end personal-info  -->
+                    <div>
+                        <div class="dropdown-box border-bottom">
+                            <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center">
+                                <span class="fw-bold fs-14px text-uppercase text-head d-block">Pinned activity</span>
+                                <div class="">
+                                    <button 
+                                    class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent"
+                                    @click="toggleRightSidebarDropdownBox"
+                                    >
+                                        <svg class="svg-3" height="18px" viewBox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></svg>
+                                    </button>
+                                </div>
+                            </div><!-- dropdown header -->
+                            <div class="dropdown-body" style="height:0px;">
+                                <div class=" px-3 py-1 pb-2">
+                                    <span class="text-head fs-14px">Nothing pinned</span>
+                                </div>
+                            </div> <!-- dropdown body end  -->
+                        </div> <!-- dropdown box end -->
+                    </div>
                     <div class="p-3 border-bottom">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <div class="fs-14px fw-bold text-head mb-0 text-uppercase">lead Properties</div>
@@ -480,8 +530,147 @@ export default {
                                 <div class="fs-12px text-soft mb-1">Unsolicited contact </div>
                                 <input class="form-control form-control-sm " type="text">
                             </div>
-                            <div style="height:10rem;"></div>
                         </form>
+                    </div>
+                    <!-- Dropdown Section -->
+                    <div class="">
+                        <div class="dropdown-box border-bottom">
+                            <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center">
+                                <span class="fw-bold fs-14px text-uppercase text-head d-block">Tasks</span>
+                                <div class="">
+                                    <button class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent" @click="toggleRightSidebarDropdownBox">
+                                        <svg class="svg-3" height="18px" viewBox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></svg>
+                                    </button>
+                                </div>
+                            </div><!-- dropdown header -->
+                            <div class="dropdown-body" style="height:0px;">
+                                <div class=" px-3 py-1 pb-2 fs-12px">
+                                    <div class="lead-files">
+                                        <div class="empty-state">
+                                            <div class="icon icon--36">
+                                                <svg data-v-562e52ff="" xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 0 24 24" width="36px" fill="currentColor"><path data-v-562e52ff="" d="M0 0h24v24H0V0z" fill="none"></path><path data-v-562e52ff="" d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm0 12H4V6h5.17l2 2H20v10zm-8-4h2v2h2v-2h2v-2h-2v-2h-2v2h-2z"></path></svg>
+                                            </div> 
+                                            <div class="empty-state__body">
+                                                <strong>Start a new project</strong>
+                                                <br>
+                                                or link with an existing project
+                                            </div>
+                                            <button class="btn btn-sm btn-primary">Add Project</button>
+                                        </div> 
+                                        <input accept=".xlsx,.xls,.csv,.png,.jpeg,.jpg,.pdf,.doc,.docx,.pages,.svg" type="file" multiple="multiple" style="display: none;">
+                                    </div>
+                                </div>
+                            </div> <!-- dropdown body end  -->
+                        </div> <!-- dropdown box end -->
+                        <div class="dropdown-box border-bottom">
+                            <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center">
+                                <span class="fw-bold fs-14px text-uppercase text-head d-block">Tags</span>
+                                <div class="">
+                                    <button class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent" @click="toggleRightSidebarDropdownBox">
+                                        <svg class="svg-3" height="18px" viewBox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></svg>
+                                    </button>
+                                </div>
+                            </div><!-- dropdown header -->
+                            <div class="dropdown-body" style="height: 0px;">
+                                <div class=" px-3 py-1 pb-2 fs-12px">
+                                    <div class="lead-files">
+                                        <div class="empty-state">
+                                            <div class="icon icon--36">
+                                                <svg data-v-562e52ff="" xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 0 24 24" width="36px" fill="currentColor"><path data-v-562e52ff="" d="M0 0h24v24H0V0z" fill="none"></path><path data-v-562e52ff="" d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm0 12H4V6h5.17l2 2H20v10zm-8-4h2v2h2v-2h2v-2h-2v-2h-2v2h-2z"></path></svg>
+                                            </div> 
+                                            <div class="empty-state__body">
+                                                <strong>Start a new project</strong>
+                                                <br>
+                                                or link with an existing project
+                                            </div>
+                                            <button class="btn btn-sm btn-primary">Add Project</button>
+                                        </div> 
+                                        <input accept=".xlsx,.xls,.csv,.png,.jpeg,.jpg,.pdf,.doc,.docx,.pages,.svg" type="file" multiple="multiple" style="display: none;">
+                                    </div>
+                                </div>
+                            </div> <!-- dropdown body end  -->
+                        </div> <!-- dropdown box end -->
+                        <div class="dropdown-box border-bottom">
+                            <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center show">
+                                <span class="fw-bold fs-14px text-uppercase text-head d-block">Project Designs</span>
+                                <div class="">
+                                    <button class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent" @click="toggleRightSidebarDropdownBox">
+                                        <svg class="svg-3" height="18px" viewBox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></svg>
+                                    </button>
+                                </div>
+                            </div><!-- dropdown header -->
+                            <div class="dropdown-body">
+                                <div class=" px-3 py-1 pb-2 fs-12px">
+                                    <div class="lead-files">
+                                        <div class="empty-state">
+                                            <div class="icon icon--36">
+                                                <svg data-v-562e52ff="" xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 0 24 24" width="36px" fill="currentColor"><path data-v-562e52ff="" d="M0 0h24v24H0V0z" fill="none"></path><path data-v-562e52ff="" d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm0 12H4V6h5.17l2 2H20v10zm-8-4h2v2h2v-2h2v-2h-2v-2h-2v2h-2z"></path></svg>
+                                            </div> 
+                                            <div class="empty-state__body">
+                                                <strong>Start a new project</strong>
+                                                <br>
+                                                or link with an existing project
+                                            </div>
+                                            <button class="btn btn-sm btn-primary">Add Project</button>
+                                        </div> 
+                                        <input accept=".xlsx,.xls,.csv,.png,.jpeg,.jpg,.pdf,.doc,.docx,.pages,.svg" type="file" multiple="multiple" style="display: none;">
+                                    </div>
+                                </div>
+                            </div> <!-- dropdown body end  -->
+                        </div> <!-- dropdown box end -->
+                        <div class="dropdown-box border-bottom">
+                            <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center show">
+                                <span class="fw-bold fs-14px text-uppercase text-head d-block">Notes</span>
+                                <div class="">
+                                    <button 
+                                    class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent"
+                                    @click="toggleRightSidebarDropdownBox"
+                                    >
+                                        <svg class="svg-3" height="18px" viewBox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></svg>
+                                    </button>
+                                </div>
+                            </div><!-- dropdown header -->
+                            <div class="dropdown-body">
+                                <div class=" px-3 py-1 pb-2 fs-12px">
+                                    <QuillEditor theme="snow"  :toolbar="[]" />
+                                    <div class="save-notes-btn">
+                                        <button class="btn btn-sm btn-outline-primary">Save Notes</button>
+                                    </div>
+                                </div>
+                            </div> <!-- dropdown body end  -->
+                        </div> <!-- dropdown box end -->
+                        <div class="dropdown-box border-bottom">
+                            <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center show">
+                                <span class="fw-bold fs-14px text-uppercase text-head d-block">Uploaded files</span>
+                                <div class="">
+                                    <button 
+                                    class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent"
+                                    @click="toggleRightSidebarDropdownBox"
+                                    >
+                                        <svg class="svg-3" height="18px" viewBox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></svg>
+                                    </button>
+                                </div>
+                            </div><!-- dropdown header -->
+                            <div class="dropdown-body" style="height:100%;">
+                                <div class=" px-3 py-1 pb-2 fs-12px">
+                                    <div class="lead-files">
+                                        <div class="empty-state">
+                                            <div class="icon icon--36">
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 0 24 24" width="36px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path></svg>
+                                            </div> 
+                                            <div class="empty-state__body">
+                                                Attach files to store power bills,
+                                                <br>
+                                                site photos, and other information.
+                                                <button class="btn-text">Browse files</button>
+                                            </div>
+                                        </div> 
+                                        <input accept=".xlsx,.xls,.csv,.png,.jpeg,.jpg,.pdf,.doc,.docx,.pages,.svg" type="file" multiple="multiple" style="display: none;">
+                                    </div>
+                                </div>
+                            </div> <!-- dropdown body end  -->
+                        </div> <!-- dropdown box end -->
+                        <div style="height:10rem;"></div>
                     </div>
                 </CustomScrollbar>
             </div>
@@ -526,6 +715,66 @@ export default {
         flex-grow: 1;
         width: 24rem;
         background-color: #f5f7fa;
+        .dropdown-box{
+            .dropdown-header{
+                &.show{
+                    button{
+                        transform:rotate(-180deg);
+                    }
+                }
+                button{
+                    transition: transform 0.3s ease-in-out;
+                }
+            }
+            .dropdown-body{
+                overflow: hidden;
+                transition: height 0.3s ease-in-out;
+                position: relative;
+
+                .lead-files{
+                    .empty-state{
+                        -webkit-box-align: center;
+                        align-items: center;
+                        background-color: #e5f4ff;
+                        border: 2px solid #b3ddff;
+                        -webkit-border-radius: .25rem;
+                        border-radius: .25rem;
+                        color: #0062b3;
+                        display: flex;
+                        flex-direction: column;
+                        font-size: .875rem;
+                        gap: .25rem;
+                        justify-content: center;
+                        line-height: 1.25;
+                        min-height: 9.25rem;
+                        padding: 1rem;
+                        text-align: center;
+                        user-select: none;
+                        width: 100%;
+                        .btn-text {
+                            background: transparent;
+                            border: 0;
+                            color: #007ee5;
+                            padding: 0;
+                            text-decoration: underline;
+                        }
+                    }
+                }
+
+
+                .save-notes-btn{
+                    position: absolute;
+                    bottom: 18px;
+                    right: 25px;
+                    z-index: 999999;
+                    button{
+                        font-weight: bold;
+                        padding: 3px 6px;
+                        background-color: #fff3c4 !important;
+                    }
+                }
+            }
+        }
     }
     .left-hover-action{
         .div-hover-effice{
@@ -653,8 +902,20 @@ export default {
             }
         }
     }
+   
 </style>
 <style>
+    .ql-container.ql-snow{ 
+        border: none !important; 
+        height: 10rem !important;
+        background-color: #fff3c4 !important;
+        color:#8d2b0b !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+    }
+    .ql-toolbar.ql-snow{
+        display: none !important;
+    }
     .lead-edit .col-left .scrollbar__wrapper{
         height: calc(100% - 18.5rem);
     }

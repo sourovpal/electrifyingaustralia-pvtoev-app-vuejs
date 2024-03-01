@@ -41,7 +41,6 @@ export default {
 
 <style scoped lang="scss">
 .sidebar--submenu{
-  // position: absolute;
   top:0;
   background-color: #ffffff;
   width: 18rem;

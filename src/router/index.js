@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import LoginIndexPage from '../views/auth/LoginIndexPage.vue';
 import Master from '../components/Master.vue';
 
 import PlatformIndex from '../views/platform/PlatformIndex.vue';
@@ -362,6 +363,11 @@ const routes = [
             },
         ],
     },
+    {
+        name:"login",
+        path:'/login',
+        component:LoginIndexPage,
+    }
 ];
 
 

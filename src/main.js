@@ -3,8 +3,8 @@ import App from './App.vue';
 import router from './router';
 import * as mdb from 'mdb-ui-kit';
 import 'mdb-ui-kit/css/mdb.min.css';
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
-
+import "vue-custom-scrollbar/dist/vueScrollbar.css"; // remove
+import 'custom-vue-scrollbar/dist/style.css';
 
 import { plugin as VueTippy } from 'vue-tippy'
 import 'tippy.js/dist/tippy.css' // optional for styling

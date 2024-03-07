@@ -1,15 +1,12 @@
 <script>
 
     import SearchBar from '../../../../components/SearchBar.vue';
-    import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue';
     import CustomScrollbar from 'custom-vue-scrollbar';
     import FilterRightSidebar from './FilterRightSidebar.vue';
-    import 'custom-vue-scrollbar/dist/style.css';
 
     export default {
         components: {
             SearchBar,
-            vueCustomScrollbar,
             CustomScrollbar,
             FilterRightSidebar,
         },

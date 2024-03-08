@@ -1,7 +1,65 @@
 <script>
-    export default {
+  import {LoginAction} from '../../actions/AuthAction';
+  export default {
+    data() {
+      return {
+        username:'sourovpal35@gmail.com',
+        password:'12345678',
+        errors:{},
+      }
+    },
+    methods: {
+      async submitLoginForm(e){
+        e.preventDefault();
+        try{
+          
+          const res = await LoginAction({
+            username:this.username,
+            password:this.password,
+          });
+          if(res){
 
-    }
+            
+            try{
+              const {user, access_token} = res;
+              this.$cookies.set('user_data',user);
+              this.$cookies.set('access_token',(access_token.token));
+            }catch(e){}
+            
+            try{
+              this.$toast[res.message.type](res.message.text);
+              if(res.message.redirect_url){
+                await setTimeout(()=>{
+                  window.location.replace(res.message.redirect_url);
+                },2000);
+                return res;
+              }else{
+                await setTimeout(()=>{
+                  window.location.replace('/');
+                },2000);
+                return res;
+              }
+            }catch(e){
+              window.location.replace('/');
+            }
+          }
+        }catch(error){
+
+          try{
+            var data = error.response.data;
+            this.errors = data.errors;
+          }catch(e){}
+
+          try{
+            var data = error.response.data;
+            this.$toast[data.type](data.text);
+          }catch(e){
+            this.$toast.error('Oops, something went wrong');
+          }
+        }
+      }
+    },
+  }
 </script>
 
 <template>
@@ -16,13 +74,15 @@
                 <div class="row justify-content-center">
                     <div class="col-md-6 col-lg-4">
                         <div class="login-wrap p-0">
-                        <form action="#" class="signin-form">
-                            <div class="form-group">
-                                <input type="text" class="login-form-control" placeholder="Username" required>
-                            </div>
-                            <div class="form-group">
-                                <input id="password-field" type="password" class="login-form-control" placeholder="Password" required>
-                                <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                        <form @submit.prevent="submitLoginForm" method="post" class="signin-form">
+                            <div class="form-group mb-3">
+                                <input @focus="delete errors?.username" v-model="username" type="text" class="login-form-control" placeholder="Username or Email Address">
+                                <span class="text-center fs-14px text-danger py-1 w-100 d-block" v-if="errors?.username?.length">{{ errors?.username[0] }}</span>
+                              </div>
+                              <div class="form-group mb-3">
+                                <input @focus="delete errors?.password" v-model="password" id="password-field" type="password" class="login-form-control" placeholder="Password">
+                                <span class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                                <span class="text-center fs-14px text-danger py-1 w-100 d-block" v-if="errors?.password?.length">{{ errors?.password[0] }}</span>
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="login-form-control btn btn-primary submit px-3">Sign In</button>
@@ -38,6 +98,11 @@
                                     <a href="#" style="color: #fff">Forgot Password</a>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <div class="w-100 text-left">
+                                  <span>Don't have an account ? <router-link to="/register" style="color: #1662ee">Sign Up.</router-link></span>
+                                </div>
+                            </div>
                         </form>
                         </div>
                     </div>
@@ -47,7 +112,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
 .body-img {
   font-family: "Lato", Arial, sans-serif;
   font-size: 16px;
@@ -66,7 +131,7 @@
   bottom: 0;
   content: '';
   background: #000;
-  opacity: .5;
+  opacity: .7;
   z-index: -1;
 }
 a {
@@ -152,7 +217,6 @@ h1, h2, h3, h4, h5, .h1, .h2, .h3, .h4, .h5 {
   -o-transition: 0.3s;
   transition: 0.3s;
   width: 100%;
-  margin-bottom:30px;
 }
 @media (prefers-reduced-motion: reduce) {
   .login-form-control {

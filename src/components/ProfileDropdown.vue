@@ -1,13 +1,40 @@
 <script>
+import {LogoutAction} from '../actions/AuthAction';
 export default{
-
+    data() {
+        return {
+            confirmDialog:false,
+        }
+    },
+    methods: {
+        async logoutHandler(){
+            this.confirmDialog = false;
+            try{
+                const res = await LogoutAction();
+                this.$cookies.remove('user_data');
+                this.$cookies.remove('access_token');
+                window.location.replace('/login');
+            }catch(error){
+            }
+        }
+    },
 }
 </script>
 
 
 <template>
 
+    
+    
 <div class="sidebar-profile pb-1">
+    <div v-if="confirmDialog" class="confirm-dialog-area">
+        <div class="confirm-dialog" style="max-width:350px;">
+            <h1 class="text-hard fw-bold">Logout</h1>
+            <p>Are you ready to logout your account?</p>
+            <button @click="confirmDialog=!confirmDialog">Cancel</button>
+            <button @click="logoutHandler">Confirm</button>
+        </div>
+    </div>
     <div class="user-menu-profile">
         <div class="user-menu-email">connections@electrifyingaustralia.com.au</div> 
         <div class="user-menu-role">Bijoy Chowdhury · Admin</div>
@@ -34,7 +61,7 @@ export default{
         Billing
     </a> 
     <hr class="mt-2 mb-1"> 
-    <button class="dropdown-item user-menu__logout">
+    <button @click="confirmDialog=!confirmDialog" class="dropdown-item user-menu__logout">
         <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="18px" viewBox="0 0 24 24" width="18px" fill="#000000"><path d="M0,0h24v24H0V0z" fill="none"></path> <path d="M17,8l-1.41,1.41L17.17,11H9v2h8.17l-1.58,1.58L17,16l4-4L17,8z M5,5h7V3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h7v-2H5V5z"></path></svg>
         Log out
     </button>

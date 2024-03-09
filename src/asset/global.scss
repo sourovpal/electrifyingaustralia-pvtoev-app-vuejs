@@ -24,6 +24,9 @@ body{
 html{
   scroll-behavior: smooth;
 }
+button[disabled]{
+  cursor:no-drop;
+}
 .modal-title{
   color: #333;
   font-weight: 600;
@@ -321,4 +324,38 @@ html{
 }
 .confirm-dialog button:active {
   background: #dddddd;
+}
+// 
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 150;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -35;
+  }
+  100% {
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: -124;
+  }
+}
+.spinner {
+  animation: rotate 2s linear infinite;
+  width: 25px;
+  height: 25px;
+  margin-right:6px;
+  margin-left:-25px;
+  &>.path {
+    stroke: #1f71ff;
+    stroke-linecap: round;
+    animation: dash 1.5s ease-in-out infinite;
+  }
 }

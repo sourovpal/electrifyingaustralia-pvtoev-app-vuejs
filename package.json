@@ -22,6 +22,7 @@
     "smart-tagz": "^0.4.1",
     "tippy.js": "^6.3.7",
     "vue": "^3.4.14",
+    "vue-advanced-cropper": "^2.8.8",
     "vue-cookies": "^1.8.3",
     "vue-custom-scrollbar": "^1.4.4",
     "vue-draggable-next": "^2.2.1",

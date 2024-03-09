@@ -9,10 +9,15 @@
             password:'',
             confirm_password:'',
             errors:{},
+            isSubmit:false,
         }
       },
       methods: {
         async submitLoginForm(e){
+          if(this.isSubmit){
+            return;
+          }
+          this.isSubmit = true;
           e.preventDefault();
           try{
             
@@ -23,17 +28,22 @@
                 password:this.password,
                 confirm_password:this.confirm_password,
             });
+
             if(res){
+
               try{
+
                 this.$toast[res.type](res.text);
                 await setTimeout(()=>{
                     window.location.replace('/login');
                 },3000);
                 return res;
+
               }catch(e){
                 window.location.replace('/');
               }
             }
+
           }catch(error){
   
             try{
@@ -47,6 +57,9 @@
             }catch(e){
               this.$toast.error('Oops, something went wrong');
             }
+
+          }finally{
+            this.isSubmit = false;
           }
         }
       },
@@ -58,7 +71,7 @@
           <section class="login-section">
               <div class="container">
                   <div class="row justify-content-center">
-                      <div class="col-md-6 text-center mb-5 mt-5 pt-5">
+                      <div class="col-md-6 text-center mb-5 mt-5">
                           <h2 class="heading-section">Electrifying Australia</h2>
                       </div>
                   </div>
@@ -89,7 +102,15 @@
                                     <span class="text-center fs-14px text-danger py-1 w-100 d-block" v-if="errors?.confirm_password?.length">{{ errors?.confirm_password[0] }}</span>
                                 </div>
                                 <div class="form-group">
-                                    <button type="submit" class="login-form-control btn btn-primary submit px-3">Sign Up</button>
+                                    <button :disabled="isSubmit" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
+                                      <div v-if="isSubmit">
+                                        <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;">
+                                          <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                                        </svg>
+                                        <span>Loading...</span>
+                                      </div>
+                                      <span v-if="!isSubmit">Sign Up</span>
+                                    </button>
                                 </div>
                                 <div class="form-group mt-2">
                                     <div class="w-100 text-center">

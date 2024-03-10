@@ -13,7 +13,11 @@ const FetchProfile = ()=>{
 
 const UpdateProfile = (payload)=>{
     return new Promise((resolve, reject)=>{
-        axios.put('/profile', payload)
+        axios.post('/profile', payload, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            }
+        })
         .then((res)=>{
             return resolve(res.data);
         }).catch((error)=>{

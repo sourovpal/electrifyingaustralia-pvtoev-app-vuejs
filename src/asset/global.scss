@@ -267,6 +267,7 @@ button[disabled]{
   height: 100vh;
   background: rgb(0 0 0 / 40%);
   animation: fadeopacity 0.2s ease 1 forwards;
+  z-index: 999999999999;
 }
 .confirm-dialog {
   position: fixed;

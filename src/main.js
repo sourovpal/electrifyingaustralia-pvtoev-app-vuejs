@@ -51,6 +51,7 @@ app.use(
   axios.defaults.baseURL = 'http://localhost/pylon-api/public/api/v1';
 // axios.defaults.headers.common['deviceid'] = uid;
 axios.defaults.headers.common['Accept'] = 'application/json';
+// axios.defaults.headers.common['Content-Type'] = 'application/json';
   
 axios.interceptors.request.use((request)=>{
   var token = VueCookies.get('access_token');
@@ -65,6 +66,7 @@ axios.interceptors.request.use((request)=>{
 axios.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
+  console.log(error)
     if (error.response.status === 401)// acces denied
     {
       VueCookies.remove('access_token');

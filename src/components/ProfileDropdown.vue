@@ -13,9 +13,14 @@ export default{
                 const res = await LogoutAction();
                 this.$cookies.remove('user_data');
                 this.$cookies.remove('access_token');
-                window.location.replace('/login');
+                setTimeout(()=>{
+                    window.location.replace('/login');
+                },500);
             }catch(error){
             }
+        },
+        async hello(){
+
         }
     },
 }

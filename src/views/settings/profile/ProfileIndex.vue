@@ -39,10 +39,7 @@ export default {
         Cropper
     },
     methods: {
-        async fetchProfileData(reset=false){
-            if(reset){
-                return ;
-            }
+        async fetchProfileData(){
             try{
                 this.isFetching = true;
                 const res = await FetchProfile();

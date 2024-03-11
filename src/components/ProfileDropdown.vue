@@ -13,15 +13,18 @@ export default{
                 const res = await LogoutAction();
                 this.$cookies.remove('user_data');
                 this.$cookies.remove('access_token');
+                try{
+                    const {message} = res;
+                    this.$toast[message.type](message.text);
+                }catch(error){}
                 setTimeout(()=>{
-                    window.location.replace('/login');
-                },500);
+                    if(res){
+                        window.location.replace('/login');
+                    }
+                },1000);
             }catch(error){
             }
         },
-        async hello(){
-
-        }
     },
 }
 </script>
@@ -34,8 +37,8 @@ export default{
 <div class="sidebar-profile pb-1">
     <div v-if="confirmDialog" class="confirm-dialog-area">
         <div class="confirm-dialog" style="max-width:350px;">
-            <h1 class="text-hard fw-bold">Logout</h1>
-            <p>Are you ready to logout your account?</p>
+            <h1 class="fw-bold text-dark">Logout</h1>
+            <p class="text-hard">Are you ready to logout your account?</p>
             <button @click="confirmDialog=!confirmDialog">Cancel</button>
             <button @click="logoutHandler">Confirm</button>
         </div>

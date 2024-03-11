@@ -229,6 +229,7 @@ export default {
                                         <tr>
                                             <th class="fw-bold py-1" width="25%" scope="col">Browser</th>
                                             <th class="fw-bold py-1" width="20%" scope="col">Location</th>
+                                            <th class="fw-bold py-1" width="15%" scope="col">IP</th>
                                             <th class="fw-bold py-1" width="15%" scope="col">Sign In</th>
                                             <th class="fw-bold py-1" width="15%" scope="col">Last seen</th>
                                             <th class="fw-bold py-1" width="5%" scope="col">User</th>
@@ -239,6 +240,7 @@ export default {
                                         <tr v-for="(session, index) in activeUsers" :key="index">
                                             <td scope="col" class="py-1">{{ session.browser }}</td>
                                             <td scope="col" class="py-1">{{ session.location }}</td>
+                                            <td scope="col" class="py-1">{{ session.ip_address }}</td>
                                             <td scope="col" class="py-1">{{ session.created_at }}</td>
                                             <td scope="col" class="py-1">{{ session.updated_at }}</td>
                                             <td scope="col" class="py-1"><span :class="`btn btn-sm py-0 px-1 fs-12px btn-${(session.is_active==1)?'danger':'warning'}`">{{ (session.is_active == 1)?'Current':'Other' }}</span></td>

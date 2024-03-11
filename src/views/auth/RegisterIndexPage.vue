@@ -33,7 +33,7 @@
 
               try{
 
-                this.$toast[res.type](res.text);
+                this.$toast[res.message.type](res.message.text);
                 await setTimeout(()=>{
                     window.location.replace('/login');
                 },3000);
@@ -53,7 +53,7 @@
   
             try{
               var data = error.response.data;
-              this.$toast[data.type](data.text);
+              this.$toast[data.message.type](data.message.text);
             }catch(e){
               this.$toast.error('Oops, something went wrong');
             }

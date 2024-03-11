@@ -35,12 +35,12 @@
               this.$toast[res.message.type](res.message.text);
               if(res.message.redirect_url){
                 await setTimeout(()=>{
-                  window.location.replace(res.message.redirect_url);
+                  // window.location.replace(res.message.redirect_url);
                 },2000);
                 return res;
               }else{
                 await setTimeout(()=>{
-                  window.location.replace('/');
+                  // window.location.replace('/');
                 },2000);
                 return res;
               }

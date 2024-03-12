@@ -47,11 +47,12 @@ export default {
                 }
             }finally{
                 this.isFetching = false;
+                this.$Progress.finish();
             }
         },
         async updateEmailAddress(action=null){
             try{
-
+                
                 if(this.email === this.fetchUser.email){
                     return ;
                 }
@@ -70,9 +71,9 @@ export default {
                 }else{
                     return;
                 }
-
+                
                 const res = await UpdateProfile(data);
-
+                
                 if(action === 'send_email_otp'){
                     this.tempChangeEmail = this.email;
                     this.showEmailOtpInputDialog = true;

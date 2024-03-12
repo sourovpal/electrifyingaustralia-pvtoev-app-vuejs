@@ -116,6 +116,7 @@ const routes = [
                 component: HomeIndex,
                 meta:{
                     auth:true,
+                    progress:true,
                     title:'Home Page',
                     permissions:[],
                 },
@@ -128,6 +129,7 @@ const routes = [
                 component: PlatformIndex,
                 meta:{
                     auth:true,
+                    progress:true,
                     title:'Home Page',
                     permissions:[],
                 },
@@ -139,6 +141,7 @@ const routes = [
                         component: LeadIndexPage,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -150,6 +153,7 @@ const routes = [
                         component: EditLeadPage,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -161,6 +165,7 @@ const routes = [
                         component: DealsIndexPage,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -172,6 +177,7 @@ const routes = [
                         component: ContactsIndexPage,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -185,6 +191,7 @@ const routes = [
                 component: MapIndex,
                 meta:{
                     auth:true,
+                    progress:true,
                     title:'Home Page',
                     permissions:[],
                 },
@@ -197,6 +204,7 @@ const routes = [
                 component: LibraryIndex,
                 meta:{
                     auth:true,
+                    progress:true,
                     title:'Home Page',
                     permissions:[],
                 },
@@ -209,6 +217,7 @@ const routes = [
                 component: PaymentIndex,
                 meta:{
                     auth:true,
+                    progress:true,
                     title:'Home Page',
                     permissions:[],
                 },
@@ -222,6 +231,7 @@ const routes = [
                 component: SettingsIndex,
                 meta:{
                     auth:true,
+                    progress:true,
                     title:'Home Page',
                     permissions:[],
                 },
@@ -232,6 +242,7 @@ const routes = [
                         component: SettingsProfileIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -242,6 +253,7 @@ const routes = [
                         component: SettingsAccountIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -252,6 +264,7 @@ const routes = [
                         component: SettingsNotificationIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -262,6 +275,7 @@ const routes = [
                         component: SettingsReferIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -272,6 +286,7 @@ const routes = [
                         component: SettingsCompanyDetailsIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -282,6 +297,7 @@ const routes = [
                         component: SettingsLocalizationIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -292,6 +308,7 @@ const routes = [
                         component: SettingsInstallersIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -302,6 +319,7 @@ const routes = [
                         component: SettingsInstallerCreate,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -312,6 +330,7 @@ const routes = [
                         component: SettingsInstallerEdit,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -322,6 +341,7 @@ const routes = [
                         component: SettingsPreferenceIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -332,6 +352,7 @@ const routes = [
                         component: SettingsAboutIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -342,6 +363,7 @@ const routes = [
                         component: LegalsIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -352,6 +374,7 @@ const routes = [
                         component: ProposalLegalsWarranty,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -362,6 +385,7 @@ const routes = [
                         component: SolarDesignIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -372,6 +396,7 @@ const routes = [
                         component: ComponentPriceIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -382,6 +407,7 @@ const routes = [
                         component: PackageIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -392,6 +418,7 @@ const routes = [
                         component: JobSheetsIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -402,6 +429,7 @@ const routes = [
                         component: FinancingIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -412,6 +440,7 @@ const routes = [
                         component: EmailTemplatesIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -422,6 +451,7 @@ const routes = [
                         component: RolesIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -432,6 +462,7 @@ const routes = [
                         component: TeamIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -442,6 +473,7 @@ const routes = [
                         component: BillingIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -452,6 +484,7 @@ const routes = [
                         component: ApiIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -462,6 +495,7 @@ const routes = [
                         component: Apilogs,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -472,6 +506,7 @@ const routes = [
                         component: ApiEventLogs,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -482,6 +517,7 @@ const routes = [
                         component: ApiEventDetails,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -492,6 +528,7 @@ const routes = [
                         component: IntegrationsIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -502,6 +539,7 @@ const routes = [
                         component: EsignatureIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -512,6 +550,7 @@ const routes = [
                         component: AccreditationIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -529,6 +568,7 @@ const routes = [
                         component: EmailIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -539,6 +579,7 @@ const routes = [
                         component: LeadProviderEmailIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -549,6 +590,7 @@ const routes = [
                         component: LeadsIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -559,6 +601,7 @@ const routes = [
                         component: WorkflowIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -569,6 +612,7 @@ const routes = [
                         component: AutomationIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -579,6 +623,7 @@ const routes = [
                         component: TagIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -589,6 +634,7 @@ const routes = [
                         component: LeadCaptureFormIndex,
                         meta:{
                             auth:true,
+                            progress:true,
                             title:'Home Page',
                             permissions:[],
                         },
@@ -620,14 +666,14 @@ const router = createRouter({
     strict: true,
 });
 
-
-router.beforeEach((to, from) => {
+router.beforeEach(async(to, from, next) => {
     try{
         if(to.meta.auth){
             var user = VueCookies.get('user_data');
             var token = VueCookies.get('access_token');
             if(user != null && token != null){
-                return true;
+                // await new Promise(resolve => setTimeout(resolve, 2000));
+                return next();
             }else{
                 window.location.replace('/login');
                 return false;
@@ -638,7 +684,7 @@ router.beforeEach((to, from) => {
             var user = VueCookies.get('user_data');
             var token = VueCookies.get('access_token');
             if(user == null || token == null){
-                return true;
+                return next();
             }else{
                 window.location.replace(from.path);
                 return false;
@@ -648,6 +694,6 @@ router.beforeEach((to, from) => {
     }catch(e){
         return false;
     }
-})
+});
 
 export default router;

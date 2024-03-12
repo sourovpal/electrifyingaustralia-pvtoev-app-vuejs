@@ -20,6 +20,7 @@ export default {
         tempChangeEmail:'',
         isEmailChangeSubmit:false,
         isEmailChangeSubmitOtp:false,
+        isPasswordSubmit:false,
       }
     },
     components:{
@@ -101,6 +102,32 @@ export default {
             }finally{
                 this.isEmailChangeSubmit = false;
                 this.isEmailChangeSubmitOtp = false;
+            }
+        },
+        async changePasswordHandler(){
+            try{
+                this.isPasswordSubmit = true;
+                const res = await UpdateProfilePassword({
+                    current_password:this.current_password,
+                    new_password:this.new_password,
+                    confirm_password:this.confirm_password,
+                });
+                const {message} = res;
+                this.$toast[message.type](message.text);
+            }catch(error){
+                console.log(error);
+                try{
+                    var data = error.response.data;
+                    this.errors = data.errors;
+                }catch(e){}
+                try{
+                    var message = error.response.data.message;
+                    this.$toast[message.type](message.text);
+                }catch(e){
+                    this.$toast.error('Oops, something went wrong');
+                }
+            }finally{
+                this.isPasswordSubmit = false;
             }
         },
         async logoutOthersDevice(token_id, current=0){
@@ -194,21 +221,32 @@ export default {
                             
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">Current password</label>
-                                <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                                <input @focus="delete errors?.current_password" v-model="current_password" type="text" class="form-control form-control-input">
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.current_password?.length">{{ errors?.current_password[0] }}</span>
                             </div>
                             
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">New password</label>
-                                <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
-                                <span class="form-input-commant">Please use at least 8 characters</span>
+                                <input @focus="delete errors?.new_password" v-model="new_password" type="text" class="form-control form-control-input">
+                                <span class="form-input-commant" v-if="!errors?.new_password?.length">Please use at least 8 characters</span>
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.new_password?.length">{{ errors?.new_password[0] }}</span>
                             </div>
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">Confirm new password</label>
-                                <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                                <input @focus="delete errors?.confirm_password" v-model="confirm_password" type="text" class="form-control form-control-input">
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.confirm_password?.length">{{ errors?.confirm_password[0] }}</span>
                             </div>
                             
                             <div class="d-flex justify-content-start align-items-center">
-                                <button class="btn btn-primary fw-bold">Change Password</button>
+                                <button :disabled="isPasswordSubmit" @click="changePasswordHandler" class="btn btn-primary fw-bold">
+                                    <div v-if="isPasswordSubmit">
+                                        <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
+                                            <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                                        </svg>
+                                        <span>Submitting...</span>
+                                    </div>
+                                    <span v-if="!isPasswordSubmit">Change Password</span>
+                                </button>
                                 <a class="fw-bold ms-4" href="">I forgot my password</a>
                             </div>
                         </div>

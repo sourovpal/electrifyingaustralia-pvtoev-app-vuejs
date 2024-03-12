@@ -11,11 +11,11 @@
     },
     methods: {
       async submitLoginForm(e){
+        e.preventDefault();
         if(this.isSubmit){
-          return;
+          return false;
         }
         this.isSubmit = true;
-        e.preventDefault();
         try{
           
           const res = await LoginAction({
@@ -23,8 +23,6 @@
             password:this.password,
           });
           if(res){
-
-            
             try{
               const {user, access_token} = res;
               this.$cookies.set('user_data',user);
@@ -35,21 +33,13 @@
 
               this.$toast[res.message.type](res.message.text);
               if(res.message.redirect_url){
-                await setTimeout(()=>{
                   window.location.replace(res.message.redirect_url);
-                },2000);
-                return res;
-
+                  return false;
               }else{
-
-                await setTimeout(()=>{
-                  window.location.replace('/');
-                },2000);
-                return res;
-
+                  window.location.replace('/app');
+                  return false;
               }
             }catch(e){
-              window.location.replace('/');
             }
           }
         }catch(error){
@@ -65,9 +55,11 @@
           }catch(e){
             this.$toast.error('Oops, something went wrong');
           }
+          
         }finally{
           this.isSubmit = false;
         }
+        return false;
       }
     },
   }

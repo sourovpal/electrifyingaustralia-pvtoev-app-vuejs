@@ -28,11 +28,7 @@ const UpdateProfile = (payload)=>{
 
 const UpdateProfilePassword = (payload)=>{
     return new Promise((resolve, reject)=>{
-        axios.post('/profile', payload, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            }
-        })
+        axios.post('/profile/password', payload)
         .then((res)=>{
             return resolve(res.data);
         }).catch((error)=>{

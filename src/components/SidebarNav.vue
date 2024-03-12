@@ -1,9 +1,17 @@
 <script>
 import ProfileDropdown from './ProfileDropdown.vue';
 import NotificationsDropdown from './NotificationsDropdown.vue';
-
 export default{
-    components: { ProfileDropdown, NotificationsDropdown }
+    components: { ProfileDropdown, NotificationsDropdown },
+    data() {
+        return {
+            homeLogo: '/src/asset/sidebar-image/reshot-icon-home.svg',
+            platformLogo: '/src/asset/sidebar-image/reshot-icon-growth-chart.svg',
+            mapLogo: '/src/asset/sidebar-image/reshot-icon-tracking.svg',
+            libraryLogo: '/src/asset/sidebar-image/reshot-icon-business-folder.svg',
+            paymentLogo: '/src/asset/sidebar-image/reshot-icon-payment-method.svg',
+        }
+    },
 }
 </script>
 
@@ -12,31 +20,32 @@ export default{
         <div class="navbar-top">
             <div class="nav-item">
                 <router-link to="/app" v-tippy='{ content:"Home", placement : "right" }' class="navbar-brand nav-link" data-mdb-toggle="tooltip" data-mdb-placement="right">
-                    <svg  width="26" height="26" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3L2 12H5V20H19V12H22L12 3M11.5 18V14H9L12.5 7V11H15L11.5 18Z" /></svg>
+                    <img style="width:26px;height:26px;object-fit: cover;" :src="homeLogo" alt="">
                 </router-link>
             </div>
             
             <div class="nav-item">
                 <router-link v-tippy='{ content:"Platform", placement : "right" }' to="/platform" class="navbar-brand nav-link">
-                    <svg  xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M7.5,21H2V9h5.5V21z M14.75,3h-5.5v18h5.5V3z M22,11h-5.5v10H22V11z"></path></svg>
+                    <img style="width:22px;height:22px;object-fit: cover;" :src="platformLogo" alt="">
                 </router-link>
             </div>
-
+            
             <div class="nav-item">
+                
                 <router-link to="/map" v-tippy='{ content:"Map", placement : "right" }' class="navbar-brand nav-link">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 10.9c-.61 0-1.1.49-1.1 1.1s.49 1.1 1.1 1.1c.61 0 1.1-.49 1.1-1.1s-.49-1.1-1.1-1.1zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm2.19 12.19L6 18l3.81-8.19L18 6l-3.81 8.19z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                    <img style="width:30px;height:30px;object-fit: cover;" :src="mapLogo" alt="">
                 </router-link>
             </div>
-
+            
             <div class="nav-item">
                 <router-link v-tippy='{ content:"Library", placement : "right" }' to="/library" class="navbar-brand nav-link">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"></path> <path opacity="0.3" d="M6,6v10h16V6H6z"></path> <path d="M2,6H0v5h0l0,9c0,1.1,0.9,2,2,2h18v-2H2V6z M22,4h-8l-2-2H6C4.9,2,4,2.9,4,4l0,12c0,1.1,0.9,2,2,2h16c1.1,0,2-0.9,2-2V6C24,4.9,23.1,4,22,4z M22,6v10H6V6H22z"></path></svg>
+                    <img style="width:28px;height:28px;object-fit: cover;" :src="libraryLogo" alt="">
                 </router-link>
             </div>
             
             <div class="nav-item">
                 <router-link v-tippy='{ content:"Payments", placement : "right" }' to="/payments" class="navbar-brand nav-link">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 14V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zm-9-1c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm13-6v11c0 1.1-.9 2-2 2H4v-2h17V7h2z"></path></svg>
+                    <img style="width:24px;height:24px;object-fit: cover;" :src="paymentLogo" alt="">
                 </router-link>
             </div>
 
@@ -165,3 +174,11 @@ export default{
 }
 
 </style>
+<style type="text/css">
+    .fil2 {fill:none}
+    .fil4 {fill:#FFA726}
+    .fil3 {fill:#FFCC80}
+    .fil0 {fill:#00897B;fill-rule:nonzero}
+    .fil1 {fill:#26A69A;fill-rule:nonzero}
+  </style>
+

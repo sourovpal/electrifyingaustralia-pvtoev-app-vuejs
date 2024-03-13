@@ -97,4 +97,32 @@
         border-top-color: transparent;
         border-left-color: transparent;
     }
-} 
+}
+
+.form-label-title{
+    margin-bottom: 0.25rem;
+    line-height: 1.5rem;
+    font-weight: 600;
+    color: #3e4c59;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+    font-size: .875rem;
+    user-select: none;
+}
+.form-control-input{
+    background: #f5f7fa !important;
+    border:none !important;
+    border-bottom:2px solid transparent !important;
+    border-radius:0px !important;
+    &:focus{
+        box-shadow: none !important;
+        border-bottom-color: #007ee5 !important;
+    }                          
+}  

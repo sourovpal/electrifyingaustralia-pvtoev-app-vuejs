@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
+import { createRouter, createWebHistory, createWebHashHistory , createMemoryHistory} from "vue-router";
 import VueCookies from 'vue-cookies';
 
 import LoginIndexPage from '../views/auth/LoginIndexPage.vue';
@@ -656,44 +656,12 @@ const routes = [
 ];
 
 
-
-
-
-
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory('/'),
     routes:routes, 
     strict: true,
-});
-
-router.beforeEach(async(to, from, next) => {
-    try{
-        if(to.meta.auth){
-            var user = VueCookies.get('user_data');
-            var token = VueCookies.get('access_token');
-            if(user != null && token != null){
-                // await new Promise(resolve => setTimeout(resolve, 2000));
-                return next();
-            }else{
-                window.location.replace('/login');
-                return false;
-            }
-        }
-
-        if(to.path === '/login' || to.path === '/register'){
-            var user = VueCookies.get('user_data');
-            var token = VueCookies.get('access_token');
-            if(user == null || token == null){
-                return next();
-            }else{
-                window.location.replace(from.path);
-                return false;
-            }
-        }
-
-    }catch(e){
-        return false;
-    }
+    mode: 'history',
+    base: '/',
 });
 
 export default router;

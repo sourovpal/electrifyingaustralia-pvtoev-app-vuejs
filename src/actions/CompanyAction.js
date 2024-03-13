@@ -1,8 +1,8 @@
-import axios from "axios";
+import api from "./api";
 
 const FetchComapny = ()=>{
     return new Promise((resolve, reject)=>{
-        axios.get(`/company`)
+        api.get(`/company`)
         .then((res)=>{
             return resolve(res.data);
         }).catch((error)=>{

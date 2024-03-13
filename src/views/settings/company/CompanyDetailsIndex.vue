@@ -244,7 +244,7 @@ export default {
                       <div class="col-lg-6 col-12">
       
                           <div class="settings-group-item">
-                              <label class="form-label-title" for="">Twitter handle</label>
+                              <label class="form-label-title" for="">Twitter username</label>
                               <input v-model="twitter_link" type="text" class="form-control form-control-input">
                               <span class="form-input-commant">Check Link: <a target="_blank" :href="`https://twitter.com/${twitter_link}`">https://twitter.com/{{ twitter_link }}</a></span>
                           </div>
@@ -265,6 +265,12 @@ export default {
                               <label class="form-label-title" for="">Pinterest username</label>
                               <input v-model="pinterest_link" type="text" class="form-control form-control-input">
                               <span class="form-input-commant">Check Link: <a target="_blank" :href="`https://www.pinterest.com/${pinterest_link}`">https://www.pinterest.com/{{ pinterest_link }}</a></span>
+                          </div>
+      
+                          <div class="settings-group-item">
+                              <label class="form-label-title" for="">Youtube username</label>
+                              <input v-model="youtube_link" type="text" class="form-control form-control-input">
+                              <span class="form-input-commant">Check Link: <a target="_blank" :href="`https://www.youtube.com/${youtube_link}`">https://www.youtube.com/{{ youtube_link }}</a></span>
                           </div>
       
                           <div>

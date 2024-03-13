@@ -54,7 +54,6 @@ export default {
                 }
             }finally{
                 this.isFetching = false;
-                this.$Progress.finish();
             }
         },
         async resetInputField(section=null){

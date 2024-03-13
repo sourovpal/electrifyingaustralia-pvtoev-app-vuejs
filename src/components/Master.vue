@@ -5,15 +5,6 @@ export default {
     components:{
         SidebarNav,
     },
-    created() {
-        this.$Progress.start();
-        this.$router.beforeEach((to, from, next) => {
-            if (to.meta.progress) {
-                this.$Progress.start();
-            }
-            return next();
-        });
-    },
 }
 
 </script>

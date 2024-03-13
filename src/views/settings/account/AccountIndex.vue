@@ -13,6 +13,7 @@ export default {
         isFetching:false,
         email:'',
         email_otp:'',
+        password:'',
         current_password:'',
         new_password:'',
         confirm_password:'',
@@ -47,7 +48,6 @@ export default {
                 }
             }finally{
                 this.isFetching = false;
-                this.$Progress.finish();
             }
         },
         async updateEmailAddress(action=null){
@@ -68,6 +68,7 @@ export default {
                     data.append('action', 'update_email');
                     data.append('email', this.tempChangeEmail);
                     data.append('email_otp', this.email_otp);
+                    data.append('password', this.password);
                 }else{
                     return;
                 }
@@ -80,6 +81,7 @@ export default {
                 }else{
                     this.tempChangeEmail = '';
                     this.email_otp = '';
+                    this.password = '';
                     this.showEmailOtpInputDialog = false;
                 }
 
@@ -305,14 +307,20 @@ export default {
 
 
     <div v-if="showEmailOtpInputDialog" class="confirm-dialog-area">
-        <div class="confirm-dialog" style="max-width:380px;">
-            <p class="text-hard pt-4 mb-2" style="margin: 0;font-size: 20px;line-height: 18px;">
-                <span class="fw-bold">You got your verification code to this </span>
-                <br> <span class="text-hard fs-14px">{{ email }}</span>
+        <div class="confirm-dialog" style="max-width:450px;">
+            <p class="text-hard pt-4 mb-2" style="margin: 0;font-size: 20px;line-height: 20px;">
+                <span class="fw-bold text-primary">You got your verification code to this </span>
+                <br> <span class="text-hard fs-14px ">{{ email }}</span>
             </p>
-            <div class="px-4 mb-5 pb-3 pt-2">
-                <input @focus="delete errors?.email_otp" type="text" class="form-control form-control-input" v-model="email_otp" placeholder="Code: 123456">
+            <div class="px-4 pb-3 pt-2">
+                <label class="form-label-title">Verification Code</label>
+                <input @focus="delete errors?.email_otp" type="text" class="form-control form-control-input" v-model="email_otp" placeholder="">
                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.email_otp?.length">{{ errors?.email_otp[0] }}</span>
+            </div>
+            <div class="px-4 mb-5 pb-4">
+                <label class="form-label-title">Your Current Password</label>
+                <input @focus="delete errors?.password" type="text" class="form-control form-control-input" v-model="password" placeholder="">
+                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.password?.length">{{ errors?.password[0] }}</span>
             </div>
             <button @click="showEmailOtpInputDialog=!showEmailOtpInputDialog">Cancel</button>
             <button :disabled="isEmailChangeSubmitOtp" @click="updateEmailAddress('update_email')">

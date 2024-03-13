@@ -1,8 +1,8 @@
-import axios from "axios";
+import api from "./api";
 
 const FetchProfile = (active_users=0)=>{
     return new Promise((resolve, reject)=>{
-        axios.get(`/profile${active_users>0?'?active_users=1':''}`)
+        api.get(`/profile${active_users>0?'?active_users=1':''}`)
         .then((res)=>{
             return resolve(res.data);
         }).catch((error)=>{
@@ -13,7 +13,7 @@ const FetchProfile = (active_users=0)=>{
 
 const UpdateProfile = (payload)=>{
     return new Promise((resolve, reject)=>{
-        axios.post('/profile', payload, {
+        api.post('/profile', payload, {
             headers: {
               'Content-Type': 'multipart/form-data',
             }
@@ -28,7 +28,7 @@ const UpdateProfile = (payload)=>{
 
 const UpdateProfilePassword = (payload)=>{
     return new Promise((resolve, reject)=>{
-        axios.post('/profile/password', payload)
+        api.post('/profile/password', payload)
         .then((res)=>{
             return resolve(res.data);
         }).catch((error)=>{

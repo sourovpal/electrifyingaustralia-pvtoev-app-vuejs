@@ -10,18 +10,18 @@ export default {
         return{
             fetchUser:{},
             isFetching:false,
-            name:'',
-            display_name:'',
-            job_title:'',
-            username:'',
-            email:'',
-            phone_office:'',
-            phone_mobile:'',
-            time_zone:'',
-            profile_avatar:'',
-            company_name:'',
-            default_profile_avatar:'',
-            map_base_layer_style:'',
+            name:null,
+            display_name:null,
+            job_title:null,
+            username:null,
+            email:null,
+            phone_office:null,
+            phone_mobile:null,
+            time_zone:null,
+            profile_avatar:null,
+            company_name:null,
+            default_profile_avatar:null,
+            map_base_layer_style:null,
             isBasicDetailsChangeCount:0,
             isContactInfoChangeCount:0,
             isBasicDetailsSubmit:false,
@@ -81,16 +81,16 @@ export default {
             data.append('action', section);
             if(section === 'basic_details' && !this.isBasicDetailsSubmit && this.isBasicDetailsChangeCount !== 1){
                 
-                data.append('name', this.name);
-                data.append('username', this.username);
-                data.append('job_title', this.job_title);
-                data.append('display_name', this.display_name);
+                data.append('name', this.name??'');
+                data.append('username', this.username??'');
+                data.append('job_title', this.job_title??'');
+                data.append('display_name', this.display_name??'');
                 this.isBasicDetailsSubmit = true;
                 
             }else if(section === 'contact_info' && !this.isContactInfoSubmit && this.isContactInfoChangeCount !== 1){
                 
-                data.append('phone_mobile', this.phone_mobile);
-                data.append('phone_office', this.phone_office);
+                data.append('phone_mobile', this.phone_mobile??'');
+                data.append('phone_office', this.phone_office??'');
                 this.isContactInfoSubmit = true;
                 
             }else if(section === 'profile_photo_upload' && !this.isProfileImageSubmit){
@@ -104,7 +104,7 @@ export default {
                     data.append('remove_profile_photo', 1);
                     this.isProfileImageRemoveSubmit = true;
                 }else if(this.profileImageFile){
-                    data.append('profile_photo', this.profileImageFile);
+                    data.append('profile_photo', this.profileImageFile??'');
                     this.isProfileImageSubmit = true;
                 }else{
                     return ;

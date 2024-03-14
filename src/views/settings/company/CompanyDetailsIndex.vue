@@ -1,35 +1,41 @@
 <script>
 import CustomScrollbar from 'custom-vue-scrollbar';
-import {FetchComapny} from '../../../actions/CompanyAction';
+import {FetchComapny, UpdateComapny} from '../../../actions/CompanyAction';
 export default {
   name:'ProfileIndex',
     data() {
       return{
+        errors:{},
         fetchData:{},
         timezomes:[],
-        company_name:'',
-        business_name:'',
-        business_number:'',
-        office_phone:'',
-        mobile_phone:'',
-        email:'',
-        website:'',
-        street_name:'',
-        unit:'',
-        city:'',
-        postcode:'',
-        state:'',
-        country:'',
-        business_logo:'',
-        time_zone:'',
-        twitter_link:'',
-        instagram_link:'',
-        facebook_link:'',
-        pinterest_link:'',
-        youtube_link:'',
-      }
-    },
-    components:{
+        company_name:null,
+        business_name:null,
+        business_number:null,
+        office_phone:null,
+        mobile_phone:null,
+        email:null,
+        website:null,
+        street_name:null,
+        unit:null,
+        city:null,
+        postcode:null,
+        state:null,
+        country:null,
+        business_logo:null,
+        time_zone:null,
+        twitter_link:null,
+        instagram_link:null,
+        facebook_link:null,
+        pinterest_link:null,
+        youtube_link:null,
+        companyDetailsUpdateReset:0,
+        isCompanyDetailsUpdateSubmit:false,
+        isSocialMediaUpdateSubmit:false,
+        isTimeZoneUpdateSubmit:false,
+        businessLogoFile:null,
+    }
+},
+components:{
         CustomScrollbar,
     },
     methods: {
@@ -40,9 +46,96 @@ export default {
                     const {company, timezomes} = res;
                     this.fetchData = company;
                     this.timezomes = timezomes;
-                }catch(error){}
+                }catch(error){
+                    this.$toast.error('Oops, something went wrong');
+                }
             }catch(error){
+                this.$toast.error('Oops, something went wrong');
+            }
+        },
+        async updateCompanyData(action = null){
+            const formData = new FormData();
+            formData.append('action', action);
+            if(action === 'update_company_details'){
+                this.isCompanyDetailsUpdateSubmit = true;
+                formData.append('company_name', this.company_name??'');
+                formData.append('business_name', this.business_name??'');
+                formData.append('business_number', this.business_number??'');
+                formData.append('office_phone', this.office_phone??'');
+                formData.append('mobile_phone', this.mobile_phone??'');
+                formData.append('email', this.email??'');
+                formData.append('website', this.website??'');
+                formData.append('street_name', this.street_name??'');
+                formData.append('unit', this.unit??'');
+                formData.append('city', this.city??'');
+                formData.append('state', this.state??'');
+                formData.append('postcode', this.postcode??'');
+                formData.append('country', this.country??'');
+                if(this.businessLogoFile){
+                    formData.append('business_logo', this.businessLogoFile);
+                }
+                
+            }else if(action === 'update_time_zone'){
 
+                this.isTimeZoneUpdateSubmit = true;                
+                formData.append('time_zone', this.time_zone??'');
+                
+            }else if(action === 'update_social_media'){
+                
+                this.isSocialMediaUpdateSubmit = true;
+                formData.append('twitter_link', this.twitter_link??'');
+                formData.append('instagram_link', this.instagram_link??'');
+                formData.append('facebook_link', this.facebook_link??'');
+                formData.append('pinterest_link', this.pinterest_link??'');
+                formData.append('youtube_link', this.youtube_link??'');
+                
+            }else if(action === 'remove_comapny_logo'){
+                this.isTimeZoneUpdateSubmit = true;
+                formData.append('remove_business_logo', 1);
+            }else{
+                return false;
+            }
+
+            try{
+                const res = await UpdateComapny(formData);
+
+                try{
+                    const {message} = res;
+                    this.$toast[message.type](message.text);
+                }catch(error){}
+                try{
+                    this.businessLogoFile = null;
+                    const {company} = res;
+                    this.fetchData = company;
+                    this.isSocialMediaUpdateSubmit = 
+                    this.isCompanyDetailsUpdateSubmit = 
+                    this.isTimeZoneUpdateSubmit = false;
+                }catch(error){}
+                
+            }catch(error){
+                try{
+                    var data = error.response.data;
+                    console.log(data);
+                    this.errors = data.errors;
+                }catch(e){}
+                
+                try{
+                    var message = error.response.data.message;
+                    this.$toast[message.type](message.text);
+                }catch(e){
+                    this.$toast.error('Oops, something went wrong');
+                }
+            }finally{
+                this.isSocialMediaUpdateSubmit = 
+                this.isCompanyDetailsUpdateSubmit = 
+                this.isTimeZoneUpdateSubmit = false;
+            }
+        },
+        async selectLogoHandler(e){
+            if(e.target.files && e.target.files.length > 0){
+                var file = e.target.files[0];
+                this.business_logo = URL.createObjectURL(file);
+                this.businessLogoFile = file;
             }
         }
     },
@@ -60,6 +153,7 @@ export default {
                 this.email           = company.email;
                 this.website         = company.website;
                 this.street_name     = company.street_name;
+                this.state           = company.state;
                 this.unit            = company.unit;
                 this.city            = company.city;
                 this.postcode        = company.postcode;
@@ -99,21 +193,22 @@ export default {
                       </div>
                       <div class="col-lg-6 col-12">
                           <div class="row">
-                              <div class="col-lg-8">
+                              <div v-if="business_logo" class="col-lg-8">
                                   <div class="preview-logo">
-                                      <img class="logo-img" src="https://static.getpylon.com/images/companies/V3vLWPgnNAtXjcevk46rX92OP59HUuIG8Ebv18zT.png.png" alt="">
+                                      <img class="logo-img" :src="business_logo" alt="">
                                   </div>
                               </div>
                               <div class="col-md-8">
                                   <div class="settings-group-item mb-1">
-                                      <input type="file" class="form-control form-control-input">
-                                  </div>
-                              </div>
-                              <div class="col-md-4 text-end">
-                                  <a class="btn btn-danger" href="">Remove</a>
-                              </div>
-                              <div class="settings-group-item">
-                                  <span class="form-input-commant">For best results, use a horizontal image with a white or transparent background.</span>
+                                      <input @click="delete errors?.business_logo" @change="selectLogoHandler" type="file" class="form-control form-control-input">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <button class="btn btn-danger btn-sm">Remove</button>
+                                </div>
+                                <div class="settings-group-item">
+                                    <span v-if="!errors?.business_logo?.length" class="form-input-commant">For best results, use a horizontal image with a white or transparent background.</span>
+                                    <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.business_logo?.length">{{ errors?.business_logo[0] }}</span>
                               </div>
                           </div>
                       </div>
@@ -132,150 +227,197 @@ export default {
       
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">Company name</label>
-                                <input v-model="company_name" type="text" class="form-control form-control-input">
-                                <span class="form-input-commant">Your company name may be used on invoices, receipts and customer facing proposals.</span>
+                                <input @focus="delete errors?.company_name" v-model="company_name" type="text" class="form-control form-control-input">
+                                <span class="form-input-commant" v-if="!errors?.company_name?.length">Your company name may be used on invoices, receipts and customer facing proposals.</span>
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.company_name?.length">{{ errors?.company_name[0] }}</span>
                             </div>
-      
+                            
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">Business name / trading name</label>
-                                <input v-model="business_name" type="text" class="form-control form-control-input">
-                                <span class="form-input-commant">Your business name or trading name will be used instead of your company name where possible and also in your Terms and Conditions.</span>
+                                <input @focus="delete errors?.business_name" v-model="business_name" type="text" class="form-control form-control-input">
+                                <span v-if="!errors?.business_name?.length" class="form-input-commant">Your business name or trading name will be used instead of your company name where possible and also in your Terms and Conditions.</span>
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.business_name?.length">{{ errors?.business_name[0] }}</span>
                             </div>
-      
+                            
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">Australian Business Number (ABN)</label>
-                                <input v-model="business_number" type="text" class="form-control form-control-input">
-                                <span class="form-input-commant">Your business identifier may be used on invoices, receipts and proposals. Please make sure it's correct.</span>
+                                <input @focus="delete errors?.business_number" v-model="business_number" type="text" class="form-control form-control-input">
+                                <span v-if="!errors?.business_number?.length" class="form-input-commant">Your business identifier may be used on invoices, receipts and proposals. Please make sure it's correct.</span>
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.business_number?.length">{{ errors?.business_number[0] }}</span>
                             </div>
-      
+                            
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">Contact phone (office)</label>
-                                <input v-model="office_phone" type="text" class="form-control form-control-input">
+                                <input @focus="delete errors?.office_phone" v-model="office_phone" type="text" class="form-control form-control-input">
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.office_phone?.length">{{ errors?.office_phone[0] }}</span>
                             </div>
-        
+                            
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">Contact phone (mobile)</label>
-                                <input v-model="mobile_phone" type="text" class="form-control form-control-input">
+                                <input @focus="delete errors?.mobile_phone" v-model="mobile_phone" type="text" class="form-control form-control-input">
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.mobile_phone?.length">{{ errors?.mobile_phone[0] }}</span>
                             </div>
-      
+                            
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">Company contact email</label>
-                                <input v-model="email" type="text" class="form-control form-control-input">
+                                <input @focus="delete errors?.email" v-model="email" type="text" class="form-control form-control-input">
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.email?.length">{{ errors?.email[0] }}</span>
                             </div>
-      
+                            
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">Company Website</label>
-                                <input v-model="website" type="text" class="form-control form-control-input">
+                                <input @focus="delete errors?.website" v-model="website" type="text" class="form-control form-control-input">
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.website?.length">{{ errors?.website[0] }}</span>
                             </div>
-
+                            
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">Unit</label>
-                                <input v-model="unit" type="text" class="form-control form-control-input">
+                                <input @focus="delete errors?.unit" v-model="unit" type="text" class="form-control form-control-input">
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.unit?.length">{{ errors?.unit[0] }}</span>
                             </div>
-                        
+                            
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">Street Name</label>
-                                <input v-model="street_name" type="text" class="form-control form-control-input">
+                                <input @focus="delete errors?.street_name" v-model="street_name" type="text" class="form-control form-control-input">
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.street_name?.length">{{ errors?.street_name[0] }}</span>
                             </div>
-
+                            
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">City</label>
-                                <input v-model="city" type="text" class="form-control form-control-input">
+                                <input @focus="delete errors?.city" v-model="city" type="text" class="form-control form-control-input">
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.city?.length">{{ errors?.city[0] }}</span>
                             </div>
-
+                            
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">State</label>
-                                <input v-model="state" type="text" class="form-control form-control-input">
+                                <input @focus="delete errors?.state" v-model="state" type="text" class="form-control form-control-input">
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.state?.length">{{ errors?.state[0] }}</span>
                             </div>
-
+                            
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">Country</label>
-                                <input v-model="country" type="text" class="form-control form-control-input">
+                                <input @focus="delete errors?.country" v-model="country" type="text" class="form-control form-control-input">
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.country?.length">{{ errors?.country[0] }}</span>
                             </div>
-                          
+                            
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">Postcode</label>
-                                <input v-model="postcode" type="text" class="form-control form-control-input">
+                                <input @focus="delete errors?.postcode" v-model="postcode" type="text" class="form-control form-control-input">
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.postcode?.length">{{ errors?.postcode[0] }}</span>
                             </div>
-                          
-                            <div>
-                                <button class="btn btn-primary fw-bold">Save Settings</button>
+                            
+                            <div class="d-flex">
+                                <button :disabled="isCompanyDetailsUpdateSubmit" @click="updateCompanyData('update_company_details')" class="btn btn-primary fw-bold">
+                                    <div v-if="isCompanyDetailsUpdateSubmit">
+                                        <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
+                                            <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                                        </svg>
+                                        <span>Submitting...</span>
+                                    </div>
+                                    <span v-if="!isCompanyDetailsUpdateSubmit">Save Settings</span>
+                                </button>
+                                <button class="btn btn-danger fw-bold ms-auto">Reset</button>
                             </div>
-                      </div>
-                  </div>
-      
-                  <hr class="mt-4 mb-5">
-      
-                  <div class="row">
-                      <div class="col-lg-2 col-12 mb-3 mb-lg-0">
-                          <div class="settings-group-header">
-                              <h2>Time & Location</h2>
-                              <span class="sub-title">These settings affect how time is displayed.</span>
-                          </div>
-                      </div>
-                      <div class="col-lg-6 col-12">
-      
-                          <div class="settings-group-item">
-                              <label class="form-label-title" for="">Default timezone</label>
-                              <div class="select-box">
-                                  <select class="form-control form-control-input" v-model="time_zone">
-                                      <option v-for="(timezome, index) in timezomes" :key="index" :value="timezome.name">{{ timezome.name }} &nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;&nbsp; {{ timezome.offset }}</option>
-                                  </select>
-                              </div>
-                              <span class="form-input-commant">This timezone will be used when time-stamping e-signature documents.</span>
-                          </div>
-      
-                          <div>
-                              <button class="btn btn-primary fw-bold">Save Settings</button>
-                          </div>
-                      </div>
-                  </div>
-      
-                  <hr class="mt-4 mb-5">
-      
-      
-                  <div class="row">
-                      <div class="col-lg-2 col-12 mb-3 mb-lg-0">
-                          <div class="settings-group-header">
-                              <h2>Social Media Details</h2>
-                              <span class="sub-title">Links to your company social media accounts</span>
-                          </div>
-                      </div>
-                      <div class="col-lg-6 col-12">
-      
-                          <div class="settings-group-item">
-                              <label class="form-label-title" for="">Twitter username</label>
-                              <input v-model="twitter_link" type="text" class="form-control form-control-input">
-                              <span class="form-input-commant">Check Link: <a target="_blank" :href="`https://twitter.com/${twitter_link}`">https://twitter.com/{{ twitter_link }}</a></span>
-                          </div>
-      
-                          <div class="settings-group-item">
-                              <label class="form-label-title" for="">Instagram username</label>
-                              <input v-model="instagram_link" type="text" class="form-control form-control-input">
-                              <span class="form-input-commant">Check Link: <a target="_blank" :href="`https://instagram.com/${instagram_link}`">https://instagram.com/{{ instagram_link }}</a></span>
-                          </div>
-      
-                          <div class="settings-group-item">
-                              <label class="form-label-title" for="">Facebook username</label>
-                              <input v-model="facebook_link" type="text" class="form-control form-control-input">
-                              <span class="form-input-commant">Check Link: <a target="_blank" :href="`https://facebook.com/${facebook_link}`">https://facebook.com/{{ facebook_link }}</a></span>
-                          </div>
-      
-                          <div class="settings-group-item">
-                              <label class="form-label-title" for="">Pinterest username</label>
-                              <input v-model="pinterest_link" type="text" class="form-control form-control-input">
-                              <span class="form-input-commant">Check Link: <a target="_blank" :href="`https://www.pinterest.com/${pinterest_link}`">https://www.pinterest.com/{{ pinterest_link }}</a></span>
-                          </div>
-      
-                          <div class="settings-group-item">
-                              <label class="form-label-title" for="">Youtube username</label>
-                              <input v-model="youtube_link" type="text" class="form-control form-control-input">
-                              <span class="form-input-commant">Check Link: <a target="_blank" :href="`https://www.youtube.com/${youtube_link}`">https://www.youtube.com/{{ youtube_link }}</a></span>
-                          </div>
-      
-                          <div>
-                              <button class="btn btn-primary fw-bold">Save Settings</button>
-                          </div>
+                        </div>
+                    </div>
+                    
+                    <hr class="mt-4 mb-5">
+                    
+                    <div class="row">
+                        <div class="col-lg-2 col-12 mb-3 mb-lg-0">
+                            <div class="settings-group-header">
+                                <h2>Time & Location</h2>
+                                <span class="sub-title">These settings affect how time is displayed.</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12">
+                            
+                            <div class="settings-group-item">
+                                <label class="form-label-title" for="">Default timezone</label>
+                                <div class="select-box">
+                                    <select @click="delete errors?.time_zone" class="form-control form-control-input" v-model="time_zone">
+                                        <option v-for="(timezome, index) in timezomes" :key="index" :value="timezome.name">{{ timezome.name }} &nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;&nbsp; {{ timezome.offset }}</option>
+                                    </select>
+                                </div>
+                                <span v-if="!errors?.time_zone?.length" class="form-input-commant">This timezone will be used when time-stamping e-signature documents.</span>
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.time_zone?.length">{{ errors?.time_zone[0] }}</span>
+                            </div>
+                            
+                            <div class="d-flex">
+                                <button :disabled="isTimeZoneUpdateSubmit" @click="updateCompanyData('update_time_zone')" class="btn btn-primary fw-bold">
+                                    <div v-if="isTimeZoneUpdateSubmit">
+                                        <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
+                                            <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                                        </svg>
+                                        <span>Submitting...</span>
+                                    </div>
+                                    <span v-if="!isTimeZoneUpdateSubmit">Save Settings</span>
+                                </button>
+                                <button class="btn btn-danger fw-bold ms-auto">Reset</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    
+                    <hr class="mt-4 mb-5">
+                    
+                    
+                    <div class="row">
+                        <div class="col-lg-2 col-12 mb-3 mb-lg-0">
+                            <div class="settings-group-header">
+                                <h2>Social Media Details</h2>
+                                <span class="sub-title">Links to your company social media accounts</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-12">
+                            
+                            <div class="settings-group-item">
+                                <label class="form-label-title" for="">Twitter username</label>
+                                <input @focus="delete errors?.twitter_link" v-model="twitter_link" type="text" class="form-control form-control-input">
+                                <span v-if="!errors?.twitter_link?.length" class="form-input-commant">Check Link: <a target="_blank" :href="`https://twitter.com/${twitter_link}`">https://twitter.com/{{ twitter_link }}</a></span>
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.twitter_link?.length">{{ errors?.twitter_link[0] }}</span>
+                            </div>
+                            
+                            <div class="settings-group-item">
+                                <label class="form-label-title" for="">Instagram username</label>
+                                <input @focus="delete errors?.instagram_link" v-model="instagram_link" type="text" class="form-control form-control-input">
+                                <span v-if="!errors?.instagram_link?.length" class="form-input-commant">Check Link: <a target="_blank" :href="`https://instagram.com/${instagram_link}`">https://instagram.com/{{ instagram_link }}</a></span>
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.instagram_link?.length">{{ errors?.instagram_link[0] }}</span>
+                            </div>
+                            
+                            <div class="settings-group-item">
+                                <label class="form-label-title" for="">Facebook username</label>
+                                <input @focus="delete errors?.facebook_link" v-model="facebook_link" type="text" class="form-control form-control-input">
+                                <span v-if="!errors?.facebook_link?.length" class="form-input-commant">Check Link: <a target="_blank" :href="`https://facebook.com/${facebook_link}`">https://facebook.com/{{ facebook_link }}</a></span>
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.facebook_link?.length">{{ errors?.facebook_link[0] }}</span>
+                            </div>
+                            
+                            <div class="settings-group-item">
+                                <label class="form-label-title" for="">Pinterest username</label>
+                                <input @focus="delete errors?.pinterest_link" v-model="pinterest_link" type="text" class="form-control form-control-input">
+                                <span v-if="!errors?.pinterest_link?.length" class="form-input-commant">Check Link: <a target="_blank" :href="`https://www.pinterest.com/${pinterest_link}`">https://www.pinterest.com/{{ pinterest_link }}</a></span>
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.pinterest_link?.length">{{ errors?.pinterest_link[0] }}</span>
+                            </div>
+                            
+                            <div class="settings-group-item">
+                                <label class="form-label-title" for="">Youtube username</label>
+                                <input @focus="delete errors?.youtube_link" v-model="youtube_link" type="text" class="form-control form-control-input">
+                                <span v-if="!errors?.youtube_link?.length" class="form-input-commant">Check Link: <a target="_blank" :href="`https://www.youtube.com/${youtube_link}`">https://www.youtube.com/{{ youtube_link }}</a></span>
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.youtube_link?.length">{{ errors?.youtube_link[0] }}</span>
+                            </div>
+                            
+                            <div class="d-flex">
+                                <button :disabled="isSocialMediaUpdateSubmit" @click="updateCompanyData('update_social_media')" class="btn btn-primary fw-bold">
+                                    <div v-if="isSocialMediaUpdateSubmit">
+                                        <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
+                                            <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                                        </svg>
+                                        <span>Submitting...</span>
+                                    </div>
+                                    <span v-if="!isSocialMediaUpdateSubmit">Save Settings</span>
+                                </button>
+                                <button class="btn btn-danger fw-bold ms-auto">Reset</button>
+                            </div>
                           
                       </div>
                   </div>

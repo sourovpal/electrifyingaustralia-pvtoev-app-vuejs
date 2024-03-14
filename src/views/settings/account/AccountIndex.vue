@@ -61,14 +61,14 @@ export default {
                     this.isEmailChangeSubmit = true;
                     this.tempChangeEmail = '';
                     this.email_otp = '',
-                    data.append('email', this.email);
+                    data.append('email', this.email??'');
                     data.append('action', 'send_email_otp');
                 }else if(action === 'update_email'){
                     this.isEmailChangeSubmitOtp = true;
                     data.append('action', 'update_email');
-                    data.append('email', this.tempChangeEmail);
-                    data.append('email_otp', this.email_otp);
-                    data.append('password', this.password);
+                    data.append('email', this.tempChangeEmail??'');
+                    data.append('email_otp', this.email_otp??'');
+                    data.append('password', this.password??'');
                 }else{
                     return;
                 }
@@ -115,10 +115,11 @@ export default {
                     new_password:this.new_password,
                     confirm_password:this.confirm_password,
                 });
-                const {message} = res;
-                this.$toast[message.type](message.text);
+                try{
+                    const {message} = res;
+                    this.$toast[message.type](message.text);
+                }catch(error){}
             }catch(error){
-                console.log(error);
                 try{
                     var data = error.response.data;
                     this.errors = data.errors;

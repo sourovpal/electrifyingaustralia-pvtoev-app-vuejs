@@ -26,7 +26,8 @@ html{
   scroll-behavior: smooth;
 }
 button[disabled]{
-  cursor:no-drop;
+  cursor:no-drop !important;
+  pointer-events:inherit !important;
 }
 .v-toast {
   z-index: 1090999999999999 !important;
@@ -309,7 +310,6 @@ button[disabled]{
   bottom: 0;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
-  letter-spacing:0.8px;
 }
 .confirm-dialog button:nth-of-type(1) {
   color: #ff0d3a;

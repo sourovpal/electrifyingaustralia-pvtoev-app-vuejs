@@ -17,6 +17,9 @@ import "vue-custom-scrollbar/dist/vueScrollbar.css"; // remove
 import 'custom-vue-scrollbar/dist/style.css';
 import 'tippy.js/dist/tippy.css'
 import 'vue-toast-notification/dist/theme-bootstrap.css';
+
+
+
 const VueProgressBarOptions = {
   color: "rgb(67 138 255)",
   failedColor: "rgb(67 138 255)",
@@ -62,14 +65,12 @@ app.mount('#app');
 
 
 app.config.errorHandler = (err, instance, info) => {
-  // report error to tracking services
+  console.log(err);
 }
 
 
-  // ==================================================
 // ==================================================
 //+++++++++++++++++ Router Middleware ++++++++++++++
-// ==================================================
 // ==================================================
 
 

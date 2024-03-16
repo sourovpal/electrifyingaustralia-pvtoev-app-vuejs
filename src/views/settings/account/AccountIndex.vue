@@ -54,6 +54,7 @@ export default {
             try{
                 
                 if(this.email === this.fetchUser.email){
+                    this.errors = {email:['Please change current email address.']};
                     return ;
                 }
                 var data = new FormData();

@@ -1,225 +1,184 @@
 <script>
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
+    import ActionBar from '../../../components/ActionBar/ActionBar.vue';
+    import LeftActionBar from '../../../components/ActionBar/LeftActionBar.vue';
+    import RightActionBar from '../../../components/ActionBar/RightActionBar.vue';
+    import Datatable from '../../../components/Datatable/Datatable.vue';
+    import DatatableHeader from '../../../components/Datatable/DatatableHeader.vue';
+    import DatatableBody from '../../../components/Datatable/DatatableBody.vue';
+    import {FetchInstaller} from '../../../actions/InstallerAction';
+    export default {
+        components: {
+            ActionBar,
+            LeftActionBar,
+            RightActionBar,
+            Datatable,
+            DatatableHeader,
+            DatatableBody,
+        },
+        data() {
+            return {
+                isLoading:false,
+                fetchInstallers:{},
+                pagination:{
+                    total:null,
+                    per_page:null,
+                    current_page:null,
+                    next_page:null,
+                    prev_page:null,
+                    last_page:null,
+                    from:null,
+                    to:null
+                },
+            }
+        },
+        mounted(){
+            this.fetchInstallerDataHandler();
+        },
+        methods: {
+            async fetchInstallerDataHandler(page=null, limit=30){
+                try{
+                    if(!page){
+                        const query = this.$route.query;
+                        if(query.page){
+                            page = query.page;
+                        }else{
+                            page = 1;
+                        }
+                    }
+                    this.$router.push('?page='+page);
+                    this.isLoading = true;
+                    const res = await FetchInstaller({page, limit});
+                    try{
+                        const {installers, pagination} = res;
+                        this.fetchInstallers = installers;
+                        this.pagination = pagination;
+                    }catch(error){}
 
-export default {
-  name:'AccountIndex',
-    data() {
-      return{
-      }
-    },
-    components:{
-        vueCustomScrollbar,
+                }catch(error){
+                }finally{
+                    this.isLoading = false;
+                }
+            }
+        },
     }
-  }
-  
 </script>
-
-<template>
-
-  <vue-custom-scrollbar :settings="{ suppressScrollY: false, suppressScrollX: false, wheelPropagation: false, wheelSpeed:0.5 }" class="content">
     
-    <div class="content-header">
-        <h1>Installers list</h1>
-    </div>
+<template>        
+    <section class="content installer-list">
+        <div class="content-header my-3">
+            <h1>Installers list</h1>
+        </div>
+    
+        <div class="content-body- border-top">
+            <action-bar>
+                <left-action-bar>
+                    <button :disabled="isLoading" @click="fetchInstallerDataHandler(1)" class="toolbar-btn btn btn-light btn-floating btn-sm me-3 ms-2">
+                        <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                    </button>
+                    <button :disabled="true" class="toolbar-btn btn btn-light btn-md btn-lg btn-floating btn-sm ms-3">
+                        <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h12v-4H9v4zm0 5h12v-4H9v4zM9 5v4h12V5H9z"></path></svg>
+                    </button>
+                </left-action-bar>
+            
+                <right-action-bar>
+                    <div class="mx-3">
+                        <router-link class="btn btn-primary fw-bold btn-sm" to="/settings/installers/new">Add new installer</router-link>
+                    </div>
+                    <div class="fw-bold d-flex justify-content-center align-items-center wh-40" style="width: 8rem;">{{ pagination.from }}-{{ pagination.to }} of {{ pagination.total }}</div>
+                    <button 
+                    :disabled="!pagination.prev_page" 
+                    @click="pagination.prev_page && fetchInstallerDataHandler(pagination.prev_page)" 
+                    class="btn btn-light btn-md btn-lg btn-floating btn-sm me-2">
+                        <svg  class="svg-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>
+                    </button>
+                    <button 
+                    :disabled="!pagination.next_page" 
+                    @click="pagination.next_page && fetchInstallerDataHandler(pagination.next_page)" 
+                    class="toolbar-btn btn btn-light btn-floating btn-sm me-3">
+                        <svg class="svg-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+                    </button>
+                </right-action-bar>
+            </action-bar>
+        
+            <Datatable>
+        
+                <datatable-header class="">
+                    <div class="tbl-th" style="width:15rem;">Installer Name</div>
+                    <div class="tbl-th " style="width:10rem;">ABN</div>
+                    <div class="tbl-th" style="width:15rem;flex-grow: 1;">Company Name</div>
+                    <div class="tbl-th" style="width:15rem;flex-grow: 1;">Email</div>
+                    <div class="tbl-th" style="width:10rem;flex-grow: 1;">Phone Number</div>
+                    <div class="tbl-th" style="width:10rem;flex-grow: 1;">Hours Phone Number</div>
+                    <div class="tbl-th" style="width:15rem;flex-grow: 1;">Tax Identifier Type</div>
+                    <div class="tbl-th" style="width:15rem;flex-grow: 1;">Electrical Licence Number</div>
+                    <div class="tbl-th" style="width:15rem;flex-grow: 1;">CEC Accreditation Number</div>
+                    <div class="tbl-th" style="width:15rem;flex-grow: 1;">Workmanship Warranty (years) </div>
+                    <div class="tbl-th" style="width:10rem;">Last Update</div>
+                    <div class="tbl-th" style="width:10rem;">Created At</div>
+                </datatable-header>
+                <datatable-body>
+                    
+                    <div class="tbl-tr full-width" v-for="(installer, index) in fetchInstallers" :key="index">
+        
+                        <div style="width:15rem;" class="tbl-td full-width">
+                            <a class="text-overflow-ellipsis" href=""> {{ installer.full_name }}</a>
+                        </div>
+        
+                        <div style="width:10rem;" class="tbl-td full-width">
+                            <a class="text-overflow-ellipsis" href="">{{ installer.abn }}</a>
+                        </div>
+        
+                        <div style="width:15rem;" class="tbl-td full-width">
+                            <a class="text-overflow-ellipsis" href="">{{ installer.company_name }}</a>
+                        </div>
+                
+                        <div style="width:15rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">
+                            <a class="text-overflow-ellipsis" href="">{{ installer.email }}</a>
+                        </div>
 
-    <div class="content-body">
-        <section class="">
+                        <div style="width:10rem;" class="tbl-td d-none d-lg-flex">
+                            {{ installer.phone_number }}
+                        </div>
+                        
+                        <div style="width:10rem;" class="tbl-td d-none d-lg-flex">
+                            {{ installer.home_phone_number }}
+                        </div>
 
-            <div class="row">
-                <div class="col-lg-10">
-                    <table class="table table-sm table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th class="fw-bold" width="15%" scope="col">Installer Name</th>
-                                <th class="fw-bold" width="15%" scope="col">Email</th>
-                                <th class="fw-bold" width="10%" scope="col">Phone</th>
-                                <th class="fw-bold" width="10%" scope="col">License no.</th>
-                                <th class="fw-bold" width="15%" scope="col">CEC accr. no.</th>
-                                <th class="fw-bold" width="15%" scope="col"><span class="d-none">Action</span></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Ibrahim Saleh</td>
-                                <td>Ibrahim.sal300@gmail.com</td>
-                                <td>0474 265 201</td>
-                                <td>353420c</td>
-                                <td>A1486311</td>
-                                <td class="text-end">
-                                    <router-link class="me-1 btn btn-info btn-sm px-2" to="/settings/installers/edit/s5d6s7fs6d7fsd5">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
-                                    </router-link>
-                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Ibrahim Saleh</td>
-                                <td>Ibrahim.sal300@gmail.com</td>
-                                <td>0474 265 201</td>
-                                <td>353420c</td>
-                                <td>A1486311</td>
-                                <td class="text-end">
-                                    <router-link class="me-1 btn btn-info btn-sm px-2" to="/settings/installers/edit/s5d6s7fs6d7fsd5">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
-                                    </router-link>
-                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Ibrahim Saleh</td>
-                                <td>Ibrahim.sal300@gmail.com</td>
-                                <td>0474 265 201</td>
-                                <td>353420c</td>
-                                <td>A1486311</td>
-                                <td class="text-end">
-                                    <router-link class="me-1 btn btn-info btn-sm px-2" to="/settings/installers/edit/s5d6s7fs6d7fsd5">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
-                                    </router-link>
-                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Ibrahim Saleh</td>
-                                <td>Ibrahim.sal300@gmail.com</td>
-                                <td>0474 265 201</td>
-                                <td>353420c</td>
-                                <td>A1486311</td>
-                                <td class="text-end">
-                                    <router-link class="me-1 btn btn-info btn-sm px-2" to="/settings/installers/edit/s5d6s7fs6d7fsd5">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
-                                    </router-link>
-                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Ibrahim Saleh</td>
-                                <td>Ibrahim.sal300@gmail.com</td>
-                                <td>0474 265 201</td>
-                                <td>353420c</td>
-                                <td>A1486311</td>
-                                <td class="text-end">
-                                    <router-link class="me-1 btn btn-info btn-sm px-2" to="/settings/installers/edit/s5d6s7fs6d7fsd5">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
-                                    </router-link>
-                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Ibrahim Saleh</td>
-                                <td>Ibrahim.sal300@gmail.com</td>
-                                <td>0474 265 201</td>
-                                <td>353420c</td>
-                                <td>A1486311</td>
-                                <td class="text-end">
-                                    <router-link class="me-1 btn btn-info btn-sm px-2" to="/settings/installers/edit/s5d6s7fs6d7fsd5">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
-                                    </router-link>
-                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Ibrahim Saleh</td>
-                                <td>Ibrahim.sal300@gmail.com</td>
-                                <td>0474 265 201</td>
-                                <td>353420c</td>
-                                <td>A1486311</td>
-                                <td class="text-end">
-                                    <router-link class="me-1 btn btn-info btn-sm px-2" to="/settings/installers/edit/s5d6s7fs6d7fsd5">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
-                                    </router-link>
-                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Ibrahim Saleh</td>
-                                <td>Ibrahim.sal300@gmail.com</td>
-                                <td>0474 265 201</td>
-                                <td>353420c</td>
-                                <td>A1486311</td>
-                                <td class="text-end">
-                                    <router-link class="me-1 btn btn-info btn-sm px-2" to="/settings/installers/edit/s5d6s7fs6d7fsd5">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
-                                    </router-link>
-                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Ibrahim Saleh</td>
-                                <td>Ibrahim.sal300@gmail.com</td>
-                                <td>0474 265 201</td>
-                                <td>353420c</td>
-                                <td>A1486311</td>
-                                <td class="text-end">
-                                    <router-link class="me-1 btn btn-info btn-sm px-2" to="/settings/installers/edit/s5d6s7fs6d7fsd5">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
-                                    </router-link>
-                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Ibrahim Saleh</td>
-                                <td>Ibrahim.sal300@gmail.com</td>
-                                <td>0474 265 201</td>
-                                <td>353420c</td>
-                                <td>A1486311</td>
-                                <td class="text-end">
-                                    <router-link class="me-1 btn btn-info btn-sm px-2" to="/settings/installers/edit/s5d6s7fs6d7fsd5">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
-                                    </router-link>
-                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
-                                    </a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Ibrahim Saleh</td>
-                                <td>Ibrahim.sal300@gmail.com</td>
-                                <td>0474 265 201</td>
-                                <td>353420c</td>
-                                <td>A1486311</td>
-                                <td class="text-end">
-                                    <router-link class="me-1 btn btn-info btn-sm px-2" to="/settings/installers/edit/s5d6s7fs6d7fsd5">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M480-120v-71l216-216 71 71-216 216h-71ZM120-330v-60h300v60H120Zm690-49-71-71 29-29q8-8 21-8t21 8l29 29q8 8 8 21t-8 21l-29 29ZM120-495v-60h470v60H120Zm0-165v-60h470v60H120Z"/></svg>
-                                    </router-link>
-                                    <a class="ms-1 btn btn-danger btn-sm px-2" href="">
-                                        <svg height="20" viewBox="0 -960 960 960" width="20" fill="#ffffff"><path d="M261-120q-24.75 0-42.375-17.625T201-180v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm438-630H261v570h438v-570ZM367-266h60v-399h-60v399Zm166 0h60v-399h-60v399ZM261-750v570-570Z"/></svg>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-lg-12 mt-3">
-                    <router-link class="btn btn-primary fw-bold" to="/settings/installers/new">Add new installer</router-link>
-                </div>
-            </div>
+                        <div style="width:15rem;" class="tbl-td full-width">
+                            <a class="text-overflow-ellipsis" href="">{{ installer.tax_identifier_type }}</a>
+                        </div>
 
-            <br><br><br>
-        </section>
-    </div>
+                        <div style="width:15rem;" class="tbl-td full-width">
+                            <a class="text-overflow-ellipsis" href=""> {{ installer.electrical_licence_number }}</a>
+                        </div>
 
-  </vue-custom-scrollbar>
+                        <div style="width:15rem;" class="tbl-td full-width">
+                            <a class="text-overflow-ellipsis" href=""> {{ installer.cec_accreditation_number }}</a>
+                        </div>
 
+                        <div style="width:15rem;" class="tbl-td full-width">
+                            <a class="text-overflow-ellipsis" href=""> {{ installer.workmanship_warranty }}</a>
+                        </div>
+        
+                        <div style="width:10rem;" class="tbl-td d-none d-lg-flex">{{ installer.updated_at }}</div>
+                
+                        <div style="width:10rem;" class="tbl-td d-none d-lg-flex">{{ installer.created_at }}</div>
+                    </div>
+                </datatable-body>
+        
+            </Datatable>
+        </div>
+    </section>
 </template>
+    
+<style scoped lang="scss">
 
-<style lang="scss" scoped>
+</style>
+<style>
+    .installer-list .scrollbar__wrapper{
+        height:calc(100vh - 7rem + 5px);
+    }
+    .installer-list .scrollbar__scroller{
+        height: 100%;
+    }
 </style>

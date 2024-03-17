@@ -35,7 +35,7 @@
             this.fetchInstallerDataHandler();
         },
         methods: {
-            async fetchInstallerDataHandler(page=null, limit=30){
+            async fetchInstallerDataHandler(page=null, limit=50){
                 try{
                     if(!page){
                         const query = this.$route.query;
@@ -75,16 +75,13 @@
                     <button :disabled="isLoading" @click="fetchInstallerDataHandler(1)" class="toolbar-btn btn btn-light btn-floating btn-sm me-3 ms-2">
                         <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
                     </button>
-                    <button :disabled="true" class="toolbar-btn btn btn-light btn-md btn-lg btn-floating btn-sm ms-3">
-                        <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h12v-4H9v4zm0 5h12v-4H9v4zM9 5v4h12V5H9z"></path></svg>
-                    </button>
                 </left-action-bar>
             
                 <right-action-bar>
                     <div class="mx-3">
                         <router-link class="btn btn-primary fw-bold btn-sm" to="/settings/installers/new">Add new installer</router-link>
                     </div>
-                    <div class="fw-bold d-flex justify-content-center align-items-center wh-40" style="width: 8rem;">{{ pagination.from }}-{{ pagination.to }} of {{ pagination.total }}</div>
+                    <div class="fw-bold d-flex justify-content-center align-items-center wh-40 me-2" style="width: 8rem;">{{ pagination.from }} - {{ pagination.to }} &nbsp; of &nbsp; {{ pagination.total }}</div>
                     <button 
                     :disabled="!pagination.prev_page" 
                     @click="pagination.prev_page && fetchInstallerDataHandler(pagination.prev_page)" 

@@ -28,12 +28,16 @@ const UpdateProfile = (payload)=>{
 
 const UpdateProfilePassword = (payload)=>{
     return new Promise((resolve, reject)=>{
-        api.post('/profile/password', payload)
-        .then((res)=>{
-            return resolve(res.data);
-        }).catch((error)=>{
+        try{
+            api.post('/profile/password', payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
             return reject(error);
-        });
+        }
     });
 }
 

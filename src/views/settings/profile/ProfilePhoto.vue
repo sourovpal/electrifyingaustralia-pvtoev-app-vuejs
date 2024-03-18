@@ -13,8 +13,8 @@
                 default_profile_avatar:null,
                 inputProfileImage:null,
                 profileImageFile:null,
-                isProfileImageSubmit:false,
-                isProfileImageRemoveSubmit:false,
+                isSubmitProfileImage:false,
+                isSubmitProfileImageRemove:false,
                 profileImageRemoveConfirmDialog:false,
             }
         },
@@ -48,12 +48,12 @@
 
                     this.profileImageRemoveConfirmDialog = false;
                     data.append('remove_profile_photo', 1);
-                    this.isProfileImageRemoveSubmit = true;
+                    this.isSubmitProfileImageRemove = true;
                     
                 }else if(this.profileImageFile){
                     
                     data.append('profile_photo', this.profileImageFile);
-                    this.isProfileImageSubmit = true;
+                    this.isSubmitProfileImage = true;
 
                 }else{
 
@@ -90,8 +90,8 @@
                         this.$toast.error('Oops, something went wrong');
                     }
                 }finally{
-                    this.isProfileImageSubmit = false;
-                    this.isProfileImageRemoveSubmit = false;
+                    this.isSubmitProfileImage = false;
+                    this.isSubmitProfileImageRemove = false;
                 }
                 
             },
@@ -181,25 +181,25 @@
                         <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.profile_photo?.length">{{ errors?.profile_photo[0] }}</span>
                     </div>
                     <div class="d-flex">
-                        <button :disabled="isProfileImageSubmit" @click="formSubmitHandler()" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
-                            <div v-if="isProfileImageSubmit">
+                        <button :disabled="isSubmitProfileImage" @click="formSubmitHandler()" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
+                            <div v-if="isSubmitProfileImage">
                                 <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
                                     <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
                                 </svg>
                                 <span>Submitting...</span>
                             </div>
-                            <span v-if="!isProfileImageSubmit">Save Settings</span>
+                            <span v-if="!isSubmitProfileImage">Save Settings</span>
                         </button>
                         
                         <button ref="showCropperModel" data-mdb-toggle="modal" data-mdb-target="#prifileImageCroperModel" style="opacity: 0;visibility: hidden;"></button>
-                        <button v-if="profile_avatar" :disabled="isProfileImageRemoveSubmit" @click="profileImageRemoveConfirmDialog=!profileImageRemoveConfirmDialog" class="btn btn-danger ms-auto">
-                            <div v-if="isProfileImageRemoveSubmit">
+                        <button v-if="profile_avatar" :disabled="isSubmitProfileImageRemove" @click="profileImageRemoveConfirmDialog=!profileImageRemoveConfirmDialog" class="btn btn-danger ms-auto">
+                            <div v-if="isSubmitProfileImageRemove">
                                 <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
                                     <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
                                 </svg>
                                 <span class="text-white">Submitting...</span>
                             </div>
-                            <span v-if="!isProfileImageRemoveSubmit">Remove</span>
+                            <span v-if="!isSubmitProfileImageRemove">Remove</span>
                         </button>
                     </div>
                 </div>

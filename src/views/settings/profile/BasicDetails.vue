@@ -12,7 +12,7 @@
                 job_title:null,
                 username:null,
                 company_name:null,
-                isBasicDetailsSubmit:false,
+                isSubmitBasicDetails:false,
             }
         },
         watch: {
@@ -38,7 +38,7 @@
                     job_title   :this.job_title,
                     display_name:this.display_name,
                 };
-                this.isBasicDetailsSubmit = true;
+                this.isSubmitBasicDetails = true;
                 
                 try{
                     const res = await UpdateProfile(data);
@@ -68,7 +68,7 @@
                         this.$toast.error('Oops, something went wrong');
                     }
                 }finally{
-                    this.isBasicDetailsSubmit = false;
+                    this.isSubmitBasicDetails = false;
                 }
                 
             },
@@ -112,14 +112,14 @@
                   <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.username?.length">{{ errors?.username[0] }}</span>
               </div>
               <div class="d-flex">
-                  <button :disabled="isBasicDetailsSubmit" @click="formSubmitHandler()" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
-                      <div v-if="isBasicDetailsSubmit">
+                  <button :disabled="isSubmitBasicDetails" @click="formSubmitHandler()" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
+                      <div v-if="isSubmitBasicDetails">
                           <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
                               <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
                           </svg>
                           <span>Submitting...</span>
                       </div>
-                      <span v-if="!isBasicDetailsSubmit">Save Settings</span>
+                      <span v-if="!isSubmitBasicDetails">Save Settings</span>
                   </button>
                   <button class="btn btn-danger fw-bold ms-auto">Reset</button>
               </div>

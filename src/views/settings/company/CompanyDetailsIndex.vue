@@ -29,9 +29,9 @@ export default {
         pinterest_link:null,
         youtube_link:null,
         companyDetailsUpdateReset:0,
-        isCompanyDetailsUpdateSubmit:false,
-        isSocialMediaUpdateSubmit:false,
-        isTimeZoneUpdateSubmit:false,
+        isSubmitCompanyDetailsUpdate:false,
+        isSubmitSocialMediaUpdate:false,
+        isSubmitTimeZoneUpdate:false,
         businessLogoFile:null,
     }
 },
@@ -57,7 +57,7 @@ components:{
             const formData = new FormData();
             formData.append('action', action);
             if(action === 'update_company_details'){
-                this.isCompanyDetailsUpdateSubmit = true;
+                this.isSubmitCompanyDetailsUpdate = true;
                 formData.append('company_name', this.company_name??'');
                 formData.append('business_name', this.business_name??'');
                 formData.append('business_number', this.business_number??'');
@@ -77,12 +77,12 @@ components:{
                 
             }else if(action === 'update_time_zone'){
 
-                this.isTimeZoneUpdateSubmit = true;                
+                this.isSubmitTimeZoneUpdate = true;                
                 formData.append('time_zone', this.time_zone??'');
                 
             }else if(action === 'update_social_media'){
                 
-                this.isSocialMediaUpdateSubmit = true;
+                this.isSubmitSocialMediaUpdate = true;
                 formData.append('twitter_link', this.twitter_link??'');
                 formData.append('instagram_link', this.instagram_link??'');
                 formData.append('facebook_link', this.facebook_link??'');
@@ -90,7 +90,7 @@ components:{
                 formData.append('youtube_link', this.youtube_link??'');
                 
             }else if(action === 'remove_comapny_logo'){
-                this.isTimeZoneUpdateSubmit = true;
+                this.isSubmitTimeZoneUpdate = true;
                 formData.append('remove_business_logo', 1);
             }else{
                 return false;
@@ -107,9 +107,9 @@ components:{
                     this.businessLogoFile = null;
                     const {company} = res;
                     this.fetchData = company;
-                    this.isSocialMediaUpdateSubmit = 
-                    this.isCompanyDetailsUpdateSubmit = 
-                    this.isTimeZoneUpdateSubmit = false;
+                    this.isSubmitSocialMediaUpdate = 
+                    this.isSubmitCompanyDetailsUpdate = 
+                    this.isSubmitTimeZoneUpdate = false;
                 }catch(error){}
                 
             }catch(error){
@@ -126,9 +126,9 @@ components:{
                     this.$toast.error('Oops, something went wrong');
                 }
             }finally{
-                this.isSocialMediaUpdateSubmit = 
-                this.isCompanyDetailsUpdateSubmit = 
-                this.isTimeZoneUpdateSubmit = false;
+                this.isSubmitSocialMediaUpdate = 
+                this.isSubmitCompanyDetailsUpdate = 
+                this.isSubmitTimeZoneUpdate = false;
             }
         },
         async selectLogoHandler(e){
@@ -175,7 +175,7 @@ components:{
 
 <template>
     <div id="account-index" class="content">
-        <CustomScrollbar>
+        <CustomScrollbar thumbWidth="8" direction="horizontal" bg="red">
           
           <div class="content-header">
               <h1>Company</h1>
@@ -307,14 +307,14 @@ components:{
                             </div>
                             
                             <div class="d-flex">
-                                <button :disabled="isCompanyDetailsUpdateSubmit" @click="updateCompanyData('update_company_details')" class="btn btn-primary fw-bold">
-                                    <div v-if="isCompanyDetailsUpdateSubmit">
+                                <button :disabled="isSubmitCompanyDetailsUpdate" @click="updateCompanyData('update_company_details')" class="btn btn-primary fw-bold">
+                                    <div v-if="isSubmitCompanyDetailsUpdate">
                                         <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
                                             <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
                                         </svg>
                                         <span>Submitting...</span>
                                     </div>
-                                    <span v-if="!isCompanyDetailsUpdateSubmit">Save Settings</span>
+                                    <span v-if="!isSubmitCompanyDetailsUpdate">Save Settings</span>
                                 </button>
                                 <button class="btn btn-danger fw-bold ms-auto">Reset</button>
                             </div>
@@ -344,14 +344,14 @@ components:{
                             </div>
                             
                             <div class="d-flex">
-                                <button :disabled="isTimeZoneUpdateSubmit" @click="updateCompanyData('update_time_zone')" class="btn btn-primary fw-bold">
-                                    <div v-if="isTimeZoneUpdateSubmit">
+                                <button :disabled="isSubmitTimeZoneUpdate" @click="updateCompanyData('update_time_zone')" class="btn btn-primary fw-bold">
+                                    <div v-if="isSubmitTimeZoneUpdate">
                                         <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
                                             <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
                                         </svg>
                                         <span>Submitting...</span>
                                     </div>
-                                    <span v-if="!isTimeZoneUpdateSubmit">Save Settings</span>
+                                    <span v-if="!isSubmitTimeZoneUpdate">Save Settings</span>
                                 </button>
                                 <button class="btn btn-danger fw-bold ms-auto">Reset</button>
                             </div>
@@ -407,14 +407,14 @@ components:{
                             </div>
                             
                             <div class="d-flex">
-                                <button :disabled="isSocialMediaUpdateSubmit" @click="updateCompanyData('update_social_media')" class="btn btn-primary fw-bold">
-                                    <div v-if="isSocialMediaUpdateSubmit">
+                                <button :disabled="isSubmitSocialMediaUpdate" @click="updateCompanyData('update_social_media')" class="btn btn-primary fw-bold">
+                                    <div v-if="isSubmitSocialMediaUpdate">
                                         <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
                                             <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
                                         </svg>
                                         <span>Submitting...</span>
                                     </div>
-                                    <span v-if="!isSocialMediaUpdateSubmit">Save Settings</span>
+                                    <span v-if="!isSubmitSocialMediaUpdate">Save Settings</span>
                                 </button>
                                 <button class="btn btn-danger fw-bold ms-auto">Reset</button>
                             </div>

@@ -16,6 +16,7 @@
     "custom-vue-scrollbar": "^0.0.8",
     "dotenv": "^16.4.5",
     "force": "^0.0.3",
+    "js-base64": "^3.7.7",
     "keen-ui": "^1.4.0",
     "mapbox-gl-vue": "^2.0.4",
     "mdb-ui-kit": "^6.4.0",

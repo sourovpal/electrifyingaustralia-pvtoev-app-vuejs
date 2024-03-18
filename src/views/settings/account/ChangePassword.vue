@@ -8,13 +8,13 @@ export default {
         current_password:'',
         new_password:'',
         confirm_password:'',
-        isPasswordSubmit:false,
+        isSubmitPasswordChange:false,
       }
     },
     methods:{
         async changePasswordHandler(){
             try{
-                this.isPasswordSubmit = true;
+                this.isSubmitPasswordChange = true;
                 const res = await UpdateProfilePassword({
                     current_password:this.current_password,
                     new_password:this.new_password,
@@ -36,7 +36,7 @@ export default {
                     this.$toast.error('Oops, something went wrong');
                 }
             }finally{
-                this.isPasswordSubmit = false;
+                this.isSubmitPasswordChange = false;
             }
         },
     }
@@ -70,14 +70,14 @@ export default {
             </div>
             
             <div class="d-flex justify-content-start align-items-center">
-                <button :disabled="isPasswordSubmit" @click="changePasswordHandler" class="btn btn-primary fw-bold">
-                    <div v-if="isPasswordSubmit">
+                <button :disabled="isSubmitPasswordChange" @click="changePasswordHandler" class="btn btn-primary fw-bold">
+                    <div v-if="isSubmitPasswordChange">
                         <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
                             <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
                         </svg>
                         <span>Submitting...</span>
                     </div>
-                    <span v-if="!isPasswordSubmit">Change Password</span>
+                    <span v-if="!isSubmitPasswordChange">Change Password</span>
                 </button>
                 <a class="fw-bold ms-4" href="">I forgot my password</a>
             </div>

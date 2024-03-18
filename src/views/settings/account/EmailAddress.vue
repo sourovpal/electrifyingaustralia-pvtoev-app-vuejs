@@ -12,8 +12,8 @@ export default {
         password:'',
         showEmailOtpInputDialog:false,
         tempChangeEmail:'',
-        isEmailChangeSubmit:false,
-        isEmailChangeSubmitOtp:false,
+        isSubmitEmailChange:false,
+        isSubmitEmailChangeOtp:false,
       }
     },
     watch: {
@@ -36,13 +36,13 @@ export default {
                 }
                 var data = new FormData();
                 if(action === 'send_email_otp'){
-                    this.isEmailChangeSubmit = true;
+                    this.isSubmitEmailChange = true;
                     this.tempChangeEmail = '';
                     this.email_otp = '',
                     data.append('email', this.email??'');
                     data.append('action', 'send_email_otp');
                 }else if(action === 'update_email'){
-                    this.isEmailChangeSubmitOtp = true;
+                    this.isSubmitEmailChangeOtp = true;
                     data.append('action', 'update_email');
                     data.append('email', this.tempChangeEmail??'');
                     data.append('email_otp', this.email_otp??'');
@@ -81,8 +81,8 @@ export default {
                     this.$toast.error('Oops, something went wrong');
                 }
             }finally{
-                this.isEmailChangeSubmit = false;
-                this.isEmailChangeSubmitOtp = false;
+                this.isSubmitEmailChange = false;
+                this.isSubmitEmailChangeOtp = false;
             }
         },
     }
@@ -105,14 +105,14 @@ export default {
             </div>
             
             <div>
-                <button :disabled="isEmailChangeSubmit" @click="updateEmailAddress('send_email_otp')" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
-                    <div v-if="isEmailChangeSubmit">
+                <button :disabled="isSubmitEmailChange" @click="updateEmailAddress('send_email_otp')" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
+                    <div v-if="isSubmitEmailChange">
                         <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
                             <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
                         </svg>
                         <span>Submitting...</span>
                     </div>
-                    <span v-if="!isEmailChangeSubmit">Change Email</span>
+                    <span v-if="!isSubmitEmailChange">Change Email</span>
                 </button>
             </div>
         </div>
@@ -135,14 +135,14 @@ export default {
                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.password?.length">{{ errors?.password[0] }}</span>
             </div>
             <button @click="showEmailOtpInputDialog=!showEmailOtpInputDialog">Cancel</button>
-            <button :disabled="isEmailChangeSubmitOtp" @click="updateEmailAddress('update_email')">
-                <div v-if="isEmailChangeSubmitOtp">
+            <button :disabled="isSubmitEmailChangeOtp" @click="updateEmailAddress('update_email')">
+                <div v-if="isSubmitEmailChangeOtp">
                     <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
                         <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
                     </svg>
                     <span>Submitting...</span>
                 </div>
-                <span v-if="!isEmailChangeSubmitOtp">Confirm</span>
+                <span v-if="!isSubmitEmailChangeOtp">Confirm</span>
             </button>
         </div>
     </div>

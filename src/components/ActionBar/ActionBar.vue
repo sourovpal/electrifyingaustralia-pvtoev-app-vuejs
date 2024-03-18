@@ -20,6 +20,7 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    padding:2px 0px;
     .checkbox {
         cursor: pointer;
         display: flex;
@@ -49,43 +50,11 @@
     .checkbox__label {
         margin-left: 0.5em;
     }
-    .wh-40{
-        width:40px;
-        height:40px;
-    }
     .right-bar,
     .left-bar{
         display: flex;
         justify-content:flex-start;
         align-items: center;
-        .item{
-            padding:5px 10px 5px 10px;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            cursor: pointer;
-            
-            &.wh-40{
-                position: relative;
-                &::after{
-                    content: "";
-                    width: 38px;
-                    height: 38px;
-                    background-color: transparent;
-                    top: 50%;
-                    left: 50%;
-                    position: absolute;
-                    transform: translate(-50%, -50%) scale(0.6);
-                    border-radius: 50%;
-                    z-index: -1;
-                    transition: all 0.2s;
-                }
-                &:hover::after{
-                    background-color: #e4eaef;
-                    transform: translate(-50%, -50%) scale(1);
-                }
-            }
-        }
     }
 }
 </style>

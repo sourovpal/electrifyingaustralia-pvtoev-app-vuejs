@@ -58,20 +58,20 @@
                     <div class="d-flex flex-row justify-content-start align-items-center">
                         <h5 class="m-0 ps-1 fs-20px fw-bold title-dark">Selas</h5>
                         <div class="ms-5">
-                            <button type="button" class="toolbar-btn btn btn-light btn-md btn-lg btn-floating" data-mdb-ripple-init>
-                                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                            <button type="button" class="toolbar-btn btn btn-light btn-lg btn-floating" data-mdb-ripple-init>
+                                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
                             </button>
                         </div>
                         <div class="mx-2">
                             <router-link to="?view=row">
-                                <button type="button" class="toolbar-btn btn btn-light btn-md btn-lg btn-floating" data-mdb-ripple-init>
+                                <button type="button" class="toolbar-btn btn btn-light btn-lg btn-floating" data-mdb-ripple-init>
                                     <svg :class="` ${dataShowTable?'active-svg-tbl':''} svg-5`" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h12v-4H9v4zm0 5h12v-4H9v4zM9 5v4h12V5H9z"></path></svg>
                                 </button>
                             </router-link>
                         </div>
                         <div class="mx-2">
                             <router-link to="?view=column">
-                                <button type="button" class="toolbar-btn btn btn-light btn-md btn-lg btn-floating" data-mdb-ripple-init>
+                                <button type="button" class="toolbar-btn btn btn-light btn-lg btn-floating" data-mdb-ripple-init>
                                     <svg :class="` ${!dataShowTable?'active-svg-tbl':''} svg-5`" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M10 18h5V5h-5v13zm-6 0h5V5H4v13zM16 5v13h5V5h-5z"></path></svg>
                                 </button>
                             </router-link>
@@ -84,7 +84,7 @@
                             <button 
                             data-mdb-toggle="dropdown" 
                             aria-expanded="false"
-                            class="btn btn-secondary btn-md fs-14px text-head fw-bold btn-sm dropdown-toggle">
+                            class="btn btn-secondary fs-14px text-head fw-bold btn-sm dropdown-toggle">
                                 <span class="me-2">
                                     <svg  xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="#000000"><path  d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"></path></svg>
                                 </span>
@@ -129,8 +129,8 @@
                             </div>
                         </div>
                         <div class="ms-2">
-                            <button @click="filterRightSidebar = !filterRightSidebar" type="button" class="toolbar-btn btn btn-light btn-md btn-lg btn-floating" data-mdb-ripple-init>
-                                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path  d="M0 0h24v24H0z" fill="none"></path> <path  d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path></svg>
+                            <button @click="filterRightSidebar = !filterRightSidebar" type="button" class="toolbar-btn btn btn-light btn-lg btn-floating" data-mdb-ripple-init>
+                                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 0 24 24" width="22"><path  d="M0 0h24v24H0z" fill="none"></path> <path  d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path></svg>
                             </button>
                         </div>
                     </div>
@@ -139,7 +139,7 @@
         </section>
 
         <!-- Card Pipline -->        
-        <CustomScrollbar v-if="!dataShowTable" class="pip-body-scrollbar" thumbWidth="10" direction="horizontal" :style="{overflowY:'hidden' }">
+        <CustomScrollbar v-if="!dataShowTable" class="pip-body-scrollbar" thumbWidth="8" direction="horizontal" :style="{overflowY:'hidden' }">
             <section class="pipline d-table">
                 <div class="piplien-body d-flex flex-row">
                     
@@ -159,7 +159,7 @@
                                 <span class="text-head fw-bold fs-12px">$0.00</span>
                             </div>
                         </div>  
-                        <CustomScrollbar thumbWidth="10" direction="horizontal" :style="{height: '100%' }">
+                        <CustomScrollbar thumbWidth="3.5" direction="horizontal" :style="{height: '100%' }">
                             <div class="pip-body px-2">
                                 <a v-for="(item, index) in 10" :key="index" class="" href="">
                                     <div class="pip-item">
@@ -209,7 +209,7 @@
             :class="filterRightSidebar?'show':''"
             @toggle-filter="(e)=> filterRightSidebar = e" />
 
-            <CustomScrollbar class="pip-body-scrollbar" thumbWidth="10">
+            <CustomScrollbar class="pip-body-scrollbar" thumbWidth="8">
 
                 <div class="px-4 mt-5" v-for="(item, index) in Array.from(Array(10).keys())" :key="index">
                     <div class="row mb-2">
@@ -753,7 +753,7 @@
             height: 100% !important;
         }
         .pipline-list .piplien-state .scrollbar__thumbPlaceholder{
-            width:3px !important;
+            /* width:3px !important; */
         }
         .pipline-list .piplien-state .scrollbar__content.scrollbar__content--horizontal{
             min-height: 75vh;

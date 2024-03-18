@@ -56,15 +56,15 @@ export default {
         <div class=" d-flex justify-content-center align-item-start" style="margin-left: 14px;">
             <input class="form-check-input rounded-0" type="checkbox"  value="" aria-label="..." />
         </div>
-        <div class="item wh-40">
-            <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
-        </div>
+        <button class="btn btn-light btn-floating ms-2">
+            <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+        </button>
     </left-action-bar>
 
     <right-action-bar>
-        <div class="item wh-40" @click="filterRightSidebar=!filterRightSidebar">
-            <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path   d="M0 0h24v24H0z" fill="none"></path> <path   d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path></svg>
-        </div>
+        <button class="btn btn-light btn-floating me-2" @click="filterRightSidebar=!filterRightSidebar">
+            <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 0 24 24" width="22px"><path   d="M0 0h24v24H0z" fill="none"></path> <path   d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path></svg>
+        </button>
         <div class="item d-none d-lg-flex">
             <button class="btn btn-sm btn-primary fw-bold" data-mdb-toggle="modal" data-mdb-target="#addNewLeadModal">
                 <svg class="me-2" width="24" height="24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>account-plus</title><path d="M15,14C12.33,14 7,15.33 7,18V20H23V18C23,15.33 17.67,14 15,14M6,10V7H4V10H1V12H4V15H6V12H9V10M15,12A4,4 0 0,0 19,8A4,4 0 0,0 15,4A4,4 0 0,0 11,8A4,4 0 0,0 15,12Z" /></svg>
@@ -91,12 +91,12 @@ export default {
         <HeaderPropertiesDropdown/>
 
         <div class="fw-bold d-flex justify-content-center align-items-center wh-40" style="width: 4rem;">1-100</div>
-        <div class="item wh-40">
+        <button class="btn btn-light btn-floating me-2">
             <svg  class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>
-        </div>
-        <div class="item wh-40">
+        </button>
+        <button class="btn btn-light btn-floating me-2">
             <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
-        </div>
+        </button>
         
     </right-action-bar>
 
@@ -244,7 +244,7 @@ export default {
 </style>
 <style>
     .lead-list .scrollbar__wrapper{
-        height:calc(100vh - 7rem + 5px);
+        height:calc(100vh - 7rem + 9px);
     }
     .lead-list .scrollbar__scroller{
         height: 100%;

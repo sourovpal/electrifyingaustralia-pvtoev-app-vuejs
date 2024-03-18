@@ -29,6 +29,11 @@ button[disabled]{
   cursor:no-drop !important;
   pointer-events:inherit !important;
 }
+.text-overflow-ellipsis{
+  max-width: 'fit-content';
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .v-toast {
   z-index: 1090999999999999 !important;
 }

@@ -9,6 +9,7 @@ export default {
       countries:[],
       showCountryList:false,
       searchInput:null,
+      deleteCountry:null,
     }
   },
   components:{
@@ -16,16 +17,6 @@ export default {
   },
   watch:{
     searchInput:function(n, o){
-      this.countries = this.countries.map((item)=>{
-        if(item.name.toLowerCase().search(n.toLowerCase()) > -1 && item.status){
-          return {...item, status:true};
-        }else{
-          return {...item, status:false};
-        }
-      });
-      if(n == ''){
-        
-      }
     }
   },
   methods: {
@@ -34,22 +25,23 @@ export default {
         const res = await FetchLocalization();
         const {countries, localization} = res;
 
-        if(localization?.countries?.length > 0){
+        if(localization){
           this.selectedCountry = localization.countries.split(',');
         }
 
         try{
-          await countries.map((item)=>{
-            if(this.selectedCountry.includes(item.name)){
-              this.countries.push({...item, status:false});
-            }else{
-              this.countries.push(item);
-            }
-          });
+          this.countries = countries;
         }catch(error){}
 
       }catch(error){
         
+        try{
+          var message = error.response.data.message;
+          this.$toast[message.type](message.text);
+        }catch(e){
+          this.$toast.error('Oops, something went wrong');
+        }
+
       }finally{
 
       }
@@ -57,22 +49,45 @@ export default {
     selectedCountryHandler(name=null){
       if(name){
         this.selectedCountry.push(name);
+        this.searchInput = null;
+        this.$refs['searchInputRef'].focus();
       }
     },
     removeSelectedCountry(name=null){
+      var index = -1;
       if(name){
-        const index = this.selectedCountry.indexOf(name);
-        const findCon = this.countries.find((item)=>item.name===name);
-        const position = this.countries.indexOf(findCon);
-        if(index > -1){
-          this.selectedCountry.splice(index, 1);
-          this.countries.splice(position, 0, {...findCon, status:true});
-        }
+        index = this.selectedCountry.indexOf(name);
+      }else if(this.selectedCountry.length > 0){
+        index = this.selectedCountry.length - 1;
       }
+      if(index > -1){
+        this.deleteCountry = this.selectedCountry[index];
+        this.selectedCountry.splice(index, 1);
+      }
+    },
+    searchCountries() {
+      return this.countries.filter((item) =>{
+        if(this.searchInput){
+          if(item.name.toLowerCase().search(this.searchInput.toLowerCase()) > -1){
+            return item;
+          }
+        }else{
+          if(this.selectedCountry.includes(item.name)){
+            item.status = false;
+            return item; 
+          }else if(this.deleteCountry === item.name){ 
+            item.status = true;
+            this.deleteCountry = null;
+            return item;
+          }else{
+            return item;  
+          }
+        }
+      });
     },
     async updateLocalizationHandler(){
       console.log(this.selectedCountry.join(','));
-    }
+    },
   },
   mounted() {
     this.fetchLocalizationsHandler();
@@ -113,14 +128,24 @@ export default {
                           <div class="form-control form-control-input form-control-tags-input px-2" :class="`${showCountryList?'focus':''}`">
 
                             <label @click="removeSelectedCountry(country)" v-for="(country, index) in selectedCountry" :key="index" class="tag-lable">{{ country }}<span class="close-tag">&times;</span></label>
-                            <input v-model="searchInput" @focus="showCountryList=true" type="text" class="tags-input">
+                            <input 
+                            ref="searchInputRef" 
+                            v-model="searchInput" 
+                            @focus="showCountryList=true" 
+                            @keydown.delete="(e)=>e.target.value.length === 0 && removeSelectedCountry(null)"
+                            type="text" 
+                            class="tags-input">
 
                           </div>
 
                           <div class="search-tags-list" v-if="showCountryList">
                             <CustomScrollbar thumbWidth="8" direction="horizontal">
                               <ul>
-                                <li @click="selectedCountryHandler(country.name)" :class="!country.status?'d-none':''" v-for="(country, index) in countries" :key="index">{{ country.name }}</li>
+                                <li 
+                                :class="`${country.status?'':'d-none'}`"
+                                @click="selectedCountryHandler(country.name)" 
+                                v-for="(country, index) in searchCountries()" 
+                                :key="index">{{ country.name }}</li>
                               </ul>
                             </CustomScrollbar>
                           </div>

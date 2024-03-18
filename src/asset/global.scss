@@ -370,3 +370,15 @@ button[disabled]{
     animation: dash 1.5s ease-in-out infinite;
   }
 }
+
+
+
+.all-custom-scrollbar .scrollbar__wrapper{
+  height: 100vh;
+}
+.all-custom-scrollbar .scrollbar__wrapper .scrollbar__scroller{
+  height: 100%;
+}
+.all-custom-scrollbar .scrollbar__wrapper .scrollbar__content.scrollbar__content--horizontal{
+  display: block;
+}

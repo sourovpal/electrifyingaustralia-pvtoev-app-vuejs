@@ -60,7 +60,7 @@ export default {
 <template>
 
     <div id="account-index" class="content">
-        <CustomScrollbar thumbWidth="8" direction="horizontal">
+        <CustomScrollbar thumbWidth="8">
             <div class="content-header">
                 <h1>Account</h1>
             </div>

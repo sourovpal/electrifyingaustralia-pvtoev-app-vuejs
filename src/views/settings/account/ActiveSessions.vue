@@ -1,5 +1,6 @@
 <script>
 import { UpdateProfilePassword } from '../../../actions/ProfileAction';
+import CustomScrollbar from 'custom-vue-scrollbar';
 export default {
     props:{
         sessions:Array,
@@ -7,6 +8,9 @@ export default {
     data() {
       return{
       }
+    },
+    components:{
+        CustomScrollbar,
     },
     methods:{
         async logoutOthersDevice(token_id, current=0){
@@ -37,8 +41,8 @@ export default {
                 <h2>Active sessions</h2>
             </div>
         </div>
-        <div class="col-lg-9 col-12">
-            <div class="table-responsive-lg">
+        <div class="col-lg-9 col-12" id="action-session">
+            <CustomScrollbar thumbWidth="0">
                 <table class="table table-bordered table-sm table-striped table-hover table-light">
                     <thead>
                         <tr>
@@ -70,7 +74,23 @@ export default {
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </CustomScrollbar>
         </div>
     </div>
 </template>
+<style scoped lang="scss">
+#action-session{
+    table {
+        tr{
+            td{
+                white-space: nowrap;
+            }
+        }
+    }
+}
+</style>
+<style>
+#action-session .scrollbar__wrapper{
+    height:fit-content !important;
+}
+</style>

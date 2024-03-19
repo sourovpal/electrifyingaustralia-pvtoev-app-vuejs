@@ -51,7 +51,7 @@ export default {
 <template>
     <div id="profile-index" class="content">        
 
-        <CustomScrollbar thumbWidth="8" direction="horizontal">
+        <CustomScrollbar thumbWidth="8">
           
             <div class="content-header">
                 <h1>Profile</h1>

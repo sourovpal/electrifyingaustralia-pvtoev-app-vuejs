@@ -1,15 +1,17 @@
 <script>
 import CustomScrollbar from 'custom-vue-scrollbar';
-import {FetchLocalization} from '../../../actions/LocalizationAction';
+import {FetchLocalization, UpdateLocalization} from '../../../actions/LocalizationAction';
 export default {
   name:'ProfileIndex',
   data() {
     return {
+      errors:{},
       selectedCountry:[],
       countries:[],
       showCountryList:false,
       searchInput:null,
       deleteCountry:null,
+      isSubmitLocalization:false,
     }
   },
   components:{
@@ -25,23 +27,23 @@ export default {
         const res = await FetchLocalization();
         const {countries, localization} = res;
 
-        if(localization){
-          this.selectedCountry = localization.countries.split(',');
-        }
+        try{
+          if(localization && localization.countries){
+            this.selectedCountry = localization.countries?.split(',');
+          }
+        }catch(error){}
 
         try{
           this.countries = countries;
         }catch(error){}
 
       }catch(error){
-        
         try{
           var message = error.response.data.message;
           this.$toast[message.type](message.text);
         }catch(e){
           this.$toast.error('Oops, something went wrong');
         }
-
       }finally{
 
       }
@@ -86,7 +88,34 @@ export default {
       });
     },
     async updateLocalizationHandler(){
-      console.log(this.selectedCountry.join(','));
+      try{
+        this.isSubmitLocalization = true;
+        var data = {
+          countries:this.selectedCountry.join(',')
+        };
+        
+        const res = await UpdateLocalization(data);
+        try{
+          const {message} = res;
+          this.$toast[message.type](message.text);
+        }catch(error){}
+        
+      }catch(error){
+
+        try{
+          this.errors = error.response.data.errors;
+        }catch(error){}
+
+        try{
+          var message = error.response.data.message;
+          this.$toast[message.type](message.text);
+        }catch(e){
+          this.$toast.error('Oops, something went wrong');
+        }
+
+      }finally{
+        this.isSubmitLocalization = false;
+      }
     },
   },
   mounted() {
@@ -104,15 +133,13 @@ export default {
 </script>
 
 <template>
-  <div class="content all-custom-scrollbar">
+  <div class="content add-custom-scrollbar">
     <CustomScrollbar thumbWidth="8">
       <div class="content-header">
           <h1>Localisation</h1>
       </div>
-  
       <div class="content-body">
           <section class="">
-  
               <div class="row">
                   <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                       <div class="settings-group-header">
@@ -134,15 +161,14 @@ export default {
                             <input 
                             ref="searchInputRef" 
                             v-model="searchInput" 
-                            @focus="showCountryList=true" 
+                            @focus="showCountryList=true && delete errors?.countries" 
                             @keydown.delete="(e)=>e.target.value.length === 0 && removeSelectedCountry(null)"
                             type="text" 
                             class="tags-input">
-
                           </div>
 
                           <div class="search-tags-list" v-if="showCountryList">
-                            <CustomScrollbar thumbWidth="8" direction="horizontal">
+                            <CustomScrollbar thumbWidth="8">
                               <ul>
                                 <li 
                                 :class="`${country.status?'':'d-none'}`"
@@ -152,17 +178,23 @@ export default {
                               </ul>
                             </CustomScrollbar>
                           </div>
-
-                          <span class="form-input-commant">List all the countries where your company operates. Address searching, settings, and support will be based on the countries you select.</span>
-
+                          <span class="form-input-commant"  v-if="!errors?.countries?.length">List all the countries where your company operates. Address searching, settings, and support will be based on the countries you select.</span>
+                          <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.countries?.length">{{ errors?.countries[0] }}</span>
                       </div>
   
                       <div>
-                          <button @click="updateLocalizationHandler()" class="btn btn-primary fw-bold">Save Settings</button>
+                        <button :disabled="isSubmitLocalization" @click="updateLocalizationHandler()" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
+                          <div v-if="isSubmitLocalization">
+                              <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
+                                  <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                              </svg>
+                              <span>Submitting...</span>
+                          </div>
+                          <span v-if="!isSubmitLocalization">Save Settings</span>
+                        </button>
                       </div>
                   </div>
               </div>
-  
               <br><br><br>
           </section>
       </div>

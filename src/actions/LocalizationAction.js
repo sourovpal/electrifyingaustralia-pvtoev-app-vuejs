@@ -15,6 +15,22 @@ const FetchLocalization = (payload)=>{
     });
 }
 
+const UpdateLocalization = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.post(`/localizations`, payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
 export {
     FetchLocalization,
+    UpdateLocalization
 }

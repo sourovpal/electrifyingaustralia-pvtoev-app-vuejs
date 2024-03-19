@@ -105,7 +105,7 @@ export default {
 
 <template>
   <div class="content all-custom-scrollbar">
-    <CustomScrollbar thumbWidth="8" direction="horizontal">
+    <CustomScrollbar thumbWidth="8">
       <div class="content-header">
           <h1>Localisation</h1>
       </div>
@@ -127,7 +127,10 @@ export default {
 
                           <div class="form-control form-control-input form-control-tags-input px-2" :class="`${showCountryList?'focus':''}`">
 
-                            <label @click="removeSelectedCountry(country)" v-for="(country, index) in selectedCountry" :key="index" class="tag-lable">{{ country }}<span class="close-tag">&times;</span></label>
+                            <label v-for="(country, index) in selectedCountry" :key="index" class="tag-lable">{{ country }}
+                              <span @click="removeSelectedCountry(country)" class="close-tag">&times;</span>
+                            </label>
+                            
                             <input 
                             ref="searchInputRef" 
                             v-model="searchInput" 
@@ -239,7 +242,7 @@ export default {
 </style>
 <style>
   .search-tags-list .scrollbar__wrapper{
-    height: 15rem !important;
+    height: 18rem !important;
   }
   .search-tags-list .scrollbar__wrapper .scrollbar__scroller{
     height: 100%;

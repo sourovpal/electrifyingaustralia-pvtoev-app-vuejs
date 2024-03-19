@@ -87,7 +87,7 @@ export default {
 
 <template>
     <div id="installer-create" class="content add-custom-scrollbar">
-        <CustomScrollbar thumbWidth="8" direction="horizontal">
+        <CustomScrollbar thumbWidth="8">
             <div class="content-header d-flex justify-content-start align-items-center">
                 <router-link to="/settings/installers">
                     <h1 class="mb-0 text-base">Installers list</h1>

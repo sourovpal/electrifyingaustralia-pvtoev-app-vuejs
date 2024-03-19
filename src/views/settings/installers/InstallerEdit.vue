@@ -116,7 +116,7 @@ export default {
 </script>
 
 <template>
-    <div id="installer-edit" class="content">
+    <div id="installer-edit" class="content add-custom-scrollbar">
         <CustomScrollbar thumbWidth="8" direction="horizontal">
             <div class="content-header d-flex justify-content-start align-items-center">
                 <router-link to="/settings/installers">
@@ -231,16 +231,5 @@ export default {
         span{
             padding-bottom: 2px !important;
         }
-    }
-</style>
-<style>
-    #installer-edit .scrollbar__wrapper{
-        height: 100vh;
-    }
-    #installer-edit .scrollbar__wrapper .scrollbar__scroller{
-        height: 100%;
-    }
-    #installer-edit .scrollbar__wrapper .scrollbar__content.scrollbar__content--horizontal{
-        display: block;
     }
 </style>

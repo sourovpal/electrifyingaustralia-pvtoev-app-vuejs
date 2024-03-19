@@ -728,7 +728,7 @@ export default {
                                 </div>
                             </div><!-- dropdown header -->
                             <div class="dropdown-body">
-                                <div class=" px-3 py-1 pb-2 fs-12px">
+                                <div class=" px-3 py-1 pb-2 fs-12px lead-timeline-notes">
                                     <QuillEditor theme="snow"  :toolbar="[]" />
                                     <div class="save-notes-btn">
                                         <button class="btn btn-sm btn-outline-primary">Save Notes</button>
@@ -1144,7 +1144,7 @@ export default {
 
 </style>
 <style>
-    .ql-container.ql-snow{ 
+    .lead-timeline-notes .ql-container.ql-snow{
         border: none !important; 
         height: 10rem !important;
         background-color: #fff3c4 !important;
@@ -1152,7 +1152,7 @@ export default {
         font-weight: 600 !important;
         font-size: 14px !important;
     }
-    .ql-toolbar.ql-snow{
+    .lead-timeline-notes .ql-toolbar.ql-snow{
         display: none !important;
     }
     .lead-edit .col-left .scrollbar__wrapper{

@@ -12,7 +12,7 @@ export default {
       return{
         errors:{},
         user:{},
-        activeSessions:[],
+        sessions:[],
         isFetching:false,        
         isPasswordSubmit:false,
       }
@@ -30,10 +30,10 @@ export default {
                 const res = await FetchProfile(1);
                 const {user, active_users} = res;
                 if(is_token){
-                    this.activeSessions = active_users;              
+                    this.sessions = active_users;              
                 }else{
                     this.user = user;
-                    this.activeSessions = active_users;              
+                    this.sessions = active_users;              
                 }
             }catch{
                 try{
@@ -76,7 +76,7 @@ export default {
         
                     <hr class="mt-4 mb-5">
         
-                    <active-sessions :sessions="activeSessions"/>
+                    <active-sessions :sessions="sessions"/>
         
                     <br><br><br>
                 </section>

@@ -42,10 +42,10 @@ export default {
             </div>
         </div>
         <div class="col-lg-9 col-12" id="action-session">
-            <CustomScrollbar thumbWidth="0">
+            <CustomScrollbar thumbWidth="5">
                 <table class="table table-bordered table-sm table-striped table-hover table-light">
                     <thead>
-                        <tr>
+                        <tr>                            
                             <th class="fw-bold py-1" width="25%" scope="col">Browser</th>
                             <th class="fw-bold py-1" width="20%" scope="col">Location</th>
                             <th class="fw-bold py-1" width="15%" scope="col">IP</th>

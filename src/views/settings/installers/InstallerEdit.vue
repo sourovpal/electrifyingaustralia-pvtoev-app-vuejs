@@ -140,41 +140,40 @@ export default {
                                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.first_name?.length">{{ errors?.first_name[0] }}</span>
                             </div>
                             
-        
                             <div class="settings-group-item mb-3">
                                 <label class="form-label-title">Last name</label>
                                 <input @focus="delete errors?.last_name" v-model="last_name" type="text" class="form-control form-control-input py-1">
                                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.last_name?.length">{{ errors?.last_name[0] }}</span>
                             </div>
-        
-                            <div class="settings-group-item mb-3">
-                                <label class="form-label-title">ABN</label>
-                                <input @focus="delete errors?.abn" v-model="abn" type="text" class="form-control form-control-input py-1">
-                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.abn?.length">{{ errors?.abn[0] }}</span>
-                            </div>
-        
+                            
                             <div class="settings-group-item mb-3">
                                 <label class="form-label-title">Company Name</label>
                                 <input @focus="delete errors?.company_name" v-model="company_name" type="text" class="form-control form-control-input py-1">
                                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.company_name?.length">{{ errors?.company_name[0] }}</span>
                             </div>
-        
+                            
                             <div class="settings-group-item mb-3">
                                 <label class="form-label-title">Phone Number <span class="ms-3 btn btn-sm btn-danger py-0 px-2 fs-10px">Required</span></label>
                                 <input @focus="delete errors?.phone_number" v-model="phone_number" type="text" class="form-control form-control-input py-1">
                                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.phone_number?.length">{{ errors?.phone_number[0] }}</span>
                             </div>
-        
+                            
                             <div class="settings-group-item mb-3">
                                 <label class="form-label-title">After-Hours Phone Number</label>
                                 <input @focus="delete errors?.house_phone_number" v-model="house_phone_number" type="text" class="form-control form-control-input py-1">
                                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.house_phone_number?.length">{{ errors?.house_phone_number[0] }}</span>
                             </div>
-        
+
                             <div class="settings-group-item mb-3">
                                 <label class="form-label-title">Email <span class="ms-3 btn btn-sm btn-danger py-0 px-2 fs-10px">Required</span></label>
                                 <input @focus="delete errors?.email" v-model="email" type="text" class="form-control form-control-input py-1">
                                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.email?.length">{{ errors?.email[0] }}</span>
+                            </div>
+
+                            <div class="settings-group-item mb-3">
+                                <label class="form-label-title">ABN</label>
+                                <input @focus="delete errors?.abn" v-model="abn" type="text" class="form-control form-control-input py-1">
+                                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.abn?.length">{{ errors?.abn[0] }}</span>
                             </div>
         
                             <div class="settings-group-item mb-3">

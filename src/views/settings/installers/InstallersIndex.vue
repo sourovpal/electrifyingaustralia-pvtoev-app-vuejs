@@ -7,6 +7,7 @@
     import DatatableHeader from '../../../components/Datatable/DatatableHeader.vue';
     import DatatableBody from '../../../components/Datatable/DatatableBody.vue';
     import {FetchInstaller, CreateInstaller} from '../../../actions/InstallerAction';
+    import CustomCheckbox from '../../../components/CustomCheckbox.vue';
 
     export default {
         components: {
@@ -16,6 +17,7 @@
             Datatable,
             DatatableHeader,
             DatatableBody,
+            CustomCheckbox,
         },
         data() {
             return {
@@ -31,6 +33,8 @@
                     from:0,
                     to:0
                 },
+                selectedRows:["NA=="],
+                selectedAllRows:true,
             }
         },
         mounted(){
@@ -56,9 +60,17 @@
                             this.fetchInstallers = installers;
                             this.pagination = pagination;
                         }
-                    }catch(error){}
+                    }catch(error){
+                        this.$toast.error('Oops, something went wrong');
+                    }
 
                 }catch(error){
+                    try{
+                        var message = error.response.data.message;
+                        this.$toast[message.type](message.text);
+                    }catch(e){
+                        this.$toast.error('Oops, something went wrong');
+                    }
                 }finally{
                     this.isLoading = false;
                 }
@@ -76,9 +88,14 @@
         <div class="content-body- border-top">
             <action-bar>
                 <left-action-bar>
-                    <button :disabled="isLoading" @click="fetchInstallerDataHandler()" class="toolbar-btn btn btn-light btn-floating me-3 ms-2">
-                        <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
-                    </button>
+                    <div class="ps-3">
+                        <CustomCheckbox type="checkbox" v-model="selectedAllRows" />
+                    </div>
+                    <div>
+                        <button :disabled="isLoading" @click="fetchInstallerDataHandler()" class="toolbar-btn btn btn-light btn-floating me-3 ms-3">
+                            <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                        </button>
+                    </div>
                 </left-action-bar>
             
                 <right-action-bar>
@@ -104,12 +121,14 @@
             <Datatable>
         
                 <datatable-header class="">
-                    <div class="tbl-th" style="width:15rem;">Installer Name</div>
+                    <div class="tbl-th" style="width:3rem;"></div>
+                    <div class="tbl-th" style="width:10rem;">Installer Name</div>
                     <div class="tbl-th " style="width:10rem;">ABN</div>
                     <div class="tbl-th" style="width:15rem;flex-grow: 1;">Company Name</div>
-                    <div class="tbl-th" style="width:15rem;flex-grow: 1;">Email</div>
+                    <div class="tbl-th" style="width:15rem;flex-grow: 1;">Email Address</div>
                     <div class="tbl-th" style="width:10rem;flex-grow: 1;">Phone Number</div>
                     <div class="tbl-th" style="width:10rem;flex-grow: 1;">Hours Phone Number</div>
+                    <div class="tbl-th" style="width:10rem;flex-grow: 1;">Address</div>
                     <div class="tbl-th" style="width:15rem;flex-grow: 1;">Tax Identifier Type</div>
                     <div class="tbl-th" style="width:15rem;flex-grow: 1;">Electrical Licence Number</div>
                     <div class="tbl-th" style="width:15rem;flex-grow: 1;">CEC Accreditation Number</div>
@@ -119,9 +138,14 @@
                 </datatable-header>
                 <datatable-body>
                     
-                    <div class="tbl-tr full-width" v-for="(installer, index) in fetchInstallers" :key="index">
-        
-                        <div style="width:15rem;" class="tbl-td full-width">
+                    
+                    <div class="tbl-tr full-width py-1" v-for="(installer, index) in fetchInstallers" :key="index">
+                        
+                        <div style="width:4rem;" class="tbl-td full-width">
+                            <CustomCheckbox v-model="selectedRows" :value="installer.id" />
+                        </div>
+
+                        <div style="width:10rem;" class="tbl-td full-width">
                             <router-link class="text-overflow-ellipsis" :to="`/settings/installers/edit/${installer.id}`"> {{ installer.full_name }}</router-link>
                         </div>
         
@@ -143,6 +167,10 @@
                         
                         <div style="width:10rem;" class="tbl-td d-none d-lg-flex">
                             <span class="text-overflow-ellipsis">{{ installer.house_phone_number }}</span>
+                        </div>
+                        
+                        <div style="width:10rem;" class="tbl-td d-none d-lg-flex">
+                            <span class="text-overflow-ellipsis">{{ installer.address }}</span>
                         </div>
 
                         <div style="width:15rem;" class="tbl-td full-width">

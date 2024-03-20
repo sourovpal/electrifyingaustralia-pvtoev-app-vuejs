@@ -121,14 +121,14 @@
             <Datatable>
         
                 <datatable-header class="">
-                    <div class="tbl-th" style="width:3rem;"></div>
+                    <div class="tbl-th" style="width:4rem;"></div>
                     <div class="tbl-th" style="width:10rem;">Installer Name</div>
                     <div class="tbl-th " style="width:10rem;">ABN</div>
                     <div class="tbl-th" style="width:15rem;flex-grow: 1;">Company Name</div>
                     <div class="tbl-th" style="width:15rem;flex-grow: 1;">Email Address</div>
                     <div class="tbl-th" style="width:10rem;flex-grow: 1;">Phone Number</div>
                     <div class="tbl-th" style="width:10rem;flex-grow: 1;">Hours Phone Number</div>
-                    <div class="tbl-th" style="width:10rem;flex-grow: 1;">Address</div>
+                    <div class="tbl-th" style="width:20rem;flex-grow: 1;">Address</div>
                     <div class="tbl-th" style="width:15rem;flex-grow: 1;">Tax Identifier Type</div>
                     <div class="tbl-th" style="width:15rem;flex-grow: 1;">Electrical Licence Number</div>
                     <div class="tbl-th" style="width:15rem;flex-grow: 1;">CEC Accreditation Number</div>
@@ -139,8 +139,7 @@
                 <datatable-body>
                     
                     
-                    <div class="tbl-tr full-width py-1" v-for="(installer, index) in fetchInstallers" :key="index">
-                        
+                    <div :class="selectedRows.includes(installer.id)?'active':''" class="tbl-tr full-width" v-for="(installer, index) in fetchInstallers" :key="index">
                         <div style="width:4rem;" class="tbl-td full-width">
                             <CustomCheckbox v-model="selectedRows" :value="installer.id" />
                         </div>
@@ -169,7 +168,7 @@
                             <span class="text-overflow-ellipsis">{{ installer.house_phone_number }}</span>
                         </div>
                         
-                        <div style="width:10rem;" class="tbl-td d-none d-lg-flex">
+                        <div style="width:20rem;" class="tbl-td d-none d-lg-flex">
                             <span class="text-overflow-ellipsis">{{ installer.address }}</span>
                         </div>
 

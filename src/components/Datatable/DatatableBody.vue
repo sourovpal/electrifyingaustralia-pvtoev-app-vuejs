@@ -126,7 +126,7 @@ export default{
 .tbl-body .tbl-tr:hover{
   /* background: rgb(182 182 182 / 12%);
    */
-   background-color: rgb(255 235 59 / 6%);
+   background-color: rgb(6 31 65 / 8%);
 }
 .tbl .tbl-dropdown-title{
   font-size: 14px;

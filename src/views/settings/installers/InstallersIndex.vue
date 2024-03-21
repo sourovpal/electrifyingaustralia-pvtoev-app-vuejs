@@ -42,6 +42,7 @@
         methods: {
             async fetchInstallerDataHandler(page=1, limit=50){
                 try{
+                    if(this.isLoading){return;}
                     this.isLoading = true;
                     const res = await FetchInstaller({page, limit});
                     try{
@@ -148,24 +149,33 @@
             
                 <right-action-bar>
 
-                    <div class="mx-3">
-                        <router-link class="btn btn-primary fw-bold btn-sm" to="/settings/installers/new">Add New</router-link>
+                    <div v-if="isLoading" class="me-3">
+                        <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
+                            <circle style="stroke: rgb(59, 113, 202);" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                        </svg>
                     </div>
 
-                    <div class="fw-bold d-flex justify-content-center align-items-center me-2 text-overflow-ellipsis" style="min-width: 8rem;">{{ pagination.from }} - {{ pagination.to }} of  {{ pagination.total }}</div>
+                    <div class="me-3">
+                        <router-link class="btn btn-primary fw-bold btn-sm" to="/settings/installers/new">
+                            <span><svg data-v-3254ee1f="" class="me-2" width="24" height="24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title data-v-3254ee1f="">account-plus</title><path data-v-3254ee1f="" d="M15,14C12.33,14 7,15.33 7,18V20H23V18C23,15.33 17.67,14 15,14M6,10V7H4V10H1V12H4V15H6V12H9V10M15,12A4,4 0 0,0 19,8A4,4 0 0,0 15,4A4,4 0 0,0 11,8A4,4 0 0,0 15,12Z"></path></svg></span>
+                            Add New
+                        </router-link>
+                    </div>
+
+                    <div class="fw-bold d-flex justify-content-center align-items-center me-3 text-overflow-ellipsis fs-16px" style="min-width: 8rem;">{{ pagination.from }} - {{ pagination.to }} of  {{ pagination.total }}</div>
                     
                     <button 
                     :disabled="!pagination.prev_page" 
                     @click="pagination.prev_page && fetchInstallerDataHandler(pagination.prev_page)" 
-                    class="toolbar-btn btn btn-light btn-floating me-2">
-                        <svg  class="svg-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>
+                    class="toolbar-btn btn btn-light btn-floating me-3">
+                        <svg  class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>
                     </button>
 
                     <button 
                     :disabled="!pagination.next_page" 
                     @click="pagination.next_page && fetchInstallerDataHandler(pagination.next_page)" 
                     class="toolbar-btn btn btn-light btn-floating me-3">
-                        <svg class="svg-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
+                        <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
                     </button>
 
                 </right-action-bar>

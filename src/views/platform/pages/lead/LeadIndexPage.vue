@@ -27,18 +27,52 @@ export default {
 },
   data() {
     return {
-      selectAllIds:[],
-      filterRightSidebar:false,
+        filterRightSidebar:false,
+        selectedRows:[],
+        isSelectedAllRows:false,
+        isSelectedAllRowsReset:false,
+        fetchInstallers:[],
     }
   },
   methods: {
     selectAll(){
-      if(this.selectAllIds.length > 0){
-        this.selectAllIds = [];
-      }else{
-        this.selectAllIds = Array.from(Array(100).keys());
-      }
     },
+    selectedAllRowsHandler(){
+        if(this.isSelectedAllRowsReset){
+            this.selectedRows = [];
+            this.isSelectedAllRowsReset = !this.isSelectedAllRowsReset;
+        }else if(!this.isSelectedAllRows){
+            this.isSelectedAllRows = !this.isSelectedAllRows;
+            this.selectedRows = Array.from(Array(50).keys());
+            // this.fetchInstallers.map((item)=>{
+            //     this.selectedRows.push(item.id);
+            // });
+        }else{
+            this.selectedRows = [];
+            this.isSelectedAllRows = false;
+            this.isSelectedAllRowsReset = false;
+        }
+
+    },
+    singleRowSelectedHandler(id){
+        var index = this.selectedRows.indexOf(id);
+        if(index > -1){
+            this.selectedRows.splice(index, 1);
+        }else{
+            this.selectedRows.push(id);
+        }
+
+        if(this.selectedRows.length === this.fetchInstallers.length){
+            this.isSelectedAllRows = true;
+            this.isSelectedAllRowsReset = false;
+        }else if(this.selectedRows.length > 0){
+            this.isSelectedAllRows = false;
+            this.isSelectedAllRowsReset = true;
+        }else{
+            this.isSelectedAllRows = false;
+            this.isSelectedAllRowsReset = false;
+        }
+    }
   },
   watch:{
   }
@@ -53,17 +87,21 @@ export default {
     <action-bar>
 
     <left-action-bar>
-        <div class=" d-flex justify-content-center align-item-start" style="margin-left: 14px;">
-            <input class="form-check-input rounded-0" type="checkbox"  value="" aria-label="..." />
+        <div class=" d-flex justify-content-center align-item-start" style="margin-left: 8px;">
+            <label class="custom-form-checkbox btn btn-floating btn-light" @click="selectedAllRowsHandler">
+                <svg v-if="!isSelectedAllRows && !isSelectedAllRowsReset" class="unchecked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
+                <svg v-if="isSelectedAllRows && !isSelectedAllRowsReset" class="checked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
+                <svg v-if="isSelectedAllRowsReset" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><defs><path id="a" d="M0 0h24v24H0z"></path></defs> <clipPath id="b"><use xlink:href="#a" overflow="visible"></use></clipPath> <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z" clip-path="url(#b)"></path></svg>
+            </label>
         </div>
         <button class="btn btn-light btn-floating ms-2">
-            <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+            <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
         </button>
     </left-action-bar>
 
     <right-action-bar>
         <button class="btn btn-light btn-floating me-2" @click="filterRightSidebar=!filterRightSidebar">
-            <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="22px" viewBox="0 0 24 24" width="22px"><path   d="M0 0h24v24H0z" fill="none"></path> <path   d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path></svg>
+            <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path   d="M0 0h24v24H0z" fill="none"></path> <path   d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path></svg>
         </button>
         <div class="item d-none d-lg-flex">
             <button class="btn btn-sm btn-primary fw-bold" data-mdb-toggle="modal" data-mdb-target="#addNewLeadModal">
@@ -107,7 +145,7 @@ export default {
         <FilterRightSidebar v-if="filterRightSidebar" @toggle-filter="(e)=> filterRightSidebar = e" />
 
         <datatable-header class="">
-            <div class="tbl-th" style="width:4rem;"></div>
+            <div class="tbl-th" style="width:3.6rem;"></div>
             <div class="tbl-th" style="width:20rem;">Lead</div>
             <div class="tbl-th" style="width:10rem;">Source</div>
             <div class="tbl-th" style="width:5rem;">State</div>
@@ -122,10 +160,13 @@ export default {
 
         <datatable-body>
 
-            <div class="tbl-tr full-width" v-for="(item, index) in Array.from(Array(100).keys())" :key="index">
+            <div class="tbl-tr full-width" v-for="(item, index) in Array.from(Array(50).keys())" :key="index">
 
-                <div style="width:4rem;" class="tbl-td">
-                    <input class="form-check-input rounded-0" type="checkbox"  value="" aria-label="..." />
+                <div style="width:4rem;margin-left: -7px;" class="tbl-td full-width">
+                    <label @click="singleRowSelectedHandler(index)" class="custom-form-checkbox btn btn-floating btn-light">
+                        <svg v-if="!selectedRows.includes(index)" class="unchecked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
+                        <svg v-if="selectedRows.includes(index)" class="checked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
+                    </label>
                 </div>
 
                 <div style="width:20rem;" class="tbl-td full-width">

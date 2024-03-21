@@ -32,7 +32,7 @@ export default{
 }
 .tbl-body .tbl-tr .tbl-td{
   border-bottom: 1px solid rgba(182, 182, 182, 0.4);
-  padding: 6px 10px 6px 15px;
+  padding: 3px 10px 3px 15px;
   display:flex;
   font-size: 14px;
   font-weight: 400;
@@ -111,7 +111,7 @@ export default{
     width:100% !important;
   }
   .tbl-body .tbl-tr .tbl-td.full-width{
-    padding: 14px 10px 14px 20px;
+    /* padding: 14px 10px 14px 20px; */
     font-weight: bold;
   }
 }
@@ -124,9 +124,7 @@ export default{
 }
 .tbl-body .tbl-tr.active,
 .tbl-body .tbl-tr:hover{
-  /* background: rgb(182 182 182 / 12%);
-   */
-   background-color: rgb(6 31 65 / 8%);
+  background-color: rgb(6 31 65 / 8%);
 }
 .tbl .tbl-dropdown-title{
   font-size: 14px;

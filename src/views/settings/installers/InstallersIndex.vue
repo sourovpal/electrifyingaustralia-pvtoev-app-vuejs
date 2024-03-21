@@ -40,17 +40,8 @@
             this.fetchInstallerDataHandler();
         },
         methods: {
-            async fetchInstallerDataHandler(page=null, limit=50){
+            async fetchInstallerDataHandler(page=1, limit=50){
                 try{
-                    if(!page){
-                        const query = this.$route.query;
-                        if(query.page){
-                            page = query.page;
-                        }else{
-                            page = 1;
-                        }
-                    }
-                    this.$router.push('?page='+page);
                     this.isLoading = true;
                     const res = await FetchInstaller({page, limit});
                     try{

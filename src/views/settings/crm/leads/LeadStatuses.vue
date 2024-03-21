@@ -1,5 +1,6 @@
 <script>
 import { VueDraggableNext } from 'vue-draggable-next';
+import {UpdateLeadStatus} from '../../../../actions/CrmLeads';
 export default {
     props:{
         lead_statuses:{
@@ -12,8 +13,51 @@ export default {
     data() {
         return {
             leadStatuses:this.$props.lead_statuses,
+            isSubmitLeadStatus:false,
         }
     },
+    methods: {
+        async updateLeadStatusHandler(){
+            try{
+                const data = {
+                    lead_statuses:this.leadStatuses,
+                }
+                this.isSubmitLeadStatus = true;
+                const res = await UpdateLeadStatus(data);
+                
+                try{
+
+                    const {message} = res;
+                    this.$toast[message.type](message.text);
+
+                }catch(error){}
+
+                try{
+                    const {lead_statuses} = res;
+                    if(lead_statuses.length > 0){
+                        this.leadStatuses = lead_statuses;
+                    }
+                }catch(error){
+                    throw new Error(error.message);
+                }
+
+            }catch(error){
+                try{
+                    var message = error.response.data.message;
+                    this.$toast[message.type](message.text);
+                }catch(e){
+                    this.$toast.error('Oops, something went wrong');
+                }
+            }finally{
+                this.isSubmitLeadStatus = false;
+            }
+        }
+    },
+    watch:{
+        lead_statuses:function(v){
+            this.leadStatuses = v;
+        }
+    }
 }
 </script>
 
@@ -28,14 +72,14 @@ export default {
             <p class="mb-2 fw-bold fs-14px">Change order or name of statuses</p>
             <div class="list-group ">
                 <vue-draggable-next class="lead-status-list" tag="div" :list="leadStatuses" handle=".handle">
-                    <div class="list-group-item py-0" :class="item.status == 0?'is-lost':null" v-for="(item, index) in leadStatuses" :key="item.id">
+                    <div class="list-group-item py-0" :class="item.is_lost == 1?'is-lost':null" v-for="(item, index) in leadStatuses" :key="item.id">
                         <div class="box-info">
                             <div class="handle">
                                 <svg  width="24" height="24" viewBox="0 0 24 24"><path  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path></svg>
                             </div>
                             <input class="form-control form-control-lg" type="text" :value="item.name" @change="(input)=>{item.name=input.target.value}">
                             
-                            <div class="lost-status" v-if="item.status==0">
+                            <div class="lost-status" v-if="item.is_lost==1">
                                 <svg  xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path  d="M0 0h24v24H0z" fill="none"></path><path  d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"></path></svg>
                             </div>
 
@@ -47,15 +91,15 @@ export default {
                                     <li>
                                         <a 
                                         class="dropdown-item lost-item" 
-                                        v-if="item.status == 1"
-                                        @click="item.status = 0"
+                                        v-if="item.is_lost == 0"
+                                        @click="item.is_lost = 1"
                                         >Make a lost</a>
                                     </li>
                                     <li>
                                         <a 
                                         class="dropdown-item active-item" 
-                                        v-if="item.status == 0"
-                                        @click="item.status = 1"
+                                        v-if="item.is_lost == 1"
+                                        @click="item.is_lost = 0"
                                         >Make a active</a>
                                     </li>
                                     <li>
@@ -69,10 +113,18 @@ export default {
                         </div>
                     </div>
                 </vue-draggable-next>
-                <div class="list-group-item border-top-0 bg-light text-center add-new-lead-status" @click="leadStatuses.push({name:`Lead Status`, id:leadStatuses.length+1, status:1})">Add New Status</div>
+                <div class="list-group-item border-top-0 bg-light text-center add-new-lead-status" @click="leadStatuses.push({name:`New Status`, id:leadStatuses.length+1, is_lost:0})">Add New Status</div>
             </div>
             <div class="mt-3">
-                <button class="btn btn-primary fw-bold">Save settings</button>
+                <button :disabled="isSubmitLeadStatus" @click="updateLeadStatusHandler()" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
+                    <div v-if="isSubmitLeadStatus">
+                        <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
+                            <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                        </svg>
+                        <span>Submitting...</span>
+                    </div>
+                    <span v-if="!isSubmitLeadStatus">Save Settings</span>
+                </button>
             </div>
         </div>
     </div>
@@ -84,10 +136,6 @@ export default {
     .list-group-item:first-child{
         border-top-left-radius:3px;
         border-top-right-radius:3px;
-    }
-    .list-group-item:last-child{
-        border-bottom-left-radius:0;
-        border-bottom-right-radius:0;
     }
     .list-group-item{
         position: relative;
@@ -225,6 +273,8 @@ export default {
     font-size: 14px;
     padding: 12px 8px;
     cursor: pointer;
+    border-bottom-left-radius:3px !important;
+    border-bottom-right-radius:3px !important;
     &:hover{
         color: #2563eb;
         border-color:#bfdbfe;

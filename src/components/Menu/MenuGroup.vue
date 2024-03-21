@@ -77,9 +77,10 @@ export default {
       <div class="submenu-list" :style="{height:submenuHeight}" ref="submenu">
 
         <router-link :to="{path:sub.path, query:sub.query}" v-for="sub in menu.children" v-slot="{route}" :key="sub" class="submenu-link" >
-          <span :class="(route.fullPath == $route.fullPath)?'active':''">
+          <span :class="(route.fullPath == $route.fullPath)?'active':''" class="sub-menu-text">
             {{ sub.label }}
           </span>
+          <span v-if="sub.icon" v-html="sub.icon"></span>
         </router-link>
 
       </div>
@@ -144,9 +145,16 @@ export default {
         text-decoration: none;
         font-weight: 600;
         transition:all 0.2s;
+        height: 32px;
         &:hover,
         &.router-link-active .active{
           color:#007bff;
+        }
+        .sub-menu-text{
+          display: block;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
         }
       }
     }

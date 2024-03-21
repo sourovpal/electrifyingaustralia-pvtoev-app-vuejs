@@ -2,6 +2,7 @@
 import CustomScrollbar from 'custom-vue-scrollbar';
 import LeadStatuses from './LeadStatuses.vue';
 import DealPipelines from './DealPipelines.vue';
+import {FetchLeadStatus, UpdateLeadStatus, FetchLeadStatusAndDealPiplines} from '../../../../actions/CrmLeads';
 
 export default {
   name:'ProfileIndex',
@@ -18,7 +19,32 @@ export default {
         DealPipelines,
     },
     methods:{
-    }
+        async fetchLeadStatusAndDealPiplinesHandler(){
+            try{
+                const res = await FetchLeadStatusAndDealPiplines();
+
+                try{
+                    const {lead_statuses} = res;
+                    if(lead_statuses.length > 0){
+                        this.lead_statuses = lead_statuses;
+                    }
+                }catch(error){
+                    throw new Error(error.message);
+                }
+
+            }catch(error){
+                try{
+                    var message = error.response.data.message;
+                    this.$toast[message.type](message.text);
+                }catch(e){
+                    this.$toast.error('Oops, something went wrong');
+                }
+            }
+        }
+    },
+    mounted() {
+        this.fetchLeadStatusAndDealPiplinesHandler();
+    },
   }
   
 </script>

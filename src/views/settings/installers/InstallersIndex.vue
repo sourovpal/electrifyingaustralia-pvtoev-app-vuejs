@@ -7,7 +7,6 @@
     import DatatableHeader from '../../../components/Datatable/DatatableHeader.vue';
     import DatatableBody from '../../../components/Datatable/DatatableBody.vue';
     import {FetchInstaller, CreateInstaller} from '../../../actions/InstallerAction';
-    import CustomCheckbox from '../../../components/CustomCheckbox.vue';
 
     export default {
         components: {
@@ -17,7 +16,6 @@
             Datatable,
             DatatableHeader,
             DatatableBody,
-            CustomCheckbox,
         },
         data() {
             return {
@@ -33,8 +31,9 @@
                     from:0,
                     to:0
                 },
-                selectedRows:["NA=="],
-                selectedAllRows:true,
+                selectedRows:[],
+                isSelectedAllRows:false,
+                isSelectedAllRowsReset:false,
             }
         },
         mounted(){
@@ -57,6 +56,9 @@
                     try{
                         const {installers, pagination} = res;
                         if(installers.length > 0){
+                            this.isSelectedAllRows = false;
+                            this.isSelectedAllRowsReset = false;
+                            this.selectedRows = [];
                             this.fetchInstallers = installers;
                             this.pagination = pagination;
                         }
@@ -74,6 +76,42 @@
                 }finally{
                     this.isLoading = false;
                 }
+            },
+            selectedAllRowsHandler(){
+
+                if(this.isSelectedAllRowsReset){
+                    this.selectedRows = [];
+                    this.isSelectedAllRowsReset = !this.isSelectedAllRowsReset;
+                }else if(!this.isSelectedAllRows){
+                    this.isSelectedAllRows = !this.isSelectedAllRows;
+                    this.fetchInstallers.map((item)=>{
+                        this.selectedRows.push(item.id);
+                    });
+                }else{
+                    this.selectedRows = [];
+                    this.isSelectedAllRows = false;
+                    this.isSelectedAllRowsReset = false;
+                }
+
+            },
+            singleRowSelectedHandler(id){
+                var index = this.selectedRows.indexOf(id);
+                if(index > -1){
+                    this.selectedRows.splice(index, 1);
+                }else{
+                    this.selectedRows.push(id);
+                }
+
+                if(this.selectedRows.length === this.fetchInstallers.length){
+                    this.isSelectedAllRows = true;
+                    this.isSelectedAllRowsReset = false;
+                }else if(this.selectedRows.length > 0){
+                    this.isSelectedAllRows = false;
+                    this.isSelectedAllRowsReset = true;
+                }else{
+                    this.isSelectedAllRows = false;
+                    this.isSelectedAllRowsReset = false;
+                }
             }
         },
     }
@@ -88,40 +126,64 @@
         <div class="content-body- border-top">
             <action-bar>
                 <left-action-bar>
-                    <div class="ps-3">
-                        <CustomCheckbox type="checkbox" v-model="selectedAllRows" />
+                    <div class="ps-2">
+
+                        <label class="custom-form-checkbox btn btn-floating btn-light" @click="selectedAllRowsHandler">
+                            <svg v-if="!isSelectedAllRows && !isSelectedAllRowsReset" class="unchecked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
+                            <svg v-if="isSelectedAllRows && !isSelectedAllRowsReset" class="checked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
+                            <svg v-if="isSelectedAllRowsReset" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><defs><path id="a" d="M0 0h24v24H0z"></path></defs> <clipPath id="b"><use xlink:href="#a" overflow="visible"></use></clipPath> <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z" clip-path="url(#b)"></path></svg>
+                        </label>
+
                     </div>
                     <div>
+
                         <button :disabled="isLoading" @click="fetchInstallerDataHandler()" class="toolbar-btn btn btn-light btn-floating me-3 ms-3">
-                            <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                            <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
                         </button>
+
                     </div>
+                    <div>
+
+                        <button class="toolbar-btn btn btn-danger btn-sm me-3 ms-3" v-if="selectedRows.length">
+                            <span class="fs-12px">{{ selectedRows.length }} selected</span>
+                            <span class="ms-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" fill="currentColor" width="20px" height="20px"><path d="M 13 3 A 1.0001 1.0001 0 0 0 11.986328 4 L 6 4 A 1.0001 1.0001 0 1 0 6 6 L 24 6 A 1.0001 1.0001 0 1 0 24 4 L 18.013672 4 A 1.0001 1.0001 0 0 0 17 3 L 13 3 z M 6 8 L 6 24 C 6 25.105 6.895 26 8 26 L 22 26 C 23.105 26 24 25.105 24 24 L 24 8 L 6 8 z"/></svg>
+                            </span>
+                        </button>
+
+                    </div>
+                    
                 </left-action-bar>
             
                 <right-action-bar>
+
                     <div class="mx-3">
-                        <router-link class="btn btn-primary fw-bold btn-sm" to="/settings/installers/new">Add new installer</router-link>
+                        <router-link class="btn btn-primary fw-bold btn-sm" to="/settings/installers/new">Add New</router-link>
                     </div>
+
                     <div class="fw-bold d-flex justify-content-center align-items-center me-2 text-overflow-ellipsis" style="min-width: 8rem;">{{ pagination.from }} - {{ pagination.to }} of  {{ pagination.total }}</div>
+                    
                     <button 
                     :disabled="!pagination.prev_page" 
                     @click="pagination.prev_page && fetchInstallerDataHandler(pagination.prev_page)" 
                     class="toolbar-btn btn btn-light btn-floating me-2">
                         <svg  class="svg-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>
                     </button>
+
                     <button 
                     :disabled="!pagination.next_page" 
                     @click="pagination.next_page && fetchInstallerDataHandler(pagination.next_page)" 
                     class="toolbar-btn btn btn-light btn-floating me-3">
                         <svg class="svg-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
                     </button>
+
                 </right-action-bar>
             </action-bar>
         
             <Datatable>
         
                 <datatable-header class="">
-                    <div class="tbl-th" style="width:4rem;"></div>
+                    <div class="tbl-th" style="width:3.46rem;"></div>
                     <div class="tbl-th" style="width:10rem;">Installer Name</div>
                     <div class="tbl-th " style="width:10rem;">ABN</div>
                     <div class="tbl-th" style="width:15rem;flex-grow: 1;">Company Name</div>
@@ -140,8 +202,14 @@
                     
                     
                     <div :class="selectedRows.includes(installer.id)?'active':''" class="tbl-tr full-width" v-for="(installer, index) in fetchInstallers" :key="index">
-                        <div style="width:4rem;" class="tbl-td full-width">
-                            <CustomCheckbox v-model="selectedRows" :value="installer.id" />
+
+                        <div style="width:4rem;margin-left: -7px;" class="tbl-td full-width">
+
+                            <label @click="singleRowSelectedHandler(installer.id)" class="custom-form-checkbox btn btn-floating btn-light">
+                                <svg v-if="!selectedRows.includes(installer.id)" class="unchecked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
+                                <svg v-if="selectedRows.includes(installer.id)" class="checked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
+                            </label>
+
                         </div>
 
                         <div style="width:10rem;" class="tbl-td full-width">
@@ -203,6 +271,10 @@
 
 </style>
 <style>
+    .installer-list .tbl-body .tbl-tr .tbl-td{
+        padding-top:2px !important;
+        padding-bottom: 2px !important;
+    }
     .installer-list .scrollbar__wrapper{
         height:calc(100vh - 7rem + 3px);
     }

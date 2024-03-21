@@ -382,3 +382,18 @@ button[disabled]{
 .add-custom-scrollbar .scrollbar__wrapper .scrollbar__content.scrollbar__content--horizontal{
   display: block;
 }
+
+.custom-form-checkbox{
+  color:#616e7c !important;
+  position:relative !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  background-color: transparent !important;
+  input{
+      display: none;
+  }
+  .unchecked{
+      display: block;
+  }
+}

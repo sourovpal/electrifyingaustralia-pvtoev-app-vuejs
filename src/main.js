@@ -6,7 +6,6 @@ import * as mdb from 'mdb-ui-kit';
 import VueProgressBar from "@aacassandra/vue3-progressbar";
 
 import { plugin as VueTippy } from 'vue-tippy'
-import axios from 'axios';
 import VueCookies from 'vue-cookies';
 
 import ToastPlugin from 'vue-toast-notification';

@@ -11,7 +11,7 @@ async function getLeadStatus(){
         output['lead_statuses'] = lead_statuses.map((item)=>{
             return {
                 label:item.name,
-                path:'leads',
+                path:'/platform/leads',
                 query:{status:btoa(item.name)},
                 icon:item.is_lost==1?lostIcon:null,
             };

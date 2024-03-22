@@ -85,6 +85,13 @@ export default {
                 this.isSubmitEmailChangeOtp = false;
             }
         },
+    },
+    mounted(){
+        try{
+            const {name, email} = this.$cookies.get('user_data');
+            this.name = name;
+            this.email = email;
+        }catch(error){}
     }
 }
 </script>

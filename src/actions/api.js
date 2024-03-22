@@ -1,7 +1,7 @@
 import axios from "axios";
 import VueCookies from 'vue-cookies';
 
-var token = VueCookies.get('access_token');
+var token = VueCookies.get(import.meta.env.VITE_AUTH_TOKEN);
 
 const headers = {};
 if(token){
@@ -30,8 +30,10 @@ instance.interceptors.response.use(function (response) {
     return response;
     }, function (error) {
         if (error.response.status === 401){
-            VueCookies.remove('access_token');
-            VueCookies.remove('user_data');
+            VueCookies.remove(import.meta.env.VITE_AUTH_USER, '/');
+            VueCookies.remove(import.meta.env.VITE_AUTH_COMPANY, '/');
+            VueCookies.remove(import.meta.env.VITE_AUTH_TOKEN, '/');
+            VueCookies.remove(import.meta.env.VITE_AUTH_APP, '/');
             window.location.replace('/login');
         }
         return Promise.reject(error);

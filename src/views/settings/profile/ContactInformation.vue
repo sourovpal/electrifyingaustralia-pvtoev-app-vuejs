@@ -43,7 +43,8 @@
                     
                     try{
                         const {user} = res;
-                        this.fetchUser = user;
+                        this.$cookies.remove(import.meta.env.VITE_AUTH_USER, '/');
+                        this.$cookies.set(import.meta.env.VITE_AUTH_USER, user, '1y', '/');
                     }catch(error){
                     }
                     
@@ -65,6 +66,15 @@
                 
             },
         },
+        mounted(){
+            try{
+                const {phone_office, phone_mobile} = this.$cookies.get(import.meta.env.VITE_AUTH_USER);
+                this.phone_office = phone_office;
+                this.phone_mobile = phone_mobile;
+            }catch(error){
+
+            }
+        }
     }
 </script>
 <template>

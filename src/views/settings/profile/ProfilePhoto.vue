@@ -74,6 +74,8 @@
                     try{
                         const {user} = res;
                         this.profile_avatar = user.profile_avatar;
+                        this.$cookies.remove(import.meta.env.VITE_AUTH_USER, '/');
+                        this.$cookies.set(import.meta.env.VITE_AUTH_USER, user, '1y', '/');
                     }catch(error){
                     }
                     
@@ -118,6 +120,15 @@
                 this.profileImageFile = await new File([blob], 'profile-image.png', { lastModified:Date.now() });
             }
         },
+        mounted(){
+            try{
+                const {phone_office, phone_mobile} = this.$cookies.get(import.meta.env.VITE_AUTH_USER);
+                this.phone_office = phone_office;
+                this.phone_mobile = phone_mobile;
+            }catch(error){
+
+            }
+        }
     }
 </script>
 <template>

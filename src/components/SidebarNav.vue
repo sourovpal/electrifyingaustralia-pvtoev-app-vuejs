@@ -1,6 +1,8 @@
 <script>
 import ProfileDropdown from './ProfileDropdown.vue';
 import NotificationsDropdown from './NotificationsDropdown.vue';
+import {LogoutAction} from '../actions/AuthAction';
+
 export default{
     components: { ProfileDropdown, NotificationsDropdown },
     data() {
@@ -10,12 +12,45 @@ export default{
             mapLogo: '/src/asset/sidebar-image/reshot-icon-tracking.svg',
             libraryLogo: '/src/asset/sidebar-image/reshot-icon-business-folder.svg',
             paymentLogo: '/src/asset/sidebar-image/reshot-icon-payment-method.svg',
+            confirmDialog:false,
         }
     },
+    methods:{
+        async logoutHandler(){
+            console.log('Hello');
+            this.confirmDialog = false;
+            try{
+                const res = await LogoutAction();
+                this.$cookies.remove(import.meta.env.VITE_AUTH_USER, '/');
+                this.$cookies.remove(import.meta.env.VITE_AUTH_COMPANY, '/');
+                this.$cookies.remove(import.meta.env.VITE_AUTH_TOKEN, '/');
+                this.$cookies.remove(import.meta.env.VITE_AUTH_APP, '/');
+                try{
+                    const {message} = res;
+                    this.$toast[message.type](message.text);
+                }catch(error){}
+                setTimeout(()=>{
+                    if(res){
+                        window.location.replace('/login');
+                    }
+                },1000);
+            }catch(error){
+                this.$toast['error'](error.message);
+            }
+        },
+    }
 }
 </script>
 
 <template>
+    <div v-if="confirmDialog" class="confirm-dialog-area">
+        <div class="confirm-dialog" style="max-width:350px;">
+            <h1 class="fw-bold text-dark">Logout</h1>
+            <p class="text-hard">Are you ready to logout your account?</p>
+            <button @click="confirmDialog=!confirmDialog">Cancel</button>
+            <button @click="logoutHandler">Confirm</button>
+        </div>
+    </div>
     <nav class="navbar navbar-vertical d-none d-md-flex shadow-none">
         <div class="navbar-top">
             <div class="nav-item">
@@ -92,7 +127,7 @@ export default{
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
                     </a>
                 </div>
-                <ProfileDropdown @click="(e)=>e.stopPropagation()" class="dropdown-menu dropdown-menu-end" />
+                <ProfileDropdown :confirmDialog="(e)=>confirmDialog=e" class="dropdown-menu dropdown-menu-end" />
             </div>
         </div>
     </nav>

@@ -14,7 +14,7 @@
                 company_name:null,
                 isSubmitBasicDetails:false,
             }
-        },
+        },        
         watch: {
             fetchUser:{
                 handler(val){
@@ -51,7 +51,8 @@
                     
                     try{
                         const {user} = res;
-                        this.fetchUser = user;
+                        this.$cookies.remove(import.meta.env.VITE_AUTH_USER, '/');
+                        this.$cookies.set(import.meta.env.VITE_AUTH_USER, user, '1y', '/');
                     }catch(error){
                     }
                     
@@ -72,6 +73,19 @@
                 }
                 
             },
+        },
+        mounted(){
+            try{
+                const {name, username, job_title, display_name} = this.$cookies.get(import.meta.env.VITE_AUTH_USER);
+                const {company_name} = this.$cookies.get(import.meta.env.VITE_AUTH_COMPANY);
+                this.name = name;
+                this.username = username;
+                this.job_title = job_title;
+                this.display_name = display_name;
+                this.company_name = company_name;
+            }catch(error){
+
+            }
         },
     }
 </script>

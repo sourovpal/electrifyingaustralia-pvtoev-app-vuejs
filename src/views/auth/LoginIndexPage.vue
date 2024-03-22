@@ -24,9 +24,20 @@
           });
           if(res){
             try{
-              const {user, access_token} = res;
-              this.$cookies.set('user_data',user);
-              this.$cookies.set('access_token',(access_token.token));
+              const {user, access_token, company, app} = res;
+
+              this.$cookies.remove(import.meta.env.VITE_AUTH_USER, '/');
+              this.$cookies.remove(import.meta.env.VITE_AUTH_COMPANY, '/');
+              this.$cookies.remove(import.meta.env.VITE_AUTH_TOKEN, '/');
+              this.$cookies.remove(import.meta.env.VITE_AUTH_APP, '/');
+
+              this.$cookies.set(import.meta.env.VITE_AUTH_USER, user);
+              this.$cookies.set(import.meta.env.VITE_AUTH_COMPANY, company);
+              this.$cookies.set(import.meta.env.VITE_AUTH_TOKEN, (access_token.token));
+              if(app){
+                this.$cookies.set(import.meta.env.VITE_AUTH_APP, app);
+              }
+              
             }catch(e){}
             
             try{

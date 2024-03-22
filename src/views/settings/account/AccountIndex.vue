@@ -15,6 +15,7 @@ export default {
         sessions:[],
         isFetching:false,        
         isPasswordSubmit:false,
+        intervalId:null,
       }
     },
     components:{
@@ -49,10 +50,13 @@ export default {
     },
     mounted() {
         this.fetchProfileData();
-        setInterval(()=>{
+        this.intervalId = setInterval(()=>{
             this.fetchProfileData(true);
         },10000);
     },
+    beforeUnmount() {
+        clearInterval(this.intervalId);
+    }
   }
   
 </script>

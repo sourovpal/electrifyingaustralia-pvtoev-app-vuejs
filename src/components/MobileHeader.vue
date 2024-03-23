@@ -45,7 +45,7 @@
     align-items: center;
     flex-wrap: nowrap;
     padding: 8px 16px;
-    z-index: 999999;
+    z-index: 99;
     .navbar-left{
 
         display: flex;

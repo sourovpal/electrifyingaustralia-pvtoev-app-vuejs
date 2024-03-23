@@ -17,7 +17,7 @@ import "vue-custom-scrollbar/dist/vueScrollbar.css"; // remove
 import 'custom-vue-scrollbar/dist/style.css';
 import 'tippy.js/dist/tippy.css'
 import 'vue-toast-notification/dist/theme-bootstrap.css';
-
+import 'vue-skeletor/dist/vue-skeletor.css';
 
 
 const VueProgressBarOptions = {

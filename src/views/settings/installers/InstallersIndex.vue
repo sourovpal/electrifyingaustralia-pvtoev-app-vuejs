@@ -7,6 +7,8 @@
     import DatatableHeader from '../../../components/Datatable/DatatableHeader.vue';
     import DatatableBody from '../../../components/Datatable/DatatableBody.vue';
     import {FetchInstaller, CreateInstaller} from '../../../actions/InstallerAction';
+    import DataTableSkeletor from './DataTableSkeletor.vue';
+    import DataNotFound from './DataNotFound.vue';
 
     export default {
         components: {
@@ -16,9 +18,12 @@
             Datatable,
             DatatableHeader,
             DatatableBody,
+            DataTableSkeletor,
+            DataNotFound,
         },
         data() {
             return {
+                isFirstLoading:false,
                 isLoading:false,
                 fetchInstallers:{},
                 pagination:{
@@ -37,6 +42,7 @@
             }
         },
         mounted(){
+            this.isFirstLoading = true;
             this.fetchInstallerDataHandler();
         },
         methods: {
@@ -45,8 +51,10 @@
                     if(this.isLoading){return;}
                     this.isLoading = true;
                     const res = await FetchInstaller({page, limit});
+                    // await new Promise((e)=>setTimeout(e, 5000));
                     try{
                         const {installers, pagination} = res;
+                        this.isFirstLoading = false;
                         if(installers.length > 0){
                             this.isSelectedAllRows = false;
                             this.isSelectedAllRowsReset = false;
@@ -67,6 +75,7 @@
                     }
                 }finally{
                     this.isLoading = false;
+                    this.isFirstLoading = false;
                 }
             },
             selectedAllRowsHandler(){
@@ -183,7 +192,7 @@
         
             <Datatable>
         
-                <datatable-header class="">
+                <datatable-header v-if="isFirstLoading || fetchInstallers.length">
                     <div class="tbl-th" style="width:3.46rem;"></div>
                     <div class="tbl-th" style="width:10rem;">Installer Name</div>
                     <div class="tbl-th " style="width:10rem;">ABN</div>
@@ -202,7 +211,7 @@
                 <datatable-body>
                     
                     
-                    <div :class="selectedRows.includes(installer.id)?'active':''" class="tbl-tr full-width" v-for="(installer, index) in fetchInstallers" :key="index">
+                    <div v-if="!isFirstLoading || fetchInstallers.length" :class="selectedRows.includes(installer.id)?'active':''" class="tbl-tr full-width" v-for="(installer, index) in fetchInstallers" :key="index">
 
                         <div style="width:4rem;margin-left: -7px;" class="tbl-td full-width">
 
@@ -261,6 +270,13 @@
                 
                         <div style="width:10rem;" class="tbl-td d-none d-lg-flex">{{ installer.created_at }}</div>
                     </div>
+                    
+                    <DataTableSkeletor v-if="isFirstLoading" />
+
+                    <DataNotFound v-if="!isFirstLoading && !fetchInstallers.length" />
+
+                    
+
                 </datatable-body>
         
             </Datatable>

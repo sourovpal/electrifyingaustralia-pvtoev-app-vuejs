@@ -4,6 +4,9 @@ export default {
     name:'Master',
     components:{
         SidebarNav,
+    },    
+    mounted() {
+        this.$store.dispatch('fetch_app_data');
     },
 }
 

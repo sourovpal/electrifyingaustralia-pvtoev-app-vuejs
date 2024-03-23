@@ -1,6 +1,7 @@
 import { createApp, watch, onUpdated } from 'vue';
 import App from './App.vue';
 import router from './router';
+import stores from './stores';
 import * as mdb from 'mdb-ui-kit';
 
 import VueProgressBar from "@aacassandra/vue3-progressbar";
@@ -39,6 +40,7 @@ var app = createApp(App);
 
 
 app.use(VueProgressBar, VueProgressBarOptions);
+app.use(stores);
 app.use(router);
 app.use(VueCookies, { expires: '1y', path: window.location.origin})
 app.use(ToastPlugin, {
@@ -56,7 +58,7 @@ app.use(
       allowHTML: true,
     }, 
   }
-  );
+);
   
   
   

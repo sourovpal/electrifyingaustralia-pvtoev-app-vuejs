@@ -74,6 +74,11 @@
                 
             },
         },
+        watch: {
+            '$store.state.count'(newValue, oldValue) {
+            console.log("new:"+newValue+" Old:"+oldValue)
+            }
+        },
         mounted(){
             try{
                 const {name, username, job_title, display_name} = this.$cookies.get(import.meta.env.VITE_AUTH_USER);

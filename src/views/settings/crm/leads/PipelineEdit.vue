@@ -1,13 +1,17 @@
 <script>
     import CustomScrollbar from 'custom-vue-scrollbar';
     import { VueDraggableNext } from 'vue-draggable-next';
-    import {FindPipeline, UpdatePipelines} from '../../../../actions/CrmLeads';
+    import {FindPipeline, UpdateOrCreatePipelines} from '../../../../actions/CrmLeads';
     export default {
       name:'AccountIndex',
         data() {
           return{
             errors:{},
-            stages:[],
+            stages:[
+                {id:1, name:'New', color:'rgb(0, 126, 229)', status:0,},
+                {id:2, name:'Lost', color:'rgb(66, 66, 66)', status:1,},
+                {id:3, name:'Sold', color:'rgb(41, 153, 0)', status:2,},
+            ],
             colors:[
                 {name:'No colour', code:'white'},
                 {name:'Sunflower Gold', code:'rgb(255, 204, 4)'},
@@ -18,7 +22,7 @@
                 {name:'Hotspot Red', code:'rgb(207, 17, 36)'},
                 {name:'Silicon Grey', code:'rgb(66, 66, 66)'},
             ],
-            title:'Example Name',
+            title:null,
             is_sales_pipeline:0,
             pipelineId:null,
             isSubmitPipelineStage:false,
@@ -31,16 +35,25 @@
         methods: {
             async fetchPipelineDataById(){
                 try{
+                    this.$toast.clear();
                     const params = this.$route.params;
-                    if(params.id != null || params.id != ''){
+                    if(params.id === 'new-pipelines'){
+                        this.pipelineId = 'new-pipelines';
+                        return;
+                    }
+                    if((params.id != null || params.id != '')){
                         const res = await FindPipeline({id:params.id});
                         try{
                             const {pipeline, stages} = res;
-                            this.pipeline = pipeline;
-                            this.stages = stages;
-                            this.title = pipeline.title;
-                            this.pipelineId = pipeline.id;
-                            this.is_sales_pipeline = pipeline.is_sales_pipeline;
+                            if(pipeline){
+                                this.pipeline = pipeline;
+                                this.title = pipeline.title;
+                                this.pipelineId = pipeline.id;
+                                this.is_sales_pipeline = pipeline.is_sales_pipeline;
+                            }
+                            if(stages.length){
+                                this.stages = stages;
+                            }
                         }catch(error){
                             throw new Error(error.message);
                         }
@@ -57,15 +70,24 @@
                 }finally{
                 }
             },
-            async updatePipelineHandler(){
+            async updateOrCreatePipelineHandler(){
                 try{
+                    this.$toast.clear();
+
+                    if(this.title === '' || this.title === null){
+                        this.errors = {
+                            title:['The title field is required.']
+                        };
+                        return;
+                    }
+
                     this.isSubmitPipelineStage = true;
                     var data = {
                         title:this.title,
                         is_sales_pipeline:this.is_sales_pipeline,
                         stages: this.stages
                     };
-                    const res = await UpdatePipelines(data, this.pipelineId);
+                    const res = await UpdateOrCreatePipelines(data, this.pipelineId);
 
                     try{
                         const {message} = res;
@@ -76,12 +98,19 @@
                         const {pipeline, stages} = res;
                         this.pipeline = pipeline;
                         this.stages = stages;
+                        this.title = pipeline.title;
+                        this.pipelineId = pipeline.id;
+                        this.is_sales_pipeline = pipeline.is_sales_pipeline;
+                        this.$router.push({path:`/settings/crm/leads/${pipeline.id}`})
                     }catch(error){
                         throw new Error(error.message);
                     }
 
                 }catch(error){
-                    console.log(error);
+                    try{
+                        var data = error.response.data;
+                        this.errors = data.errors;
+                    }catch(e){}
                     try{
                         var message = error.response.data.message;
                         this.$toast[message.type](message.text);
@@ -107,10 +136,10 @@
                     <router-link to="/settings/crm/leads">
                         <h1 class="mb-0 text-soft">Pipelines</h1>
                     </router-link>
-                    <div class="mx-2">
+                    <div class="mx-2 d-flex justify-content-center align-items-center">
                         <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path><path fill="none" d="M0 0h24v24H0V0z"></path></svg>
                     </div>
-                    <h1 class="mb-0 text-base">Edit</h1>
+                    <h1 class="mb-0 text-base">{{pipelineId=='new-pipelines'?'Add New':'Edit'}}</h1>
                 </div>
             
                 <div class="content-body">
@@ -303,7 +332,7 @@
 
                         <div class="row">
                             <div class="col-lg-12 mt-3">
-                                <button :disabled="isSubmitPipelineStage" @click="updatePipelineHandler()" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-stages-center">
+                                <button :disabled="isSubmitPipelineStage" @click="updateOrCreatePipelineHandler()" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-stages-center">
                                     <div v-if="isSubmitPipelineStage">
                                         <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
                                             <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>

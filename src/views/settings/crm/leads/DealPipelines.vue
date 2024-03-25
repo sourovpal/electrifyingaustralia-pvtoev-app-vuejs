@@ -1,6 +1,6 @@
 <script>
 import DealPipelinesSkeletor from './DealPipelinesSkeletor.vue';
-import {UpdatePipelines} from '../../../../actions/CrmLeads';
+import {UpdateOrCreatePipelines} from '../../../../actions/CrmLeads';
 export default {
     name:'ProfileIndex',
     props:{
@@ -28,7 +28,7 @@ export default {
                 if(typeof prev !== 'undefined'){
                     this.items[i] = item;
                     this.items[index] = prev;
-                    this.updateOrCreatePipelines();
+                    this.updateOrCreatePipelinesHandler();
                 }
             }else{
                 var i = index+1;
@@ -36,18 +36,18 @@ export default {
                 if(typeof prev !== 'undefined'){
                     this.items[i] = item;
                     this.items[index] = prev;
-                    this.updateOrCreatePipelines();
+                    this.updateOrCreatePipelinesHandler();
                 }
             }
         },
-        async updateOrCreatePipelines(){
+        async updateOrCreatePipelinesHandler(){
             try{
                 this.$toast.clear();
                 const data = {
                     pipelines:this.items,
                 }
                 this.isSubmitPipelineUpdate = true;
-                const res = await UpdatePipelines(data);
+                const res = await UpdateOrCreatePipelines(data, null);
                 try{
 
                     const {message} = res;
@@ -135,7 +135,7 @@ export default {
 
 
         <div class="mt-3">
-            <button class="btn btn-primary fw-bold">Add new pipeline</button>
+            <router-link to="/settings/crm/leads/new-pipelines" class="btn btn-primary fw-bold">Add new pipeline</router-link>
         </div>
     </div>
 

@@ -60,10 +60,10 @@ const FindPipeline = (payload)=>{
     });
 }
 
-const UpdatePipelines = (payload, id)=>{
+const UpdateOrCreatePipelines = (payload, id)=>{
     return new Promise((resolve, reject)=>{
         try{
-            api.post(`/pipelines/${id}`, payload)
+            api.post(`/pipelines${id?'/'+id:''}`, payload)
             .then((res)=>{
                 return resolve(res.data);
             }).catch((error)=>{
@@ -79,6 +79,6 @@ export {
     FetchLeadStatusAndDealPiplines,
     FetchLeadStatus,
     UpdateLeadStatus,
-    UpdatePipelines,
+    UpdateOrCreatePipelines,
     FindPipeline
 }

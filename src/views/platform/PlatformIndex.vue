@@ -12,6 +12,7 @@ export default {
       return{
         title,
         lead_statuses:[],
+        pipelines:[],
         menus:[],
       }
     },
@@ -22,10 +23,13 @@ export default {
     watch:{
       "$store.state.app.lead_statuses"(newVal){
         this.lead_statuses = newVal;
+      },
+      "$store.state.app.pipelines"(newVal){
+        this.pipelines = newVal;
       }
     },
     methods: {
-      async makeMenus(leadStatuses){
+      async makeMenus(leadStatuses=[], pipelinesList=[]){
         const lead_statuses = leadStatuses.map((item)=>{
           return {
               label:item.name,
@@ -34,16 +38,25 @@ export default {
               icon:item.is_lost==1?lostIcon:null,
           };
         });
-        this.menus = await menus({lead_statuses});
+        const pipelines = pipelinesList.map((item)=>{
+          return {
+              label:item.title,
+              path:'/platform/deals',
+              query:{status:btoa(item.title)},
+              icon:'',
+          };
+        });
+        this.menus = await menus({lead_statuses, pipelines});
       }
     },
     created() {
-      this.$watch(()=>[this.lead_statuses], function(){
-        this.makeMenus(this.lead_statuses);
+      this.$watch(()=>[this.lead_statuses, this.pipelines], function(){
+        this.makeMenus(this.lead_statuses, this.pipelines);
       });
     },
     mounted() {
-      this.lead_statuses = this.$store.getters.getLeadStatuses;      
+      this.lead_statuses = this.$store.getters.getLeadStatuses;    
+      this.pipelines = this.$store.getters.getPipelines;    
     },
   }
   

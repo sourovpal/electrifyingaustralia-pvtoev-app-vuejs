@@ -3,7 +3,7 @@ import api from "./api";
 const FetchLeadStatusAndDealPiplines = ()=>{
     return new Promise((resolve, reject)=>{
         try{
-            api.get(`/lead-status`)
+            api.get(`/lead-status?with=pipeline`)
             .then((res)=>{
                 return resolve(res.data);
             }).catch((error)=>{
@@ -45,8 +45,40 @@ const UpdateLeadStatus = (payload)=>{
     });
 }
 
+const FindPipeline = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.get(`/pipelines/${payload.id}`)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
+const UpdatePipelines = (payload, id)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.post(`/pipelines/${id}`, payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
 export {
     FetchLeadStatusAndDealPiplines,
     FetchLeadStatus,
-    UpdateLeadStatus
+    UpdateLeadStatus,
+    UpdatePipelines,
+    FindPipeline
 }

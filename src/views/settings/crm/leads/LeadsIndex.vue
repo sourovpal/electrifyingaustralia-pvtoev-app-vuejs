@@ -8,9 +8,9 @@ export default {
   name:'ProfileIndex',
     data() {
       return{
-        lead_statuses:[
-            { name: "Example Status",  id: 0 , status:1 }
-        ]
+        lead_statuses:[],
+        pipelines:[],
+        isFirstLoading:false,
       }
     },
     components:{
@@ -22,12 +22,15 @@ export default {
         async fetchLeadStatusAndDealPiplinesHandler(){
             try{
                 const res = await FetchLeadStatusAndDealPiplines();
-
                 try{
-                    const {lead_statuses} = res;
+                    const {lead_statuses, pipelines} = res;
                     if(lead_statuses.length > 0){
                         this.lead_statuses = lead_statuses;
                     }
+                    if(pipelines.length > 0){
+                        this.pipelines = pipelines;
+                    }
+                    this.isFirstLoading = false;
                 }catch(error){
                     throw new Error(error.message);
                 }
@@ -39,10 +42,13 @@ export default {
                 }catch(e){
                     this.$toast.error('Oops, something went wrong');
                 }
+            }finally{
+                this.isFirstLoading = false;
             }
         }
     },
     mounted() {
+        this.isFirstLoading = true;
         this.fetchLeadStatusAndDealPiplinesHandler();
     },
   }
@@ -59,7 +65,7 @@ export default {
             <div class="content-body">
                 <section class="">
             
-                    <DealPipelines/>
+                    <DealPipelines :pipelines="pipelines" :is-first-loading="isFirstLoading" />
             
                     <hr class="mt-4 mb-5">
             
@@ -93,14 +99,9 @@ export default {
         </CustomScrollbar>
     </div>
 </template>
-<style>
-.ql-container{
-    height:250px;
-}
-</style>
 <style lang="scss" scoped>
 .section-box{
-    margin-bottom:20px;
+    margin-bottom:14px;
     .pipeline-card{
         width:90%;
         border-radius:3px;

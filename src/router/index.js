@@ -69,6 +69,8 @@ import LeadProviderEmailIndex from '../views/settings/crm/lead-provider-email/Le
 
 import LeadsIndex from '../views/settings/crm/leads/LeadsIndex.vue';
 
+import PipelineEdit from '../views/settings/crm/leads/PipelineEdit.vue';
+
 import WorkflowIndex from '../views/settings/crm/workflow/WorkflowIndex.vue';
 
 import AutomationIndex from '../views/settings/crm/automation/AutomationIndex.vue';
@@ -559,7 +561,7 @@ const routes = [
             },
             { 
                 name:"CrmIndex",
-                path: '/crm',
+                path: '/settings/crm',
                 component: SettingsIndex,
                 children: [
                     {
@@ -588,6 +590,17 @@ const routes = [
                         name:'LeadsIndex',
                         path:'leads',
                         component: LeadsIndex,
+                        meta:{
+                            auth:true,
+                            progress:true,
+                            title:'Home Page',
+                            permissions:[],
+                        },
+                    },
+                    {
+                        name:'PipelineEdit',
+                        path:'leads/:id',
+                        component: PipelineEdit,
                         meta:{
                             auth:true,
                             progress:true,

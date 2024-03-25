@@ -19,6 +19,7 @@ export default {
     methods: {
         async updateLeadStatusHandler(){
             try{
+                this.$toast.clear();
                 const data = {
                     lead_statuses:this.leadStatuses,
                 }
@@ -72,7 +73,7 @@ export default {
             <p class="mb-2 fw-bold fs-14px">Change order or name of statuses</p>
             <div class="list-group ">
                 <vue-draggable-next class="lead-status-list" tag="div" :list="leadStatuses" handle=".handle">
-                    <div class="list-group-item py-0" :class="item.is_lost == 1?'is-lost':null" v-for="(item, index) in leadStatuses" :key="item.id">
+                    <div class="list-group-item py-0 border-bottom-0 border-top" :class="item.is_lost == 1?'is-lost':null" v-for="(item, index) in leadStatuses" :key="item.id">
                         <div class="box-info">
                             <div class="handle">
                                 <svg  width="24" height="24" viewBox="0 0 24 24"><path  d="M11 18c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zm-2-8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 4c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path></svg>
@@ -113,7 +114,7 @@ export default {
                         </div>
                     </div>
                 </vue-draggable-next>
-                <div class="list-group-item border-top-0 bg-light text-center add-new-lead-status" @click="leadStatuses.push({name:`New Status`, id:leadStatuses.length+1, is_lost:0})">Add New Status</div>
+                <div class="list-group-item bg-light text-center add-new-lead-status" @click="leadStatuses.push({name:`New Status`, id:leadStatuses.length+1, is_lost:0})">Add New Status</div>
             </div>
             <div class="mt-3">
                 <button :disabled="isSubmitLeadStatus" @click="updateLeadStatusHandler()" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-items-center">

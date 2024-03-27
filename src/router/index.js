@@ -69,6 +69,8 @@ import LeadProviderEmailIndex from '../views/settings/crm/lead-provider-email/Le
 
 import LeadsIndex from '../views/settings/crm/leads/LeadsIndex.vue';
 
+import LeadCustomProperties from '../views/settings/crm/leads/CustomProperties.vue';
+
 import PipelineEdit from '../views/settings/crm/leads/PipelineEdit.vue';
 
 import WorkflowIndex from '../views/settings/crm/workflow/WorkflowIndex.vue';
@@ -590,6 +592,17 @@ const routes = [
                         name:'LeadsIndex',
                         path:'leads',
                         component: LeadsIndex,
+                        meta:{
+                            auth:true,
+                            progress:true,
+                            title:'Home Page',
+                            permissions:[],
+                        },
+                    },
+                    {
+                        name:'LeadCustomProperties',
+                        path:'leads/properties',
+                        component: LeadCustomProperties,
                         meta:{
                             auth:true,
                             progress:true,

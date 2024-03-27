@@ -108,11 +108,15 @@ export default {
                 </div>
                 <div class="card-body flex-wrap d-flex justify-content-between align-items-center px-3">
                     <div class="">
-                        <span class="time">Created {{ item.created_ago }} · {{ item.stages }} stages</span>
+                        <span class="time">Created {{ item.created_ago }} · {{ item.total_stages }} stages</span>
                     </div>
                     <div class="d-flex align-items-center flex-grow-1 justify-content-end">
                         <div>
-                            <a class="edit-custom-pro-btn" href="">Edit 0 custom properties</a>
+                            <router-link 
+                                class="edit-custom-pro-btn" 
+                                :to="`/settings/crm/leads/properties?pipeline=${item.id}&title=${item.title}`">
+                                Edit {{ item.total_properties }} custom properties
+                            </router-link>
                         </div>
                         <div class="ms-auto ms-sm-0">
                             <button class="drop-down-action">
@@ -132,11 +136,10 @@ export default {
             </div>
         </div>
 
-
-
         <div class="mt-3">
             <router-link to="/settings/crm/leads/new-pipelines" class="btn btn-primary fw-bold">Add new pipeline</router-link>
         </div>
+        
     </div>
 
     <div v-if="isFirstLoading" class="col-lg-8 col-xl-5 col-12">

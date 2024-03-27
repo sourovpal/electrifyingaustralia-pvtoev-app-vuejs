@@ -75,10 +75,27 @@ const UpdateOrCreatePipelines = (payload, id)=>{
     });
 }
 
+const FetchLeadProperties = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.get(`/lead-properties?page=${payload.page}&limit=${payload.limit}&pipeline_id=${payload.pipeline_id}`)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
+
 export {
     FetchLeadStatusAndDealPiplines,
     FetchLeadStatus,
     UpdateLeadStatus,
     UpdateOrCreatePipelines,
-    FindPipeline
+    FindPipeline,
+    FetchLeadProperties
 }

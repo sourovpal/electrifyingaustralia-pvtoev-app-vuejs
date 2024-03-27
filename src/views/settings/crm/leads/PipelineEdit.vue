@@ -130,7 +130,7 @@
     </script>
     
     <template>
-        <div id="installer-create" class="content add-custom-scrollbar">
+        <div class="content add-custom-scrollbar">
             <CustomScrollbar thumbWidth="8">
                 <div class="content-header d-flex justify-content-start align-stages-center">
                     <router-link to="/settings/crm/leads">
@@ -163,6 +163,17 @@
                                         <label class="form-label-title mb-0">Sales pipeline</label>
                                     </div>
                                     <span class="form-input-commant w-75">Sales pipelines are used to track sales opportunities. When an opportunity exits the pipeline, it will be considered sold. </span>
+                                    <div class="py-3">
+                                        <router-link class="d-flex justify-content-start align-items-center" :to="`/settings/crm/leads/properties?pipeline=${pipelineId}&title=${title}`">
+                                            Add New Propertie
+                                            <span class="icon ms-2">
+                                                <svg  fill="currentColor" height="18" viewBox="0 0 24 24" width="18">
+                                                    <path  d="M0 0h24v24H0z" fill="none"></path>
+                                                    <path  d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"></path>
+                                                </svg>
+                                            </span>
+                                        </router-link>
+                                    </div>
                                 </div>
                             </div>
                         </div>

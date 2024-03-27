@@ -230,7 +230,7 @@
                             <span class="text-overflow-ellipsis">{{ installer.abn }}</span>
                         </div>
         
-                        <div style="width:15rem;" class="tbl-td full-width">
+                        <div style="width:15rem;flex-grow: 1;" class="tbl-td full-width">
                             <span class="text-overflow-ellipsis">{{ installer.company_name }}</span>
                         </div>
                 
@@ -238,31 +238,31 @@
                             <span class="text-overflow-ellipsis">{{ installer.email }}</span>
                         </div>
 
-                        <div style="width:10rem;" class="tbl-td d-none d-lg-flex">
+                        <div style="width:10rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">
                             <span class="text-overflow-ellipsis">{{ installer.phone_number }}</span>
                         </div>
                         
-                        <div style="width:10rem;" class="tbl-td d-none d-lg-flex">
+                        <div style="width:10rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">
                             <span class="text-overflow-ellipsis">{{ installer.house_phone_number }}</span>
                         </div>
                         
-                        <div style="width:20rem;" class="tbl-td d-none d-lg-flex">
+                        <div style="width:20rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">
                             <span class="text-overflow-ellipsis">{{ installer.address }}</span>
                         </div>
 
-                        <div style="width:15rem;" class="tbl-td full-width">
+                        <div style="width:15rem;flex-grow: 1;" class="tbl-td full-width">
                             <span class="text-overflow-ellipsis">{{ installer.tax_identifier_type }}</span>
                         </div>
 
-                        <div style="width:15rem;" class="tbl-td full-width">
+                        <div style="width:15rem;flex-grow: 1;" class="tbl-td full-width">
                             <span class="text-overflow-ellipsis"> {{ installer.electrical_licence_number }}</span>
                         </div>
 
-                        <div style="width:15rem;" class="tbl-td full-width">
+                        <div style="width:15rem;flex-grow: 1;" class="tbl-td full-width">
                             <span class="text-overflow-ellipsis"> {{ installer.cec_accreditation_number }}</span>
                         </div>
 
-                        <div style="width:15rem;" class="tbl-td full-width">
+                        <div style="width:15rem;flex-grow: 1;" class="tbl-td full-width">
                             <span class="text-overflow-ellipsis"> {{ installer.workmanship_warranty }}</span>
                         </div>
         

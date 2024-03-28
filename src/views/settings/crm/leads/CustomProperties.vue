@@ -8,6 +8,7 @@
     import PropetiesSkeletor from './PropetiesSkeletor.vue';
     import DataNotFound from './DataNotFound.vue';
     import {FetchLeadProperties} from '../../../../actions/CrmLeads';
+    import CreateCustomPropertieModal from './modals/CreateCustomPropertieModal.vue';
 
     export default {
         components: {
@@ -19,6 +20,7 @@
             DatatableBody,
             PropetiesSkeletor,
             DataNotFound,
+            CreateCustomPropertieModal,
         },
         data() {
             return {
@@ -45,6 +47,7 @@
                     date:`<svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"></path></svg>`,
                     date_and_time:`<svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"></path><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"></path></svg>`,
                     single_choice:`<svg class="svg-5" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="22" viewBox="0 0 24 24" width="22"><g><rect fill="none" height="24" width="24"></rect><path d="M16.54,11L13,7.46l1.41-1.41l2.12,2.12l4.24-4.24l1.41,1.41L16.54,11z M11,7H2v2h9V7z M21,13.41L19.59,12L17,14.59 L14.41,12L13,13.41L15.59,16L13,18.59L14.41,20L17,17.41L19.59,20L21,18.59L18.41,16L21,13.41z M11,15H2v2h9V15z"></path></g></svg>`,
+                    multiple_choice:`<svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 -960 960 960" width="22"><path d="M222-200 80-342l56-56 85 85 170-170 56 57-225 226Zm0-320L80-662l56-56 85 85 170-170 56 57-225 226Zm298 240v-80h360v80H520Zm0-320v-80h360v80H520Z"/></svg>`,
                     real_number:`<svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0zm0 0h24v24H0z" fill="none"></path><path d="M10 7H8v4H4v2h4v4h2v-4h4v-2h-4V7zm10 11h-2V7.38L15 8.4V6.7L19.7 5h.3v13z"></path></svg>`,
                     read_only :`<svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM4 12c0-4.42 3.58-8 8-8 1.85 0 3.55.63 4.9 1.69L5.69 16.9C4.63 15.55 4 13.85 4 12zm8 8c-1.85 0-3.55-.63-4.9-1.69L18.31 7.1C19.37 8.45 20 10.15 20 12c0 4.42-3.58 8-8 8z"></path></svg>`,
                 },
@@ -129,6 +132,9 @@
                     this.isSelectedAllRows = false;
                     this.isSelectedAllRowsReset = false;
                 }
+            },
+            showCreatePropertieModal(){
+                this.$refs['createPropertieModal'].showModalHandler(false, this.pipeline_id, 0);
             }
         },
     }
@@ -136,7 +142,6 @@
     
 <template>        
     <section class="content properties">
-
         <div v-if="pipeline_id || pipeline_title" class="content-header d-flex justify-content-start align-stages-center my-3">
             <router-link to="/settings/crm/leads">
                 <h1 class="mb-0 text-soft">Pipelines</h1>
@@ -205,10 +210,10 @@
                     </div>
 
                     <div class="me-3">
-                        <router-link class="btn btn-primary fw-bold btn-sm" to="/settings/properties/new">
+                        <button @click="showCreatePropertieModal" class="btn btn-primary fw-bold btn-sm">
                             <span><svg class="me-2" width="24" height="24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>account-plus</title><path d="M15,14C12.33,14 7,15.33 7,18V20H23V18C23,15.33 17.67,14 15,14M6,10V7H4V10H1V12H4V15H6V12H9V10M15,12A4,4 0 0,0 19,8A4,4 0 0,0 15,4A4,4 0 0,0 11,8A4,4 0 0,0 15,12Z"></path></svg></span>
                             Add New
-                        </router-link>
+                        </button>
                     </div>
 
                     <div class="fw-bold d-flex justify-content-center align-items-center me-3 text-overflow-ellipsis fs-16px" style="min-width: 8rem;">{{ pagination.from }} - {{ pagination.to }} of  {{ pagination.total }}</div>
@@ -257,7 +262,7 @@
                         </div>
 
                         <div style="width:15rem;" class="tbl-td">
-                            <router-link class="text-overflow-ellipsis" :to="`/settings/properties/edit/${propertie.id}`"> {{ propertie.label }}</router-link>
+                            <a href="#" @click="$refs['createPropertieModal'].showModalHandler(true, pipeline_id, propertie.id)" class="text-overflow-ellipsis"> {{ propertie.label }}</a>
                         </div>
         
                         <div style="width:15rem;" class="tbl-td">
@@ -265,7 +270,7 @@
                         </div>
         
                         <div style="width:10rem;flex-grow: 1;" class="tbl-td">
-                            <span class="me-2" v-if="iconList[propertie.data_type?.trim().replace(/\s+/g, '_').toLowerCase()]" v-html="iconList[propertie.data_type?.trim().replace(/\s+/g, '_').toLowerCase()]"></span>
+                            <span class="me-2" v-if="iconList[propertie.data_type_id]" v-html="iconList[propertie.data_type_id]"></span>
                             <span class="text-overflow-ellipsis">{{ propertie.data_type }}</span>
                         </div>
                 
@@ -293,21 +298,18 @@
         
             </Datatable>
         </div>
+
+        <create-custom-propertie-modal 
+        :fetchPropertieDataHandler="fetchPropertieDataHandler"
+        ref="createPropertieModal" 
+        :pipeline_title="pipeline_title??'lead'"
+        />
+
+
+
     </section>
 </template>
     
 <style scoped lang="scss">
 
-</style>
-<style>
-    .properties .tbl-body .tbl-tr .tbl-td{
-        padding-top:2px !important;
-        padding-bottom: 2px !important;
-    }
-    .properties .scrollbar__wrapper{
-        height:calc(100vh - 7rem + 3px);
-    }
-    .properties .scrollbar__scroller{
-        height: 100%;
-    }
 </style>

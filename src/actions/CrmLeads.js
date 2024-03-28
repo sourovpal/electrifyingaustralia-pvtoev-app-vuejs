@@ -90,6 +90,51 @@ const FetchLeadProperties = (payload)=>{
     });
 }
 
+const FindLeadPropertie = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.get(`/lead-properties/${payload.id}`)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
+const CreateLeadPropertie = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.post(`/lead-properties`, payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
+const UpdateLeadPropertie = (payload, id)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.post(`/lead-properties/${id}`, payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
 
 export {
     FetchLeadStatusAndDealPiplines,
@@ -97,5 +142,8 @@ export {
     UpdateLeadStatus,
     UpdateOrCreatePipelines,
     FindPipeline,
-    FetchLeadProperties
+    FetchLeadProperties,
+    CreateLeadPropertie,
+    FindLeadPropertie,
+    UpdateLeadPropertie
 }

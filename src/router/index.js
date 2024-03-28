@@ -667,7 +667,7 @@ const routes = [
                     },
                 ]
             },
-        ],
+        ], // name - Root
     },
     {
         name:"login",

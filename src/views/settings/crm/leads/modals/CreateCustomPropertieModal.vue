@@ -3,6 +3,7 @@ import { Modal } from "mdb-ui-kit";
 import CustomScrollbar from 'custom-vue-scrollbar';
 import { VueDraggableNext } from 'vue-draggable-next';
 import {CreateLeadPropertie, FindLeadPropertie, UpdateLeadPropertie} from '../../../../../actions/CrmLeads';
+import {datatypeList} from '../data.js';
 export default {
     props:['pipeline_title', 'fetchPropertieDataHandler'],
     data() {
@@ -13,6 +14,7 @@ export default {
             propertieId:0,
             modalInstance:null,
             label:null,
+            selectedPipelineTitle:null,
             html_tag:null,
             data_type:null,
             unique_id:null,
@@ -20,93 +22,10 @@ export default {
             selectedDataTypeId:null,
             showSingleChoiceInput:false,
             choiceValues:[],
+            datatypeList:[],
+            pipelines:[],
             isCustomizeUniqueId:false,
             visibility:true,
-            datatypeList:[
-                {
-                    id:'free_text',
-                    data_type:'Free Text',
-                    html_tag:'input',
-                    attributes:{
-                        type:'text',
-                        value:'',
-                    }
-                },
-                {
-                    id:'multiline_free_text',
-                    data_type:'Multiline Free Text',
-                    html_tag:'textarea',
-                    attributes:{
-                        type:'text',
-                        value:'',
-                    }
-                },
-                {
-                    id:'yes_or_no',
-                    data_type:'Yes or No',
-                    html_tag:'input',
-                    attributes:{
-                        type:'checkbox',
-                        value:'',
-                    }
-                },
-                {
-                    id:'date',
-                    data_type:'Date',
-                    html_tag:'input',
-                    attributes:{
-                        type:'date',
-                        value:'',
-                    }
-                },
-                {
-                    id:'date_and_time',
-                    data_type:'Date and Time',
-                    html_tag:'input',
-                    attributes:{
-                        type:'datetime',
-                        value:'',
-                    }
-                },
-                {
-                    id:'single_choice',
-                    data_type:'Single Choice',
-                    html_tag:'select',
-                    attributes:{
-                        type:'text',
-                        values:[], // {label:'', value:''}
-                    }
-                },
-                {
-                    id:'multiple_choice',
-                    data_type:'Multiple Choice',
-                    html_tag:'select',
-                    attributes:{
-                        type:'text',
-                        multiple:true,
-                        values:[], // {label:'', value:''}
-                    }
-                },
-                {
-                    id:'real_number',
-                    data_type:'Real Number',
-                    html_tag:'input',
-                    attributes:{
-                        type:'number',
-                        value:'',
-                    }
-                },
-                {
-                    id:'read_only',
-                    data_type:'Read Only',
-                    html_tag:'input',
-                    attributes:{
-                        type:'text',
-                        value:'',
-                        readonly:true,
-                    }
-                },
-            ],
             isSubmitProperties:false,
             isFetchLoading:false,
         }
@@ -138,6 +57,8 @@ export default {
             this.isCustomizeUniqueId = false;
             this.propertieId = null;
             this.selectedDataTypeId = null;
+            this.choiceValues = [];
+            this.selectedPipelineTitle = null;
             if(propertieId){
                 this.propertieId = propertieId;
                 this.fetchPropertieById(propertieId);
@@ -152,8 +73,7 @@ export default {
                 this.isFetchLoading = true;
                 const res = await FindLeadPropertie({id:id});
                 try{
-                    const {propertie} = res;
-
+                    const {propertie, pipelines} = res;                    
                     if(propertie){
                         const select = this.datatypeList.find(e=>e.id == propertie.data_type_id);
                         if(select){
@@ -171,6 +91,10 @@ export default {
                             }else{
                                 this.showSingleChoiceInput = false;
                                 this.choiceValues = [];
+                            }
+                            if(pipelines){
+                                this.pipelines = pipelines;
+
                             }
                         }else{
                             this.$toast.error('Invalid Data Type.');
@@ -305,9 +229,24 @@ export default {
             }finally{
                 this.isSubmitProperties = false;
             }
+        },
+        async movePropertieHandler(id){
+            try{
+                this.pipelineId = id;
+                if(id){
+                    this.pipelineId = id;
+                    var pipeline = this.pipelines.find(e=>e.id == id);
+                    this.selectedPipelineTitle = pipeline.title;
+                }else{
+                    this.pipelineId = 0;
+                    this.selectedPipelineTitle = 'Lead';
+                }
+            }catch(error){}
         }
     },
     mounted() {
+        this.datatypeList = datatypeList;
+        this.selectedPipelineTitle = this.pipeline_title;
         this.modalInstance = new Modal(this.$refs.createPropertieModal);
     }
 }
@@ -334,7 +273,7 @@ export default {
                             <label class="form-label-title" for="">Data Type</label>
                             <input @focus="delete errors?.data_type" :class="isEdit?'no-drop':''" class="form-control form-control-input" readonly type="text" data-mdb-toggle="dropdown" :value="`${data_type??'Select Data Type'}`">
                             <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.data_type?.length">{{ errors?.data_type[0] }}</span>
-                            <div v-if="!isEdit" class="dropdown-menu custom-form-select data-type">
+                            <div v-show="!isEdit" class="dropdown-menu custom-form-select data-type">
                                 <custom-scrollbar thumbWidth="8">
                                     <ul class="list-unstyled mb-0">
                                         <li 
@@ -387,7 +326,7 @@ export default {
                         <div class="form-group mb-3 position-relative">
                             <label class="form-label-title" for="">Unique ID</label>
                             <div class="d-flex justify-content-start align-items-center">
-                                <label v-if="!isEdit" @click="isCustomizeUniqueId=!isCustomizeUniqueId && delete errors?.unique_id" class="custom-form-checkbox btn btn-floating btn-light" style="margin-left: -8px;">
+                                <label v-if="!isEdit" @click="isCustomizeUniqueId=!isCustomizeUniqueId && delete errors?.unique_id" class="custom-form-checkbox btn btn-floating btn-light" :style="`${'margin-left: -8px;background: #f5f7fa'}`">
                                     <svg v-if="!isCustomizeUniqueId" class="unchecked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
                                     <svg v-if="isCustomizeUniqueId" class="checked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
                                 </label>
@@ -399,17 +338,19 @@ export default {
 
                         <div v-if="isEdit" class="form-group mb-3 position-relative">
                             <label class="form-label-title" for="">Move Propertie</label>
-                            <input @focus="delete errors?.pipeline_id" class="form-control form-control-input" readonly type="text" data-mdb-toggle="dropdown" :value="`${data_type??'Move Propertie'}`">
+                            <input @focus="delete errors?.pipeline_id" class="form-control form-control-input" readonly type="text" data-mdb-toggle="dropdown" :value="`${selectedPipelineTitle??'Move Propertie'}`">
                             <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.pipeline_id?.length">{{ errors?.pipeline_id[0] }}</span>
                             <div class="dropdown-menu custom-form-select data-type">
                                 <custom-scrollbar thumbWidth="8">
                                     <ul class="list-unstyled mb-0">
+                                        <li v-if="isEdit && pipelineId != 0" class="dropdown-item" @click="movePropertieHandler(0)"><strong>Lead</strong></li>
                                         <li 
-                                        v-for="(item, index) in datatypeList" 
+                                        v-for="(item, index) in pipelines" 
                                         :key="index"
-                                        :class="`dropdown-item ${selectedDataTypeId == item.id?'bg-primary text-white':''}`" 
-                                        @click="datatypeHandler(item.id)">
-                                        {{ item.data_type }}
+                                        v-show="item.id != pipelineId"
+                                        :class="`dropdown-item`" 
+                                        @click="movePropertieHandler(item.id)">
+                                        {{ item.title }}
                                         </li>
                                     </ul>
                                 </custom-scrollbar>

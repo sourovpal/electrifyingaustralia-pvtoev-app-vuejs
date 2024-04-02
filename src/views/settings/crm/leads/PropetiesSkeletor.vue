@@ -26,7 +26,7 @@
                 <Skeletor width="70%" />
             </div>
             
-            <div style="width:10rem;" class="tbl-td">
+            <div style="width:10rem;flex-grow: 1;" class="tbl-td">
                 <Skeletor width="70%" />
             </div>
             
@@ -34,7 +34,7 @@
                 <Skeletor width="70%" />
             </div>
             
-            <div style="width:15rem;" class="tbl-td d-none d-lg-flex">
+            <div style="width:15rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">
                 <Skeletor width="70%" />
             </div>
             

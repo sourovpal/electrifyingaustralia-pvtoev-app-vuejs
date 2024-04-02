@@ -12,7 +12,7 @@ export default {
     },
     data() {
         return {
-            leadStatuses:this.$props.lead_statuses,
+            leadStatuses:[{id:0, name:'Example Status'}],
             isSubmitLeadStatus:false,
         }
     },

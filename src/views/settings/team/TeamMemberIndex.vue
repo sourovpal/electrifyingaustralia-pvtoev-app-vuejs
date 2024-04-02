@@ -1,15 +1,13 @@
 <script>
-    import ActionBar from '../../../../components/ActionBar/ActionBar.vue';
-    import LeftActionBar from '../../../../components/ActionBar/LeftActionBar.vue';
-    import RightActionBar from '../../../../components/ActionBar/RightActionBar.vue';
-    import Datatable from '../../../../components/Datatable/Datatable.vue';
-    import DatatableHeader from '../../../../components/Datatable/DatatableHeader.vue';
-    import DatatableBody from '../../../../components/Datatable/DatatableBody.vue';
+    import ActionBar from '../../../components/ActionBar/ActionBar.vue';
+    import LeftActionBar from '../../../components/ActionBar/LeftActionBar.vue';
+    import RightActionBar from '../../../components/ActionBar/RightActionBar.vue';
+    import Datatable from '../../../components/Datatable/Datatable.vue';
+    import DatatableHeader from '../../../components/Datatable/DatatableHeader.vue';
+    import DatatableBody from '../../../components/Datatable/DatatableBody.vue';
     import PropetiesSkeletor from './PropetiesSkeletor.vue';
-    import DataNotFound from './DataNotFound.vue';
-    import {FetchLeadProperties} from '../../../../actions/CrmLeads';
-    import CreateCustomPropertieModal from './components/CreateCustomPropertieModal.vue';
-    import {propertiesIconList} from './data.js';
+    import {FetchUsers} from '../../../actions/UserAction';
+    import InviteNewMemberModal from './components/InviteNewMemberModal.vue';
     export default {
         components: {
             ActionBar,
@@ -19,14 +17,13 @@
             DatatableHeader,
             DatatableBody,
             PropetiesSkeletor,
-            DataNotFound,
-            CreateCustomPropertieModal,
+            InviteNewMemberModal,
         },
         data() {
             return {
                 isFirstLoading:false,
                 isLoading:false,
-                fetchProperties:[],
+                fetchTeamMembers:[],
                 pagination:{
                     total:0,
                     per_page:0,
@@ -46,33 +43,26 @@
             }
         },
         mounted(){
-            this.iconList = propertiesIconList;
             this.isFirstLoading = true;
-            this.fetchPropertieDataHandler();
+            this.fetchmemberDataHandler();
         },
         methods: {
-            async fetchPropertieDataHandler(page=1, limit=25){
+            async fetchmemberDataHandler(page=1, limit=25){
                 try{
                     if(this.isLoading){return;}
                     this.isLoading = true;
-                    const querys = this.$route.query;
-                    if(querys && querys.pipeline){
-                        this.pipeline_id = querys.pipeline;
-                        this.pipeline_title = querys.title;
-                    }
-
-                    const res = await FetchLeadProperties({page, limit, pipeline_id:this.pipeline_id});
+                    const res = await FetchUsers({page, limit});
                     try{
-                        const {properties, pagination} = res;
+                        const {users, pagination} = res;
                         this.isFirstLoading = false;
-                        if(properties && properties.length > 0){
+                        if(users && users.length > 0){
                             this.isSelectedAllRows = false;
                             this.isSelectedAllRowsReset = false;
                             this.selectedRows = [];
-                            this.fetchProperties = properties;
+                            this.fetchTeamMembers = users;
                             this.pagination = pagination;
                         }else{
-                            this.fetchProperties = [];
+                            this.fetchTeamMembers = [];
                         }
                     }catch(error){
                         this.$toast.error('Oops, something went wrong');
@@ -97,7 +87,7 @@
                     this.isSelectedAllRowsReset = !this.isSelectedAllRowsReset;
                 }else if(!this.isSelectedAllRows){
                     this.isSelectedAllRows = !this.isSelectedAllRows;
-                    this.fetchProperties.map((item)=>{
+                    this.fetchTeamMembers.map((item)=>{
                         this.selectedRows.push(item.id);
                     });
                 }else{
@@ -115,7 +105,7 @@
                     this.selectedRows.push(id);
                 }
 
-                if(this.selectedRows.length === this.fetchProperties.length){
+                if(this.selectedRows.length === this.fetchTeamMembers.length){
                     this.isSelectedAllRows = true;
                     this.isSelectedAllRowsReset = false;
                 }else if(this.selectedRows.length > 0){
@@ -126,39 +116,17 @@
                     this.isSelectedAllRowsReset = false;
                 }
             },
-            showCreatePropertieModal(){
-                this.$refs['createPropertieModal'].showModalHandler(false, this.pipeline_id, 0);
+            showCreatememberModal(){
+                this.$refs['inviteNewMemberModalRef'].showModalHandler();
             }
         },
     }
 </script>
     
 <template>        
-    <section class="content properties">
-        <div v-if="pipeline_id || pipeline_title" class="content-header d-flex justify-content-start align-stages-center my-3">
-            <router-link to="/settings/crm/leads">
-                <h1 class="mb-0 text-soft">Pipelines</h1>
-            </router-link>
-            <div class="mx-2 d-flex justify-content-center align-items-center">
-                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path><path fill="none" d="M0 0h24v24H0V0z"></path></svg>
-            </div>
-            <router-link :to="`/settings/crm/leads/${pipeline_id}`">
-                <h1 class="mb-0 text-soft">{{ pipeline_title }}</h1>
-            </router-link>
-            <div class="mx-2 d-flex justify-content-center align-items-center">
-                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path><path fill="none" d="M0 0h24v24H0V0z"></path></svg>
-            </div>
-            <h1 class="mb-0 text-base">Custom Properties</h1>
-        </div>
-
-        <div v-if="!pipeline_id && !pipeline_title" class="content-header d-flex justify-content-start align-stages-center my-3">
-            <router-link to="/settings/crm/leads">
-                <h1 class="mb-0 text-soft">Leads</h1>
-            </router-link>
-            <div class="mx-2 d-flex justify-content-center align-items-center">
-                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path><path fill="none" d="M0 0h24v24H0V0z"></path></svg>
-            </div>
-            <h1 class="mb-0 text-base">Custom Properties</h1>
+    <section class="content team-members">
+        <div class="content-header d-flex justify-content-start align-stages-center my-3">
+            <h1 class="mb-0 text-base">Team Members</h1>
         </div>
 
     
@@ -176,7 +144,7 @@
                     </div>
                     <div>
 
-                        <button :disabled="isLoading" @click="fetchPropertieDataHandler()" class="toolbar-btn btn btn-light btn-floating me-3 ms-3">
+                        <button :disabled="isLoading" @click="fetchmemberDataHandler()" class="toolbar-btn btn btn-light btn-floating me-3 ms-3">
                             <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
                         </button>
 
@@ -203,7 +171,7 @@
                     </div>
 
                     <div class="me-3">
-                        <button @click="showCreatePropertieModal" class="btn btn-primary fw-bold btn-sm">
+                        <button @click="showCreatememberModal" class="btn btn-primary fw-bold btn-sm">
                             <span><svg class="me-2" width="24" height="24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>account-plus</title><path d="M15,14C12.33,14 7,15.33 7,18V20H23V18C23,15.33 17.67,14 15,14M6,10V7H4V10H1V12H4V15H6V12H9V10M15,12A4,4 0 0,0 19,8A4,4 0 0,0 15,4A4,4 0 0,0 11,8A4,4 0 0,0 15,12Z"></path></svg></span>
                             Add New
                         </button>
@@ -213,14 +181,14 @@
                     
                     <button 
                     :disabled="!pagination.prev_page" 
-                    @click="pagination.prev_page && fetchPropertieDataHandler(pagination.prev_page)" 
+                    @click="pagination.prev_page && fetchmemberDataHandler(pagination.prev_page)" 
                     class="toolbar-btn btn btn-light btn-floating me-3">
                         <svg  class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>
                     </button>
 
                     <button 
                     :disabled="!pagination.next_page" 
-                    @click="pagination.next_page && fetchPropertieDataHandler(pagination.next_page)" 
+                    @click="pagination.next_page && fetchmemberDataHandler(pagination.next_page)" 
                     class="toolbar-btn btn btn-light btn-floating me-3">
                         <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
                     </button>
@@ -230,88 +198,91 @@
         
             <Datatable>
         
-                <datatable-header v-if="isFirstLoading || fetchProperties.length">
+                <datatable-header v-if="isFirstLoading || fetchTeamMembers.length">
                     <div class="tbl-th" style="width:3.46rem;"></div>
-                    <div class="tbl-th" style="width:15rem;">Propertie Name</div>
-                    <div class="tbl-th " style="width:15rem;">Unique ID</div>
-                    <div class="tbl-th" style="width:10rem;flex-grow: 1;">Data Type</div>
-                    <div class="tbl-th" style="width:10rem;flex-grow: 1;">Visibility</div>
-                    <div class="tbl-th" style="width:15rem;flex-grow: 1;">Use Case</div>
+                    <div class="tbl-th" style="width:20rem;">Team member</div>
+                    <div class="tbl-th " style="width:10rem;">Access Role</div>
+                    <div class="tbl-th" style="width:15rem;flex-grow: 1;">Join Date</div>
+                    <div class="tbl-th" style="width:15rem;flex-grow: 1;">CRM User Type</div>
                     <div class="tbl-th" style="width:10rem;">Last Update</div>
                     <div class="tbl-th" style="width:10rem;">Created At</div>
                 </datatable-header>
                 <datatable-body>
                     
                     
-                    <div v-if="!isFirstLoading || fetchProperties.length" :class="selectedRows.includes(propertie.id)?'active':''" class="tbl-tr full-width" v-for="(propertie, index) in fetchProperties" :key="index">
+                    <div v-if="!isFirstLoading || fetchTeamMembers.length" :class="selectedRows.includes(member.id)?'active':''" class="tbl-tr full-width" v-for="(member, index) in fetchTeamMembers" :key="index">
 
                         <div style="width:4rem;margin-left: -7px;" class="tbl-td full-width">
 
-                            <label @click="singleRowSelectedHandler(propertie.id)" class="custom-form-checkbox btn btn-floating btn-light">
-                                <svg v-if="!selectedRows.includes(propertie.id)" class="unchecked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
-                                <svg v-if="selectedRows.includes(propertie.id)" class="checked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
+                            <label @click="singleRowSelectedHandler(member.id)" class="custom-form-checkbox btn btn-floating btn-light">
+                                <svg v-if="!selectedRows.includes(member.id)" class="unchecked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
+                                <svg v-if="selectedRows.includes(member.id)" class="checked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
                             </label>
 
                         </div>
 
-                        <div style="width:15rem;" class="tbl-td">
-                            <a href="#" @click="$refs['createPropertieModal'].showModalHandler(true, pipeline_id, propertie.id)" class="text-overflow-ellipsis"> {{ propertie.label }}</a>
+                        <div style="width:20rem;" class="tbl-td">
+                            <div class="d-flex justify-content-between align-items-center cursor-pointer w-100 team-member-hover">
+                                <div class="avatar-group">
+                                    <img class="avatar rounded-circle" width="35" height="35" :src="member.profile_avatar" />
+                                </div>
+                                <div class="d-flex ms-2 w-100" style="flex-direction: column;line-height: 15px;">
+                                    <span class="fs-14px fw-bold text-overflow-ellipsis w-85">{{ member.name }}</span>
+                                    <span class="fs-14px fw-bold- text-overflow-ellipsis w-85">{{ member.email }}</span>
+                                </div>
+                            </div>
                         </div>
         
-                        <div style="width:15rem;" class="tbl-td">
-                            <span class="text-overflow-ellipsis">{{ propertie.unique_id }}</span>
-                        </div>
-        
-                        <div style="width:10rem;flex-grow: 1;" class="tbl-td">
-                            <span class="me-2" v-if="iconList[propertie.data_type_id]" v-html="iconList[propertie.data_type_id]"></span>
-                            <span class="text-overflow-ellipsis">{{ propertie.data_type }}</span>
-                        </div>
-                
-                        <div style="width:10rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">
-                            <span class="text-overflow-ellipsis">
-                                <svg v-if="propertie.visibility" class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z"/></svg>
-                                <svg v-if="!propertie.visibility" class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="m644-428-58-58q9-47-27-88t-93-32l-58-58q17-8 34.5-12t37.5-4q75 0 127.5 52.5T660-500q0 20-4 37.5T644-428Zm128 126-58-56q38-29 67.5-63.5T832-500q-50-101-143.5-160.5T480-720q-29 0-57 4t-55 12l-62-62q41-17 84-25.5t90-8.5q151 0 269 83.5T920-500q-23 59-60.5 109.5T772-302Zm20 246L624-222q-35 11-70.5 16.5T480-200q-151 0-269-83.5T40-500q21-53 53-98.5t73-81.5L56-792l56-56 736 736-56 56ZM222-624q-29 26-53 57t-41 67q50 101 143.5 160.5T480-280q20 0 39-2.5t39-5.5l-36-38q-11 3-21 4.5t-21 1.5q-75 0-127.5-52.5T300-500q0-11 1.5-21t4.5-21l-84-82Zm319 93Zm-151 75Z"/></svg>
-                            </span>
+                        <div style="width:10rem;" class="tbl-td">
+                            <span v-if="!member.user_roles" class="text-overflow-ellipsis btn btn-sm btn-danger py-0 px-2">{{ member.user_role }}</span>
+                            <span v-if="member.user_roles" class="text-overflow-ellipsis btn btn-sm btn-success py-0 px-2">{{ member.user_role }}</span>
                         </div>
 
                         <div style="width:15rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">
-                            <span class="text-overflow-ellipsis btn btn-sm btn-success py-0 px-2">{{ propertie.use_case }}</span>
+                            <span v-if="!member.invited_at" class="text-overflow-ellipsis btn btn-sm btn-warning py-0 px-2">{{ member.invited_at??'Pending invitations' }}</span>
+                            <span v-if="member.invited_at" class="text-overflow-ellipsis btn btn-sm btn-success py-0 px-2">{{ member.invited_at }}</span>
+                        </div>
+
+                        <div style="width:15rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">
+                            <span class="text-overflow-ellipsis">{{ 'All Access' }}</span>
                         </div>
         
-                        <div style="width:10rem;" class="tbl-td d-none d-lg-flex">{{ propertie.updated_at }}</div>
+                        <div style="width:10rem;" class="tbl-td d-none d-lg-flex">{{ member.updated_ago }}</div>
                 
-                        <div style="width:10rem;" class="tbl-td d-none d-lg-flex">{{ propertie.created_at }}</div>
+                        <div style="width:10rem;" class="tbl-td d-none d-lg-flex">{{ member.created_at }}</div>
                     </div>
                     
                     <PropetiesSkeletor v-if="isFirstLoading" />
-
-                    <DataNotFound v-if="!isFirstLoading && !fetchProperties.length" />
 
                 </datatable-body>
         
             </Datatable>
         </div>
 
-        <create-custom-propertie-modal 
-        :fetchPropertieDataHandler="fetchPropertieDataHandler"
-        ref="createPropertieModal" 
-        :pipeline_title="pipeline_title??'lead'"
+        <invite-new-member-modal 
+        ref="inviteNewMemberModalRef"
+        :fetchmemberDataHandler="fetchmemberDataHandler"
+
         />
 
 
 
     </section>
 </template>
-    
+<style scoped>
+    .team-member-hover:hover{
+        color:#2f6dd4;
+    }
+</style>
 <style>
-    .properties .tbl-body .tbl-tr .tbl-td{
+    .team-members .tbl-body .tbl-tr .tbl-td{
         padding-top:2px !important;
         padding-bottom: 2px !important;
     }
-    .properties .scrollbar__wrapper{
+    .team-members .scrollbar__wrapper{
         height:calc(100vh - 7rem + 3px);
     }
-    .properties .scrollbar__scroller{
+    .team-members .scrollbar__scroller{
         height: 100%;
     }
 </style>

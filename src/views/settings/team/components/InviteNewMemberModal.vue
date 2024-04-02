@@ -1,46 +1,118 @@
 <script>
+import { Modal } from "mdb-ui-kit";
+import {InviteMember} from '../../../../actions/UserAction';
 export default{
+  props:['fetchmemberDataHandler'],
+  data() {
+    return {
+      errors:{},
+      modalInstance:null,
+      email:null,
+      access_role:null,
+      isSubmitInviteMember:false,
+    }
+  },
+  mounted() {
+    this.modalInstance = new Modal(this.$refs.InviteNewMemberModal);
+  },
+  methods: {
+    showModalHandler(){
+      this.email = null;
+      this.access_role = null;
+      this.errors = {};
+      this.modalInstance.show();
+    },
+    hideModalHandler(){
+      this.modalInstance.hide();
+    },
+    async sendInviteMemberMail(){
+      try{
+        this.$toast.clear();
+        this.isSubmitInviteMember = true;
+        const data = {
+          email:this.email,
+          access_role:this.access_role,
+        };
+        
+        const res = await InviteMember(data);
+        this.isSubmitInviteMember = false;
+        try{
+          this.fetchmemberDataHandler();
+          var message = res.message;
+          this.$toast[message.type](message.text);
+        }catch(error){}
 
+      }catch(error){
+
+        try{
+          this.errors = error.response.data.errors;
+        }catch(error){}
+
+        try{
+          var message = error.response.data.message;
+          this.$toast[message.type](message.text);
+        }catch(e){
+          this.$toast.error('Oops, something went wrong');
+        }
+
+      }finally{
+        this.isSubmitInviteMember = false;
+      }
+    }
+  },
 }
 </script>
 
 <template>
 
-<div class="modal fade" id="InviteNewMemberModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" ref="InviteNewMemberModal" id="InviteNewMemberModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Member invitation</h5>
+        <h5 class="modal-title text-base">Member invitation</h5>
       </div>
       <div class="modal-body">
         <p class="form-subtitle">Invite team members by their email. Team members will be able to collaborate with existing projects and share designs.</p>
         <div class="row settings-group-item mb-3">
-            <div class="col-2 ms-auto d-flex justify-content-end align-items-center">
+            <div class="col-2 ms-2 d-flex justify-content-end align-items-center">
                 <label class="form-label-title mb-0">Email:</label>
             </div>
-            <div class="col-8 me-auto d-flex justify-content-start align-items-center">
-                <input class="form-control form-control-input" type="text">
+            <div class="col-8 me-auto d-flex justify-content-start align-items-center flex-direction-column">
+                <input @click="delete errors?.email" v-model="email" class="form-control form-control-input" type="text">
+                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.email?.length">{{ errors?.email[0] }}</span>
             </div>
         </div>
         <div class="row settings-group-item mb-0">
-            <div class="col-2 ms-auto d-flex justify-content-end align-items-center">
-                <label class="form-label-title mb-0">Role:</label>
-            </div>
-            <div class="col-8 me-auto d-flex justify-content-start align-items-center">
-                <div class="select-box w-100">
-                    <select class="form-control form-control-input">
-                        <option value="">Admin</option>
-                        <option value="">User</option>
-                        <option value="">Super Admin</option>
-                        <option value="">Super User</option>
-                    </select>
-                </div>
-            </div>
+          <div class="col-2 ms-2 d-flex justify-content-end align-items-center">
+              <label class="form-label-title mb-0">Role:</label>
+          </div>
+          <div class="col-8 me-auto d-flex justify-content-start align-items-center flex-direction-column">
+              <div class="select-box w-100">
+                  <select @click="delete errors?.access_role" v-model="access_role" class="form-control form-control-input">
+                      <option value="Owner">Owner</option>
+                  </select>
+              </div>
+              <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.access_role?.length">{{ errors?.access_role[0] }}</span>
+          </div>
         </div>
-    </div>
-      <div class="modal-footer flex-between-center">
-        <button type="button" class="btn btn-light fw-bold" data-mdb-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary fw-bold">Invite member</button>
+      </div>
+      <div class="modal-footer flex-between-center border-top-0">
+        <div class="row settings-group-item mb-0 w-100">
+          <div class="col-6">
+            <button type="button" class="btn btn-danger fw-bold" data-mdb-dismiss="modal">Cancel</button>
+          </div>
+          <div class="col-6">
+            <button :disabled="isSubmitInviteMember" @click="sendInviteMemberMail" type="submit" class="ms-auto btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
+              <div v-if="isSubmitInviteMember">
+                  <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
+                      <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                  </svg>
+                  <span>Submitting...</span>
+              </div>
+              <span v-if="!isSubmitInviteMember">Invite member</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

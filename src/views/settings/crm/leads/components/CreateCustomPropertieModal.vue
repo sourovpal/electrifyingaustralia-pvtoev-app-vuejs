@@ -259,7 +259,6 @@ export default {
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title text-base">{{ isEdit?'Edit':'New' }} Propertie</h5>
-                        <button type="button" class="btn-close fs-12px" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
 
@@ -360,7 +359,7 @@ export default {
 
 
 
-                        <div class="form-group mb-3">
+                        <div class="form-group">
                             <label class="form-label-title" for="">Visibility</label>
                             <div class="d-flex justify-content-start align-items-center">
                                 <label @click="visibility=!visibility" class="custom-form-checkbox btn btn-floating btn-light" style="margin-left: -8px;">
@@ -371,10 +370,10 @@ export default {
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer border-0">
-                        <button type="button" class="btn btn-secondary" @click="hideModalHandler">Close</button>
+                    <div class="modal-footer border-0 d-flex justify-content-between align-items-center">
+                        <button type="button" class="btn btn-danger" @click="hideModalHandler">Cancel</button>
 
-                        <button :disabled="isSubmitProperties" @click="isEdit?updatePropertieHandler():createNewPropertieHandler()" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
+                        <button :disabled="isSubmitProperties" @click="isEdit?updatePropertieHandler():createNewPropertieHandler()" type="submit" class=" btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
                             <div v-if="isSubmitProperties">
                                 <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
                                     <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>

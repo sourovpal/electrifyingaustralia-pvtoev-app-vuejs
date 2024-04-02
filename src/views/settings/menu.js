@@ -224,7 +224,7 @@ export const menus =[
             },
             {
                 label:'Team members',
-                path:'/settings/team',
+                path:'/settings/team-members',
                 query:{},
                 icon:'',
             },

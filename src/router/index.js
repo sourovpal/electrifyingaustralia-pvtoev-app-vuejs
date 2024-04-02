@@ -83,7 +83,7 @@ import LeadCaptureFormIndex from '../views/settings/crm/lead-capture-forms/LeadC
 
 import RolesIndex from '../views/settings/roles/RolesIndex.vue';
 
-import TeamIndex from '../views/settings/team/TeamIndex.vue';
+import TeamMemberIndex from '../views/settings/team/TeamMemberIndex.vue';
 
 import BillingIndex from '../views/settings/billing/BillingIndex.vue';
 
@@ -461,9 +461,9 @@ const routes = [
                         },
                     },
                     {
-                        name:'TeamIndex',
-                        path:'team',
-                        component: TeamIndex,
+                        name:'TeamMemberIndex',
+                        path:'team-members',
+                        component: TeamMemberIndex,
                         meta:{
                             auth:true,
                             progress:true,

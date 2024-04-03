@@ -1,0 +1,265 @@
+<script>
+import { Modal } from "mdb-ui-kit";
+import {UpdateTeamMember} from '../../../../actions/UserAction';
+import {FetchRoles} from '../../../../actions/RoleAction';
+import CustomScrollbar from 'custom-vue-scrollbar';
+export default{
+    props:['fetchmemberDataHandler'],
+    data() {
+        return {
+            errors:{},
+            modalInstance:null,
+            userId:null,
+            name:null,
+            email:null,
+            phone_office:null,
+            phone_mobile:null,
+            access_role:null,
+            company_name:null,
+            isSubmitUpdateMember:false,
+            isLoading:false,
+            roles:[],
+            member:{},
+        }
+    },
+    components:{
+      CustomScrollbar
+    },
+    mounted() {
+        this.modalInstance = new Modal(this.$refs.EditTeamMemberModalRef);
+        const {company_name} = this.$cookies.get(import.meta.env.VITE_AUTH_COMPANY);
+        this.company_name = company_name;
+    },
+    methods: {
+      showModalHandler(member){
+        this.fetchAllRoles();
+        this.member = member;
+        this.userId = this.member.id;
+        this.name = this.member.name;
+        this.email = this.member.email;
+        this.phone_office = this.member.phone_office;
+        this.phone_mobile = this.member.phone_mobile;
+        this.access_role = this.member.user_role;
+        this.errors = {};
+        this.modalInstance.show();
+      },
+      hideModalHandler(){
+          this.modalInstance.hide();
+      },
+      async fetchAllRoles(){
+          try{
+              this.isLoading = true;
+              const res = await FetchRoles();
+              this.isLoading = false;
+              try{
+              const {roles} = res;
+              this.roles = roles;
+              }catch(error){}
+          }catch(error){
+              try{
+              var message = error.response.data.message;
+              this.$toast[message.type](message.text);
+              }catch(e){
+              this.$toast.error('Oops, something went wrong');
+              }
+          }finally{
+              this.isLoading = false;
+          }
+      },
+      async updateTeamMemberHandler(){
+        try{
+            this.$toast.clear();
+            this.isSubmitUpdateMember = true;
+            const data = {
+              name:this.name,
+              email:this.email,
+              phone_office:this.phone_office,
+              phone_mobile:this.phone_mobile,
+              access_role:this.access_role,
+            };
+            
+            const res = await UpdateTeamMember(data, this.userId);
+            this.isSubmitUpdateMember = false;
+            try{
+              this.fetchmemberDataHandler();
+              var message = res.message;
+              this.$toast[message.type](message.text);
+            }catch(error){}
+    
+        }catch(error){
+          try{
+            this.errors = error.response.data.errors;
+          }catch(error){}
+  
+          try{
+            var message = error.response.data.message;
+            this.$toast[message.type](message.text);
+          }catch(e){
+            this.$toast.error('Oops, something went wrong');
+          }
+        }finally{
+          this.isSubmitUpdateMember = false;
+        }
+      }
+    },
+}
+</script>
+    
+<template>
+    
+    <div class="modal fade" ref="EditTeamMemberModalRef" id="EditTeamMemberModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-base">Manage Team Member</h5>
+          </div>
+    
+          <div class="modal-body">
+            <br>
+            <div class="row settings-group-item mb-3">
+                <div class="col-3 ms-2 d-flex justify-content-end align-items-baseline">
+                    <label class="form-label-title mb-0">Name:</label>
+                </div>
+                <div class="col-7 me-auto d-flex justify-content-start align-items-center flex-direction-column">
+                    <input @click="delete errors?.name" v-model="name" class="form-control form-control-input" type="text">
+                    <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.name?.length">{{ errors?.name[0] }}</span>
+                  </div>
+                </div>
+                <div class="row settings-group-item mb-3">
+                  <div class="col-3 ms-2 d-flex justify-content-end align-items-baseline">
+                    <label class="form-label-title mb-0">Email Address:</label>
+                  </div>
+                  <div class="col-7 me-auto d-flex justify-content-start align-items-center flex-direction-column">
+                    <input  v-model="email" class="form-control form-control-input cursor-no-drop" type="text" readonly >
+                  </div>
+                </div>
+                <div class="row settings-group-item mb-3">
+                  <div class="col-3 ms-2 d-flex justify-content-end align-items-baseline">
+                    <label class="form-label-title mb-0">Phone (office):</label>
+                  </div>
+                  <div class="col-7 me-auto d-flex justify-content-start align-items-center flex-direction-column">
+                    <input @click="delete errors?.phone_office"  v-model="phone_office" class="form-control form-control-input" type="text">
+                    <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.phone_office?.length">{{ errors?.phone_office[0] }}</span>
+                  </div>
+                </div>
+                <div class="row settings-group-item mb-3">
+                  <div class="col-3 ms-2 d-flex justify-content-end align-items-baseline">
+                    <label class="form-label-title mb-0">Phone (mobile):</label>
+                  </div>
+                  <div class="col-7 me-auto d-flex justify-content-start align-items-center flex-direction-column">
+                    <input @click="delete errors?.phone_mobile"  v-model="phone_mobile" class="form-control form-control-input" type="text">
+                    <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.phone_mobile?.length">{{ errors?.phone_mobile[0] }}</span>
+                  </div>
+            </div>
+            <div class="row settings-group-item mb-0">
+              <div class="col-3 ms-2 d-flex justify-content-end align-items-baseline">
+                  <label class="form-label-title mb-0">Role:</label>
+                </div>
+                <div class="col-7 me-auto d-flex justify-content-start align-items-center flex-direction-column position-relative">
+                  <div class="select-box w-100">
+                    <input readonly="true" v-model="access_role" class="form-control form-control-input" :class="`${member.is_owner?'cursor-no-drop':'cursor-pointer'}`" type="text" data-mdb-toggle="dropdown">
+                    <div v-if="!member.is_owner && roles.length" class="dropdown-menu custom-form-select roles">
+                      <custom-scrollbar thumbWidth="8">
+                        <ul class="list-unstyled mb-0">
+                          <li 
+                          @click="access_role=item.name"
+                          v-for="(item, index) in roles" 
+                          :key="index"
+                          v-show="access_role != item.name"
+                          :class="`dropdown-item`">
+                          {{ item.name }}
+                        </li>
+                      </ul>
+                    </custom-scrollbar>
+                  </div>
+                </div>
+                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.access_role?.length">{{ errors?.access_role[0] }}</span>
+              </div>
+            </div>
+            
+            <hr style="margin: 2.5rem 0px;">
+            
+            <div class="row settings-group-item mb-0">
+              <div class="col-3 d-flex justify-content-end align-items-baseline">
+                <label class="form-label-title text-danger mb-0">The danger zone:</label>
+              </div>
+              <div class="col-8">
+                <div class="mb-4">
+                  <h6 class="modal-title text-base">Reset user password</h6>
+                  <p class="text-base fs-12px mb-3">
+                    This will log <span class="text-danger fw-bold">{{ name }}</span> out of all sessions, remove their current password and send a password reset email to <span class="text-danger fw-bold">{{ email }}</span> .
+                  </p>
+                  <div class="">
+                    <a class="btn btn-outline-warning btn-sm reset-btn" href="">Reset password now</a>
+                  </div>
+                </div>
+                <!--  -->
+                <div class="">
+                  <h6 class="modal-title text-base">Remove user from team</h6>
+                  <p class="text-base fs-12px mb-3">This will remove <span class="text-danger fw-bold">{{ name }}</span> from {{ company_name }}. Their projects will remain in the team and can be reassigned to other users.</p>
+                  <div class="">
+                    <a class="btn btn-outline-danger btn-sm remove-btn" href="">Remove user from team</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+          
+          <div class="modal-footer flex-between-center border-top-0">
+            <div class="row settings-group-item mb-0 w-100">
+              <div class="col-6">
+                <button type="button" class="btn btn-danger fw-bold" data-mdb-dismiss="modal">Cancel</button>
+              </div>
+              <div class="col-6">
+                <button :disabled="isSubmitUpdateMember" @click="updateTeamMemberHandler" type="submit" class="ms-auto btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
+                  <div v-if="isSubmitUpdateMember">
+                      <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
+                          <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                      </svg>
+                      <span>Submitting...</span>
+                  </div>
+                  <span v-if="!isSubmitUpdateMember">Save Change</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+</template>
+<style scoped lang="scss">
+
+  .reset-btn{
+    background-color: #fff7e8;
+  }
+  .remove-btn{
+    background-color: #ffe7eb;
+  }
+
+  .custom-form-select{
+    width:100%;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    .dropdown-item{
+      cursor: pointer;
+    }
+  }
+  .form-subtitle{
+      line-height: 15px;
+      font-size: 12px;
+      font-weight: 100;
+      color: #abacb0;
+      letter-spacing: 0.2px;
+  }
+</style>
+<style>
+  .custom-form-select.roles .scrollbar__wrapper{
+    height:calc(7.6rem) !important;
+  }
+  .custom-form-select.roles .scrollbar__scroller{
+    height: 100%;
+  }
+</style>

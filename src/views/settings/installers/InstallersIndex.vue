@@ -46,7 +46,7 @@
             this.fetchInstallerDataHandler();
         },
         methods: {
-            async fetchInstallerDataHandler(page=1, limit=50){
+            async fetchInstallerDataHandler(page=this.pagination.current_page, limit=50){
                 try{
                     if(this.isLoading){return;}
                     this.isLoading = true;

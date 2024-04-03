@@ -26,7 +26,23 @@
                 <Skeletor width="70%" />
             </div>
             
-            <div style="width:15rem;flex-grow: 1;" class="tbl-td">
+            <div style="width:10rem;flex-grow: 1;" class="tbl-td">
+                <Skeletor width="70%" />
+            </div>
+            
+            <div style="width:12rem;flex-grow: 1;" class="tbl-td">
+                <Skeletor width="70%" />
+            </div>
+            
+            <div style="width:12rem;flex-grow: 1;" class="tbl-td">
+                <Skeletor width="70%" />
+            </div>
+            
+            <div style="width:12rem;flex-grow: 1;" class="tbl-td">
+                <Skeletor width="70%" />
+            </div>
+            
+            <div style="width:12rem;flex-grow: 1;" class="tbl-td">
                 <Skeletor width="70%" />
             </div>
             

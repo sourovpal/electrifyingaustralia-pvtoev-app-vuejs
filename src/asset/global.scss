@@ -25,7 +25,8 @@ body{
 html{
   scroll-behavior: smooth;
 }
-button[disabled]{
+button[disabled],
+.cursor-no-drop{
   cursor:no-drop !important;
   pointer-events:inherit !important;
 }

@@ -544,7 +544,7 @@ input.no-drop{
 
 <style>
     .custom-form-select.data-type .scrollbar__wrapper{
-        height:calc(10rem);
+        max-height:calc(10rem);
     }
     .custom-form-select.data-type .scrollbar__scroller{
         height: 100%;

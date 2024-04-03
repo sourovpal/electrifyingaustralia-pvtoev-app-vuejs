@@ -1,6 +1,8 @@
 <script>
 import { Modal } from "mdb-ui-kit";
 import {InviteMember} from '../../../../actions/UserAction';
+import {FetchRoles} from '../../../../actions/RoleAction';
+import CustomScrollbar from 'custom-vue-scrollbar';
 export default{
   props:['fetchmemberDataHandler'],
   data() {
@@ -10,13 +12,19 @@ export default{
       email:null,
       access_role:null,
       isSubmitInviteMember:false,
+      isLoading:false,
+      roles:[],
     }
+  },
+  components:{
+    CustomScrollbar
   },
   mounted() {
     this.modalInstance = new Modal(this.$refs.InviteNewMemberModal);
   },
   methods: {
     showModalHandler(){
+      this.fetchAllRoles();
       this.email = null;
       this.access_role = null;
       this.errors = {};
@@ -24,6 +32,26 @@ export default{
     },
     hideModalHandler(){
       this.modalInstance.hide();
+    },
+    async fetchAllRoles(){
+      try{
+        this.isLoading = true;
+        const res = await FetchRoles();
+        this.isLoading = false;
+        try{
+          const {roles} = res;
+          this.roles = roles;
+        }catch(error){}
+      }catch(error){
+        try{
+          var message = error.response.data.message;
+          this.$toast[message.type](message.text);
+        }catch(e){
+          this.$toast.error('Oops, something went wrong');
+        }
+      }finally{
+        this.isLoading = false;
+      }
     },
     async sendInviteMemberMail(){
       try{
@@ -71,10 +99,11 @@ export default{
       <div class="modal-header">
         <h5 class="modal-title text-base">Member invitation</h5>
       </div>
+
       <div class="modal-body">
         <p class="form-subtitle">Invite team members by their email. Team members will be able to collaborate with existing projects and share designs.</p>
         <div class="row settings-group-item mb-3">
-            <div class="col-2 ms-2 d-flex justify-content-end align-items-center">
+            <div class="col-2 ms-2 d-flex justify-content-end align-items-baseline">
                 <label class="form-label-title mb-0">Email:</label>
             </div>
             <div class="col-8 me-auto d-flex justify-content-start align-items-center flex-direction-column">
@@ -83,19 +112,32 @@ export default{
             </div>
         </div>
         <div class="row settings-group-item mb-0">
-          <div class="col-2 ms-2 d-flex justify-content-end align-items-center">
+          <div class="col-2 ms-2 d-flex justify-content-end align-items-baseline">
               <label class="form-label-title mb-0">Role:</label>
           </div>
-          <div class="col-8 me-auto d-flex justify-content-start align-items-center flex-direction-column">
+          <div class="col-8 me-auto d-flex justify-content-start align-items-center flex-direction-column position-relative">
               <div class="select-box w-100">
-                  <select @click="delete errors?.access_role" v-model="access_role" class="form-control form-control-input">
-                      <option value="Owner">Owner</option>
-                  </select>
+                <input readonly="true" v-model="access_role" class="form-control form-control-input cursor-pointer" type="text" data-mdb-toggle="dropdown">
+                <div class="dropdown-menu custom-form-select roles">
+                    <custom-scrollbar thumbWidth="8">
+                        <ul class="list-unstyled mb-0">
+                            <li 
+                            @click="access_role=item.name"
+                            v-for="(item, index) in roles" 
+                            :key="index"
+                            v-show="access_role != item.name"
+                            :class="`dropdown-item`">
+                            {{ item.name }}
+                            </li>
+                        </ul>
+                    </custom-scrollbar>
+                </div>
               </div>
               <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.access_role?.length">{{ errors?.access_role[0] }}</span>
           </div>
         </div>
       </div>
+
       <div class="modal-footer flex-between-center border-top-0">
         <div class="row settings-group-item mb-0 w-100">
           <div class="col-6">
@@ -120,6 +162,14 @@ export default{
 
 </template>
 <style scoped lang="scss">
+.custom-form-select{
+  width:100%;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  .dropdown-item{
+    cursor: pointer;
+  }
+}
 .form-subtitle{
     line-height: 15px;
     font-size: 12px;
@@ -127,4 +177,12 @@ export default{
     color: #abacb0;
     letter-spacing: 0.2px;
 }
+</style>
+<style>
+  .custom-form-select.roles .scrollbar__wrapper{
+    height:calc(7.6rem) !important;
+  }
+  .custom-form-select.roles .scrollbar__scroller{
+    height: 100%;
+  }
 </style>

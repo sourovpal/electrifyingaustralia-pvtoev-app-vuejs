@@ -22,7 +22,19 @@ const InviteMember = (payload)=>{
     });
 }
 
+const UpdateTeamMember = (payload, id)=>{
+    return new Promise((resolve, reject)=>{
+        api.post(`/users/update/${id}`, payload)
+        .then((res)=>{
+            return resolve(res.data);
+        }).catch((error)=>{
+            return reject(error);
+        });
+    });
+}
+
 export {
     FetchUsers,
-    InviteMember
+    InviteMember,
+    UpdateTeamMember
 }

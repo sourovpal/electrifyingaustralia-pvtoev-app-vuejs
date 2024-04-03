@@ -8,6 +8,7 @@
     import PropetiesSkeletor from './PropetiesSkeletor.vue';
     import {FetchUsers} from '../../../actions/UserAction';
     import InviteNewMemberModal from './components/InviteNewMemberModal.vue';
+    import EditTeamMemberModal from './components/EditTeamMemberModal.vue';
     export default {
         components: {
             ActionBar,
@@ -18,6 +19,7 @@
             DatatableBody,
             PropetiesSkeletor,
             InviteNewMemberModal,
+            EditTeamMemberModal,
         },
         data() {
             return {
@@ -47,7 +49,7 @@
             this.fetchmemberDataHandler();
         },
         methods: {
-            async fetchmemberDataHandler(page=1, limit=25){
+            async fetchmemberDataHandler(page=this.pagination.current_page, limit=25){
                 try{
                     if(this.isLoading){return;}
                     this.isLoading = true;
@@ -79,6 +81,9 @@
                     this.isLoading = false;
                     this.isFirstLoading = false;
                 }
+            },
+            async editTeamMemberHandler(member){
+                this.$refs['editTeamMemberModalRef'].showModalHandler(member);
             },
             selectedAllRowsHandler(){
 
@@ -202,7 +207,11 @@
                     <div class="tbl-th" style="width:3.46rem;"></div>
                     <div class="tbl-th" style="width:20rem;">Team member</div>
                     <div class="tbl-th " style="width:10rem;">Access Role</div>
-                    <div class="tbl-th" style="width:15rem;flex-grow: 1;">Join Date</div>
+                    <div class="tbl-th" style="width:10rem;flex-grow: 1;">Join Date</div>
+                    <div class="tbl-th" style="width:12rem;flex-grow: 1;">Display Name</div>
+                    <div class="tbl-th" style="width:12rem;flex-grow: 1;">Job Title</div>
+                    <div class="tbl-th" style="width:12rem;flex-grow: 1;">Phone (Office)</div>
+                    <div class="tbl-th" style="width:12rem;flex-grow: 1;">Phone (Mobile)</div>
                     <div class="tbl-th" style="width:15rem;flex-grow: 1;">CRM User Type</div>
                     <div class="tbl-th" style="width:10rem;">Last Update</div>
                     <div class="tbl-th" style="width:10rem;">Created At</div>
@@ -222,7 +231,7 @@
                         </div>
 
                         <div style="width:20rem;" class="tbl-td">
-                            <div class="d-flex justify-content-between align-items-center cursor-pointer w-100 team-member-hover">
+                            <div @click="editTeamMemberHandler(member)" class="d-flex justify-content-between align-items-center cursor-pointer w-100 team-member-hover">
                                 <div class="avatar-group">
                                     <img class="avatar rounded-circle" width="35" height="35" :src="member.profile_avatar" />
                                 </div>
@@ -234,13 +243,29 @@
                         </div>
         
                         <div style="width:10rem;" class="tbl-td">
-                            <span v-if="!member.user_roles" class="text-overflow-ellipsis btn btn-sm btn-danger py-0 px-2">{{ member.user_role }}</span>
-                            <span v-if="member.user_roles" class="text-overflow-ellipsis btn btn-sm btn-success py-0 px-2">{{ member.user_role }}</span>
+                            <span v-if="!member.user_role" class="text-overflow-ellipsis btn btn-sm btn-danger py-0 px-2">{{ "Guest" }}</span>
+                            <span v-if="member.user_role" class="text-overflow-ellipsis btn btn-sm btn-success py-0 px-2">{{ member.user_role }}</span>
                         </div>
 
-                        <div style="width:15rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">
+                        <div style="width:10rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">
                             <span v-if="!member.invited_at" class="text-overflow-ellipsis btn btn-sm btn-warning py-0 px-2">{{ member.invited_at??'Pending invitations' }}</span>
                             <span v-if="member.invited_at" class="text-overflow-ellipsis btn btn-sm btn-success py-0 px-2">{{ member.invited_at }}</span>
+                        </div>
+
+                        <div style="width:12rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">
+                            <span class="text-overflow-ellipsis py-0 px-2">{{ member.display_name??'Not added yet' }}</span>
+                        </div>
+
+                        <div style="width:12rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">
+                            <span class="text-overflow-ellipsis py-0 px-2">{{ member.job_title??'Not added yet' }}</span>
+                        </div>
+
+                        <div style="width:12rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">
+                            <span class="text-overflow-ellipsis py-0 px-2">{{ member.phone_office??'Not added yet' }}</span>
+                        </div>
+
+                        <div style="width:12rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">
+                            <span class="text-overflow-ellipsis py-0 px-2">{{ member.phone_mobile??'Not added yet' }}</span>
                         </div>
 
                         <div style="width:15rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">
@@ -261,6 +286,11 @@
 
         <invite-new-member-modal 
         ref="inviteNewMemberModalRef"
+        :fetchmemberDataHandler="fetchmemberDataHandler"
+        />
+
+        <edit-team-member-modal 
+        ref="editTeamMemberModalRef"
         :fetchmemberDataHandler="fetchmemberDataHandler"
 
         />

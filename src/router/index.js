@@ -99,7 +99,8 @@ import EsignatureIndex from '../views/settings/esignature/EsignatureIndex.vue';
 import AccreditationIndex from '../views/settings/accreditation/AccreditationIndex.vue';
 
 
-
+// Error
+import Forbidden403 from '../views/errors/Forbidden403.vue';
 
 
 const routes = [
@@ -135,7 +136,7 @@ const routes = [
                     auth:true,
                     progress:true,
                     title:'Home Page',
-                    permissions:[],
+                    // permissions:[],
                 },
                 redirect: "/platform/leads",
                 children: [
@@ -678,6 +679,11 @@ const routes = [
         name:"register",
         path:'/register',
         component:RegisterIndexPage,
+    },
+    {
+        name:"forbidden",
+        path:'/forbidden',
+        component:Forbidden403,
     }
 ];
 

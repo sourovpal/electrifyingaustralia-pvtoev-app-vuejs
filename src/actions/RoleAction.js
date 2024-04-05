@@ -11,6 +11,31 @@ const FetchRoles = (payload)=>{
     });
 }
 
+const FetchRolesWithPermissions = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        api.get(`/roles/role-permissions`)
+        .then((res)=>{
+            return resolve(res.data);
+        }).catch((error)=>{
+            return reject(error);
+        });
+    });
+}
+
+const CreateNewRole = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        api.post(`/roles`, payload)
+        .then((res)=>{
+            return resolve(res.data);
+        }).catch((error)=>{
+            return reject(error);
+        });
+    });
+}
+
+
 export {
-    FetchRoles
+    FetchRoles,
+    FetchRolesWithPermissions,
+    CreateNewRole
 }

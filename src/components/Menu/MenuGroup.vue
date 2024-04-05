@@ -1,22 +1,21 @@
 <script>
+import CustomScrollbar from 'custom-vue-scrollbar';
 export default {
   inheritAttrs: false,
+  props:['menu'],
   data(){
     return {
       showChildren:false,
       submenuHeight:0,
     }
   },
-  props:['menu'],
+  components:{
+    CustomScrollbar
+  },
   created(){
     if(this.menu.path == this.$route.path){
       this.submenuHeight = 'fit-content';
       this.showChildren = true;
-    }
-  },
-  watch:{
-    '$route'(){
-
     }
   },
   methods:{
@@ -159,4 +158,12 @@ export default {
       }
     }
 }
+</style>
+<style>
+  .sidebar--submenu .scrollbar__wrapper{
+    height: 100vh !important;
+  }
+  .sidebar--submenu .scrollbar__wrapper .scrollbar__scroller{
+    height: 100% !important;
+  }
 </style>

@@ -17,7 +17,6 @@ export default{
     },
     methods:{
         async logoutHandler(){
-            console.log('Hello');
             this.confirmDialog = false;
             try{
                 const res = await LogoutAction();

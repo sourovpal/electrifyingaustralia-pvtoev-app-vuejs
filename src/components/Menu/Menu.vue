@@ -1,9 +1,10 @@
 <script>
 import MenuGroup from './MenuGroup.vue';
-
+import CustomScrollbar from 'custom-vue-scrollbar';
 export default {
     components:{
         MenuGroup,
+        CustomScrollbar
     },
     data(){
         return{
@@ -25,17 +26,17 @@ export default {
 
 <template>
     <section class="sidebar--submenu d-none d-md-block">
-
-        <div class="submenu-header">
-            <h1>{{ title }}</h1>
-        </div>
-
-        <div class="submenu-body">
-
-        <menu-group ref="menugroup" @click="toggle(index)" v-for="(menu, index) in menus" :key="index" :menu="menu" />
-
-        </div>
-
+        <CustomScrollbar thumbWidth="8">
+            <div class="submenu-header">
+                <h1>{{ title }}</h1>
+            </div>
+    
+            <div class="submenu-body">
+    
+                <menu-group ref="menugroup" @click="toggle(index)" v-for="(menu, index) in menus" :key="index" :menu="menu" />
+    
+            </div>
+        </CustomScrollbar>
     </section>
 </template>
 

@@ -272,18 +272,16 @@ export default {
                             <label class="form-label-title" for="">Data Type</label>
                             <input @focus="delete errors?.data_type" :class="isEdit?'no-drop':''" class="form-control form-control-input" readonly type="text" data-mdb-toggle="dropdown" :value="`${data_type??'Select Data Type'}`">
                             <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.data_type?.length">{{ errors?.data_type[0] }}</span>
-                            <div v-show="!isEdit" class="dropdown-menu custom-form-select data-type">
-                                <custom-scrollbar thumbWidth="8">
-                                    <ul class="list-unstyled mb-0">
-                                        <li 
-                                        v-for="(item, index) in datatypeList" 
-                                        :key="index"
-                                        :class="`dropdown-item ${selectedDataTypeId == item.id?'bg-primary text-white':''}`" 
-                                        @click="datatypeHandler(item.id)">
-                                        {{ item.data_type }}
-                                        </li>
-                                    </ul>
-                                </custom-scrollbar>
+                            <div v-show="!isEdit" class="dropdown-menu custom-form-select data-type overflow-auto" style="max-height:10rem;">
+                                <ul class="list-unstyled mb-0">
+                                    <li 
+                                    v-for="(item, index) in datatypeList" 
+                                    :key="index"
+                                    :class="`dropdown-item ${selectedDataTypeId == item.id?'bg-primary text-white':''}`" 
+                                    @click="datatypeHandler(item.id)">
+                                    {{ item.data_type }}
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                         
@@ -339,20 +337,18 @@ export default {
                             <label class="form-label-title" for="">Move Propertie</label>
                             <input @focus="delete errors?.pipeline_id" class="form-control form-control-input" readonly type="text" data-mdb-toggle="dropdown" :value="`${selectedPipelineTitle??'Move Propertie'}`">
                             <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.pipeline_id?.length">{{ errors?.pipeline_id[0] }}</span>
-                            <div class="dropdown-menu custom-form-select data-type">
-                                <custom-scrollbar thumbWidth="8">
-                                    <ul class="list-unstyled mb-0">
-                                        <li v-if="isEdit && pipelineId != 0" class="dropdown-item" @click="movePropertieHandler(0)"><strong>Lead</strong></li>
-                                        <li 
-                                        v-for="(item, index) in pipelines" 
-                                        :key="index"
-                                        v-show="item.id != pipelineId"
-                                        :class="`dropdown-item`" 
-                                        @click="movePropertieHandler(item.id)">
-                                        {{ item.title }}
-                                        </li>
-                                    </ul>
-                                </custom-scrollbar>
+                            <div class="dropdown-menu custom-form-select data-type overflow-auto" style="max-height:10rem;">
+                                <ul class="list-unstyled mb-0">
+                                    <li v-if="isEdit && pipelineId != 0" class="dropdown-item" @click="movePropertieHandler(0)"><strong>Lead</strong></li>
+                                    <li 
+                                    v-for="(item, index) in pipelines" 
+                                    :key="index"
+                                    v-show="item.id != pipelineId"
+                                    :class="`dropdown-item`" 
+                                    @click="movePropertieHandler(item.id)">
+                                    {{ item.title }}
+                                    </li>
+                                </ul>
                             </div>
                         </div>
 
@@ -540,13 +536,4 @@ input.no-drop{
 }
 
 
-</style>
-
-<style>
-    .custom-form-select.data-type .scrollbar__wrapper{
-        max-height:calc(10rem);
-    }
-    .custom-form-select.data-type .scrollbar__scroller{
-        height: 100%;
-    }
 </style>

@@ -167,8 +167,7 @@ export default {
                             class="tags-input">
                           </div>
 
-                          <div class="search-tags-list" v-if="showCountryList">
-                            <CustomScrollbar thumbWidth="8">
+                          <div class="search-tags-list overflow-auto" style="max-height:15rem;" v-if="showCountryList">
                               <ul>
                                 <li 
                                 :class="`${country.status?'':'d-none'}`"
@@ -176,7 +175,6 @@ export default {
                                 v-for="(country, index) in searchCountries()" 
                                 :key="index">{{ country.name }}</li>
                               </ul>
-                            </CustomScrollbar>
                           </div>
                           <span class="form-input-commant"  v-if="!errors?.countries?.length">List all the countries where your company operates. Address searching, settings, and support will be based on the countries you select.</span>
                           <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.countries?.length">{{ errors?.countries[0] }}</span>
@@ -270,16 +268,5 @@ export default {
         }
       }
     }
-  }
-</style>
-<style>
-  .search-tags-list .scrollbar__wrapper{
-    height: 18rem !important;
-  }
-  .search-tags-list .scrollbar__wrapper .scrollbar__scroller{
-    height: 100%;
-  }
-  .search-tags-list .scrollbar__wrapper .scrollbar__content.scrollbar__content--horizontal{
-    display: block;
   }
 </style>

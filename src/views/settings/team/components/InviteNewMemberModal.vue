@@ -4,7 +4,7 @@ import {InviteMember} from '../../../../actions/UserAction';
 import {FetchRoles} from '../../../../actions/RoleAction';
 import CustomScrollbar from 'custom-vue-scrollbar';
 export default{
-  props:['fetchmemberDataHandler'],
+  props:['fetchMemberDataHandler'],
   data() {
     return {
       errors:{},
@@ -65,7 +65,7 @@ export default{
         const res = await InviteMember(data);
         this.isSubmitInviteMember = false;
         try{
-          this.fetchmemberDataHandler();
+          this.fetchMemberDataHandler();
           var message = res.message;
           this.$toast[message.type](message.text);
         }catch(error){}
@@ -118,19 +118,17 @@ export default{
           <div class="col-8 me-auto d-flex justify-content-start align-items-center flex-direction-column position-relative">
               <div class="select-box w-100">
                 <input readonly="true" v-model="access_role" class="form-control form-control-input cursor-pointer" type="text" data-mdb-toggle="dropdown">
-                <div class="dropdown-menu custom-form-select roles">
-                    <custom-scrollbar thumbWidth="8">
-                        <ul class="list-unstyled mb-0">
-                            <li 
-                            @click="access_role=item.name"
-                            v-for="(item, index) in roles" 
-                            :key="index"
-                            v-show="access_role != item.name"
-                            :class="`dropdown-item`">
-                            {{ item.name }}
-                            </li>
-                        </ul>
-                    </custom-scrollbar>
+                <div class="dropdown-menu custom-form-select roles overflow-auto" style="max-height:7.5rem;">
+                  <ul class="list-unstyled mb-0">
+                      <li 
+                      @click="access_role=item.name"
+                      v-for="(item, index) in roles" 
+                      :key="index"
+                      v-show="access_role != item.name"
+                      :class="`dropdown-item`">
+                      {{ item.name }}
+                      </li>
+                  </ul>
                 </div>
               </div>
               <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.access_role?.length">{{ errors?.access_role[0] }}</span>
@@ -177,12 +175,4 @@ export default{
     color: #abacb0;
     letter-spacing: 0.2px;
 }
-</style>
-<style>
-  .custom-form-select.roles .scrollbar__wrapper{
-    height:calc(7.6rem) !important;
-  }
-  .custom-form-select.roles .scrollbar__scroller{
-    height: 100%;
-  }
 </style>

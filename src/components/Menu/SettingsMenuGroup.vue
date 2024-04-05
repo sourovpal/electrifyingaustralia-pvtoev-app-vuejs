@@ -1,32 +1,21 @@
 <script>
-
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
+import CustomScrollbar from 'custom-vue-scrollbar';
 
 export default {
     components:{
-      vueCustomScrollbar
+      CustomScrollbar
     },
     data(){
         return{
-            status:false,
-            settings: {
-                suppressScrollY: false,
-                suppressScrollX: false,
-                wheelPropagation: false,
-                wheelSpeed:0.3,
-            }
         }
     },
     props:['menus', 'title'],
-    methods:{
-    }
 }
 </script>
 
 <template>
-    <vue-custom-scrollbar :settings="settings" class="sidebar--submenu d-none d-md-block">
-
+    <nav class="sidebar--submenu d-none d-md-block">
+      <CustomScrollbar thumbWidth="8">
         <div class="submenu-header">
             <h1>{{ title }}</h1>
         </div>
@@ -44,13 +33,13 @@ export default {
             </div>
 
         </div>
+      </CustomScrollbar>
 
-    </vue-custom-scrollbar>
+    </nav>
 </template>
 
 <style scoped lang="scss">
 .sidebar--submenu{
-  // position: absolute;
   top:0;
   background-color: #ffffff;
   width: 18rem;
@@ -127,4 +116,12 @@ export default {
     }
 }
 
+</style>
+<style>
+  .sidebar--submenu .scrollbar__wrapper{
+    height: 100vh !important;
+  }
+  .sidebar--submenu .scrollbar__wrapper .scrollbar__scroller{
+    height: 100% !important;
+  }
 </style>

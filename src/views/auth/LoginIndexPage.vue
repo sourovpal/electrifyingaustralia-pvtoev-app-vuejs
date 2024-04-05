@@ -32,7 +32,6 @@
               this.$cookies.remove(import.meta.env.VITE_AUTH_APP, '/');
 
               this.$cookies.set(import.meta.env.VITE_AUTH_USER, user);
-              this.$cookies.set(import.meta.env.VITE_AUTH_COMPANY, company);
               this.$cookies.set(import.meta.env.VITE_AUTH_TOKEN, (access_token.token));
               if(app){
                 this.$cookies.set(import.meta.env.VITE_AUTH_APP, app);

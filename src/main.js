@@ -60,8 +60,6 @@ app.use(
   }
 );
   
-  
-  
 app.mount('#app');
 
 
@@ -76,36 +74,63 @@ app.config.errorHandler = (err, instance, info) => {
 
 
 router.beforeEach(async(to, from, next) => {
+  
+  const NotCheckPaths = ['/forbidden'];
+  const IfAuthNotAllowPaths = ['/login', '/register'];
+  const user = VueCookies.get(import.meta.env.VITE_AUTH_USER);
+  const token = VueCookies.get(import.meta.env.VITE_AUTH_TOKEN);
+
   if (to.meta.progress) {
     app.config.globalProperties.$Progress.start();
   }
-  try{
-      if(to.meta.auth){
-          var user = VueCookies.get('user_data');
-          var token = VueCookies.get('access_token');
-          if(user != null && token != null){
-              return next();
-          }else{
-              next('/login');
-              window.location.replace('/login');
-              return false;
-          }
+  if(IfAuthNotAllowPaths.includes(to.path)){
+      if(user == null || token == null){
+          return next();
+      }else{
+        return next(from.path);
       }
-
-      if(to.path === '/login' || to.path === '/register'){
-          var user = VueCookies.get('user_data');
-          var token = VueCookies.get('access_token');
-          if(user == null || token == null){
-              return next();
-          }else{
-              window.location.replace(from.path);
-              return false;
-          }
-      }
-
-  }catch(e){
-      return false;
+  }else if(NotCheckPaths.includes(to.path)){
+    return next();
   }
+
+  // Check Auth
+  try{
+
+    if(to.meta.auth){
+
+      if(user != null && token != null){
+
+        if(to.meta.permissions && to.meta.permissions.length){
+
+          const checkPermission = to.meta.permissions.map(permission=>stores.getters.getPermissions.includes(permission));
+
+          if(checkPermission.includes(true)){
+
+            return next();
+
+          }else{
+
+            return next('/forbidden');
+
+          }
+
+        }else{
+
+          return next();
+
+        }
+
+      }else{
+
+        return next('/login');
+
+      }
+    }
+  }catch(e){
+      throw new Error(e);
+  }
+
+  
 });
 
 

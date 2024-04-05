@@ -18,11 +18,11 @@
     
             </div>
     
-            <div style="width:15rem;" class="tbl-td">
+            <div style="width:20rem;" class="tbl-td">
                 <Skeletor width="70%" />
             </div>
             
-            <div style="width:15rem;" class="tbl-td">
+            <div style="width:10rem;" class="tbl-td">
                 <Skeletor width="70%" />
             </div>
             

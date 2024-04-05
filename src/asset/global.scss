@@ -10,18 +10,33 @@ body{
   color:#1f2933;
   overflow: hidden;
 }
-::-webkit-scrollbar {
-  width: 8px;
+
+*,body,html {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
 }
 
-::-webkit-scrollbar-track {
-  background-color: rgb(237, 237, 237);
+::-webkit-scrollbar-track,body::-webkit-scrollbar-track,html::-webkit-scrollbar-track {
+  background-color: #f5f7fa
 }
 
-::-webkit-scrollbar-thumb {
-  background-color: rgb(165, 165, 165);
-  border-radius: 10px;
+::-webkit-scrollbar,body::-webkit-scrollbar,html::-webkit-scrollbar {
+  height: 0;
+  width: 0
 }
+
+@media(min-width: 768px) {
+  ::-webkit-scrollbar,body::-webkit-scrollbar,html::-webkit-scrollbar {
+      height:.5rem;
+      width: .5rem
+  }
+}
+
+::-webkit-scrollbar-thumb,body::-webkit-scrollbar-thumb,html::-webkit-scrollbar-thumb {
+  background-color: #cbd2d9
+}
+
+
 html{
   scroll-behavior: smooth;
 }
@@ -431,12 +446,6 @@ button[disabled],
   justify-content: center !important;
   align-items: center !important;
   background-color: transparent !important;
-  input{
-      display: none;
-  }
-  .unchecked{
-      display: block;
-  }
 }
 
 textarea::-webkit-scrollbar {

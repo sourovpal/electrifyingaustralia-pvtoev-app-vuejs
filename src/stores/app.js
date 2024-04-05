@@ -2,13 +2,14 @@ import api from "../actions/api";
 import VueCookies from "vue-cookies";
 var app = {};
 try{
-  var {lead_statuses, pipelines} = VueCookies.get(import.meta.env.VITE_AUTH_APP)??{};
+  var {lead_statuses, pipelines, permissions, company} = VueCookies.get(import.meta.env.VITE_AUTH_APP)??{};
    app = {
       state:{
         user:{},
-        company:{},
-        lead_statuses:lead_statuses,
-        pipelines:pipelines,
+        company:company??{},
+        lead_statuses:lead_statuses??{},
+        pipelines:pipelines??{},
+        permissions:permissions??[]
       },
       getters:{
         getUser(state){
@@ -22,6 +23,9 @@ try{
         },
         getPipelines(state){
           return [...state.pipelines];
+        },
+        getPermissions(state){
+          return [...state.permissions];
         },
       },
       mutations: {

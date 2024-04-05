@@ -4,7 +4,7 @@ import {UpdateTeamMember} from '../../../../actions/UserAction';
 import {FetchRoles} from '../../../../actions/RoleAction';
 import CustomScrollbar from 'custom-vue-scrollbar';
 export default{
-    props:['fetchmemberDataHandler'],
+    props:['fetchMemberDataHandler'],
     data() {
         return {
             errors:{},
@@ -16,6 +16,7 @@ export default{
             phone_mobile:null,
             access_role:null,
             company_name:null,
+            is_owner:null,
             isSubmitUpdateMember:false,
             isLoading:false,
             roles:[],
@@ -27,20 +28,20 @@ export default{
     },
     mounted() {
         this.modalInstance = new Modal(this.$refs.EditTeamMemberModalRef);
-        const {company_name} = this.$cookies.get(import.meta.env.VITE_AUTH_COMPANY);
-        this.company_name = company_name;
+        this.company_name = 'company_name';
     },
     methods: {
-      showModalHandler(member){
+      async showModalHandler(member){
         this.fetchAllRoles();
         this.member = member;
-        this.userId = this.member.id;
-        this.name = this.member.name;
-        this.email = this.member.email;
-        this.phone_office = this.member.phone_office;
-        this.phone_mobile = this.member.phone_mobile;
-        this.access_role = this.member.user_role;
-        this.errors = {};
+        this.userId = member.id;
+        this.name   = member.name;
+        this.email  = member.email;
+        this.phone_office = member.phone_office;
+        this.phone_mobile = member.phone_mobile;
+        this.access_role  = member.user_role;
+        this.is_owner = member.is_owner?1:0;
+        this.errors   = {};
         this.modalInstance.show();
       },
       hideModalHandler(){
@@ -81,7 +82,7 @@ export default{
             const res = await UpdateTeamMember(data, this.userId);
             this.isSubmitUpdateMember = false;
             try{
-              this.fetchmemberDataHandler();
+              this.fetchMemberDataHandler();
               var message = res.message;
               this.$toast[message.type](message.text);
             }catch(error){}
@@ -157,9 +158,8 @@ export default{
                 </div>
                 <div class="col-7 me-auto d-flex justify-content-start align-items-center flex-direction-column position-relative">
                   <div class="select-box w-100">
-                    <input readonly="true" v-model="access_role" class="form-control form-control-input" :class="`${member.is_owner?'cursor-no-drop':'cursor-pointer'}`" type="text" data-mdb-toggle="dropdown">
-                    <div v-if="!member.is_owner && roles.length" class="dropdown-menu custom-form-select roles">
-                      <custom-scrollbar thumbWidth="8">
+                    <input readonly v-model="access_role" class="form-control form-control-input" :class="`${is_owner?'cursor-no-drop':'cursor-pointer'}`" type="text" data-mdb-toggle="dropdown">
+                    <div v-show="is_owner!=1" class="dropdown-menu custom-form-select roles overflow-auto" style="max-height:7.5rem;">
                         <ul class="list-unstyled mb-0">
                           <li 
                           @click="access_role=item.name"
@@ -170,9 +170,9 @@ export default{
                           {{ item.name }}
                         </li>
                       </ul>
-                    </custom-scrollbar>
                   </div>
                 </div>
+                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="(!errors?.access_role?.length && is_owner)"><span class="text-warning">Note:</span> Owner role is not editable.</span>
                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.access_role?.length">{{ errors?.access_role[0] }}</span>
               </div>
             </div>
@@ -230,8 +230,7 @@ export default{
     </div>
     
 </template>
-<style scoped lang="scss">
-
+<style scoped lang="scss">    
   .reset-btn{
     background-color: #fff7e8;
   }
@@ -255,11 +254,4 @@ export default{
       letter-spacing: 0.2px;
   }
 </style>
-<style>
-  .custom-form-select.roles .scrollbar__wrapper{
-    height:calc(7.6rem) !important;
-  }
-  .custom-form-select.roles .scrollbar__scroller{
-    height: 100%;
-  }
-</style>
+

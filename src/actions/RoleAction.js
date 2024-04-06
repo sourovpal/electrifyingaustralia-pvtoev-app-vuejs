@@ -33,9 +33,33 @@ const CreateNewRole = (payload)=>{
     });
 }
 
+const FindRoleById = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        api.get(`/roles/${payload.id}`)
+        .then((res)=>{
+            return resolve(res.data);
+        }).catch((error)=>{
+            return reject(error);
+        });
+    });
+}
+
+const UpdateRoleHasPermissions = (payload, id)=>{
+    return new Promise((resolve, reject)=>{
+        api.post(`/roles/${id}`, payload)
+        .then((res)=>{
+            return resolve(res.data);
+        }).catch((error)=>{
+            return reject(error);
+        });
+    });
+}
+
 
 export {
     FetchRoles,
     FetchRolesWithPermissions,
-    CreateNewRole
+    CreateNewRole,
+    FindRoleById,
+    UpdateRoleHasPermissions
 }

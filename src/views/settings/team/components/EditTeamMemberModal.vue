@@ -172,7 +172,7 @@ export default{
                       </ul>
                   </div>
                 </div>
-                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="(!errors?.access_role?.length && is_owner)"><span class="text-warning">Note:</span> Owner role is not editable.</span>
+                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="(!errors?.access_role?.length && is_owner)"><span class="text-warning">Note:</span> Owner role can't editable.</span>
                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.access_role?.length">{{ errors?.access_role[0] }}</span>
               </div>
             </div>

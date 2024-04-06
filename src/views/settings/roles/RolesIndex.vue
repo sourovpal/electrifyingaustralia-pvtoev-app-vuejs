@@ -226,7 +226,9 @@
                         </div>
 
                         <div style="width:15rem;flex-grow: 1;" class="tbl-td">
-                            <span class="text-overflow-ellipsis">{{ role.name }}</span>
+                            <router-link :to="`/settings/roles/edit/${role.id}`">
+                                <span class="text-overflow-ellipsis">{{ role.name }}</span>
+                            </router-link>
                         </div>
         
                         <div style="width:10rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">

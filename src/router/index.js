@@ -82,6 +82,7 @@ import TagIndex from '../views/settings/crm/tag/TagIndex.vue';
 import LeadCaptureFormIndex from '../views/settings/crm/lead-capture-forms/LeadCaptureFormIndex.vue';
 
 import RolesIndex from '../views/settings/roles/RolesIndex.vue';
+import RoleEdit from '../views/settings/roles/EditRole.vue';
 
 import TeamMemberIndex from '../views/settings/team/TeamMemberIndex.vue';
 
@@ -136,7 +137,7 @@ const routes = [
                     auth:true,
                     progress:true,
                     title:'Home Page',
-                    // permissions:[],
+                    permissions:[],
                 },
                 redirect: "/platform/leads",
                 children: [
@@ -454,6 +455,17 @@ const routes = [
                         name:'RolesIndex',
                         path:'roles',
                         component: RolesIndex,
+                        meta:{
+                            auth:true,
+                            progress:true,
+                            title:'Home Page',
+                            permissions:[],
+                        },
+                    },
+                    {
+                        name:'RoleEdit',
+                        path:'roles/edit/:id',
+                        component: RoleEdit,
                         meta:{
                             auth:true,
                             progress:true,

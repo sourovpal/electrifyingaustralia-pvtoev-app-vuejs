@@ -106,10 +106,10 @@ export default {
                 this.$toast.error('Owner role can\'t editable.');
                 return;
             }
-            node.checked = !node.checked;
+            const allChecked = this.checkGroupAllSelect(node);
             node.children?.map(item=>{
                 var index = this.roleHasPermissions.indexOf(item.id);
-                if(node.checked){
+                if(!allChecked){
                     if(index == -1){
                         this.roleHasPermissions.push(item.id);
                     }
@@ -129,9 +129,6 @@ export default {
                     status = false;
                     break;
                 }
-            }
-            if(status){
-                node.checked = status;
             }
             return status;
         },

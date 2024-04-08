@@ -51,15 +51,12 @@
                     const res = await FetchRolesWithPermissions({page, limit});
                     try{
                         const {roles, pagination} = res;
-                        if(roles && roles.length > 0){
-                            this.isSelectedAllRows = false;
-                            this.isSelectedAllRowsReset = false;
-                            this.selectedRows = [];
-                            this.fetchRoles = roles;
-                            this.pagination = pagination;
-                        }else{
-                            this.fetchRoles = [];
-                        }
+                        this.isSelectedAllRows = false;
+                        this.isSelectedAllRowsReset = false;
+                        this.selectedRows = [];
+                        this.fetchRoles = roles;
+                        this.pagination = pagination;
+                        
                         this.isFirstLoading = false;
                     }catch(error){
                         this.$toast.error('Oops, something went wrong');
@@ -177,7 +174,7 @@
                         </button>
                     </div>
 
-                    <div class="fw-bold d-flex justify-content-center align-items-center me-3 text-overflow-ellipsis fs-16px" style="min-width: 8rem;">{{ pagination.from }} - {{ pagination.to }} of  {{ pagination.total }}</div>
+                    <div class="fw-bold d-flex justify-content-center align-items-center me-3 text-overflow-ellipsis fs-16px" style="min-width: 8rem;">{{ pagination.from??0 }} - {{ pagination.to??0 }} of  {{ pagination.total }}</div>
                     
                     <button 
                     :disabled="!pagination.prev_page" 

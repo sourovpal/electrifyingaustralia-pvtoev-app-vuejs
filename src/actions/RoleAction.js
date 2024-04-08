@@ -13,7 +13,7 @@ const FetchRoles = (payload)=>{
 
 const FetchRolesWithPermissions = (payload)=>{
     return new Promise((resolve, reject)=>{
-        api.get(`/roles/role-permissions`)
+        api.get(`/roles/role-permissions?page=${payload.page}&limit=${payload.limit}`)
         .then((res)=>{
             return resolve(res.data);
         }).catch((error)=>{

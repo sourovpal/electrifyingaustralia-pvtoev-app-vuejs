@@ -3,7 +3,7 @@ import api from "./api";
 const FetchInstaller = (payload)=>{
     return new Promise((resolve, reject)=>{
         try{
-            api.get(`/installers?page=${payload.page}&limit=${payload.limit}`)
+            api.get(`/installers?page=${payload.page}&limit=${payload.limit}${payload.search?`&${payload.search}`:''}`)
             .then((res)=>{
                 return resolve(res.data);
             }).catch((error)=>{

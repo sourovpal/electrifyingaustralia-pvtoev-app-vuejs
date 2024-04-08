@@ -9,6 +9,7 @@
     import {FetchInstaller, CreateInstaller} from '../../../actions/InstallerAction';
     import DataTableSkeletor from './DataTableSkeletor.vue';
     import DataNotFound from './DataNotFound.vue';
+    import FilterRightSidebar from './FilterRightSidebar.vue';
 
     export default {
         components: {
@@ -20,9 +21,11 @@
             DatatableBody,
             DataTableSkeletor,
             DataNotFound,
+            FilterRightSidebar,
         },
         data() {
             return {
+                limit:50,
                 isFirstLoading:false,
                 isLoading:false,
                 fetchInstallers:{},
@@ -39,6 +42,9 @@
                 selectedRows:[],
                 isSelectedAllRows:false,
                 isSelectedAllRowsReset:false,
+                toggleFilterSidebar:false,
+                filterQueryData:{},
+                filterFetchInterval:null
             }
         },
         mounted(){
@@ -46,22 +52,50 @@
             this.fetchInstallerDataHandler();
         },
         methods: {
-            async fetchInstallerDataHandler(page=this.pagination.current_page, limit=50){
+            resetFilterSidebar(show){
+                if(show){
+                    this.toggleFilterSidebar = true;
+                }else{
+                    this.filterQueryData = {};
+                    this.toggleFilterSidebar = false;
+                    this.fetchInstallerDataHandler(1);
+                }
+            },
+            filterDataInDatabase(key, value=null, isFetch=false){
+
+                if(value){
+                    this.filterQueryData = {...this.filterQueryData, [key]:value};
+                    clearInterval(this. filterFetchInterval);
+                }else{
+                    delete this.filterQueryData[key];
+                    clearInterval(this. filterFetchInterval);
+                }
+                if(isFetch){
+                    this. filterFetchInterval = setTimeout(()=>{
+                        this.fetchInstallerDataHandler(1);
+                    },1000);
+                }
+            },
+            async fetchInstallerDataHandler(page=this.pagination.current_page, limit=this.limit){
                 try{
                     if(this.isLoading){return;}
                     this.isLoading = true;
-                    const res = await FetchInstaller({page, limit});
-                    // await new Promise((e)=>setTimeout(e, 5000));
+                    var search = null;
+
+                    var query = new URLSearchParams(this.filterQueryData).toString();
+                    if(query){
+                        search = query;
+                    }
+
+                    const res = await FetchInstaller({page, limit, search});
                     try{
                         const {installers, pagination} = res;
                         this.isFirstLoading = false;
-                        if(installers.length > 0){
-                            this.isSelectedAllRows = false;
-                            this.isSelectedAllRowsReset = false;
-                            this.selectedRows = [];
-                            this.fetchInstallers = installers;
-                            this.pagination = pagination;
-                        }
+                        this.isSelectedAllRows = false;
+                        this.isSelectedAllRowsReset = false;
+                        this.selectedRows = [];
+                        this.fetchInstallers = installers;
+                        this.pagination = pagination;
                     }catch(error){
                         this.$toast.error('Oops, something went wrong');
                     }
@@ -123,7 +157,7 @@
         <div class="content-header my-3">
             <h1 class="text-base">Installers list</h1>
         </div>
-    
+
         <div class="content-body- border-top">
             <action-bar>
                 <left-action-bar>
@@ -164,14 +198,27 @@
                         </svg>
                     </div>
 
+                    <div class="btn-group  me-3" v-if="Object.keys(filterQueryData).length">
+                        <button class="btn btn-success btn-sm">{{ Object.keys(filterQueryData).length }} active filter</button>
+                        <button @click="resetFilterSidebar(false)" class="btn btn-success btn-sm px-2 active">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+                        </button>
+                    </div>
+
+                    <button v-if="!Object.keys(filterQueryData).length" class="toolbar-btn btn btn-light btn-floating me-3" @click="toggleFilterSidebar=!toggleFilterSidebar">
+                        <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path   d="M0 0h24v24H0z" fill="none"></path> <path   d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path></svg>
+                    </button>
+
                     <div class="me-3">
                         <router-link class="btn btn-primary fw-bold btn-sm" to="/settings/installers/new">
-                            <span><svg data-v-3254ee1f="" class="me-2" width="24" height="24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title data-v-3254ee1f="">account-plus</title><path data-v-3254ee1f="" d="M15,14C12.33,14 7,15.33 7,18V20H23V18C23,15.33 17.67,14 15,14M6,10V7H4V10H1V12H4V15H6V12H9V10M15,12A4,4 0 0,0 19,8A4,4 0 0,0 15,4A4,4 0 0,0 11,8A4,4 0 0,0 15,12Z"></path></svg></span>
+                            <span><svg class="me-2" width="24" height="24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>account-plus</title><path d="M15,14C12.33,14 7,15.33 7,18V20H23V18C23,15.33 17.67,14 15,14M6,10V7H4V10H1V12H4V15H6V12H9V10M15,12A4,4 0 0,0 19,8A4,4 0 0,0 15,4A4,4 0 0,0 11,8A4,4 0 0,0 15,12Z"></path></svg></span>
                             Add New
                         </router-link>
                     </div>
 
-                    <div class="fw-bold d-flex justify-content-center align-items-center me-3 text-overflow-ellipsis fs-16px" style="min-width: 8rem;">{{ pagination.from }} - {{ pagination.to }} of  {{ pagination.total }}</div>
+                    <div class="fw-bold d-flex justify-content-center align-items-center me-3 text-overflow-ellipsis fs-16px" style="min-width: 8rem;">
+                        {{ pagination.from??0 }} - {{ pagination.to??0 }} of  {{ pagination.total }}
+                    </div>
                     
                     <button 
                     :disabled="!pagination.prev_page" 
@@ -189,9 +236,15 @@
 
                 </right-action-bar>
             </action-bar>
-        
+            
             <Datatable>
-        
+
+                <FilterRightSidebar 
+                v-if="toggleFilterSidebar" 
+                @toggle-filter-sidebar="e=>resetFilterSidebar(e)"
+                @filter-data-in-database="(key, value, isFetch)=>filterDataInDatabase(key, value, isFetch)"
+                />
+
                 <datatable-header v-if="isFirstLoading || fetchInstallers.length">
                     <div class="tbl-th" style="width:3.46rem;"></div>
                     <div class="tbl-th" style="width:10rem;">Installer Name</div>

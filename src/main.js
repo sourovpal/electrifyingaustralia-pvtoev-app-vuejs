@@ -63,9 +63,9 @@ app.use(
 app.mount('#app');
 
 
-app.config.errorHandler = (err, instance, info) => {
-  console.log(err, instance, info);
-}
+// app.config.errorHandler = (err, instance, info) => {
+//   console.log(err, instance, info);
+// }
 
 
 // ==================================================

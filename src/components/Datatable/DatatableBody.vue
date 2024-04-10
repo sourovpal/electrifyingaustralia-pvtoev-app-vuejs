@@ -46,6 +46,14 @@ export default{
     max-width: fit-content;
     overflow: hidden;
     text-overflow: ellipsis;
+    &.hover-scroll:hover{
+      overflow: auto;
+      word-wrap: break-word;
+      display: flex !important;
+      height: 30px;
+      text-overflow: inherit;
+      white-space: normal;
+    }
   }
   .dropdown{
     & > button{

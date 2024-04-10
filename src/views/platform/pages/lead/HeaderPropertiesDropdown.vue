@@ -1,6 +1,15 @@
 <script>
+import {headers} from './data';
 export default {
-    
+    props:['toggleHeaderProperties', 'customHeaderColumns', 'disabledHeaderColumns'],
+    data() {
+        return {
+            headers:[],
+        }
+    },
+    mounted() {
+        this.headers = headers;
+    },
 }
 </script>
 
@@ -8,81 +17,38 @@ export default {
     <div class="dropdown-menu" id="table_header_properties" @click="(e)=>e.stopPropagation()">
         <div class="row pb-2">
             <div class="col-6">
-                <div class="pb-2 pt-2 ps-2 pe-3">
-                    <h6 class="fs-14px">Lead properties</h6>
+                <div class="pb-2 pt-2 ps-3 pe-3">
+                    <h6 class="fs-16px fw-bold">Lead properties</h6>
                 </div>
                 <div class="">
-                    <label class="d-flex justify-content-start align-item-start ps-2 pe-3 py-2 check-label-propertis">
-                        <input class="form-check-input" type="checkbox" value="" aria-label="..." />
-                        <span class="fs-12px">Lead source</span>
-                    </label>
-                    <label class="d-flex justify-content-start align-item-start ps-2 pe-3 py-2 check-label-propertis">
-                        <input class="form-check-input" type="checkbox"  value="" aria-label="..." />
-                        <span class="fs-12px">First created</span>
-                    </label>
-                    <label class="d-flex justify-content-start align-item-start ps-2 pe-3 py-2 check-label-propertis">
-                        <input class="form-check-input" type="checkbox"  value="" aria-label="..." />
-                        <span class="fs-12px">Last updated</span>
-                    </label>
-                    <label class="d-flex justify-content-start align-item-start ps-2 pe-3 py-2 check-label-propertis">
-                        <input class="form-check-input" type="checkbox"  value="" aria-label="..." />
-                        <span class="fs-12px">Owner</span>
-                    </label>
-                    <label class="d-flex justify-content-start align-item-start ps-2 pe-3 py-2 check-label-propertis">
-                        <input class="form-check-input" type="checkbox"  value="" aria-label="..." />
-                        <span class="fs-12px">Status</span>
-                    </label>
-                    <label class="d-flex justify-content-start align-item-start ps-2 pe-3 py-2 check-label-propertis">
-                        <input class="form-check-input" type="checkbox"  value="" aria-label="..." />
-                        <span class="fs-12px">Phone number</span>
-                    </label>
-                    <label class="d-flex justify-content-start align-item-start ps-2 pe-3 py-2 check-label-propertis">
-                        <input class="form-check-input" type="checkbox"  value="" aria-label="..." />
-                        <span class="fs-12px">Address line 1</span>
-                    </label>
-                    <label class="d-flex justify-content-start align-item-start ps-2 pe-3 py-2 check-label-propertis">
-                        <input class="form-check-input" type="checkbox"  value="" aria-label="..." />
-                        <span class="fs-12px">Address line 2</span>
-                    </label>
-                    <label class="d-flex justify-content-start align-item-start ps-2 pe-3 py-2 check-label-propertis">
-                        <input class="form-check-input" type="checkbox"  value="" aria-label="..." />
-                        <span class="fs-12px">City</span>
-                    </label>
-                    <label class="d-flex justify-content-start align-item-start ps-2 pe-3 py-2 check-label-propertis">
-                        <input class="form-check-input" type="checkbox"  value="" aria-label="..." />
-                        <span class="fs-12px">State</span>
-                    </label>
-                    <label class="d-flex justify-content-start align-item-start ps-2 pe-3 py-2 check-label-propertis">
-                        <input class="form-check-input" type="checkbox"  value="" aria-label="..." />
-                        <span class="fs-12px">Postcode</span>
-                    </label>
-                    <label class="d-flex justify-content-start align-item-start ps-2 pe-3 py-2 check-label-propertis">
-                        <input class="form-check-input" type="checkbox"  value="" aria-label="..." />
-                        <span class="fs-12px">Country</span>
+                    <label
+                    v-for="(header, index) in headers" :key="index" 
+                    @click="toggleHeaderProperties(header.unique_id)"
+                    class="d-flex justify-content-start align-items-center ps-2 pe-3 py-2 check-label-propertis">
+                        <span class="custom-form-checkbox btn btn-floating btn-light btn-sm">
+                            <svg v-if="disabledHeaderColumns.includes(header.unique_id)" class="unchecked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
+                            <svg v-if="!disabledHeaderColumns.includes(header.unique_id)" class="checked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
+                        </span>
+                        <span class="fs-14px fw-bold">{{ header.title }}</span>
                     </label>
                 </div>
             </div>
             <div class="col-6">
                 <div class="pb-2 pt-2 ps-2 pe-3">
-                    <h6 class="fs-14px">Custom properties</h6>
+                    <h6 class="fs-16px fw-bold">Custom properties</h6>
                 </div>
                 <div class="">
-                    <label class="d-flex justify-content-start align-item-start ps-2 pe-3 py-2 check-label-propertis">
-                        <input class="form-check-input" type="checkbox" value="" aria-label="..." />
-                        <span class="fs-12px">Call Center Agent Name</span>
+                    <label 
+                    v-for="(header, index) in customHeaderColumns" 
+                    @click="toggleHeaderProperties(header.unique_id)"
+                    :key="index" 
+                    class="d-flex justify-content-start align-items-center ps-2 pe-3 py-2 check-label-propertis">
+                        <span class="custom-form-checkbox btn btn-floating btn-light btn-sm">
+                            <svg v-if="disabledHeaderColumns.includes(header.unique_id)" class="unchecked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
+                            <svg v-if="!disabledHeaderColumns.includes(header.unique_id)" class="checked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
+                        </span>
+                        <span class="fs-14px fw-bold">{{ header.label }}</span> 
                     </label>
-                    <label class="d-flex justify-content-start align-item-start ps-2 pe-3 py-2 check-label-propertis">
-                        <input class="form-check-input" type="checkbox"  value="" aria-label="..." />
-                        <span class="fs-12px">Recording Link</span>
-                    </label>
-                    <label class="d-flex justify-content-start align-item-start ps-2 pe-3 py-2 check-label-propertis">
-                        <input class="form-check-input" type="checkbox"  value="" aria-label="..." />
-                        <span class="fs-12px">Quarter Bill Amount</span>
-                    </label>
-                    <label class="d-flex justify-content-start align-item-start ps-2 pe-3 py-2 check-label-propertis">
-                        <input class="form-check-input" type="checkbox"  value="" aria-label="..." />
-                        <span class="fs-12px">Appointment Date & Time</span>
-                    </label><br>
                 </div>
             </div>
         </div>
@@ -122,6 +88,11 @@ export default {
             cursor: pointer;
             &:hover{
                 background-color: #f1f3f9;
+            }
+            span{
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
             }
         }
     }

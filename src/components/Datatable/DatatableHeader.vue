@@ -34,6 +34,7 @@ export default{
   display:flex;
   background-color: #ffffff;
   width: 100%;
+  height:35px;
 }
 @media only screen and (max-width: 991px) {
   .tbl-header .tbl-tr{

@@ -10,7 +10,10 @@ import DatatableBody from '../../../../components/Datatable/DatatableBody.vue';
 import AddNewLeadModal from './AddNewLeadModal.vue';
 import HeaderPropertiesDropdown from './HeaderPropertiesDropdown.vue';
 import FilterRightSidebar from './FilterRightSidebar.vue';
+import DataTableSkeletor from './DataTableSkeletor.vue';
+import DataNotFound from './DataNotFound.vue';
 
+import {FetchLeads} from '../../../../actions/LeadAction';
 
 export default {
   components: {
@@ -23,19 +26,76 @@ export default {
     DatatableHeader,
     AddNewLeadModal,
     HeaderPropertiesDropdown,
-    FilterRightSidebar
+    FilterRightSidebar,
+    DataTableSkeletor,
+    DataNotFound,
 },
   data() {
     return {
+        limit:50,
         filterRightSidebar:false,
         selectedRows:[],
         isSelectedAllRows:false,
         isSelectedAllRowsReset:false,
-        fetchInstallers:[],
+        fetchLeads:[],
+        leadStatus:[],
+        disabledHeaderColumns:[],
+        leadProperties:[],
+        isFirstLoading:false,
+        pagination: {
+            total:0,
+            per_page:0,
+            current_page:1,
+            next_page:null,
+            prev_page:null,
+            last_page:0,
+            from:0,
+            to:0,
+        }
     }
   },
   methods: {
-    selectAll(){
+    async fetchAllLeadsHandler(
+        page=this.pagination.current_page, 
+        limit=this.limit, 
+        f_headers=false, 
+        f_lead_properties=false){
+        try{
+            const res = await FetchLeads({page, limit, f_headers, f_lead_properties});
+            try{
+                const {leads, pagination, lead_properties, headers} = res;
+                this.fetchLeads = leads;
+                this.pagination = pagination;
+                if(f_headers){
+                    this.disabledHeaderColumns = headers;
+                }
+                if(f_lead_properties){
+                    this.leadProperties = lead_properties;
+                }
+                this.isFirstLoading = false;
+            }catch(error){}
+        }catch(error){
+
+        }finally{
+
+        }
+    },
+    fetchCustomProperties(properties, uniqueId){
+        if(properties){
+            var propertie = properties.find(item=>item.unique_id === uniqueId);
+            if(propertie){
+                return propertie.value;
+            }
+        }
+        return null;
+    },
+    toggleHeaderProperties(key){
+        var index = this.disabledHeaderColumns.indexOf(key);
+        if(index > -1){
+            this.disabledHeaderColumns.splice(index, 1);
+        }else{
+            this.disabledHeaderColumns.push(key);
+        }
     },
     selectedAllRowsHandler(){
         if(this.isSelectedAllRowsReset){
@@ -43,10 +103,9 @@ export default {
             this.isSelectedAllRowsReset = !this.isSelectedAllRowsReset;
         }else if(!this.isSelectedAllRows){
             this.isSelectedAllRows = !this.isSelectedAllRows;
-            this.selectedRows = Array.from(Array(50).keys());
-            // this.fetchInstallers.map((item)=>{
-            //     this.selectedRows.push(item.id);
-            // });
+            this.fetchLeads.map((item)=>{
+                this.selectedRows.push(item.id);
+            });
         }else{
             this.selectedRows = [];
             this.isSelectedAllRows = false;
@@ -62,7 +121,7 @@ export default {
             this.selectedRows.push(id);
         }
 
-        if(this.selectedRows.length === this.fetchInstallers.length){
+        if(this.selectedRows.length === this.fetchLeads.length){
             this.isSelectedAllRows = true;
             this.isSelectedAllRowsReset = false;
         }else if(this.selectedRows.length > 0){
@@ -74,8 +133,12 @@ export default {
         }
     }
   },
-  watch:{
-  }
+  mounted() {
+    this.isFirstLoading = true;
+    this.fetchAllLeadsHandler(this.pagination.current_page, this.limit, 1, 1);
+    const {lead_statuses} = this.$cookies.get(import.meta.env.VITE_AUTH_APP);
+    this.leadStatus = lead_statuses;
+  },
 }
 </script>
 
@@ -100,16 +163,16 @@ export default {
     </left-action-bar>
 
     <right-action-bar>
-        <button class="btn btn-light btn-floating me-2" @click="filterRightSidebar=!filterRightSidebar">
+        <button class="btn btn-light btn-floating me-3" @click="filterRightSidebar=!filterRightSidebar">
             <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path   d="M0 0h24v24H0z" fill="none"></path> <path   d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path></svg>
         </button>
-        <div class="item d-none d-lg-flex">
+        <div class="me-3">
             <button class="btn btn-sm btn-primary fw-bold" data-mdb-toggle="modal" data-mdb-target="#addNewLeadModal">
                 <svg class="me-2" width="24" height="24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>account-plus</title><path d="M15,14C12.33,14 7,15.33 7,18V20H23V18C23,15.33 17.67,14 15,14M6,10V7H4V10H1V12H4V15H6V12H9V10M15,12A4,4 0 0,0 19,8A4,4 0 0,0 15,4A4,4 0 0,0 11,8A4,4 0 0,0 15,12Z" /></svg>
                 New Lead
             </button>
         </div>
-        <div class="item d-none d-lg-flex">
+        <div class="me-3">
             <div class="dropdown import-dropdown">
                 <button class="btn btn-sm btn-light fw-bold d-flex align-items-center" type="button" data-mdb-toggle="dropdown" aria-expanded="false">
                     <span class="pe-4">Import</span>
@@ -123,96 +186,131 @@ export default {
                 </ul>
             </div>
         </div>
-        <div class="item d-none d-lg-flex wh-40" data-mdb-toggle="dropdown">
+        <button class="toolbar-btn btn btn-light btn-floating me-3" data-mdb-toggle="dropdown">
             <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M3,5H8.3V19H3zM17,10c1.5,0,2.9,0.5,4,1.3V5h-5.3v5.1C16.1,10,16.5,10,17,10zM10,17c0-3,2-5.6,4.7-6.6V5H9.3v14h1C10.1,18.4,10,17.7,10,17zM20.8,17c0-0.2,0-0.4-0.1-0.6l1.1-1l-1-1.7l-1.5,0.5c-0.3-0.3-0.7-0.5-1.1-0.6L18,12h-2l-0.3,1.5c-0.4,0.1-0.8,0.4-1.1,0.6l-1.4-0.5l-1,1.7l1.1,1c0,0.2-0.1,0.4-0.1,0.6s0,0.4,0.1,0.6l-1.1,1l1,1.7l1.4-0.5c0.3,0.3,0.7,0.5,1.1,0.6L16,22h2l0.3-1.5c0.4-0.1,0.8-0.4,1.1-0.6l1.5,0.5l1-1.7l-1.1-1C20.7,17.4,20.8,17.2,20.8,17z M17,19c-1.1,0-2-0.9-2-2s0.9-2,2-2s2,0.9,2,2S18.1,19,17,19z"></path></svg>
-        </div>
-        <HeaderPropertiesDropdown/>
+        </button>
+        <HeaderPropertiesDropdown 
+        :customHeaderColumns="leadProperties"
+        :disabledHeaderColumns="disabledHeaderColumns" 
+        :toggleHeaderProperties="toggleHeaderProperties" 
+        />
 
-        <div class="fw-bold d-flex justify-content-center align-items-center wh-40" style="width: 4rem;">1-100</div>
-        <button class="btn btn-light btn-floating me-2">
+        <div class="fw-bold d-flex justify-content-center align-items-center me-3 text-overflow-ellipsis fs-16px" style="min-width: 2rem;">
+            {{ pagination.from??0 }} - {{ pagination.to??0 }} of  {{ pagination.total }}
+        </div>
+        <button 
+        :disabled="!pagination.prev_page" 
+        @click="pagination.prev_page && fetchAllLeadsHandler(pagination.prev_page)" 
+        class="toolbar-btn btn btn-light btn-floating me-3">
             <svg  class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>
         </button>
-        <button class="btn btn-light btn-floating me-2">
+
+        <button 
+        :disabled="!pagination.next_page" 
+        @click="pagination.next_page && fetchAllLeadsHandler(pagination.next_page)" 
+        class="toolbar-btn btn btn-light btn-floating me-3">
             <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
         </button>
         
     </right-action-bar>
 
     </action-bar>
-
     <Datatable>
 
         <FilterRightSidebar v-if="filterRightSidebar" @toggle-filter="(e)=> filterRightSidebar = e" />
 
-        <datatable-header class="">
-            <div class="tbl-th" style="width:3.6rem;"></div>
-            <div class="tbl-th" style="width:20rem;">Lead</div>
-            <div class="tbl-th" style="width:10rem;">Source</div>
-            <div class="tbl-th" style="width:5rem;">State</div>
-            <div class="tbl-th" style="width:12rem;">Status</div>
-            <div class="tbl-th text-end" style="width:12rem;">Phone Number</div>
-            <div class="tbl-th" style="width:15rem;">Email Address</div>
-            <div class="tbl-th" style="width:15rem;">Reocrd Link</div>
-            <div class="tbl-th" style="width:20rem;">Note</div>
-            <div class="tbl-th" style="width:10rem;">Last Update</div>
-            <div class="tbl-th" style="width:10rem;">Created At</div>
+        <datatable-header class="" v-if="isFirstLoading || fetchLeads.length">
+            <div class="tbl-th" style="width:3.6rem;flex-grow: 1;"></div>
+
+            <div v-show="!disabledHeaderColumns.includes('lead')" class="tbl-th" style="width:20rem;flex-grow: 1;">Lead</div>
+
+            <div v-show="!disabledHeaderColumns.includes('source')" class="tbl-th" style="width:10rem;flex-grow: 1;">Source</div>
+            
+            <div v-show="!disabledHeaderColumns.includes('status')" class="tbl-th" style="width:12rem;flex-grow: 1;">Status</div>
+            
+            <div v-show="!disabledHeaderColumns.includes('phone_number')" class="tbl-th text-end" style="width:12rem;flex-grow: 1;">Phone Number</div>
+            
+            <div v-show="!disabledHeaderColumns.includes('email_address')" class="tbl-th" style="width:15rem;flex-grow: 1;">Email Address</div>
+            
+            <div v-show="!disabledHeaderColumns.includes('address_line_one')" class="tbl-th" style="width:10rem;flex-grow: 1;">Address One</div>
+            
+            <div v-show="!disabledHeaderColumns.includes('address_line_two')" class="tbl-th" style="width:10rem;flex-grow: 1;">Address Two</div>
+
+            <div v-show="!disabledHeaderColumns.includes('city')" class="tbl-th" style="width:10rem;flex-grow: 1;">City</div>
+
+            <div v-show="!disabledHeaderColumns.includes('state')" class="tbl-th" style="width:10rem;flex-grow: 1;">State</div>
+
+            <div v-show="!disabledHeaderColumns.includes('post_code')" class="tbl-th" style="width:10rem;flex-grow: 1;">Postcode</div>
+
+            <div v-show="!disabledHeaderColumns.includes('country')" class="tbl-th" style="width:10rem;flex-grow: 1;">Country</div>
+            
+            <!-- Custom Propertys -->
+            
+            <div 
+            v-for="(propertie, index) in leadProperties" 
+            :key="index"
+            class="tbl-th"
+            v-show="!disabledHeaderColumns.includes(propertie.unique_id)"
+            style="width:12rem;flex-grow: 1;">
+                <span class="text-overflow-ellipsis w-100">{{ propertie.label }}</span>
+            </div>
+
+
+            <div v-show="!disabledHeaderColumns.includes('last_update')" class="tbl-th" style="width:10rem;flex-grow: 1;">Last Update</div>
+            <div v-show="!disabledHeaderColumns.includes('first_create')" class="tbl-th" style="width:10rem;flex-grow: 1;">Created At</div>
         </datatable-header>
 
         <datatable-body>
 
-            <div class="tbl-tr full-width" v-for="(item, index) in Array.from(Array(50).keys())" :key="index">
+            <div
+            :class="selectedRows.includes(lead.id)?'active':''"
+            v-if="!isFirstLoading || fetchLeads.length" 
+            class="tbl-tr full-width" 
+            v-for="(lead, index) in fetchLeads" 
+            :key="index">
 
-                <div style="width:4rem;margin-left: -7px;" class="tbl-td full-width">
-                    <label @click="singleRowSelectedHandler(index)" class="custom-form-checkbox btn btn-floating btn-light">
-                        <svg v-if="!selectedRows.includes(index)" class="unchecked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
-                        <svg v-if="selectedRows.includes(index)" class="checked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
+                <div style="width:4rem;margin-left: -7px;flex-grow: 1;" class="tbl-td full-width">
+                    <label @click="singleRowSelectedHandler(lead.id)" class="custom-form-checkbox btn btn-floating btn-light">
+                        <svg v-if="!selectedRows.includes(lead.id)" class="unchecked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
+                        <svg v-if="selectedRows.includes(lead.id)" class="checked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
                     </label>
                 </div>
 
-                <div style="width:20rem;" class="tbl-td full-width">
-                    <router-link class="text-overflow-ellipsis" :to="`/platform/leads/100${index}15`" v-if="(index%2==0)"> New {{ (item?item:1) * 2155 }} South Wales</router-link>
-                    <router-link class="text-overflow-ellipsis" :to="`/platform/leads/100${index}15`" v-if="(index%2!==0)"> {{ (item?item:1) * 2155 }} Old South Powerman Local</router-link>
+                <div v-show="!disabledHeaderColumns.includes('lead')" style="width:20rem;flex-grow: 1;" class="tbl-td full-width">
+                    <router-link class="text-overflow-ellipsis" :to="`/platform/leads/${lead.id}`"> {{ lead.contact?.full_name }} </router-link>
                 </div>
         
-                <div style="width:10rem;" class="tbl-td d-none d-lg-flex">
-                    <span class="text-overflow-ellipsis">Powerman Local</span>
+                <div v-show="!disabledHeaderColumns.includes('source')" style="width:10rem;flex-grow: 1;" class="tbl-td">
+                    <span class="text-overflow-ellipsis">{{ lead.source?.title }}</span>
                 </div>
-        
-                <div style="width:5rem;" class="tbl-td d-none d-lg-flex"> {{ (item?item:1) * 2155 }}</div>
-        
-                <div style="width:12rem;" class="tbl-td d-none d-lg-flex">
+                
+                <div v-show="!disabledHeaderColumns.includes('status')" style="width:12rem;flex-grow: 1;" class="tbl-td">
                     <div class="dropdown w-100">
                         <button class="btn btn-sm btn-light fw-400 w-100 d-flex justify-content-between align-items-center" type="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                            <span class="fw-bold text-fs tbl-dropdown-title">New</span>
+                            <span class="fw-bold text-fs tbl-dropdown-title text-overflow-ellipsis">{{ lead.status?.name }}</span>
                             <div class="dropdown--icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
                             </div>
                         </button>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item selected" href="#">New</a>
-                            <a class="dropdown-item" href="#">Leads Allocated</a>
-                            <a class="dropdown-item" href="#">Contacted & Appointed</a>
-                            <a class="dropdown-item" href="#">Proposal Sent</a>
-                            <a class="dropdown-item" href="#">Proposal Sent</a>
-                            <a class="dropdown-item" href="#">Waiting for decision</a>
-                            <a class="dropdown-item" href="#">Follow Up</a>
-                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
-                            Unreachable
-                            <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"></path></svg>
+                            
+                            <a
+                            style="width:170px;"
+                            v-for="(status, index) in leadStatus" 
+                            :key="index" 
+                            class="dropdown-item d-flex justify-content-between align-items-center" 
+                            href="#"
+                            @click="lead.status.name=status.name"
+                            >
+                                <span class="text-overflow-ellipsis">{{ status.name }}</span>
+                                <svg v-if="status.is_lost" class="svg-5" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"></path></svg>
                             </a>
-                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
-                            Cancel after sign
-                            <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"></path></svg>
-                            </a>
-                            <a class="dropdown-item d-flex justify-content-between align-items-center" href="#">
-                            Lost 
-                            <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"></path></svg>
-                            </a>
+
                         </div>
                     </div>
                 </div>
         
-                <div style="width:12rem;" class="tbl-td d-none d-lg-flex">
+                <div v-show="!disabledHeaderColumns.includes('phone_number')" style="width:12rem;flex-grow: 1;" class="tbl-td">
                     <div class="d-flex justify-content-between align-items-center w-100">
                         <div>
                             <button title="Copy phone number" class="copy-phone-number" @click="navigator.clipboard.writeText(index)">
@@ -223,27 +321,57 @@ export default {
                             </a>
                         </div>
                         <div>
-                            +88 {{item}}17123{{ (item?item:1) * 2155 }}
+                            {{ lead.contact?.phone_number }}
                         </div>
                      </div>
                 </div>
         
-                <div style="width:15rem;" class="tbl-td d-none d-lg-flex">
-                    <a class="text-overflow-ellipsis" href="">powermanlaocal@gmail.com</a>
+                <div v-show="!disabledHeaderColumns.includes('email_address')" style="width:15rem;flex-grow: 1;" class="tbl-td">
+                    <a class="text-overflow-ellipsis" href="">{{ lead.contact?.email }}</a>
                 </div>
         
-                <div style="width:15rem;" class="tbl-td d-none d-lg-flex">
-                    <a class="text-overflow-ellipsis link-hover" href="">https://powermanlaocal.com/link-audio.mp3</a>
+                <div v-show="!disabledHeaderColumns.includes('address_line_one')" style="width:10rem;flex-grow: 1;" class="tbl-td">
+                    <span class="text-overflow-ellipsis">{{ lead.address_line_one }}</span>
                 </div>
         
-                <div style="width:20rem;" class="tbl-td d-none d-lg-flex">
-                    <span class="text-overflow-ellipsis">Lorem ipsum dolor sit amet consectetur adipisicing elit.</span>
+                <div v-show="!disabledHeaderColumns.includes('address_line_two')" style="width:10rem;flex-grow: 1;" class="tbl-td">
+                    <span class="text-overflow-ellipsis">{{ lead.address_line_two }}</span>
+                </div>
+        
+                
+                <div v-show="!disabledHeaderColumns.includes('city')" style="width:10rem;flex-grow: 1;" class="tbl-td"> {{ lead.city }}</div>
+
+                <div v-show="!disabledHeaderColumns.includes('state')" style="width:10rem;flex-grow: 1;" class="tbl-td"> {{ lead.state }}</div>
+
+                <div v-show="!disabledHeaderColumns.includes('post_code')" style="width:10rem;flex-grow: 1;" class="tbl-td"> {{ lead.post_code }}</div>
+
+                <div v-show="!disabledHeaderColumns.includes('country')" style="width:10rem;flex-grow: 1;" class="tbl-td"> {{ lead.country }}</div>
+
+                <!-- Custom Properties -->
+
+                <div 
+                v-for="(propertie, index) in leadProperties" 
+                :key="index" :id="propertie?.unique_id"
+                v-show="!disabledHeaderColumns.includes(propertie.unique_id)"
+                class="tbl-td" style="width:12rem;flex-grow: 1;">
+                    <span 
+                    :class="fetchCustomProperties(lead.custom_properties, propertie.unique_id)?.length > 25?'hover-scroll':''"
+                    class="text-overflow-ellipsis w-100">
+                        {{ fetchCustomProperties(lead.custom_properties, propertie.unique_id) }}
+                    </span>
                 </div>
 
-                <div style="width:10rem;" class="tbl-td d-none d-lg-flex">05/07/2023</div>
+
+                <div v-show="!disabledHeaderColumns.includes('last_update')" style="width:10rem;flex-grow: 1;" class="tbl-td">{{ lead.updated_at }}</div>
         
-                <div style="width:10rem;" class="tbl-td d-none d-lg-flex">25/07/2023</div>
+                <div v-show="!disabledHeaderColumns.includes('first_create')" style="width:10rem;flex-grow: 1;" class="tbl-td">{{ lead.created_at }}</div>
+
             </div>
+
+            <DataTableSkeletor v-if="isFirstLoading" />
+
+            <DataNotFound v-if="!isFirstLoading && !fetchLeads.length" />
+
         </datatable-body>
 
     </Datatable>

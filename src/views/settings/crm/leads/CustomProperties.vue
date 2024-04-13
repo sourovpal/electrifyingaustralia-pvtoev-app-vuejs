@@ -9,7 +9,7 @@
     import DataNotFound from './DataNotFound.vue';
     import {FetchLeadProperties} from '../../../../actions/CrmLeads';
     import CreateCustomPropertieModal from './components/CreateCustomPropertieModal.vue';
-    import {propertiesIconList} from './data.js';
+    import {propertiesIconList} from '../../../../asset/svgicon.js';
     export default {
         components: {
             ActionBar,

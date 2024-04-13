@@ -56,9 +56,11 @@
                 if(show){
                     this.toggleFilterSidebar = true;
                 }else{
-                    this.filterQueryData = {};
                     this.toggleFilterSidebar = false;
-                    this.fetchInstallerDataHandler(1);
+                    if(Object.keys(this.filterQueryData).length){
+                        this.filterQueryData = {};
+                        this.fetchInstallerDataHandler(1);
+                    }
                 }
             },
             filterDataInDatabase(key, value=null, isFetch=false){

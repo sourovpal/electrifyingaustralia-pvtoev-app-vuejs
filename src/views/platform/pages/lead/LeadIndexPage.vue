@@ -32,16 +32,22 @@ export default {
 },
   data() {
     return {
+        isLoading:false,
+        fetch:"headers,lead_properties,lead_sources,owners,",
         limit:50,
-        filterRightSidebar:false,
+        toggleFilterSidebar:false,
         selectedRows:[],
         isSelectedAllRows:false,
         isSelectedAllRowsReset:false,
         fetchLeads:[],
         leadStatus:[],
+        leadSources:[],
+        owners:[],
         disabledHeaderColumns:[],
         leadProperties:[],
         isFirstLoading:false,
+        filterQueryData:{},
+        filterFetchInterval:null,
         pagination: {
             total:0,
             per_page:0,
@@ -54,88 +60,174 @@ export default {
         }
     }
   },
+  watch:{
+    "$route"(){
+        this.fetchAllLeadsHandler(this.pagination.current_page, this.limit);
+    }
+  },
   methods: {
-    async fetchAllLeadsHandler(
-        page=this.pagination.current_page, 
-        limit=this.limit, 
-        f_headers=false, 
-        f_lead_properties=false){
+    resetFilterSidebar(show){
         try{
-            const res = await FetchLeads({page, limit, f_headers, f_lead_properties});
+            if(show){
+                this.toggleFilterSidebar = true;
+            }else{
+                this.toggleFilterSidebar = false;
+                if(Object.keys(this.filterQueryData).length){
+                    this.filterQueryData = {};
+                    this.fetchAllLeadsHandler(1);
+                }
+            }
+        }catch(error){}
+    },
+    filterDataInDatabase(key, value=null, isFetch=false){
+        try{
+            if((value != null && value != "") || value === 0){
+                this.filterQueryData = {...this.filterQueryData, [key]:value};
+                clearInterval(this. filterFetchInterval);
+            }else{
+                delete this.filterQueryData[key];
+                clearInterval(this. filterFetchInterval);
+            }
+            if(isFetch){
+                this.filterFetchInterval = setTimeout(()=>{
+                    this.fetchAllLeadsHandler();
+                },1000);
+            }
+        }catch(error){}
+    },
+    async fetchAllLeadsHandler(
+        page=this.pagination?.current_page, 
+        limit=this.limit, 
+        fetch=""){
+        try{
+            this.isLoading = true;
+            var status = this.$route.query?.status??'';
+            var fetchArr = fetch.split(',');
+            var search = '';
+            var payload = {
+                page, 
+                limit
+            };
+
+            if(Object.keys(this.filterQueryData).length){
+                search = btoa(JSON.stringify(this.filterQueryData));
+            }
+            if(fetch != ""){
+                payload['fetch'] = fetch;
+            }
+            if(status != ''){
+                payload['status'] = status;
+            }
+            if(search != ''){
+                payload['search'] = search;
+            }
+            const res = await FetchLeads(payload);
             try{
-                const {leads, pagination, lead_properties, headers} = res;
+                const {leads, pagination, lead_properties, headers, owners, lead_sources} = res;
                 this.fetchLeads = leads;
                 this.pagination = pagination;
-                if(f_headers){
+                if(fetchArr.includes('headers')){
                     this.disabledHeaderColumns = headers;
                 }
-                if(f_lead_properties){
+                if(fetchArr.includes('lead_properties')){
                     this.leadProperties = lead_properties;
                 }
-                this.isFirstLoading = false;
-            }catch(error){}
+                if(fetchArr.includes('owners')){
+                    this.owners = owners;
+                }
+                if(fetchArr.includes('owners')){
+                    this.owners = owners;
+                }
+                if(fetchArr.includes('lead_sources')){
+                    this.leadSources = lead_sources;
+                }
+            }catch(error){
+                throw new Error(error.message);
+            }
         }catch(error){
-
+            try{
+                var message = error.response.data.message;
+                this.$toast[message.type](message.text);
+            }catch(e){
+                this.$toast.error('Oops, something went wrong');
+            }
         }finally{
-
+            this.isFirstLoading = false;
+            this.isLoading = false;
         }
     },
-    fetchCustomProperties(properties, uniqueId){
-        if(properties){
-            var propertie = properties.find(item=>item.unique_id === uniqueId);
-            if(propertie){
-                return propertie.value;
+    fetchCustomProperties(leadProperties, propertie){
+        try{
+            if(leadProperties){
+                var current = leadProperties.find(item=>item.unique_id === propertie.unique_id);
+                if(current){
+                    var value = current?.value;
+                    if(propertie.data_type_id == 'yes_or_no'){
+                        if(value == '1'){
+                            return 'Yes';
+                        }else{
+                            return "No";
+                        }
+                    }
+                    return value;
+                }
             }
-        }
-        return null;
+            return null;
+        }catch(error){}
     },
     toggleHeaderProperties(key){
-        var index = this.disabledHeaderColumns.indexOf(key);
-        if(index > -1){
-            this.disabledHeaderColumns.splice(index, 1);
-        }else{
-            this.disabledHeaderColumns.push(key);
-        }
+        try{
+            var index = this.disabledHeaderColumns.indexOf(key);
+            if(index > -1){
+                this.disabledHeaderColumns.splice(index, 1);
+            }else{
+                this.disabledHeaderColumns.push(key);
+            }
+        }catch(error){}
     },
     selectedAllRowsHandler(){
-        if(this.isSelectedAllRowsReset){
-            this.selectedRows = [];
-            this.isSelectedAllRowsReset = !this.isSelectedAllRowsReset;
-        }else if(!this.isSelectedAllRows){
-            this.isSelectedAllRows = !this.isSelectedAllRows;
-            this.fetchLeads.map((item)=>{
-                this.selectedRows.push(item.id);
-            });
-        }else{
-            this.selectedRows = [];
-            this.isSelectedAllRows = false;
-            this.isSelectedAllRowsReset = false;
-        }
+        try{
+            if(this.isSelectedAllRowsReset){
+                this.selectedRows = [];
+                this.isSelectedAllRowsReset = !this.isSelectedAllRowsReset;
+            }else if(!this.isSelectedAllRows){
+                this.isSelectedAllRows = !this.isSelectedAllRows;
+                this.fetchLeads.map((item)=>{
+                    this.selectedRows.push(item.id);
+                });
+            }else{
+                this.selectedRows = [];
+                this.isSelectedAllRows = false;
+                this.isSelectedAllRowsReset = false;
+            }
+        }catch(error){}
 
     },
     singleRowSelectedHandler(id){
-        var index = this.selectedRows.indexOf(id);
-        if(index > -1){
-            this.selectedRows.splice(index, 1);
-        }else{
-            this.selectedRows.push(id);
-        }
-
-        if(this.selectedRows.length === this.fetchLeads.length){
-            this.isSelectedAllRows = true;
-            this.isSelectedAllRowsReset = false;
-        }else if(this.selectedRows.length > 0){
-            this.isSelectedAllRows = false;
-            this.isSelectedAllRowsReset = true;
-        }else{
-            this.isSelectedAllRows = false;
-            this.isSelectedAllRowsReset = false;
-        }
+        try{
+            var index = this.selectedRows.indexOf(id);
+            if(index > -1){
+                this.selectedRows.splice(index, 1);
+            }else{
+                this.selectedRows.push(id);
+            }
+    
+            if(this.selectedRows.length === this.fetchLeads.length){
+                this.isSelectedAllRows = true;
+                this.isSelectedAllRowsReset = false;
+            }else if(this.selectedRows.length > 0){
+                this.isSelectedAllRows = false;
+                this.isSelectedAllRowsReset = true;
+            }else{
+                this.isSelectedAllRows = false;
+                this.isSelectedAllRowsReset = false;
+            }
+        }catch(error){}
     }
   },
   mounted() {
     this.isFirstLoading = true;
-    this.fetchAllLeadsHandler(this.pagination.current_page, this.limit, 1, 1);
+    this.fetchAllLeadsHandler(this.pagination.current_page, this.limit, this.fetch);
     const {lead_statuses} = this.$cookies.get(import.meta.env.VITE_AUTH_APP);
     this.leadStatus = lead_statuses;
   },
@@ -157,21 +249,39 @@ export default {
                 <svg v-if="isSelectedAllRowsReset" fill="currentColor" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><defs><path id="a" d="M0 0h24v24H0z"></path></defs> <clipPath id="b"><use xlink:href="#a" overflow="visible"></use></clipPath> <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z" clip-path="url(#b)"></path></svg>
             </label>
         </div>
-        <button class="btn btn-light btn-floating ms-2">
+        <button class="btn btn-light btn-floating ms-2" :disabled="isLoading" @click="fetchAllLeadsHandler()">
             <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
         </button>
+        {{ filterQueryData }}
     </left-action-bar>
 
     <right-action-bar>
-        <button class="btn btn-light btn-floating me-3" @click="filterRightSidebar=!filterRightSidebar">
+        
+        <div v-if="isLoading" class="me-3">
+            <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
+                <circle style="stroke: rgb(59, 113, 202);" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+            </svg>
+        </div>
+        <div class="btn-group  me-3" v-if="Object.keys(filterQueryData).length">
+            <button class="btn btn-success btn-sm">{{ Object.keys(filterQueryData).length }} active filter</button>
+            <button @click="resetFilterSidebar(false)" class="btn btn-success btn-sm px-2 active">
+                <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+            </button>
+        </div>
+
+        <button v-if="!Object.keys(filterQueryData).length" class="toolbar-btn btn btn-light btn-floating me-3" @click="toggleFilterSidebar=!toggleFilterSidebar">
             <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path   d="M0 0h24v24H0z" fill="none"></path> <path   d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path></svg>
         </button>
+
+
+
         <div class="me-3">
             <button class="btn btn-sm btn-primary fw-bold" data-mdb-toggle="modal" data-mdb-target="#addNewLeadModal">
                 <svg class="me-2" width="24" height="24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>account-plus</title><path d="M15,14C12.33,14 7,15.33 7,18V20H23V18C23,15.33 17.67,14 15,14M6,10V7H4V10H1V12H4V15H6V12H9V10M15,12A4,4 0 0,0 19,8A4,4 0 0,0 15,4A4,4 0 0,0 11,8A4,4 0 0,0 15,12Z" /></svg>
                 New Lead
             </button>
         </div>
+
         <div class="me-3">
             <div class="dropdown import-dropdown">
                 <button class="btn btn-sm btn-light fw-bold d-flex align-items-center" type="button" data-mdb-toggle="dropdown" aria-expanded="false">
@@ -217,7 +327,15 @@ export default {
     </action-bar>
     <Datatable>
 
-        <FilterRightSidebar v-if="filterRightSidebar" @toggle-filter="(e)=> filterRightSidebar = e" />
+        <FilterRightSidebar 
+        v-if="toggleFilterSidebar" 
+        @toggle-filter="(e)=> resetFilterSidebar(e)"
+        @filter-data-in-database="(key, value, isFetch)=> filterDataInDatabase(key, value, isFetch)"
+        :lead-properties="leadProperties"
+        :lead-sources="leadSources"
+        :filter-query-data="filterQueryData"
+        :owners="owners"
+         />
 
         <datatable-header class="" v-if="isFirstLoading || fetchLeads.length">
             <div class="tbl-th" style="width:3.6rem;flex-grow: 1;"></div>
@@ -355,9 +473,9 @@ export default {
                 v-show="!disabledHeaderColumns.includes(propertie.unique_id)"
                 class="tbl-td" style="width:12rem;flex-grow: 1;">
                     <span 
-                    :class="fetchCustomProperties(lead.custom_properties, propertie.unique_id)?.length > 25?'hover-scroll':''"
+                    :class="fetchCustomProperties(lead.custom_properties, propertie)?.length > 25?'hover-scroll':''"
                     class="text-overflow-ellipsis w-100">
-                        {{ fetchCustomProperties(lead.custom_properties, propertie.unique_id) }}
+                        {{ fetchCustomProperties(lead.custom_properties, propertie) }}
                     </span>
                 </div>
 

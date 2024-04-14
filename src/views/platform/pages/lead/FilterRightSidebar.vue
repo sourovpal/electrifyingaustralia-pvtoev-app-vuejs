@@ -1,16 +1,11 @@
 <script>
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue';
+import CustomScrollbar from 'custom-vue-scrollbar';
+
 import {propertiesIconList} from '../../../../asset/svgicon.js';
 export default {
     props:['leadProperties', 'owners', 'leadSources', 'filterQueryData'],
     data() {
         return {
-            settings: {
-                suppressScrollY: false,
-                suppressScrollX: false,
-                wheelPropagation: false,
-                wheelSpeed:0.4,
-            },
             propertiesIconList:{},
             ownerIds:[],
             created_from:null,
@@ -18,10 +13,11 @@ export default {
             updated_from:null,
             updated_to:null,
             searchSource:null,
+            source_title:null,
         }
     },
     components:{
-        vueCustomScrollbar
+        CustomScrollbar
     },
     methods: {
         optionToggle(event, field, ref=null, isCustom=false, item=null){
@@ -36,15 +32,16 @@ export default {
 
             try{
                 if(ref){
+
                     if(isCustom){
-                        if(this.$refs[ref][0].value){
+                        if(this.filterQueryData[field]){
                             this.$emit('filter-data-in-database', field, null, true);
                         }else{
                             this.$emit('filter-data-in-database', field, null, false);
                         }
                         this.$refs[ref][0].value = '';
                     }else{
-                        if(this.$refs[ref].value){
+                        if(this.filterQueryData[field]){
                             this.$emit('filter-data-in-database', field, null, true);
                         }else{
                             this.$emit('filter-data-in-database', field, null, false);
@@ -53,8 +50,8 @@ export default {
 
                         if(field == 'source'){
                             this.searchSource = null;
+                            this.source_title = null;
                         }
-
                     }
                 }else{
                     if(field == 'owners'){
@@ -87,17 +84,23 @@ export default {
             }
 
         },
-        yesOrNoHandler(item=null, remove=false){
+        yesOrNoHandler(item=null, toggle=false){
             try{
-                if(item && !remove){
-                    item.attributes.value=!item.attributes.value;
-                    this.$emit('filter-data-in-database', item.unique_id, item.attributes.value?1:0, true);
+                if(item && !toggle){
+                    if(item.attributes.value){
+                        item.attributes.value=0;
+                        this.$emit('filter-data-in-database', item.unique_id, 0, true);
+                    }else{
+                        item.attributes.value=1;
+                        this.$emit('filter-data-in-database', item.unique_id, 1, true);
+                    }
                 }else{
-                    if(item.attributes.value == false || item.attributes.value == true){
+                    if(item.attributes.value === null){
+                        item.attributes.value = 0;
+                        this.$emit('filter-data-in-database', item.unique_id, 0, true);
+                    }else{
                         item.attributes.value = null;
                         this.$emit('filter-data-in-database', item.unique_id, null, true);
-                    }else{
-                        this.$emit('filter-data-in-database', item.unique_id, null, false);
                     }
                 }
             }catch(error){}
@@ -131,8 +134,19 @@ export default {
             });
         },
         leadSourceHandler(source){
-            this.searchSource = source.title;
+            this.source_title  = source.title;
             this.$emit('filter-data-in-database', 'source', source.id, true);
+            setTimeout(()=>{
+                this.searchSource = null;
+            },200);
+        }
+    },
+    watch:{
+        source_title(n){
+            this.searchSource = n;
+            if(n == '' && this.filterQueryData['source']){
+                this.$emit('filter-data-in-database', 'source', null, true);
+            }
         }
     },
     mounted(){
@@ -160,7 +174,7 @@ export default {
 </script>
 
 <template>
-    <div id="right-filter-bar">
+    <div id="right-filter-bar" class="add-custom-scrollbar">
         <div class="header d-flex justify-content-between align-items-center">
             <div class="d-flex justify-content-start align-items-center">
                 <div class="icon">
@@ -172,7 +186,7 @@ export default {
                 <svg class="svg-5"  xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path  d="M0 0h24v24H0z" fill="none"></path> <path  d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
             </div>
         </div>
-        <vue-custom-scrollbar class="filter" :settings="settings" >
+        <CustomScrollbar class="filter" thumbWidth="8">
             <div class="filter-options">
                 <!-- Owner -->
                 <div class="filter-option">
@@ -228,7 +242,7 @@ export default {
                     <div class="option-body">
                         <div class="position-relative">
                             <input 
-                            v-model="searchSource"
+                            v-model="source_title"
                             ref="leadSourceRef" 
                             class="form-control" type="text" name="" id="" data-mdb-toggle="dropdown">
                             <div class="dropdown-menu custom-form-select roles overflow-auto" style="max-height:7.5rem;">
@@ -303,7 +317,7 @@ export default {
                 <div class="filter-option">
                     <div 
                     class="option-header d-flex justify-content-between align-items-center" 
-                    @click="optionToggle($event, 'created')">
+                    @click="optionToggle($event, 'updated')">
                         <div class="d-flex justify-content-start align-items-center">
                             <div class="icon">
                                 <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"></path></svg>
@@ -412,7 +426,7 @@ export default {
 
                 
             </div>
-        </vue-custom-scrollbar>
+        </CustomScrollbar>
 
     </div>
 </template>

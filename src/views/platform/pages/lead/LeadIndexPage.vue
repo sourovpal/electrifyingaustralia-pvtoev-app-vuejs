@@ -13,7 +13,7 @@ import FilterRightSidebar from './FilterRightSidebar.vue';
 import DataTableSkeletor from './DataTableSkeletor.vue';
 import DataNotFound from './DataNotFound.vue';
 
-import {FetchLeads} from '../../../../actions/LeadAction';
+import {FetchLeads, UpdateLeadPropertieHeaders} from '../../../../actions/LeadAction';
 
 export default {
   components: {
@@ -183,6 +183,7 @@ export default {
             }else{
                 this.disabledHeaderColumns.push(key);
             }
+            this.updatePropertieHeadersHandler();
         }catch(error){}
     },
     selectedAllRowsHandler(){
@@ -223,6 +224,15 @@ export default {
                 this.isSelectedAllRowsReset = false;
             }
         }catch(error){}
+    },
+    async updatePropertieHeadersHandler(){
+        try{
+            const res = await UpdateLeadPropertieHeaders({properties:this.disabledHeaderColumns});
+        }catch(error){
+            this.$toast.error('Oops, something went wrong');
+        }finally{
+
+        }
     }
   },
   mounted() {

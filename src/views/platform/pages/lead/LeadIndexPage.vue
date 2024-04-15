@@ -13,7 +13,7 @@ import FilterRightSidebar from './FilterRightSidebar.vue';
 import DataTableSkeletor from './DataTableSkeletor.vue';
 import DataNotFound from './DataNotFound.vue';
 
-import {FetchLeads, UpdateLeadPropertieHeaders} from '../../../../actions/LeadAction';
+import {FetchLeads, UpdateLeadPropertieHeaders, UpdateLeadStatus} from '../../../../actions/LeadAction';
 
 export default {
   components: {
@@ -231,8 +231,35 @@ export default {
         }catch(error){
             this.$toast.error('Oops, something went wrong');
         }finally{
-
+            
         }
+    },
+    async updateLeadStatusHandler(lead, status){
+        try{
+            var data = {
+                lead_id:lead.id,
+                status_id:status.id,
+                prev_status_id:lead.status?.id,
+            };
+            const res = await UpdateLeadStatus(data);
+            lead.status.name = status?.name;
+        }catch(error){
+            try{
+                var message = error.response.data.message;
+                this.$toast[message.type](message.text);
+            }catch(e){
+                this.$toast.error('Oops, something went wrong');
+            }
+        }
+    },
+    copyPhoneNumberHandler(lead){
+        var phone = lead.contact?.phone_number;
+        if(phone){
+            navigator.clipboard.writeText(phone)
+            this.$toast.success(`${phone} Copied to Clipboard`);
+            return phone;
+        }
+        this.$toast.error('Oops, Empty phone number.');
     }
   },
   mounted() {
@@ -405,7 +432,7 @@ export default {
                 </div>
 
                 <div v-show="!disabledHeaderColumns.includes('lead')" style="width:20rem;flex-grow: 1;" class="tbl-td full-width">
-                    <router-link class="text-overflow-ellipsis" :to="`/platform/leads/${lead.id}`"> {{ lead.contact?.full_name }} </router-link>
+                    <router-link class="text-overflow-ellipsis" :to="`/platform/leads/${lead.id}`"> {{ lead.contact?.title??lead.contact?.full_name }} </router-link>
                 </div>
         
                 <div v-show="!disabledHeaderColumns.includes('source')" style="width:10rem;flex-grow: 1;" class="tbl-td">
@@ -422,17 +449,16 @@ export default {
                         </button>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                             
-                            <a
+                            <span
                             style="width:170px;"
                             v-for="(status, index) in leadStatus" 
                             :key="index" 
-                            class="dropdown-item d-flex justify-content-between align-items-center" 
-                            href="#"
-                            @click="lead.status.name=status.name"
+                            class="dropdown-item d-flex justify-content-between align-items-center cursor-pointer" 
+                            @click="updateLeadStatusHandler(lead, status)"
                             >
                                 <span class="text-overflow-ellipsis">{{ status.name }}</span>
                                 <svg v-if="status.is_lost" class="svg-5" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"></path></svg>
-                            </a>
+                            </span>
 
                         </div>
                     </div>
@@ -441,10 +467,10 @@ export default {
                 <div v-show="!disabledHeaderColumns.includes('phone_number')" style="width:12rem;flex-grow: 1;" class="tbl-td">
                     <div class="d-flex justify-content-between align-items-center w-100">
                         <div>
-                            <button title="Copy phone number" class="copy-phone-number" @click="navigator.clipboard.writeText(index)">
+                            <button v-show="lead.contact?.phone_number" @click="copyPhoneNumberHandler(lead)" class="copy-phone-number">
                                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"></path><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>
                             </button>
-                            <a href="tel:+61421147267" target="_blank" title="Call phone number" class="call-btn">
+                            <a v-show="lead.contact?.phone_number" :href="`tel:${lead.contact?.phone_number}`" target="_blank" title="Call phone number" class="call-btn">
                                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"></path></svg>
                             </a>
                         </div>

@@ -16,6 +16,21 @@ const FetchLeads = (payload)=>{
     });
 }
 
+const CreateNewLead = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.post(`/leads`, payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
 const UpdateLeadPropertieHeaders = (payload)=>{
     return new Promise((resolve, reject)=>{
         try{
@@ -30,6 +45,7 @@ const UpdateLeadPropertieHeaders = (payload)=>{
         }
     });
 }
+
 const UpdateLeadStatus = (payload)=>{
     return new Promise((resolve, reject)=>{
         try{
@@ -48,5 +64,6 @@ const UpdateLeadStatus = (payload)=>{
 export {
     FetchLeads,
     UpdateLeadPropertieHeaders,
-    UpdateLeadStatus
+    UpdateLeadStatus,
+    CreateNewLead
 }

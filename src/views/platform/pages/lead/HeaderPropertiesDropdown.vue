@@ -16,11 +16,11 @@ export default {
 <template>
     <div class="dropdown-menu" id="table_header_properties" @click="(e)=>e.stopPropagation()">
         <div class="row pb-2">
-            <div class="col-6">
+            <div class="col-6 pe-0">
                 <div class="pb-2 pt-2 ps-3 pe-3">
-                    <h6 class="fs-16px fw-bold">Lead properties</h6>
+                    <h6 class="fs-16px fw-bold mb-0 border-bottom pb-2 text-center">Lead properties</h6>
                 </div>
-                <div class="">
+                <div class="properties-list">
                     <label
                     v-for="(header, index) in headers" :key="index" 
                     @click="toggleHeaderProperties(header.unique_id)"
@@ -33,11 +33,11 @@ export default {
                     </label>
                 </div>
             </div>
-            <div class="col-6">
+            <div class="col-6 ps-0">
                 <div class="pb-2 pt-2 ps-2 pe-3">
-                    <h6 class="fs-16px fw-bold">Custom properties</h6>
+                    <h6 class="fs-16px fw-bold mb-0 border-bottom pb-2 text-center">Custom properties</h6>
                 </div>
-                <div class="">
+                <div class="properties-list">
                     <label 
                     v-for="(header, index) in customHeaderColumns" 
                     @click="toggleHeaderProperties(header.unique_id)"
@@ -94,6 +94,10 @@ export default {
                 text-overflow: ellipsis;
                 overflow: hidden;
             }
+        }
+        .properties-list{
+            height:450px;
+            overflow:auto;
         }
     }
 </style>

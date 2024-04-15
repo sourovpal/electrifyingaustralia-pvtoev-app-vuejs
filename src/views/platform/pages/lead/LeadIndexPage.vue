@@ -7,7 +7,7 @@ import RightActionBar from '../../../../components/ActionBar/RightActionBar.vue'
 import Datatable from '../../../../components/Datatable/Datatable.vue';
 import DatatableHeader from '../../../../components/Datatable/DatatableHeader.vue';
 import DatatableBody from '../../../../components/Datatable/DatatableBody.vue';
-import AddNewLeadModal from './AddNewLeadModal.vue';
+import AddNewLeadModal from './components/AddNewLeadModal.vue';
 import HeaderPropertiesDropdown from './HeaderPropertiesDropdown.vue';
 import FilterRightSidebar from './FilterRightSidebar.vue';
 import DataTableSkeletor from './DataTableSkeletor.vue';
@@ -242,7 +242,11 @@ export default {
                 prev_status_id:lead.status?.id,
             };
             const res = await UpdateLeadStatus(data);
-            lead.status.name = status?.name;
+            if(lead.status){
+                lead.status.name = status?.name;
+            }else{
+                lead['status'] = status;
+            }
         }catch(error){
             try{
                 var message = error.response.data.message;
@@ -289,7 +293,6 @@ export default {
         <button class="btn btn-light btn-floating ms-2" :disabled="isLoading" @click="fetchAllLeadsHandler()">
             <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
         </button>
-        {{ filterQueryData }}
     </left-action-bar>
 
     <right-action-bar>
@@ -432,7 +435,7 @@ export default {
                 </div>
 
                 <div v-show="!disabledHeaderColumns.includes('lead')" style="width:20rem;flex-grow: 1;" class="tbl-td full-width">
-                    <router-link class="text-overflow-ellipsis" :to="`/platform/leads/${lead.id}`"> {{ lead.contact?.title??lead.contact?.full_name }} </router-link>
+                    <router-link class="text-overflow-ellipsis" :to="`/platform/leads/${lead.id}`"> {{ lead.lead_title??lead.contact?.full_name }} </router-link>
                 </div>
         
                 <div v-show="!disabledHeaderColumns.includes('source')" style="width:10rem;flex-grow: 1;" class="tbl-td">
@@ -532,7 +535,11 @@ export default {
   </section>
 
 <!-- ============================ -->
-    <add-new-lead-modal/>
+    <add-new-lead-modal
+    ref="AddNewLeadModalRef"
+    :lead-sources="leadSources"
+    :lead-status="leadStatus"
+    />
 
 </template>
 
@@ -564,12 +571,4 @@ export default {
         opacity: 1;
     }
 }
-</style>
-<style>
-    .lead-list .scrollbar__wrapper{
-        height:calc(100vh - 7rem + 9px);
-    }
-    .lead-list .scrollbar__scroller{
-        height: 100%;
-    }
 </style>

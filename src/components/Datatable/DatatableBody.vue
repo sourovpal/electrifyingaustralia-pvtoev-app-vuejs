@@ -24,6 +24,7 @@ export default{
   display:table;
   padding-bottom:100px;
   width:100%;
+  position: relative;
 }
 .tbl-body .tbl-tr{
   display:flex;

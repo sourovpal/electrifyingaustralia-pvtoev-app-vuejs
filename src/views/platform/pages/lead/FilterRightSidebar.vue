@@ -1,6 +1,4 @@
 <script>
-import CustomScrollbar from 'custom-vue-scrollbar';
-
 import {propertiesIconList} from '../../../../asset/svgicon.js';
 export default {
     props:['leadProperties', 'owners', 'leadSources', 'filterQueryData'],
@@ -17,7 +15,6 @@ export default {
         }
     },
     components:{
-        CustomScrollbar
     },
     methods: {
         optionToggle(event, field, ref=null, isCustom=false, item=null){
@@ -174,7 +171,7 @@ export default {
 </script>
 
 <template>
-    <div id="right-filter-bar" class="add-custom-scrollbar">
+    <div id="right-filter-bar">
         <div class="header d-flex justify-content-between align-items-center">
             <div class="d-flex justify-content-start align-items-center">
                 <div class="icon">
@@ -186,7 +183,7 @@ export default {
                 <svg class="svg-5"  xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path  d="M0 0h24v24H0z" fill="none"></path> <path  d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
             </div>
         </div>
-        <CustomScrollbar class="filter" thumbWidth="8">
+        <div class="filter">
             <div class="filter-options">
                 <!-- Owner -->
                 <div class="filter-option">
@@ -426,7 +423,7 @@ export default {
 
                 
             </div>
-        </CustomScrollbar>
+        </div>
 
     </div>
 </template>
@@ -466,7 +463,8 @@ export default {
         }
     }
     .filter{
-        height:100%;
+        height:calc(100vh - 160px);
+        overflow: auto;
         .filter-options{
             padding-bottom:200px;
             .filter-option{

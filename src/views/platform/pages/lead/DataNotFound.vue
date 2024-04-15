@@ -11,9 +11,9 @@
     </script>
     
     <template>
-        <div class="tbl-tr full-width active">
+        <div class="tbl-tr active">
     
-            <div style="width:100%;height:90vh;" class="tbl-td full-width">
+            <div style="width:100%;height:calc(89vh + 3px);" class="tbl-td">
                 <div class="empty-folder">
                     <div>
                         <img :src="empatyFolderIcon" alt="">
@@ -24,8 +24,8 @@
         </div>
     </template>
     <style scoped lang="scss">
-        .full-width{
-            position: relative;
+        .tbl-tr{
+            position: absolute;
         }
         .empty-folder{
             position: absolute;

@@ -316,7 +316,7 @@ export default {
 
 
         <div class="me-3">
-            <button class="btn btn-sm btn-primary fw-bold" data-mdb-toggle="modal" data-mdb-target="#addNewLeadModal">
+            <button class="btn btn-sm btn-primary fw-bold" @click="$refs['AddNewLeadModalRef'].showModalHandler()">
                 <svg class="me-2" width="24" height="24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>account-plus</title><path d="M15,14C12.33,14 7,15.33 7,18V20H23V18C23,15.33 17.67,14 15,14M6,10V7H4V10H1V12H4V15H6V12H9V10M15,12A4,4 0 0,0 19,8A4,4 0 0,0 15,4A4,4 0 0,0 11,8A4,4 0 0,0 15,12Z" /></svg>
                 New Lead
             </button>
@@ -536,9 +536,11 @@ export default {
 
 <!-- ============================ -->
     <add-new-lead-modal
+    :fetchAllLeadsHandler="fetchAllLeadsHandler"
     ref="AddNewLeadModalRef"
     :lead-sources="leadSources"
     :lead-status="leadStatus"
+    :owners="owners"
     />
 
 </template>

@@ -443,7 +443,7 @@ export default {
     height: 100%;
     background: #f5f5f5;
     right: 0;
-    z-index: 999999999;
+    z-index: 999;
     box-shadow: rgba(0, 0, 0, 0.15) -1.95px 1.95px 2.6px;
     user-select: none;
     .close{

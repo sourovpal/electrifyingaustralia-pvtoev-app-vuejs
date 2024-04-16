@@ -30,6 +30,7 @@ export default{
   display:flex;
   width: 100%;
   background-color: #ffffff;
+  transition: all 0.3s ease-in-out;
 }
 .tbl-body .tbl-tr .tbl-td{
   border-bottom: 1px solid rgba(182, 182, 182, 0.4);
@@ -58,8 +59,9 @@ export default{
   }
   .dropdown{
     & > button{
-      border: 1px solid transparent;
       transition: all 0.3s;
+      border: 1px solid rgb(0 0 0 / 9%);
+      padding: 4px 12px;
       &:hover{
         background-color: #f7f7f9;
         border:1px solid #007ee5;
@@ -126,10 +128,10 @@ export default{
 }
 .tbl-body .tbl-tr .tbl-td,
 .tbl-body .tbl-tr .tbl-td a{
-  color: #515253;
+  color: #364a63;
 }
 .tbl-body .tbl-tr .tbl-td a:hover{
-  color: #4aa4ff;
+  color: #3b71ca;
 }
 .tbl-body .tbl-tr.active,
 .tbl-body .tbl-tr:hover{

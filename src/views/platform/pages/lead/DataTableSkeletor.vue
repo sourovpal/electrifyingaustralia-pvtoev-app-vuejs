@@ -72,5 +72,10 @@ export default {
         <div style="width:10rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">
             <Skeletor width="70%" />
         </div>
+        
+        <div style="width:10rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">
+            <Skeletor style="width: 30px; height: 30px;border-radius:50%;" />
+        </div>
+
     </div>
 </template>

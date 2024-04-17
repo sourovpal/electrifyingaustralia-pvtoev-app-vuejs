@@ -46,7 +46,7 @@ const UpdateLeadPropertieHeaders = (payload)=>{
     });
 }
 
-const UpdateLeadStatus = (payload)=>{
+const UpdateMultipelLeadStatus = (payload)=>{
     return new Promise((resolve, reject)=>{
         try{
             api.post(`/leads/status`, payload)
@@ -61,9 +61,41 @@ const UpdateLeadStatus = (payload)=>{
     });
 }
 
+const DeleteMultipleLeads = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.post(`/leads/delete`, payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
+const UpdateMultipelLeadOwner = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.post(`/leads/owner`, payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
 export {
     FetchLeads,
     UpdateLeadPropertieHeaders,
-    UpdateLeadStatus,
-    CreateNewLead
+    UpdateMultipelLeadStatus,
+    CreateNewLead,
+    DeleteMultipleLeads,
+    UpdateMultipelLeadOwner
 }

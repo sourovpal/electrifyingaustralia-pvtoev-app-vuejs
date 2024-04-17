@@ -69,7 +69,7 @@ export default{
       }
     }
     .dropdown-menu{
-      box-shadow: 0 3px 3px -2px rgba(0,0,0,.2), 0 3px 4px 0 rgba(0,0,0,.14), 0 1px 8px 0 rgba(0,0,0,.12);
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
       padding: 6px 0px;
       border-radius: 3px;
       inset: 0px 0px auto auto !important;

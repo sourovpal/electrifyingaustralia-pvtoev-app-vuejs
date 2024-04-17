@@ -74,6 +74,7 @@ export default{
       border-radius: 3px;
       inset: 0px 0px auto auto !important;
       transform: translate3d(0px, 38.4px, 0px) !important;
+      z-index: 1;
       &::after{
           content: "";
           position: absolute;

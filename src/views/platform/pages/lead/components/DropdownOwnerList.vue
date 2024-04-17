@@ -33,7 +33,7 @@
 
 <template>
     <div class="owner-list-dropdown">
-        <div class="dropdown-menu pt-0 dropdown-menu-end" @click="(e)=>{e.stopPropagation()}" style="width:270px">
+        <div class="dropdown-menu pt-0 dropdown-menu-end" @click="(e)=>{e.stopPropagation()}" style="width:250px">
             <!---->
             <div>
                 <div class="dropdown-body">
@@ -73,7 +73,7 @@
                         <div 
                         class="dropdown-item px-2" 
                         v-for="(item, index) in filterOwners()" 
-                        v-show="item?.id != owner?.id"
+                        v-show="item?.email != owner?.email"
                         :key="index"
                         @click="selectOwnerHandler(item)"
                         >
@@ -85,7 +85,7 @@
                                 </div>
                             </span>
                         </div>
-                        <div class="dropdown-item" v-if="!owners?.length">
+                        <div class="dropdown-item px-2" v-if="owners?.length == 1 && owner">
                             <span class="username fs-14px fw-bold">
                                 Owner is not available.
                             </span>
@@ -169,6 +169,15 @@
                 span{
                     display: inline-block;
                     line-height: 18px;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    .project-owner-email,
+                    .team-member-email{
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                    }
                 }
             }
             .project-owner-team-members{
@@ -189,6 +198,15 @@
                     span{
                         display: inline-block;
                         line-height: 18px;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        .project-owner-email,
+                        .team-member-email{
+                            white-space: nowrap;
+                            text-overflow: ellipsis;
+                            overflow: hidden;
+                        }
                     }
                 }
             }

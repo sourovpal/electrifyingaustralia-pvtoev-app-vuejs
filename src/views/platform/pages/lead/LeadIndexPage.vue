@@ -255,11 +255,7 @@ export default {
                 };
                 const res = await UpdateMultipelLeadStatus(data);
                 if(lead){
-                    if(lead.status){
-                        lead.status.name = status?.name;
-                    }else{
-                        lead['status'] = status;
-                    }
+                    lead['status'] = status;
                 }else{
                     this.fetchAllLeadsHandler();
                 }
@@ -361,7 +357,7 @@ export default {
         class="dropdown ms-2">
             <button 
             style="width:130px;"
-            class="btn btn-sm btn-light fw-400 d-flex justify-content-between align-items-center multiple-lead-status-btn" 
+            class="btn btn-sm btn-outline-secondary fw-400 d-flex justify-content-between align-items-center multiple-lead-status-btn" 
             type="button" 
             data-mdb-toggle="dropdown" 
             aria-expanded="false">
@@ -436,7 +432,7 @@ export default {
         <div class="me-3">
             <div class="dropdown import-dropdown">
                 <button 
-                class="btn btn-sm btn-light fw-bold d-flex align-items-center" 
+                class="btn btn-sm btn-outline-secondary multiple-lead-status-btn fw-bold d-flex align-items-center" 
                 v-tippy='{ content:"Import File or Connect", placement : "top" }'
                 type="button" data-mdb-toggle="dropdown" aria-expanded="false">
                     <span class="pe-4">Import</span>
@@ -566,7 +562,7 @@ export default {
                 
                 <div v-show="!disabledHeaderColumns.includes('status')" style="width:12rem;flex-grow: 1;" class="tbl-td">
                     <div class="dropdown w-100">
-                        <button class="btn btn-sm btn-light fw-400 w-100 d-flex justify-content-between align-items-center" type="button" data-mdb-toggle="dropdown" aria-expanded="false">
+                        <button class="btn btn-sm btn-outline-secondary fw-400 w-100 d-flex justify-content-between align-items-center" type="button" data-mdb-toggle="dropdown" aria-expanded="false">
                             <span class="fw-bold text-fs tbl-dropdown-title text-overflow-ellipsis">{{ lead.status?.name??'Lead Status' }}</span>
                             <div class="dropdown--icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>

@@ -12,6 +12,7 @@ const propertiesIconList = {
 
 const icons = {
     avatar:'/src/asset/icon/white-avatar.png',
+    empty_folder:'/src/asset/icon/empty-folder-1.png',
 };
 
 

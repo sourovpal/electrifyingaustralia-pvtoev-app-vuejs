@@ -172,8 +172,7 @@
                 }
             }
             .project-owner-team-members{
-                /* max-width:19rem; */
-                max-height:250px;
+                max-height:290px;
                 overflow: auto;
                 .dropdown-item{
                     display: flex;

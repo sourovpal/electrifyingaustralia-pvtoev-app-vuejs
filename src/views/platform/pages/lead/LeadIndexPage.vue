@@ -567,7 +567,7 @@ export default {
                 <div v-show="!disabledHeaderColumns.includes('status')" style="width:12rem;flex-grow: 1;" class="tbl-td">
                     <div class="dropdown w-100">
                         <button class="btn btn-sm btn-light fw-400 w-100 d-flex justify-content-between align-items-center" type="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                            <span class="fw-bold text-fs tbl-dropdown-title text-overflow-ellipsis">{{ lead.status?.name }}</span>
+                            <span class="fw-bold text-fs tbl-dropdown-title text-overflow-ellipsis">{{ lead.status?.name??'Lead Status' }}</span>
                             <div class="dropdown--icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
                             </div>
@@ -578,7 +578,8 @@ export default {
                             style="width:170px;"
                             v-for="(status, index) in leadStatus" 
                             :key="index" 
-                            class="dropdown-item d-flex justify-content-between align-items-center cursor-pointer py-1" 
+                            class="dropdown-item d-flex justify-content-between align-items-center cursor-pointer py-1"
+                            :class="`${status.name == lead.status?.name?'selected':''}`"
                             @click="updateLeadStatusHandler([lead.id], status, lead)"
                             >
                                 <span class="text-overflow-ellipsis">{{ status.name }}</span>

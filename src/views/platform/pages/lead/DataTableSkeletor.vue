@@ -27,7 +27,7 @@ export default {
         </div>
         
         <div style="width:12rem;flex-grow: 1;" class="tbl-td full-width">
-            <Skeletor width="70%" style="height:25px;border-radius:3px;" />
+            <Skeletor width="100%" style="height:28px;border-radius:3px;" />
         </div>
         
         <div style="width:12rem;flex-grow: 1;" class="tbl-td d-none d-lg-flex">

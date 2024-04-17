@@ -389,7 +389,7 @@ export default {
         class="settings-group-item owner-list-dropdown ms-3 ps-2 position-relative">
             <button class="owner-dropdown-toggler" data-mdb-toggle="dropdown" aria-expanded="false" v-tippy='{ content:"Change Owner", placement : "top" }'>
                 <div class="icon">
-                    <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&d=mm&r=PG" alt="">
+                    <img :src="icons.avatar" alt="">
                 </div>
             </button>
             <DropdownOwnerList

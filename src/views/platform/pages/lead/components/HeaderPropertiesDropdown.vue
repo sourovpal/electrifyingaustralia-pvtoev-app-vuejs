@@ -1,5 +1,5 @@
 <script>
-import {headers} from './data';
+import {headers} from '../data';
 export default {
     props:['toggleHeaderProperties', 'customHeaderColumns', 'disabledHeaderColumns'],
     data() {

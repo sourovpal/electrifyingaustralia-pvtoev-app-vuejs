@@ -48,16 +48,16 @@
     
                     <div v-if="owner" class="dropdown-item noselect px-2">
                         <img :src="owner?.profile_avatar" draggable="false" />
-                        <span class="fs-14px fw-bold">
+                        <span class="fs-14px fw-bold text-head">
                             {{ owner?.name }}
-                            <div class="project-owner-email text-muted fs-12px">
+                            <div class="project-owner-email text-muted fs-12px text-head">
                                 {{ owner?.email }}
                             </div>
                         </span>
                     </div>
 
                     <div v-if="!owner" class="dropdown-item noselect" @click="selectOwnerHandler(null)">
-                        <img :src="icons.avatar" draggable="false" alt="No Owner's avatar" class="project-owner__profile-photo" />
+                        <img :src="icons?.avatar" draggable="false" alt="No Owner's avatar" class="project-owner__profile-photo" />
                         <span class="fs-14px fw-bold">
                             No Owner
                             <div class="project-owner-email text-muted fs-12px"></div>
@@ -78,14 +78,14 @@
                         @click="selectOwnerHandler(item)"
                         >
                             <img :src="item.profile_avatar" draggable="false" />
-                            <span class="username fs-14px">
+                            <span class="username fs-14px text-head fw-bold">
                                 {{ item.name }}
-                                <div class="team-member-email text-muted fs-12px">
+                                <div class="team-member-email text-muted fs-12px text-head">
                                     {{ item.email }}
                                 </div>
                             </span>
                         </div>
-                        <div class="dropdown-item px-2" v-if="owners?.length == 1 && owner">
+                        <div class="dropdown-item px-2" v-if="(owners?.length == 1 && owner) || !owners?.length">
                             <span class="username fs-14px fw-bold">
                                 Owner is not available.
                             </span>

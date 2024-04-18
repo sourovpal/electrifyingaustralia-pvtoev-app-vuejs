@@ -91,11 +91,43 @@ const UpdateMultipelLeadOwner = (payload)=>{
     });
 }
 
+const FetchLeadPipelineWithStage = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.get(`/leads/pipelines`, payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
+const ConfirmQualify = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.post(`/leads/confirm-qualify`, payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
 export {
     FetchLeads,
     UpdateLeadPropertieHeaders,
     UpdateMultipelLeadStatus,
     CreateNewLead,
     DeleteMultipleLeads,
-    UpdateMultipelLeadOwner
+    UpdateMultipelLeadOwner,
+    FetchLeadPipelineWithStage,
+    ConfirmQualify,
 }

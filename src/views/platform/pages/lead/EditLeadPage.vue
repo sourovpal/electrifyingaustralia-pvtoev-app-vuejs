@@ -4,14 +4,19 @@ import SearchBar from '../../../../components/SearchBar.vue';
 import ActionBar from '../../../../components/ActionBar/ActionBar.vue';
 import LeftActionBar from '../../../../components/ActionBar/LeftActionBar.vue';
 import RightActionBar from '../../../../components/ActionBar/RightActionBar.vue';
+import LeadQualifyModal from './components/LeadQualifyModal.vue';
 
 import CustomScrollbar from 'custom-vue-scrollbar';
-import 'custom-vue-scrollbar/dist/style.css';
 
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import '@vueup/vue-quill/dist/vue-quill.bubble.css';
+import { Skeletor } from 'vue-skeletor';
 
+import {
+    FetchLeads,
+    FetchLeadPipelineWithStage,
+} from '../../../../actions/LeadAction';
 
 export default {
   components: {
@@ -20,11 +25,23 @@ export default {
     LeftActionBar,
     RightActionBar,
     CustomScrollbar,
-    QuillEditor
+    QuillEditor,
+    LeadQualifyModal,
+    Skeletor,
 },
   data() {
     return {
-      selectAllIds:[],
+        fetch:"lead_properties,lead_sources,owners,pipelines",
+        findLead:null,
+        leadStatus:[],
+        leadSources:[],
+        leadProperties:[],
+        pipelines:[],
+        owners:[],
+        owner:null,
+        currentOwner:null,
+        isLoading:false,
+        isFirstLoading:false,
     }
   },
   methods: {
@@ -58,10 +75,62 @@ export default {
             }
         }
     },
-
+    async findLeadByIdHandler(fetch=""){
+        try{
+            this.isLoading = true;
+            var fetchArr = fetch.split(',');
+            var leadId = this.$route.params?.id??'';
+            var payload = {
+                lead_id:leadId,
+            };
+            if(fetch != ""){
+                payload['fetch'] = fetch;
+            }
+            const res = await FetchLeads(payload);
+            try{
+                const {lead, lead_properties, pipelines, owners, lead_sources} = res;
+                this.isFirstLoading = false;
+                this.findLead = lead;
+                if(this.findLead){
+                    if(this.findLead?.owner){
+                        this.owner = this.findLead.owner;
+                        this.currentOwner = this.owner;
+                    }
+                }
+                if(fetchArr.includes('lead_properties')){
+                    this.leadProperties = lead_properties;
+                }
+                if(fetchArr.includes('owners')){
+                    this.owners = owners;
+                }
+                if(fetchArr.includes('pipelines')){
+                    this.pipelines = pipelines;
+                }
+                if(fetchArr.includes('lead_sources')){
+                    this.leadSources = lead_sources;
+                }
+            }catch(error){
+                throw new Error(error.message);
+            }
+        }catch(error){
+            try{
+                var message = error.response.data.message;
+                this.$toast[message.type](message.text);
+            }catch(e){
+                this.$toast.error('Oops, something went wrong');
+            }
+        }finally{
+            this.isFirstLoading = false;
+            this.isLoading = false;
+        }
+    },
   },
-  watch:{
-  }
+  mounted() {
+        this.isFirstLoading = true;
+        this.findLeadByIdHandler(this.fetch);
+        const {lead_statuses} = this.$cookies.get(import.meta.env.VITE_AUTH_APP);
+        this.leadStatus = lead_statuses;
+    },
 }
 </script>
 
@@ -72,49 +141,69 @@ export default {
 
     <action-bar>
 
-        <left-action-bar>
-            <div class="ms-3 d-flex flex-row justify-content-start align-items-center left-hover-action">
-                <div class="d-flex flex-row justify-content-start align-items-center">
-                    <h5 class="text-head mb-0 fs-18px fw-bold">Mae Adams</h5>
-                    <div class="div-hover-effice d-flex justify-content-center align-item-start" style="margin-left: 14px;">
+        <left-action-bar style="flex-grow: 1;">
+            <div class="ms-3 d-flex flex-row justify-content-start align-items-center left-hover-action" style="flex-grow: 1;">
+                <div class="d-flex flex-row justify-content-start align-items-center cursor-pointer select-none">
+                    <Skeletor  v-if="isFirstLoading" width="250px" />
+                    <h5 v-if="!isFirstLoading" class="text-head mb-0 fs-16px fw-bold lead-title-text">{{ findLead?.lead_title??findLead?.contact?.full_name }}</h5>
+                    <button class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-2" style="margin-left: 14px;">
                         <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg>
-                    </div>
-                </div>
-                <div class="item wh-40 div-hover-effice">
-                    <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>
+                    </button>
+                    <button class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-3">
+                        <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>
+                    </button>
                 </div>
             </div>
         </left-action-bar>
 
         <right-action-bar>
-            <div class="item wh-40">
-                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14l-6-6z"></path></svg>
-            </div>
-            <div class="item wh-40">
-                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M24 24H0V0h24v24z" fill="none" opacity=".87"></path><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z"></path></svg>
-            </div>
-            <div class="item d-none d-lg-flex">
-                <button class="btn btn-sm btn-primary fw-bold" data-mdb-toggle="modal" data-mdb-target="#addNewLeadModal">
-                    <svg class="me-2" width="24" height="24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>account-plus</title><path d="M15,14C12.33,14 7,15.33 7,18V20H23V18C23,15.33 17.67,14 15,14M6,10V7H4V10H1V12H4V15H6V12H9V10M15,12A4,4 0 0,0 19,8A4,4 0 0,0 15,4A4,4 0 0,0 11,8A4,4 0 0,0 15,12Z" /></svg>
-                    Qualify
+            <button class="toolbar-btn btn btn-light btn-sm btn-floating me-3">
+                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14l-6-6z"></path></svg>
+            </button>
+            <button class="toolbar-btn btn btn-light btn-sm btn-floating me-3">
+                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M24 24H0V0h24v24z" fill="none" opacity=".87"></path><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z"></path></svg>
+            </button>
+
+            <button 
+            @click="$refs['leadQualifyModalRef'].showModalHandler()"
+            class="btn btn-sm btn-primary fw-bold me-3">
+                <svg class="me-1" xmlns="http://www.w3.org/2000/svg" height="24" fill="currentColor" viewBox="0 -960 960 960" width="24"><path d="M707-485 581-612l51-51 75 74 160-159 52 52-212 211Zm-352-2q-71.462 0-116.231-44.769Q194-576.537 194-648t44.769-116.231Q283.538-809 355-809q71.462 0 116.231 44.769Q516-719.463 516-648t-44.769 116.231Q426.462-487 355-487ZM20-130v-109q0-39.113 18.594-69.548Q57.187-338.982 92-354q77-35 138.292-49 61.293-14 124.5-14Q418-417 479-403t138 49q34.812 16.018 53.906 45.952Q690-278.113 690-239v109H20Zm73-73h524v-36q0-16-7.825-29.674T588-288q-72-33-123.5-44.5T355-344q-58 0-110 11.5T122-288q-13.8 5.652-21.4 19.326Q93-255 93-239v36Zm262-357q38 0 63-25t25-63q0-38-25-63t-63-25q-38 0-63 25t-25 63q0 38 25 63t63 25Zm0 286Zm0-374Z"/></svg>
+                Qualify
+            </button>
+            <lead-qualify-modal 
+            :leadStatus="leadStatus"
+            :pipelines="pipelines"
+            :owners="owners"
+            :owner="owner"
+            ref="leadQualifyModalRef" />
+
+            <!-- lead status -->
+            <div v-tippy='{ content:"Change Lead Status", placement : "top" }'
+            class="dropdown me-3">
+                <button style="width:130px;" type="button" 
+                class="btn btn-sm btn-outline-secondary fw-400 d-flex justify-content-between align-items-center curtom-dropdown-toggler-btn" 
+                data-mdb-toggle="dropdown" 
+                aria-expanded="false">
+                    <span class="fw-bold text-fs tbl-dropdown-title text-overflow-ellipsis text-head">Lead Status</span>
+                    <div class="dropdown--icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                    </div>
                 </button>
-            </div>
-            <div class="item d-none d-lg-flex">
-                <div class="dropdown import-dropdown">
-                    <button class="btn btn-sm btn-light fw-bold d-flex align-items-center" type="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                        <span class="pe-4">New</span>
-                        <div class="dropdown--icon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
-                        </div>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">Upload spreadsheet...</a></li>
-                    <li><a class="dropdown-item" href="#">Connect to lead providers</a></li>
-                    </ul>
+                <div class="dropdown-menu dropdown-menu-end shadow-md multiple-lead-status-dropdown" aria-labelledby="dropdownMenuButton">
+                    <span
+                    style="width:170px;"
+                    v-for="(status, index) in leadStatus"
+                    :key="index" 
+                    @click="updateLeadStatusHandler(selectedRows, status)"
+                    class="dropdown-item d-flex justify-content-between align-items-center cursor-pointer py-1">
+                        <span class="text-overflow-ellipsis text-head">{{ status.name }}</span>
+                        <svg v-if="status.is_lost" class="svg-5" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"></path></svg>
+                    </span>
                 </div>
             </div>
 
-            <div class="settings-group-item owner-list-dropdown mx-2">
+
+            <div class="settings-group-item owner-list-dropdown me-3">
                 <button class="owner-dropdown-toggler" data-mdb-toggle="dropdown" aria-expanded="false">
                     <div class="icon">
                         <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&d=mm&r=PG" alt="">
@@ -161,7 +250,7 @@ export default {
                 </div>
             </div>
 
-            <div class="settings-group-item owner-list-dropdown mx-2">
+            <div class="settings-group-item owner-list-dropdown me-3">
                 <button class="owner-dropdown-toggler" data-mdb-toggle="dropdown" aria-expanded="false">
                     <div class="icon">
                         <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&d=mm&r=PG" alt="">
@@ -209,23 +298,22 @@ export default {
             </div>
 
 
+            <button class="toolbar-btn btn btn-light btn-sm btn-floating me-3">
+                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"></path> <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5v-3h3.56c.69 1.19 1.97 2 3.45 2s2.75-.81 3.45-2H19v3zm0-5h-4.99c0 1.1-.9 2-2 2s-2-.9-2-2H5V5h14v9z"></path></svg>
+            </button>
 
-            <div class="item d-none d-lg-flex wh-40" data-mdb-toggle="dropdown">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"></path> <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5v-3h3.56c.69 1.19 1.97 2 3.45 2s2.75-.81 3.45-2H19v3zm0-5h-4.99c0 1.1-.9 2-2 2s-2-.9-2-2H5V5h14v9z"></path></svg>
-            </div>
-
-            <div class="item wh-40">
-                <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"></path> <path d="M6.41,21L5,19.59l4.83-4.83c0.75-0.75,1.17-1.77,1.17-2.83v-5.1L9.41,8.41L8,7l4-4l4,4l-1.41,1.41L13,6.83v5.1 c0,1.06,0.42,2.08,1.17,2.83L19,19.59L17.59,21L12,15.41L6.41,21z"></path></svg>
-            </div>
-            <div class="item wh-40">
-                <svg height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
-            </div>
+            <button class="toolbar-btn btn btn-light btn-sm btn-floating me-3">
+                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="20px" viewBox="0 0 24 24" width="20px"><path d="M0 0h24v24H0V0z" fill="none"></path> <path d="M6.41,21L5,19.59l4.83-4.83c0.75-0.75,1.17-1.77,1.17-2.83v-5.1L9.41,8.41L8,7l4-4l4,4l-1.41,1.41L13,6.83v5.1 c0,1.06,0.42,2.08,1.17,2.83L19,19.59L17.59,21L12,15.41L6.41,21z"></path></svg>
+            </button>
+            <button class="toolbar-btn btn btn-light btn-sm btn-floating me-3">
+                <svg class="svg-5" height="20px" viewBox="0 0 24 24" width="20px" xmlns="http://www.w3.org/2000/svg"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+            </button>
             
         </right-action-bar>
 
     </action-bar>
 
-    <section class="h-100">
+    <!-- <section class="h-100">
         <div class="col-area">
             <div class="col-left">
                 <CustomScrollbar>
@@ -409,7 +497,6 @@ export default {
                             </button>
                         </div>
                     </div>
-                    <!--  -->
                     <div class="personal-info px-3 py-3 border-bottom">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                             <h3 class="user-name fs-18px fw-bold text-head mb-0">Mae Adams</h3>
@@ -453,7 +540,9 @@ export default {
                                 </tr>
                             </table>
                         </div>
-                    </div> <!-- end personal-info  -->
+                    </div> 
+
+
                     <div>
                         <div class="dropdown-box border-bottom">
                             <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center">
@@ -466,13 +555,14 @@ export default {
                                         <svg class="svg-3" height="18px" viewBox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></svg>
                                     </button>
                                 </div>
-                            </div><!-- dropdown header -->
+                            </div>
+
                             <div class="dropdown-body" style="height:0px;">
                                 <div class=" px-3 py-1 pb-2">
                                     <span class="text-head fs-14px">Nothing pinned</span>
                                 </div>
-                            </div> <!-- dropdown body end  -->
-                        </div> <!-- dropdown box end -->
+                            </div>
+                        </div>
                     </div>
                     <div class="p-3 border-bottom">
                         <div class="d-flex justify-content-between align-items-center mb-1">
@@ -629,7 +719,7 @@ export default {
                             </div>
                         </form>
                     </div>
-                    <!-- Dropdown Section -->
+                    
                     <div class="">
                         <div class="dropdown-box border-bottom">
                             <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center">
@@ -639,7 +729,7 @@ export default {
                                         <svg class="svg-3" height="18px" viewBox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></svg>
                                     </button>
                                 </div>
-                            </div><!-- dropdown header -->
+                            </div>
                             <div class="dropdown-body" style="height:0px;">
                                 <div class=" px-3 py-1 pb-2 fs-12px">
                                     <div class="lead-files">
@@ -657,8 +747,8 @@ export default {
                                         <input accept=".xlsx,.xls,.csv,.png,.jpeg,.jpg,.pdf,.doc,.docx,.pages,.svg" type="file" multiple="multiple" style="display: none;">
                                     </div>
                                 </div>
-                            </div> <!-- dropdown body end  -->
-                        </div> <!-- dropdown box end -->
+                            </div>
+                        </div>
                         <div class="dropdown-box border-bottom">
                             <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center">
                                 <span class="fw-bold fs-14px text-uppercase text-head d-block">Tags</span>
@@ -667,7 +757,7 @@ export default {
                                         <svg class="svg-3" height="18px" viewBox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></svg>
                                     </button>
                                 </div>
-                            </div><!-- dropdown header -->
+                            </div>
                             <div class="dropdown-body" style="height: 0px;">
                                 <div class=" px-3 py-1 pb-2 fs-12px">
                                     <div class="lead-files">
@@ -685,8 +775,8 @@ export default {
                                         <input accept=".xlsx,.xls,.csv,.png,.jpeg,.jpg,.pdf,.doc,.docx,.pages,.svg" type="file" multiple="multiple" style="display: none;">
                                     </div>
                                 </div>
-                            </div> <!-- dropdown body end  -->
-                        </div> <!-- dropdown box end -->
+                            </div>
+                        </div>
                         <div class="dropdown-box border-bottom">
                             <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center show">
                                 <span class="fw-bold fs-14px text-uppercase text-head d-block">Project Designs</span>
@@ -695,7 +785,7 @@ export default {
                                         <svg class="svg-3" height="18px" viewBox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></svg>
                                     </button>
                                 </div>
-                            </div><!-- dropdown header -->
+                            </div>
                             <div class="dropdown-body">
                                 <div class=" px-3 py-1 pb-2 fs-12px">
                                     <div class="lead-files">
@@ -713,8 +803,8 @@ export default {
                                         <input accept=".xlsx,.xls,.csv,.png,.jpeg,.jpg,.pdf,.doc,.docx,.pages,.svg" type="file" multiple="multiple" style="display: none;">
                                     </div>
                                 </div>
-                            </div> <!-- dropdown body end  -->
-                        </div> <!-- dropdown box end -->
+                            </div>
+                        </div>
                         <div class="dropdown-box border-bottom">
                             <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center show">
                                 <span class="fw-bold fs-14px text-uppercase text-head d-block">Notes</span>
@@ -726,7 +816,7 @@ export default {
                                         <svg class="svg-3" height="18px" viewBox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></svg>
                                     </button>
                                 </div>
-                            </div><!-- dropdown header -->
+                            </div>
                             <div class="dropdown-body">
                                 <div class=" px-3 py-1 pb-2 fs-12px lead-timeline-notes">
                                     <QuillEditor theme="snow"  :toolbar="[]" />
@@ -734,8 +824,8 @@ export default {
                                         <button class="btn btn-sm btn-outline-primary">Save Notes</button>
                                     </div>
                                 </div>
-                            </div> <!-- dropdown body end  -->
-                        </div> <!-- dropdown box end -->
+                            </div>
+                        </div>
                         <div class="dropdown-box border-bottom">
                             <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center show">
                                 <span class="fw-bold fs-14px text-uppercase text-head d-block">Uploaded files</span>
@@ -747,7 +837,7 @@ export default {
                                         <svg class="svg-3" height="18px" viewBox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></svg>
                                     </button>
                                 </div>
-                            </div><!-- dropdown header -->
+                            </div>
                             <div class="dropdown-body" style="height:100%;">
                                 <div class=" px-3 py-1 pb-2 fs-12px">
                                     <div class="lead-files">
@@ -765,14 +855,14 @@ export default {
                                         <input accept=".xlsx,.xls,.csv,.png,.jpeg,.jpg,.pdf,.doc,.docx,.pages,.svg" type="file" multiple="multiple" style="display: none;">
                                     </div>
                                 </div>
-                            </div> <!-- dropdown body end  -->
-                        </div> <!-- dropdown box end -->
+                            </div>
+                        </div>
                         <div style="height:10rem;"></div>
                     </div>
                 </CustomScrollbar>
             </div>
         </div>
-    </section>
+    </section> -->
 
     
   </section>
@@ -782,6 +872,12 @@ export default {
 </template>
 
 <style scoped lang="scss">
+    .lead-title-text{
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        max-width:280px;
+    }
     .col-area{
         display:flex;
         height: 100%;
@@ -874,13 +970,13 @@ export default {
         }
     }
     .left-hover-action{
-        .div-hover-effice{
+        .hover-effice{
             opacity: 0;
             transition:opacity 0.3s ease-in-out;
             cursor: pointer;
         }
         &:hover{
-            .div-hover-effice{
+            .hover-effice{
                 opacity: 1;
             }
         }
@@ -1141,7 +1237,28 @@ export default {
             }
         }
     }
-
+    .curtom-dropdown-toggler-btn{
+        border: 1px solid rgba(0, 0, 0, 0.09);
+        &:hover{
+            background-color: #f7f7f9 !important;
+            border: 1px solid #007ee5 !important;
+            box-shadow: 0 1px 3px rgba(0, 126, 229, 0.34) !important;
+        }
+    }
+    .multiple-lead-status-dropdown{
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+        border-radius:3px;
+        ::after {
+            content: "";
+            position: absolute;
+            top: -6px;
+            right: 20px;
+            border: 7px solid white;
+            transform: rotate(45deg);
+            border-bottom-color: transparent;
+            border-right-color: transparent;
+        }
+    }
 </style>
 <style>
     .lead-timeline-notes .ql-container.ql-snow{

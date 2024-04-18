@@ -8,10 +8,10 @@ import RightActionBar from '../../../../components/ActionBar/RightActionBar.vue'
 import Datatable from '../../../../components/Datatable/Datatable.vue';
 import DatatableHeader from '../../../../components/Datatable/DatatableHeader.vue';
 import DatatableBody from '../../../../components/Datatable/DatatableBody.vue';
-import HeaderPropertiesDropdown from './HeaderPropertiesDropdown.vue';
-import FilterRightSidebar from './FilterRightSidebar.vue';
-import DataTableSkeletor from './DataTableSkeletor.vue';
-import DataNotFound from './DataNotFound.vue';
+import HeaderPropertiesDropdown from './components/HeaderPropertiesDropdown.vue';
+import FilterRightSidebar from './components/FilterRightSidebar.vue';
+import DataTableSkeletor from './components/DataTableSkeletor.vue';
+import DataNotFound from './components/DataNotFound.vue';
 import AddNewLeadModal from './components/AddNewLeadModal.vue';
 import DeleteMultipleLeadWarningModal from './components/DeleteMultipleLeadWarningModal.vue';
 import DropdownOwnerList from './components/DropdownOwnerList.vue';
@@ -44,7 +44,7 @@ export default {
         return {
             icons:{},
             isLoading:false,
-            fetch:"headers,lead_properties,lead_sources,owners,",
+            fetch:"headers,lead_properties,lead_sources,owners",
             limit:50,
             toggleFilterSidebar:false,
             selectedRows:[],
@@ -357,7 +357,7 @@ export default {
         class="dropdown ms-2">
             <button 
             style="width:130px;"
-            class="btn btn-sm btn-outline-secondary fw-400 d-flex justify-content-between align-items-center multiple-lead-status-btn" 
+            class="btn btn-sm btn-outline-secondary fw-400 d-flex justify-content-between align-items-center curtom-dropdown-toggler-btn" 
             type="button" 
             data-mdb-toggle="dropdown" 
             aria-expanded="false">
@@ -432,7 +432,7 @@ export default {
         <div class="me-3">
             <div class="dropdown import-dropdown">
                 <button 
-                class="btn btn-sm btn-outline-secondary multiple-lead-status-btn fw-bold d-flex align-items-center" 
+                class="btn btn-sm btn-outline-secondary curtom-dropdown-toggler-btn fw-bold d-flex align-items-center" 
                 v-tippy='{ content:"Import File or Connect", placement : "top" }'
                 type="button" data-mdb-toggle="dropdown" aria-expanded="false">
                     <span class="pe-4 text-head">Import</span>
@@ -719,17 +719,17 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.multiple-lead-status-btn{
+.curtom-dropdown-toggler-btn{
     border: 1px solid rgba(0, 0, 0, 0.09);
     &:hover{
-        background-color: #f7f7f9;
-        border: 1px solid #007ee5;
-        box-shadow: 0 1px 3px rgba(0, 126, 229, 0.34);
+        background-color: #f7f7f9 !important;
+        border: 1px solid #007ee5 !important;
+        box-shadow: 0 1px 3px rgba(0, 126, 229, 0.34) !important;
     }
 }
 .multiple-lead-status-dropdown{
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-    border-radius:2px;
+    border-radius:3px;
     ::after {
         content: "";
         position: absolute;

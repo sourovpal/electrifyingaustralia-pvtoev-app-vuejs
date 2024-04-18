@@ -189,7 +189,7 @@
                         <div class="mb-3">
                             <label class="form-label-title" for="">Lead source <span class="text-soft fs-12px ms-1">(Optional)</span> </label>
                             <input @click="delete errors?.lead_source" class="form-control" v-model="source_title" type="text" data-mdb-toggle="dropdown">
-                            <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar" style="max-height:130px;">
+                            <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar" style="max-height:125px;">
                                 <ul class="list-unstyled mb-0">
                                     <li 
                                     v-for="(item, index) in filterLeadSource()" 
@@ -227,7 +227,7 @@
                         <div class="mb-3 position-relative">
                             <label class="form-label-title" for="">Lead status <span class="text-soft fs-12px ms-1">(Optional)</span> </label>
                             <input @click="delete errors?.lead_status" class="form-control cursor-pointer" :value="status?.name" type="text" data-mdb-toggle="dropdown" readonly>
-                            <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar" style="max-height:160px;">
+                            <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar" style="max-height:125px;">
                                 <ul class="list-unstyled mb-0">
                                     <li 
                                     v-for="(item, index) in leadStatus" 
@@ -303,13 +303,6 @@
 
 </template>
 
-<style lang="scss">
-    .add-new-lead-owner-list-dropdown{
-        .dropdown-menu{
-            width: 100% !important;
-        }
-    }
-</style>
 <style lang="scss" scoped>
     @media (min-width: 992px){
         .add-new-lead-modal .modal-lg {
@@ -317,61 +310,6 @@
         }
         .lead-details-right{
             background-color: #f5f7fa;
-        }
-    }
-    .custom-form-select{
-        width: 100%;
-        cursor: pointer;
-        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-        border-radius:3px !important;
-        border-top-left-radius:0px !important;
-        border-top-right-radius:0px !important;
-        overflow: auto;
-    }
-    .dropdown-item.selected{
-        position: relative;
-        &::before{
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 2px;
-            width: 4px;
-            height: 90%;
-            background-color: rgb(44, 114, 226);
-            border-top-right-radius: 3px;
-            border-bottom-right-radius: 3px;
-        }
-    }    
-    .owner-form-control{
-        transition: all 0.2s ease-in-out;
-        &:hover{
-            border-color: #3b71ca;
-            box-shadow: inset 0 0 0 1px #3b71ca;
-        }
-        .owner-info{
-            display: flex;
-            user-select: none !important;
-            position: relative;
-            top: -1px;
-            .circle-avatar{
-                width:25px;
-                height: 25px;
-                border-radius:50%;
-                overflow: hidden;
-                object-fit: cover;
-                .avatar{
-                    width:100%;
-                    height: 100%;
-                    border-radius: 50%;
-                    border: 2px solid #dddddd;
-                }
-            }
-            .owner-name{
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                width: 80%;
-                overflow: hidden;
-            }
         }
     }
     .tags-list-form-control{

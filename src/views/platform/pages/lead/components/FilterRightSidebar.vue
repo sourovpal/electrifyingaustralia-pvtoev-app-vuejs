@@ -1,5 +1,5 @@
 <script>
-import {propertiesIconList} from '../../../../asset/svgicon.js';
+import {propertiesIconList} from '../../../../../asset/svgicon.js';
 export default {
     props:['leadProperties', 'owners', 'leadSources', 'filterQueryData'],
     data() {

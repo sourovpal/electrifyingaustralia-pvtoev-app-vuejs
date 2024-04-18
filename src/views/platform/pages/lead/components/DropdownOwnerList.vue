@@ -33,7 +33,7 @@
 
 <template>
     <div class="owner-list-dropdown">
-        <div class="dropdown-menu pt-0 dropdown-menu-end" @click="(e)=>{e.stopPropagation()}" style="width:250px">
+        <div class="dropdown-menu py-0 dropdown-menu-end" @click="(e)=>{e.stopPropagation()}" style="width:250px">
             <!---->
             <div>
                 <div class="dropdown-body">
@@ -64,7 +64,7 @@
                         </span>
                     </div>
     
-                    <div class="project-owner-team-members">
+                    <div class="project-owner-team-members slim-scrollbar">
     
                         <div class="dropdown-header">
                             Change owner

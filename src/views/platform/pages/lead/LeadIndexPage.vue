@@ -361,7 +361,7 @@ export default {
             type="button" 
             data-mdb-toggle="dropdown" 
             aria-expanded="false">
-                <span class="fw-bold text-fs tbl-dropdown-title text-overflow-ellipsis">Lead Status</span>
+                <span class="fw-bold text-fs tbl-dropdown-title text-overflow-ellipsis text-head">Lead Status</span>
                 <div class="dropdown--icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
                 </div>
@@ -373,7 +373,7 @@ export default {
                 :key="index" 
                 @click="updateLeadStatusHandler(selectedRows, status)"
                 class="dropdown-item d-flex justify-content-between align-items-center cursor-pointer py-1">
-                    <span class="text-overflow-ellipsis">{{ status.name }}</span>
+                    <span class="text-overflow-ellipsis text-head">{{ status.name }}</span>
                     <svg v-if="status.is_lost" class="svg-5" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"></path></svg>
                 </span>
             </div>
@@ -435,7 +435,7 @@ export default {
                 class="btn btn-sm btn-outline-secondary multiple-lead-status-btn fw-bold d-flex align-items-center" 
                 v-tippy='{ content:"Import File or Connect", placement : "top" }'
                 type="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                    <span class="pe-4">Import</span>
+                    <span class="pe-4 text-head">Import</span>
                     <div class="dropdown--icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
                     </div>
@@ -563,7 +563,7 @@ export default {
                 <div v-show="!disabledHeaderColumns.includes('status')" style="width:12rem;flex-grow: 1;" class="tbl-td">
                     <div class="dropdown w-100">
                         <button class="btn btn-sm btn-outline-secondary fw-400 w-100 d-flex justify-content-between align-items-center" type="button" data-mdb-toggle="dropdown" aria-expanded="false">
-                            <span class="fw-bold text-fs tbl-dropdown-title text-overflow-ellipsis">{{ lead.status?.name??'Lead Status' }}</span>
+                            <span class="fw-bold text-fs tbl-dropdown-title text-overflow-ellipsis text-head">{{ lead.status?.name??'Lead Status' }}</span>
                             <div class="dropdown--icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
                             </div>
@@ -578,7 +578,7 @@ export default {
                             :class="`${status.name == lead.status?.name?'selected':''}`"
                             @click="updateLeadStatusHandler([lead.id], status, lead)"
                             >
-                                <span class="text-overflow-ellipsis">{{ status.name }}</span>
+                                <span class="text-overflow-ellipsis text-head">{{ status.name }}</span>
                                 <svg v-if="status.is_lost" class="svg-5" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"></path></svg>
                             </span>
 

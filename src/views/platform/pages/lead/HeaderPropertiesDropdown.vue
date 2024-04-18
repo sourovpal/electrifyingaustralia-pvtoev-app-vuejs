@@ -20,7 +20,7 @@ export default {
                 <div class="pb-2 pt-2 ps-3 pe-3">
                     <h6 class="fs-16px fw-bold mb-0 border-bottom pb-2 text-center">Lead properties</h6>
                 </div>
-                <div class="properties-list">
+                <div class="properties-list slim-scrollbar">
                     <label
                     v-for="(header, index) in headers" :key="index" 
                     @click="toggleHeaderProperties(header.unique_id)"
@@ -37,7 +37,7 @@ export default {
                 <div class="pb-2 pt-2 ps-2 pe-3">
                     <h6 class="fs-16px fw-bold mb-0 border-bottom pb-2 text-center">Custom properties</h6>
                 </div>
-                <div class="properties-list">
+                <div class="properties-list slim-scrollbar">
                     <label 
                     v-for="(header, index) in customHeaderColumns" 
                     @click="toggleHeaderProperties(header.unique_id)"

@@ -189,7 +189,7 @@
                         <div class="mb-3">
                             <label class="form-label-title" for="">Lead source <span class="text-soft fs-12px ms-1">(Optional)</span> </label>
                             <input @click="delete errors?.lead_source" class="form-control" v-model="source_title" type="text" data-mdb-toggle="dropdown">
-                            <div class="dropdown-menu fade custom-form-select overflow-auto" style="max-height:130px;">
+                            <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar" style="max-height:130px;">
                                 <ul class="list-unstyled mb-0">
                                     <li 
                                     v-for="(item, index) in filterLeadSource()" 
@@ -227,7 +227,7 @@
                         <div class="mb-3 position-relative">
                             <label class="form-label-title" for="">Lead status <span class="text-soft fs-12px ms-1">(Optional)</span> </label>
                             <input @click="delete errors?.lead_status" class="form-control cursor-pointer" :value="status?.name" type="text" data-mdb-toggle="dropdown" readonly>
-                            <div class="dropdown-menu fade custom-form-select overflow-auto" style="max-height:160px;">
+                            <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar" style="max-height:160px;">
                                 <ul class="list-unstyled mb-0">
                                     <li 
                                     v-for="(item, index) in leadStatus" 
@@ -241,7 +241,7 @@
                             </div>
                             <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.lead_status?.length">{{ errors?.lead_status[0] }}</span>
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 add-new-lead-owner-list-dropdown">
                             <label class="form-label-title" for="">Owner <span class="text-soft fs-12px ms-1">(Optional)</span></label>
                             <div @click="$refs['dropdownOwnerListRef']?.resetSearchOwner()" class="form-control cursor-pointer owner-form-control" data-mdb-toggle="dropdown" >
                                 <div class="owner-info">
@@ -303,7 +303,13 @@
 
 </template>
 
-
+<style lang="scss">
+    .add-new-lead-owner-list-dropdown{
+        .dropdown-menu{
+            width: 100% !important;
+        }
+    }
+</style>
 <style lang="scss" scoped>
     @media (min-width: 992px){
         .add-new-lead-modal .modal-lg {
@@ -335,7 +341,7 @@
             border-top-right-radius: 3px;
             border-bottom-right-radius: 3px;
         }
-    }
+    }    
     .owner-form-control{
         transition: all 0.2s ease-in-out;
         &:hover{

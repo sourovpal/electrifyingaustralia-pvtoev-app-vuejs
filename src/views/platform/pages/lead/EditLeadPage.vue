@@ -12,11 +12,13 @@ import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import '@vueup/vue-quill/dist/vue-quill.bubble.css';
 import { Skeletor } from 'vue-skeletor';
-
+import DropdownOwnerList from './components/DropdownOwnerList.vue';
+import {icons} from '../../../../asset/svgicon.js';
 import {
     FetchLeads,
     FetchLeadPipelineWithStage,
     UpdateMultipelLeadStatus,
+    UpdateMultipelLeadOwner,
 } from '../../../../actions/LeadAction';
 
 export default {
@@ -29,10 +31,12 @@ export default {
     QuillEditor,
     LeadQualifyModal,
     Skeletor,
+    DropdownOwnerList,
 },
   data() {
     return {
         fetch:"lead_properties,lead_sources,owners,pipelines",
+        icons:{},
         findLead:null,
         nextLead:null,
         prevLead:null,
@@ -138,29 +142,48 @@ export default {
         }
     },
     async updateLeadStatusHandler(status){
-            try{
-                if(this.findLead?.status && this.findLead?.status?.id == atob(status.id)){
-                    return;
-                }
-                var data = {
-                    leads:[this.findLead.id],
-                    status:status.id,
-                };
-                const res = await UpdateMultipelLeadStatus(data);
-                this.findLead['status'] = {...status};
-
-            }catch(error){
-                console.log(error);
-                try{
-                    var message = error.response.data.message;
-                    this.$toast[message.type](message.text);
-                }catch(e){
-                    this.$toast.error('Oops, something went wrong');
-                }
+        try{
+            if(this.findLead?.status && this.findLead?.status?.id == atob(status.id)){
+                return;
             }
-        },
+            var data = {
+                leads:[this.findLead.id],
+                status:status.id,
+            };
+            const res = await UpdateMultipelLeadStatus(data);
+            this.findLead['status'] = {...status};
+
+        }catch(error){
+            console.log(error);
+            try{
+                var message = error.response.data.message;
+                this.$toast[message.type](message.text);
+            }catch(e){
+                this.$toast.error('Oops, something went wrong');
+            }
+        }
+    },
+    async updateLeadOwnerHandler(owner=null){
+        try{
+            var data = {
+                owner:owner?.id,
+                leads:[this.findLead?.id],
+            };
+            const res = await UpdateMultipelLeadOwner(data);
+            this.owner = this.currentOwner = owner;
+            this.findLead['owner'] = owner;
+        }catch(error){
+            try{
+                var message = error.response.data.message;
+                this.$toast[message.type](message.text);
+            }catch(e){
+                this.$toast.error('Oops, something went wrong');
+            }
+        }
+    },
   },
   mounted() {
+        this.icons = icons;
         this.isFirstLoading = true;
         this.findLeadByIdHandler(this.fetch);
         const {lead_statuses} = this.$cookies.get(import.meta.env.VITE_AUTH_APP);
@@ -298,51 +321,19 @@ export default {
                 </div>
             </div>
 
-            <div class="settings-group-item owner-list-dropdown me-3">
-                <button class="owner-dropdown-toggler" data-mdb-toggle="dropdown" aria-expanded="false">
+            <div         
+            class="settings-group-item owner-list-dropdown me-3 position-relative">
+                <button class="owner-dropdown-toggler" data-mdb-toggle="dropdown" aria-expanded="false" v-tippy='{ content:"Change Owner", placement : "top" }'>
                     <div class="icon">
-                        <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&d=mm&r=PG" alt="">
+                        <img v-if="owner" :src="owner?.profile_avatar" alt="">
+                        <img v-if="!owner" :src="icons?.avatar" alt="">
                     </div>
                 </button>
-                <div class="dropdown-menu dropdown-menu-end" @click="(e)=>{e.stopPropagation()}">
-                    <!---->
-                    <div>
-                        <div class="dropdown-body">
-
-                            <div class="dropdown-input">
-                                <input type="text" placeholder="Filter for team members" class="project-owner-filter form-control" />
-                            </div>
-
-                            <div class="dropdown-header">
-                                Owner
-                            </div>
-
-                            <div class="dropdown-item noselect">
-                                <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&amp;d=mm&amp;r=PG" draggable="false" alt="No Owner's avatar" class="project-owner__profile-photo" />
-                                <span class="fs-14px fw-bold">
-                                    No Owner
-                                    <div class="project-owner-email text-muted fs-12px"></div>
-                                </span>
-                            </div>
-
-                            <CustomScrollbar class="project-owner-team-members" style="height:20rem;">
-                                <div class="dropdown-header">
-                                    Change owner
-                                </div>
-                                
-                                <div v-for="(item, index) in 10" :key="index" class="dropdown-item">
-                                    <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&amp;d=mm&amp;r=PG" draggable="false" alt="Susmita Chowdhury's avatar" class="project-owner__profile-photo" />
-                                    <span class="username fs-14px text-overflow-ellipsis">
-                                        Susmita Chowdhury
-                                        <div class="team-member-email text-muted fs-12px text-overflow-ellipsis">
-                                            admin@electrifyingaustralia.com.au
-                                        </div>
-                                    </span>
-                                </div>
-                            </CustomScrollbar>
-                        </div>
-                    </div>
-                </div>
+                <DropdownOwnerList
+                :owner="owner"
+                :owners="owners"
+                :selectOwnerHandler="(item)=>updateLeadOwnerHandler(item)"
+                />
             </div>
 
 

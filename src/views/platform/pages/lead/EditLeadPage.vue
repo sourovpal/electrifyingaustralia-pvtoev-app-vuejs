@@ -16,6 +16,7 @@ import { Skeletor } from 'vue-skeletor';
 import {
     FetchLeads,
     FetchLeadPipelineWithStage,
+    UpdateMultipelLeadStatus,
 } from '../../../../actions/LeadAction';
 
 export default {
@@ -33,6 +34,8 @@ export default {
     return {
         fetch:"lead_properties,lead_sources,owners,pipelines",
         findLead:null,
+        nextLead:null,
+        prevLead:null,
         leadStatus:[],
         leadSources:[],
         leadProperties:[],
@@ -42,6 +45,11 @@ export default {
         currentOwner:null,
         isLoading:false,
         isFirstLoading:false,
+    }
+  },
+  watch:{
+    "$route"(){
+        this.findLeadByIdHandler();
     }
   },
   methods: {
@@ -87,10 +95,15 @@ export default {
                 payload['fetch'] = fetch;
             }
             const res = await FetchLeads(payload);
+            // await new Promise((e)=>setTimeout(e, 5000));
             try{
-                const {lead, lead_properties, pipelines, owners, lead_sources} = res;
+                const {lead, next_lead, prev_lead, lead_properties, pipelines, owners, lead_sources} = res;
                 this.isFirstLoading = false;
                 this.findLead = lead;
+
+                this.nextLead = next_lead;
+                this.prevLead = prev_lead;
+
                 if(this.findLead){
                     if(this.findLead?.owner){
                         this.owner = this.findLead.owner;
@@ -124,6 +137,28 @@ export default {
             this.isLoading = false;
         }
     },
+    async updateLeadStatusHandler(status){
+            try{
+                if(this.findLead?.status && this.findLead?.status?.id == atob(status.id)){
+                    return;
+                }
+                var data = {
+                    leads:[this.findLead.id],
+                    status:status.id,
+                };
+                const res = await UpdateMultipelLeadStatus(data);
+                this.findLead['status'] = {...status};
+
+            }catch(error){
+                console.log(error);
+                try{
+                    var message = error.response.data.message;
+                    this.$toast[message.type](message.text);
+                }catch(e){
+                    this.$toast.error('Oops, something went wrong');
+                }
+            }
+        },
   },
   mounted() {
         this.isFirstLoading = true;
@@ -157,12 +192,23 @@ export default {
         </left-action-bar>
 
         <right-action-bar>
-            <button class="toolbar-btn btn btn-light btn-sm btn-floating me-3">
-                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14l-6-6z"></path></svg>
-            </button>
-            <button class="toolbar-btn btn btn-light btn-sm btn-floating me-3">
-                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M24 24H0V0h24v24z" fill="none" opacity=".87"></path><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z"></path></svg>
-            </button>
+
+            <div v-if="isLoading" class="me-3">
+                <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
+                    <circle style="stroke: rgb(59, 113, 202);" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                </svg>
+            </div>
+
+            <router-link :to="`${prevLead?`/platform/leads/${prevLead}`:''}`">
+                <button v-tippy='{ content:"Prev Lead", placement : "top" }' class="toolbar-btn btn btn-light btn-sm btn-floating me-3" :disabled="!prevLead">
+                    <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14l-6-6z"></path></svg>
+                </button>
+                </router-link>
+            <router-link :to="`${nextLead?`/platform/leads/${nextLead}`:''}`">
+                <button v-tippy='{ content:"Next Lead", placement : "top" }' class="toolbar-btn btn btn-light btn-sm btn-floating me-3"  :disabled="!nextLead">
+                    <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M24 24H0V0h24v24z" fill="none" opacity=".87"></path><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z"></path></svg>
+                </button>
+            </router-link>
 
             <button 
             @click="$refs['leadQualifyModalRef'].showModalHandler()"
@@ -178,13 +224,14 @@ export default {
             ref="leadQualifyModalRef" />
 
             <!-- lead status -->
-            <div v-tippy='{ content:"Change Lead Status", placement : "top" }'
+            <Skeletor class="me-3"  v-if="isFirstLoading" style="width:150px;height:32px;border-radius:3px;" />
+            <div v-if="!isFirstLoading" v-tippy='{ content:"Change Lead Status", placement : "top" }'
             class="dropdown me-3">
-                <button style="width:130px;" type="button" 
+                <button style="min-width:150px;max-width:150px;" type="button" 
                 class="btn btn-sm btn-outline-secondary fw-400 d-flex justify-content-between align-items-center curtom-dropdown-toggler-btn" 
                 data-mdb-toggle="dropdown" 
                 aria-expanded="false">
-                    <span class="fw-bold text-fs tbl-dropdown-title text-overflow-ellipsis text-head">Lead Status</span>
+                    <span class="fw-bold text-fs tbl-dropdown-title text-overflow-ellipsis text-head" style="white-space: nowrap;">{{ findLead?.status?.name??'Lead Status' }}</span>
                     <div class="dropdown--icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
                     </div>
@@ -194,7 +241,8 @@ export default {
                     style="width:170px;"
                     v-for="(status, index) in leadStatus"
                     :key="index" 
-                    @click="updateLeadStatusHandler(selectedRows, status)"
+                    @click="updateLeadStatusHandler(status)"
+                    :class="`${status.name == findLead?.status?.name?'selected':''}`"
                     class="dropdown-item d-flex justify-content-between align-items-center cursor-pointer py-1">
                         <span class="text-overflow-ellipsis text-head">{{ status.name }}</span>
                         <svg v-if="status.is_lost" class="svg-5" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"></path></svg>

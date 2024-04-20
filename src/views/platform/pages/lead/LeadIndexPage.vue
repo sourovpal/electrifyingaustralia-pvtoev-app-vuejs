@@ -18,7 +18,7 @@ import DropdownOwnerList from './components/DropdownOwnerList.vue';
 
 import {
     FetchLeads, 
-    UpdateLeadPropertieHeaders, 
+    UpdateLeadPropertieHeaders,
     UpdateMultipelLeadStatus, 
     UpdateMultipelLeadOwner,
 } from '../../../../actions/LeadAction';

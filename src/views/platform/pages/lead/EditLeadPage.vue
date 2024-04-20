@@ -5,6 +5,7 @@ import ActionBar from '../../../../components/ActionBar/ActionBar.vue';
 import LeftActionBar from '../../../../components/ActionBar/LeftActionBar.vue';
 import RightActionBar from '../../../../components/ActionBar/RightActionBar.vue';
 import LeadQualifyModal from './components/LeadQualifyModal.vue';
+import LeadReCategoriseModal from './components/LeadReCategoriseModal.vue';
 
 import CustomScrollbar from 'custom-vue-scrollbar';
 
@@ -21,6 +22,8 @@ import {
     UpdateMultipelLeadOwner,
 } from '../../../../actions/LeadAction';
 
+
+
 export default {
   components: {
     SearchBar,
@@ -32,6 +35,7 @@ export default {
     LeadQualifyModal,
     Skeletor,
     DropdownOwnerList,
+    LeadReCategoriseModal,
 },
   data() {
     return {
@@ -110,8 +114,9 @@ export default {
 
                 if(this.findLead){
                     if(this.findLead?.owner){
-                        this.owner = this.findLead.owner;
-                        this.currentOwner = this.owner;
+                        this.owner = this.currentOwner = this.findLead.owner;
+                    }else{
+                        this.owner = this.currentOwner = null;
                     }
                 }
                 if(fetchArr.includes('lead_properties')){
@@ -202,15 +207,15 @@ export default {
         <left-action-bar style="flex-grow: 1;">
             <div class="ms-3 d-flex flex-row justify-content-start align-items-center left-hover-action" style="flex-grow: 1;">
                 <div class="d-flex flex-row justify-content-start align-items-center cursor-pointer select-none">
-                    <Skeletor  v-if="isFirstLoading" width="250px" />
+                    <Skeletor  v-if="isFirstLoading" class="lead-title-text" />
                     <h5 v-if="!isFirstLoading" class="text-head mb-0 fs-16px fw-bold lead-title-text">{{ findLead?.lead_title??findLead?.contact?.full_name }}</h5>
                     <button class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-2" style="margin-left: 14px;">
                         <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg>
                     </button>
-                    <button class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-3">
-                        <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>
-                    </button>
                 </div>
+                <button class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-3">
+                    <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>
+                </button>
             </div>
         </left-action-bar>
 
@@ -223,7 +228,7 @@ export default {
             </div>
 
             <router-link :to="`${prevLead?`/platform/leads/${prevLead}`:''}`">
-                <button v-tippy='{ content:"Prev Lead", placement : "top" }' class="toolbar-btn btn btn-light btn-sm btn-floating me-3" :disabled="!prevLead">
+                <button v-tippy='{ content:"Previous Lead", placement : "top" }' class="toolbar-btn btn btn-light btn-sm btn-floating me-3" :disabled="!prevLead">
                     <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14l-6-6z"></path></svg>
                 </button>
                 </router-link>
@@ -235,7 +240,7 @@ export default {
 
             <button 
             @click="$refs['leadQualifyModalRef'].showModalHandler()"
-            class="btn btn-sm btn-primary fw-bold me-3">
+            class="btn btn-sm btn-primary fw-bold me-3 d-none d-xl-flex justify-content-center align-items">
                 <svg class="me-1" xmlns="http://www.w3.org/2000/svg" height="24" fill="currentColor" viewBox="0 -960 960 960" width="24"><path d="M707-485 581-612l51-51 75 74 160-159 52 52-212 211Zm-352-2q-71.462 0-116.231-44.769Q194-576.537 194-648t44.769-116.231Q283.538-809 355-809q71.462 0 116.231 44.769Q516-719.463 516-648t-44.769 116.231Q426.462-487 355-487ZM20-130v-109q0-39.113 18.594-69.548Q57.187-338.982 92-354q77-35 138.292-49 61.293-14 124.5-14Q418-417 479-403t138 49q34.812 16.018 53.906 45.952Q690-278.113 690-239v109H20Zm73-73h524v-36q0-16-7.825-29.674T588-288q-72-33-123.5-44.5T355-344q-58 0-110 11.5T122-288q-13.8 5.652-21.4 19.326Q93-255 93-239v36Zm262-357q38 0 63-25t25-63q0-38-25-63t-63-25q-38 0-63 25t-25 63q0 38 25 63t63 25Zm0 286Zm0-374Z"/></svg>
                 Qualify
             </button>
@@ -247,9 +252,9 @@ export default {
             ref="leadQualifyModalRef" />
 
             <!-- lead status -->
-            <Skeletor class="me-3"  v-if="isFirstLoading" style="width:150px;height:32px;border-radius:3px;" />
+            <Skeletor class="me-3 d-none d-xl-inline"  v-if="isFirstLoading" style="width:150px;height:32px;border-radius:3px;" />
             <div v-if="!isFirstLoading" v-tippy='{ content:"Change Lead Status", placement : "top" }'
-            class="dropdown me-3">
+            class="dropdown me-3 d-none d-xl-inline">
                 <button style="min-width:150px;max-width:150px;" type="button" 
                 class="btn btn-sm btn-outline-secondary fw-400 d-flex justify-content-between align-items-center curtom-dropdown-toggler-btn" 
                 data-mdb-toggle="dropdown" 
@@ -274,7 +279,7 @@ export default {
             </div>
 
 
-            <div class="settings-group-item owner-list-dropdown me-3">
+            <div class="settings-group-item owner-list-dropdown me-3  d-none d-lg-inline">
                 <button class="owner-dropdown-toggler" data-mdb-toggle="dropdown" aria-expanded="false">
                     <div class="icon">
                         <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&d=mm&r=PG" alt="">
@@ -322,7 +327,7 @@ export default {
             </div>
 
             <div         
-            class="settings-group-item owner-list-dropdown me-3 position-relative">
+            class="settings-group-item owner-list-dropdown me-3 position-relative  d-none d-lg-inline">
                 <button class="owner-dropdown-toggler" data-mdb-toggle="dropdown" aria-expanded="false" v-tippy='{ content:"Change Owner", placement : "top" }'>
                     <div class="icon">
                         <img v-if="owner" :src="owner?.profile_avatar" alt="">
@@ -337,16 +342,29 @@ export default {
             </div>
 
 
-            <button class="toolbar-btn btn btn-light btn-sm btn-floating me-3">
+            <button class="toolbar-btn btn btn-light btn-sm btn-floating me-3 d-none d-lg-inline">
                 <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"></path> <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5v-3h3.56c.69 1.19 1.97 2 3.45 2s2.75-.81 3.45-2H19v3zm0-5h-4.99c0 1.1-.9 2-2 2s-2-.9-2-2H5V5h14v9z"></path></svg>
             </button>
 
-            <button class="toolbar-btn btn btn-light btn-sm btn-floating me-3">
+            <button class="toolbar-btn btn btn-light btn-sm btn-floating me-3 d-none d-lg-inline">
                 <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="20px" viewBox="0 0 24 24" width="20px"><path d="M0 0h24v24H0V0z" fill="none"></path> <path d="M6.41,21L5,19.59l4.83-4.83c0.75-0.75,1.17-1.77,1.17-2.83v-5.1L9.41,8.41L8,7l4-4l4,4l-1.41,1.41L13,6.83v5.1 c0,1.06,0.42,2.08,1.17,2.83L19,19.59L17.59,21L12,15.41L6.41,21z"></path></svg>
             </button>
-            <button class="toolbar-btn btn btn-light btn-sm btn-floating me-3">
-                <svg class="svg-5" height="20px" viewBox="0 0 24 24" width="20px" xmlns="http://www.w3.org/2000/svg"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
-            </button>
+
+            <div class="me-3 position-relative">
+                <button class="toolbar-btn btn btn-light btn-sm btn-floating" data-mdb-toggle="dropdown">
+                    <svg class="svg-5" height="20px" viewBox="0 0 24 24" width="20px" xmlns="http://www.w3.org/2000/svg"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end shadow-md multiple-lead-status-dropdown three-dot" aria-labelledby="dropdownMenuButton">
+                    <span @click="$refs['leadQualifyModalRef'].showModalHandler()" class="dropdown-item cursor-pointer text-head d-block d-lg-none">Qualify</span>
+                    <span @click="$refs['leadReCategoriseModalRef'].showModalHandler()" class="dropdown-item cursor-pointer text-head">Re-categorise lead</span>
+                </div>
+            </div>
+
+            <LeadReCategoriseModal
+            ref="leadReCategoriseModalRef"
+            :leadStatus="leadStatus"
+            :pipelines="pipelines"
+            />
             
         </right-action-bar>
 
@@ -915,7 +933,10 @@ export default {
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
-        max-width:280px;
+        max-width:150px;
+        @media screen and (min-width:1199px) {
+            max-width:250px;
+        }
     }
     .col-area{
         display:flex;
@@ -1287,7 +1308,17 @@ export default {
     .multiple-lead-status-dropdown{
         box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
         border-radius:3px;
-        ::after {
+        &::before {
+            content: "";
+            position: absolute;
+            top: -6px;
+            right: 20px;
+            border: 7px solid #8dabff;
+            transform: rotate(45deg);
+            border-bottom-color: transparent;
+            border-right-color: transparent;
+        }
+        &::after {
             content: "";
             position: absolute;
             top: -6px;
@@ -1296,6 +1327,10 @@ export default {
             transform: rotate(45deg);
             border-bottom-color: transparent;
             border-right-color: transparent;
+        }
+        &.three-dot::before,
+        &.three-dot::after{
+            right:10px;
         }
     }
 </style>

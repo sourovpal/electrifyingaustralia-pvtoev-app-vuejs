@@ -63,9 +63,8 @@ export default {
 </script>
 
 <template>
-
   <MobileHeader/>
-  <section class="d-flex flex-row overflow-hidden position-relative">
+  <section class="">
     <Menu :menus="menus" :title="title" />
     <router-view></router-view>
   </section>

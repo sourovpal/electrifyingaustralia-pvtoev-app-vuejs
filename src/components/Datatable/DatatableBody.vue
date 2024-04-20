@@ -117,16 +117,6 @@ export default{
     }
   }
 }
-@media only screen and (max-width: 991px){
-  .tbl-body .tbl-tr.full-width,
-  .tbl-body .tbl-tr .tbl-td.full-width{
-    width:100% !important;
-  }
-  .tbl-body .tbl-tr .tbl-td.full-width{
-    /* padding: 14px 10px 14px 20px; */
-    font-weight: bold;
-  }
-}
 .tbl-body .tbl-tr .tbl-td,
 .tbl-body .tbl-tr .tbl-td a{
   color: #364a63;

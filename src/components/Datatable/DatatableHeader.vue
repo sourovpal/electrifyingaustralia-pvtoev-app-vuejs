@@ -36,11 +36,7 @@ export default{
   width: 100%;
   height:35px;
 }
-@media only screen and (max-width: 991px) {
-  .tbl-header .tbl-tr{
-    display:none !important;
-  }
-}
+
 .tbl-header .tbl-tr .tbl-th{
   border-bottom: 1px solid rgb(182 182 182 / 40%);
   display: table-cell;

@@ -121,6 +121,21 @@ const ConfirmQualify = (payload)=>{
     });
 }
 
+const MoveLeadStatusToPipeline = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.post(`/leads/move-lead`, payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
 export {
     FetchLeads,
     UpdateLeadPropertieHeaders,
@@ -130,4 +145,5 @@ export {
     UpdateMultipelLeadOwner,
     FetchLeadPipelineWithStage,
     ConfirmQualify,
+    MoveLeadStatusToPipeline,
 }

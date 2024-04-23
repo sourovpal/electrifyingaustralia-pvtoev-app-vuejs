@@ -366,7 +366,7 @@ export default {
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
                 </div>
             </button>
-            <div class="dropdown-menu dropdown-menu-end shadow-md multiple-lead-status-dropdown" aria-labelledby="dropdownMenuButton">
+            <div class="dropdown-menu dropdown-menu-end shadow-md custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <span
                 style="width:170px;"
                 v-for="(status, index) in leadStatus" 
@@ -481,7 +481,7 @@ export default {
             <button class="toolbar-btn btn btn-light btn-sm btn-floating" data-mdb-toggle="dropdown">
                 <svg class="svg-5" height="20px" viewBox="0 0 24 24" width="20px" xmlns="http://www.w3.org/2000/svg"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
             </button>
-            <div class="dropdown-menu dropdown-menu-end shadow-md multiple-lead-status-dropdown three-dot" aria-labelledby="dropdownMenuButton">
+            <div class="dropdown-menu dropdown-menu-end shadow-md custom-dropdown-menu three-dot" aria-labelledby="dropdownMenuButton">
                 <span @click="$refs['AddNewLeadModalRef'].showModalHandler()" class="dropdown-item cursor-pointer text-head d-block d-lg-none">Add New</span>
                 <span class="dropdown-item cursor-pointer text-head">Import</span>
                 <span @click="toggleFilterSidebar=!toggleFilterSidebar" class="dropdown-item cursor-pointer text-head">Filter Leads</span>
@@ -743,7 +743,7 @@ export default {
         box-shadow: 0 1px 3px rgba(0, 126, 229, 0.34) !important;
     }
 }
-.multiple-lead-status-dropdown{
+.custom-dropdown-menu{
     box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
     border-radius:3px;
     ::after {

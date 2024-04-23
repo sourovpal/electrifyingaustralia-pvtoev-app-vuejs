@@ -137,7 +137,7 @@
 <template>
 
 <div class="modal fade add-new-lead-modal" id="leadQualifyModalRef" ref="leadQualifyModalRef" aria-hidden="true" aria-labelledby="leadQualifyModalRef" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered- modal-sm" style="max-width: 350px;margin: auto;">
+    <div class="modal-dialog modal-dialog-centered- modal-sm mx-auto" style="max-width: 350px;">
         <div class="modal-content">
             <div class="modal-header py-2">
                 <div class="d-flex justify-content-center align-items-center py-0">

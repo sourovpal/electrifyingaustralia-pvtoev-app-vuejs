@@ -457,10 +457,16 @@ export default {
         :disabledHeaderColumns="disabledHeaderColumns" 
         :toggleHeaderProperties="toggleHeaderProperties" 
         />
-
-        <div class="fw-bold d-flex justify-content-center align-items-center me-2 text-overflow-ellipsis fs-16px" style="min-width: 2rem;">
+        
+        <!-- Show current Lead Range -->
+        <div class="fw-bold d-flex justify-content-center align-items-center me-2 text-overflow-ellipsis fs-16px d-none d-xl-block" style="min-width: 2rem;">
             {{ pagination.from??0 }} - {{ pagination.to??0 }} of  {{ pagination.total }}
         </div>
+        <div v-if="!Object.keys(filterQueryData).length" class="fw-bold d-flex justify-content-center align-items-center me-2 text-overflow-ellipsis fs-16px d-block d-xl-none" style="min-width: 2rem;">
+            {{ pagination.from??0 }} - {{ pagination.to??0 }} of  {{ pagination.total }}
+        </div>
+        <!-- Show current Lead Range End -->
+
         <button 
             :disabled="!pagination.prev_page" 
             @click="pagination.prev_page && fetchAllLeadsHandler(pagination.prev_page)" 
@@ -482,7 +488,7 @@ export default {
                 <svg class="svg-5" height="20px" viewBox="0 0 24 24" width="20px" xmlns="http://www.w3.org/2000/svg"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
             </button>
             <div class="dropdown-menu dropdown-menu-end shadow-md custom-dropdown-menu three-dot" aria-labelledby="dropdownMenuButton">
-                <span @click="$refs['AddNewLeadModalRef'].showModalHandler()" class="dropdown-item cursor-pointer text-head d-block d-lg-none">Add New</span>
+                <span @click="$refs['AddNewLeadModalRef'].showModalHandler()" class="dropdown-item cursor-pointer text-head">Add New</span>
                 <span class="dropdown-item cursor-pointer text-head">Import</span>
                 <span @click="toggleFilterSidebar=!toggleFilterSidebar" class="dropdown-item cursor-pointer text-head">Filter Leads</span>
             </div>

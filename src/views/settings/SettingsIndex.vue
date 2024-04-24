@@ -25,10 +25,10 @@ export default {
 <template>
 
   <MobileHeader/>
-  <section class="">
+  <section class="d-flex flex-row">
     <SettingsMenuGroup :menus="menus" :title="title" />
+    <router-view></router-view>
   </section>
-  <router-view></router-view>
 </template>
 
 <style>

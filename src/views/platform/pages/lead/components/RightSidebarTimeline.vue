@@ -10,12 +10,13 @@
             QuillEditor,
             ContactEditModal,
         },
-        props:['leadContacts', 'primaryContact'],
+        props:['findLead', 'leadContacts', 'primaryContact', 'toggleRightDetailsSidebar'],
         data() {
             return {
                 contacts:[],
                 contact:null,
-                contactFadeinout:false,
+                lead:null,
+                address:null,
             }
         },
         watch:{
@@ -23,8 +24,37 @@
                 this.contacts = c;
             },
             "primaryContact"(p){
-                this.contactFadeinout = true;
                 this.contact = p;
+            },
+            "findLead"(l){
+                this.lead = l;
+
+                var temp = '';
+                if(l?.address_line_two){
+                    temp+=l?.address_line_two;
+                    if(l?.address_line_one){
+                        temp+='/'+l?.address_line_one;
+                    }
+                }else if(l?.address_line_one){
+                    temp+=l?.address_line_one;
+                }
+
+                if(l?.city || l?.state || l?.post_code){
+                    temp+=", ";
+                }
+
+                if(l?.city){
+                    temp+=l?.city+" ";
+                }
+
+                if(l?.state){
+                    temp+=l?.state+" ";
+                }
+
+                if(l?.post_code){
+                    temp+=l?.post_code;
+                }
+                this.address = temp;
             },
         },
         methods: {
@@ -51,9 +81,7 @@
                 }
             },
             selectPrimaryContactHandler(contact){
-                this.contactFadeinout = false;
                 this.contact = contact;
-                setTimeout(()=>{this.contactFadeinout = true;},0);
             },
             copyToClipboard(text=null){
                 this.$toast.clear();
@@ -68,13 +96,13 @@
     }
 </script>
 <template>
-    <div class="col-right">
+    <div class="col-right" :class="{show:toggleRightDetailsSidebar}">
         <CustomScrollbar>
             <div class="col-r-header d-flex justify-content-between align-items-center border-bottom">
                 <div class="left ps-3 py-1 d-flex justify-content-start align-items-center slim-scrollbar">
                     <div 
                     v-for="(item, index) in contacts" 
-                    class="circle-avatar me-3 cursor-pointer" 
+                    class="circle-avatar me-2 cursor-pointer" 
                     :class="`${(contact?.id == item.id)?'shadow-border':''}`" 
                     @click="selectPrimaryContactHandler(item)"
                     v-tippy='{ content:`${item.full_name}`, placement : "top" }' 
@@ -90,7 +118,7 @@
                 </div>
             </div>
 
-            <div class="personal-info px-3 py-3 border-bottom" :class="{fadeinout:contactFadeinout}">
+            <div class="personal-info px-3 py-3 border-bottom">
                 <div class="d-flex justify-content-between align-items-center mb-1 position-relative">
                     <h3 class="user-name fs-18px fw-bold text-head mb-0">{{ contact?.full_name }}</h3>
                     <button data-mdb-toggle="dropdown" class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
@@ -219,8 +247,10 @@
                 <div class="mb-1">
                     <div class="fs-12px text-soft mb-0">Address</div>
                     <div class="d-flex">
-                        <div class="fs-14px fw-bold text-head mb-0">78 Wirrinda Road, Somersby New South Wales 2250</div>
-                        <a href="" class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent ms-auto">
+                        <div class="fs-14px fw-bold text-head mb-0">
+                            {{ address??' - ' }}
+                        </div>
+                        <a target="_blank" v-if="address" :href="`https://www.google.com/maps/search/${address}`" class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent ms-auto">
                             <svg class="svg-3" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg>
                         </a>
                     </div>
@@ -228,13 +258,13 @@
                 <div class="mb-1">
                     <div class="fs-12px text-soft mb-0">Value</div>
                     <div class="d-flex">
-                        <div class="fs-14px fw-bold text-head mb-0">$10,245.00</div>
+                        <div class="fs-14px fw-bold text-head mb-0">{{ lead?.estimated_value??' - ' }}</div>
                     </div>
                 </div>
                 <div class="mb-1">
                     <div class="fs-12px text-soft mb-0">Source</div>
                     <div class="d-flex">
-                        <div class="fs-14px fw-bold text-head mb-0">-</div>
+                        <div class="fs-14px fw-bold text-head mb-0">{{ lead?.source?.title??' - ' }}</div>
                     </div>
                 </div>
 
@@ -521,6 +551,21 @@
         flex-grow: 1;
         width: 24rem;
         background-color: #f5f7fa;
+        /* @media only screen and (min-width: 767px) and (max-width: 1500px) { */
+        @media only screen and (max-width:991.99px) {
+            position: absolute;
+            right: -30rem;
+            transition:all 0.5s ease-in-out;
+            height: 100vh;
+            &.show{
+                right:0px !important;
+            }
+        }
+        @media only screen and (min-width: 1px) and (max-width:991px) {
+            &.show{
+                width:calc(100%) !important;
+            }
+        }
         .dropdown-box{
             .dropdown-header{
                 &.show{
@@ -613,26 +658,4 @@
             }
         }
     }    
-</style>
-
-<style>
-    .fadeinout
-    {
-        animation: fadeinout 0.7s ease-in-out;
-    }
-
-    @keyframes fadeinout
-    {
-        0%{
-            opacity:0;
-        }
-        50%
-        {
-            opacity:0.5;
-        }
-        100%
-        {
-            opacity:1;
-        }
-    }
 </style>

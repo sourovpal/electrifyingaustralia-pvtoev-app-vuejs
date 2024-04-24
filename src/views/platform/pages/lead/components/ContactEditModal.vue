@@ -56,6 +56,7 @@
                 this.modalInstance.hide();
             },
             selectContactHandler(contact=null){
+                this.errors = {};
                 if(contact){
                     this.contact = contact;
                 }else{
@@ -81,7 +82,7 @@
                 }
                 delete this.errors['phone_number'];
                 if(!this.another_phones){this.another_phones = []}
-                this.another_phones.push({phone_number:null, phone_use:null,});
+                this.another_phones.push({phone_number:'', phone_use:'',});
             },
             addedAnatherEmailHandler(){
                 if(this.email == null || this.email == ""){
@@ -91,7 +92,7 @@
                 if(this.another_emails?.length > 0){
                     var last = this.another_emails[this.another_emails.length - 1];
                     if(last){
-                        if(last.another_emails == null || last.another_emails == ""){
+                        if(last.email == null || last.email == ""){
                             this.errors['email'] = ['This email address field is required.'];
                             return;
                         }
@@ -99,7 +100,7 @@
                 }
                 delete this.errors['email'];
                 if(!this.another_emails){this.another_emails = []}
-                this.another_emails.push({email:null, email_use:null,});
+                this.another_emails.push({email:'', email_use:'',});
             },
         },
         mounted() {
@@ -177,7 +178,7 @@
 
 
                         <div class="row">
-                            <div class="col-lg-8">
+                            <div class="col-lg-8 mb-3 mb-lg-0">
                                 <div class="">
                                     <label class="form-label-title">Phone number</label>
                                     <input 
@@ -196,9 +197,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-3" v-for="(item, index) in another_phones" :key="index">
-                            <div class="col-lg-8">
+                        <div class="row mt-lg-2" v-for="(item, index) in another_phones" :key="index">
+                            <div class="col-lg-8 mb-3 mb-lg-0">
                                 <div class="">
+                                    <label class="form-label-title d-block d-lg-none">Phone number</label>
                                     <input 
                                     @click="delete errors?.phone_number" 
                                     :class="{'border-error':(errors?.phone_number && !item.phone_number)}" 
@@ -206,8 +208,9 @@
                                     @input="item.phone_number=$event.target.value" type="text" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-4 mb-3 mb-lg-0">
                                 <div class="">
+                                    <label class="form-label-title d-block d-lg-none">Intended use</label>
                                     <select @change="item.phone_use=$event.target.value" class="form-control">
                                         <option value=""></option>
                                         <option v-for="(intended, index) in intendedUse" :key="index" :selected="item.phone_use==intended" :value="intended">{{ intended }}</option>
@@ -215,7 +218,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-1">
                             <div class="col-lg-8"><span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.phone_number?.length">{{ errors?.phone_number[0] }}</span></div>
                             <div class="col-lg-4"><div @click="addedAnatherPhoneHandler()" class="fs-14px text-primary cursor-pointer py-1 select-none">Add another phone</div></div>
                         </div>
@@ -223,7 +226,7 @@
 
 
                         <div class="row">
-                            <div class="col-lg-8">
+                            <div class="col-lg-8 mb-3 mb-lg-0">
                                 <div class="">
                                     <label class="form-label-title">Email address</label>
                                     <input 
@@ -232,7 +235,7 @@
                                     v-model="email" type="email" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-4 mb-3 mb-lg-0">
                                 <div class="">
                                     <label class="form-label-title">Intended use</label>
                                     <select class="form-control">
@@ -242,9 +245,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mt-3" v-for="(item, index) in another_emails" :key="index">
-                            <div class="col-lg-8">
+                        <div class="row mt-lg-2" v-for="(item, index) in another_emails" :key="index">
+                            <div class="col-lg-8 mb-3 mb-lg-0">
                                 <div class="">
+                                    <label class="form-label-title d-block d-lg-none">Email address</label>
                                     <input 
                                     type="email"
                                     @click="delete errors?.email" 
@@ -253,8 +257,9 @@
                                     @input="item.email=$event.target.value" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-4 mb-3 mb-lg-0">
                                 <div class="">
+                                    <label class="form-label-title d-block d-lg-none">Intended use</label>
                                     <select @change="item.email_use=$event.target.value" class="form-control">
                                         <option value=""></option>
                                         <option v-for="(intended, index) in intendedUse" :key="index" :selected="item.email_use==intended" :value="intended">{{ intended }}</option>
@@ -262,7 +267,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-1">
                             <div class="col-lg-8"><span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.email?.length">{{ errors?.email[0] }}</span></div>
                             <div class="col-lg-4"><div @click="addedAnatherEmailHandler()" class="fs-14px text-primary cursor-pointer py-1 select-none">Add another email</div></div>
                         </div>
@@ -270,7 +275,7 @@
                             <label class="form-label-title">Notes <span data-v-27371ed7="" class="text-soft fs-12px ms-1">(Optional)</span></label>
                             <textarea v-model="notes" type="text" class="form-control" rows="3"></textarea>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex justify-content-between align-items-center pt-2">
                             <button @click="hideModalHandler()" class="btn btn-danger">Close</button>
                             <button class="btn btn-primary">Save Change</button>
                         </div>

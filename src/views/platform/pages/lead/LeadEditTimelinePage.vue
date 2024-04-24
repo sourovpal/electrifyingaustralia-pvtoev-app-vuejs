@@ -56,6 +56,7 @@ export default {
         currentOwner:null,
         isLoading:false,
         isFirstLoading:false,
+        toggleRightDetailsSidebar:false,
     }
   },
   watch:{
@@ -64,6 +65,9 @@ export default {
     }
   },
   methods: {
+    toggleRightDetailsSidebarHandler(){
+        this.toggleRightDetailsSidebar = !this.toggleRightDetailsSidebar;
+    },
     selectAll(){
       if(this.selectAllIds.length > 0){
         this.selectAllIds = [];
@@ -197,24 +201,27 @@ export default {
 
     <action-bar>
 
-        <left-action-bar style="flex-grow: 1;">
-            <div class="ms-3 d-flex flex-row justify-content-start align-items-center left-hover-action" style="flex-grow: 1;">
-                <div @click="$refs['editLeadModalRef'].showModalHandler()" class="d-flex flex-row justify-content-start align-items-center cursor-pointer select-none">
-                    <Skeletor  v-if="isFirstLoading" style="width:200px;" />
-                    <h5 v-if="!isFirstLoading" class="text-head mb-0 fs-16px fw-bold lead-title-text">{{ findLead?.lead_title??findLead?.contact?.full_name }}</h5>
-                    <button class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-2" style="margin-left: 14px;">
-                        <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg>
-                    </button>
-                </div>
-                <EditLeadModal 
-                :findLead="findLead"
-                :leadSources="leadSources"
-                :leadProperties="leadProperties"
-                ref="editLeadModalRef" />
-                <button class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-3">
-                    <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>
-                </button>
-            </div>
+        <left-action-bar class="left-hover-action ms-3 ps-1">
+            <Skeletor  v-if="isFirstLoading" style="width:150px;" />
+            <span 
+                @click="$refs['editLeadModalRef'].showModalHandler()"
+                v-if="!isFirstLoading" 
+                class="text-head mb-0 fs-16px fw-bold lead-title-text">
+                {{ findLead?.lead_title??findLead?.contact?.full_name }}
+            </span>
+            <button 
+            @click="$refs['editLeadModalRef'].showModalHandler()" 
+            class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-2 d-none d-md-inline" style="margin-left: 14px;">
+                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg>
+            </button>
+            <EditLeadModal 
+            :findLead="findLead"
+            :leadSources="leadSources"
+            :leadProperties="leadProperties"
+            ref="editLeadModalRef" />
+            <button class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-3 d-none d-md-inline">
+                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>
+            </button>
         </left-action-bar>
 
         <right-action-bar>
@@ -235,6 +242,10 @@ export default {
                     <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M24 24H0V0h24v24z" fill="none" opacity=".87"></path><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z"></path></svg>
                 </button>
             </router-link>
+            
+            <button @click="toggleRightDetailsSidebarHandler()" v-tippy='{ content:"Lead Details", placement : "top" }' class="toolbar-btn btn btn-light btn-sm btn-floating me-3 d-inline d-lg-none">
+                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M120-240v-80h520v80H120Zm664-40L584-480l200-200 56 56-144 144 144 144-56 56ZM120-440v-80h400v80H120Zm0-200v-80h520v80H120Z"/></svg>
+            </button>
 
             <button 
             @click="$refs['leadQualifyModalRef'].showModalHandler()"
@@ -339,7 +350,6 @@ export default {
                 />
             </div>
 
-
             <button class="toolbar-btn btn btn-light btn-sm btn-floating me-3 d-none d-lg-inline">
                 <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"></path> <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5v-3h3.56c.69 1.19 1.97 2 3.45 2s2.75-.81 3.45-2H19v3zm0-5h-4.99c0 1.1-.9 2-2 2s-2-.9-2-2H5V5h14v9z"></path></svg>
             </button>
@@ -372,6 +382,8 @@ export default {
         <div class="col-area">
             <timeline-history/>
             <right-sidebar-timeline
+            :findLead="findLead"
+            :toggleRightDetailsSidebar="toggleRightDetailsSidebar"
             :leadContacts="leadContacts"
             :primaryContact="primaryContact"
             />
@@ -402,14 +414,19 @@ export default {
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
-        width: auto;
-        @media screen and (min-width:1199px) {
-            max-width:250px;
+        cursor: pointer;
+        max-width:100px;
+        @media only screen and (min-width: 992px) {
+            max-width: 150px;
+        }
+        @media only screen and (min-width: 1400px) {
+            max-width: 350px;
         }
     }
     .col-area{
         display:flex;
         height: 100%;
+        position: relative;
     }
     .owner-dropdown-toggler{
         cursor: pointer;
@@ -575,7 +592,7 @@ export default {
         display: none !important;
     }
     .lead-edit .col-left .scrollbar__wrapper{
-        height: calc(100% - 18.5rem);
+        height:calc(100vh - 18rem);
     }
     .lead-edit .col-left .scrollbar__scroller{
         height: 100%;
@@ -584,7 +601,7 @@ export default {
         width:6px !important;
     }
     .lead-edit .col-right .scrollbar__wrapper{
-        height: calc(100%);
+        height: 100vh;
     }
     .lead-edit .col-right .scrollbar__scroller{
         height: 100%;

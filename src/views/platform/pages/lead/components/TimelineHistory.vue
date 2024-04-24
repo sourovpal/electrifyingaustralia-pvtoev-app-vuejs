@@ -188,11 +188,17 @@ export default {
         border-right: 1px solid #dddddd;
         width: calc(100% - 24rem);
         position: relative;
+        height: 100vh;
+
+        @media only screen and (max-width:991.99px) {
+            width:100% !important;
+        }
+
         .message-box{
             position: absolute;
             width: 100%;
             min-height: 12rem;
-            bottom: 105px;
+            bottom: 100px;
             padding: 1rem;
             background-color: #ffffff;
             display: flex;

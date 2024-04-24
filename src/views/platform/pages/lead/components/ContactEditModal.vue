@@ -28,9 +28,6 @@
             }
         },
         watch:{
-            "first_name"(c){
-                console.log(this.another_phones);
-            },
             "leadContacts"(c){
                 this.contacts = c;
             },

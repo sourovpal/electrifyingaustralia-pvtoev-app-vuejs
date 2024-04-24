@@ -152,7 +152,7 @@
                             </td>
                         </tr>
                         <!-- Another Emails -->
-                        <tr v-for="(item, index) in contact?.another_emails??[]" :key="index">
+                        <tr v-for="(item, index) in contact?.another_emails??[]" :key="index" v-show="item?.email">
                             <td class="fs-16px" width="10%">
                                 <svg class="svg-5" width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z"/></svg>
                             </td>
@@ -192,7 +192,7 @@
                             </td>
                         </tr>
 
-                        <tr v-for="(item, index) in contact?.another_phones??[]" :key="index">
+                        <tr v-for="(item, index) in contact?.another_phones??[]" :key="index" v-show="item?.phone_number">
                             <td class="fs-16px" width="10%">
                                 <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"></path></svg>
                             </td>

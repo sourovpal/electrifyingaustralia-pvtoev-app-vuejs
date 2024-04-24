@@ -155,7 +155,7 @@
                     </div>
                     <div class="modal-body px-0">
                         <div class="mb-3">
-                            <label class="form-label-title">Title {{ console.is_primary }}</label>
+                            <label class="form-label-title">Title</label>
                             <input v-model="title" type="text" class="form-control">
                         </div>
                         <div class="row">

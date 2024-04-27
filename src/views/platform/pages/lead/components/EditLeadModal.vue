@@ -7,13 +7,15 @@
     } from '../../../../../actions/LeadAction';
 
     export default {
-        props:["leadProperties", "findLead", "leadSources"],
         components:{
         },
         data(){
             return {
                 errors:{},
                 toggleTabs:1,
+                findLead:{},
+                leadProperties:[],
+                leadSources:[],
                 modalInstance:null,
                 lead_source:null,
                 source_title:null,
@@ -24,20 +26,6 @@
             }
         },
         watch:{
-            "findLead"(l){
-                
-                this.currentLead = l;
-
-                if(l.custom_properties){
-                    l.custom_properties.map((item)=>{
-                        this.leadCustomProperties[item.unique_id] = item.value;
-                    });
-                }
-
-                if(l.source){
-                    this.source_title = l.source.title;
-                }
-            },
             "source_title"(s){
                 if(!this.lead_source){return ;}
                 if(s == ''){
@@ -54,6 +42,22 @@
         methods: {
             showModalHandler(){
                 this.errors = {};
+
+                this.findLead = this.$store.getters.getFindLead;
+                this.leadProperties = this.$store.getters.getLeadProperties;
+                this.leadSources = this.$store.getters.getLeadSources;
+
+                var leadCustomProperties = this.$store.getters.getLeadCustomProperties;
+
+                leadCustomProperties?.map((item)=>{
+                    this.leadCustomProperties[item.unique_id] = item.value;
+                });
+
+                if(this.findLead?.source){
+                    this.source_title = this.findLead?.source.title;
+                }
+
+
                 this.modalInstance.show();
             },
             hideModalHandler(){

@@ -42,18 +42,12 @@ export default {
     return {
         fetch:"lead_properties,lead_sources,owners,pipelines",
         icons:{},
-        findLead:null,
-        primaryContact:null,
-        leadContacts:[],
-        nextLead:null,
+        findLead:{},
         prevLead:null,
-        leadStatus:[],
-        leadSources:[],
-        leadProperties:[],
-        pipelines:[],
-        owners:[],
+        nextLead:null,
         owner:null,
-        currentOwner:null,
+        owners:[],
+        leadStatus:[],
         isLoading:false,
         isFirstLoading:false,
         toggleRightDetailsSidebar:false,
@@ -62,72 +56,42 @@ export default {
   watch:{
     "$route"(){
         this.findLeadByIdHandler();
-    }
+    },
+    "$store.state.leadEdit.findLead"(lead){
+        this.findLead = lead;
+    },
+    "$store.state.leadEdit.prev_lead"(prev){
+        this.prevLead = prev;
+    },
+    "$store.state.leadEdit.next_lead"(next){
+        this.nextLead = next;
+    },
+    "$store.state.leadEdit.owners"(owners){
+        this.owners = owners;
+    },
+    "$store.state.leadEdit.currentOwner"(owner){
+        this.owner = owner;
+    },
+    "$store.state.leadEdit.leadStatus"(status){
+        this.leadStatus = status;
+    },
   },
   methods: {
     toggleRightDetailsSidebarHandler(){
         this.toggleRightDetailsSidebar = !this.toggleRightDetailsSidebar;
     },
-    selectAll(){
-      if(this.selectAllIds.length > 0){
-        this.selectAllIds = [];
-      }else{
-        this.selectAllIds = Array.from(Array(100).keys());
-      }
-    },    
-    async findLeadByIdHandler(fetch=""){
+    async findLeadByIdHandler(fetch=this.fetch){
         try{
             this.isLoading = true;
-            var fetchArr = fetch.split(',');
             var leadId = this.$route.params?.id??'';
             var payload = {
                 lead_id:leadId,
+                fetch:fetch,
             };
-            if(fetch != ""){
-                payload['fetch'] = fetch;
-            }
             const res = await FetchLeads(payload);
-            // await new Promise((e)=>setTimeout(e, 5000));
             try{
-                const {lead, next_lead, prev_lead, lead_properties, pipelines, owners, lead_sources} = res;
+                this.$store.commit('setLeadEditTimelineData', res);
                 this.isFirstLoading = false;
-                this.findLead = lead;
-
-                this.nextLead = next_lead;
-                this.prevLead = prev_lead;
-                console.log(this.findLead)
-
-                if(this.findLead){
-                    if(this.findLead?.owner){
-                        this.owner = this.currentOwner = this.findLead.owner;
-                    }else{
-                        this.owner = this.currentOwner = null;
-                    }
-                    // Contacts
-                    if(this.findLead.contacts?.length){
-                        this.leadContacts = this.findLead.contacts;
-                        if(this.findLead.contact){
-                            this.primaryContact = this.findLead.contact;
-                        }else{
-                            this.primaryContact = this.findLead?.contacts[0];
-                        }
-                    }
-                }
-
-
-
-                if(fetchArr.includes('lead_properties')){
-                    this.leadProperties = lead_properties;
-                }
-                if(fetchArr.includes('owners')){
-                    this.owners = owners;
-                }
-                if(fetchArr.includes('pipelines')){
-                    this.pipelines = pipelines;
-                }
-                if(fetchArr.includes('lead_sources')){
-                    this.leadSources = lead_sources;
-                }
             }catch(error){
                 throw new Error(error.message);
             }
@@ -187,9 +151,7 @@ export default {
   mounted(){
         this.icons = icons;
         this.isFirstLoading = true;
-        this.findLeadByIdHandler(this.fetch);
-        const {lead_statuses} = this.$cookies.get(import.meta.env.VITE_AUTH_APP);
-        this.leadStatus = lead_statuses;
+        this.findLeadByIdHandler();
     },
 }
 </script>
@@ -214,11 +176,7 @@ export default {
             class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-2 d-none d-md-inline" style="margin-left: 14px;">
                 <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"></path></svg>
             </button>
-            <EditLeadModal 
-            :findLead="findLead"
-            :leadSources="leadSources"
-            :leadProperties="leadProperties"
-            ref="editLeadModalRef" />
+            <EditLeadModal ref="editLeadModalRef" />
             <button class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-3 d-none d-md-inline">
                 <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"></path></svg>
             </button>
@@ -253,12 +211,7 @@ export default {
                 <svg class="me-1" xmlns="http://www.w3.org/2000/svg" height="24" fill="currentColor" viewBox="0 -960 960 960" width="24"><path d="M707-485 581-612l51-51 75 74 160-159 52 52-212 211Zm-352-2q-71.462 0-116.231-44.769Q194-576.537 194-648t44.769-116.231Q283.538-809 355-809q71.462 0 116.231 44.769Q516-719.463 516-648t-44.769 116.231Q426.462-487 355-487ZM20-130v-109q0-39.113 18.594-69.548Q57.187-338.982 92-354q77-35 138.292-49 61.293-14 124.5-14Q418-417 479-403t138 49q34.812 16.018 53.906 45.952Q690-278.113 690-239v109H20Zm73-73h524v-36q0-16-7.825-29.674T588-288q-72-33-123.5-44.5T355-344q-58 0-110 11.5T122-288q-13.8 5.652-21.4 19.326Q93-255 93-239v36Zm262-357q38 0 63-25t25-63q0-38-25-63t-63-25q-38 0-63 25t-25 63q0 38 25 63t63 25Zm0 286Zm0-374Z"/></svg>
                 Qualify
             </button>
-            <lead-qualify-modal 
-            :leadStatus="leadStatus"
-            :pipelines="pipelines"
-            :owners="owners"
-            :owner="owner"
-            ref="leadQualifyModalRef" />
+            <lead-qualify-modal ref="leadQualifyModalRef" />
 
             <!-- lead status -->
             <Skeletor class="me-3 d-none d-xl-inline"  v-if="isFirstLoading" style="width:150px;height:32px;border-radius:3px;" />
@@ -368,11 +321,7 @@ export default {
                 </div>
             </div>
 
-            <LeadReCategoriseModal
-            ref="leadReCategoriseModalRef"
-            :leadStatus="leadStatus"
-            :pipelines="pipelines"
-            />
+            <LeadReCategoriseModal ref="leadReCategoriseModalRef" />
             
         </right-action-bar>
 
@@ -381,12 +330,7 @@ export default {
     <section class="h-100">
         <div class="col-area">
             <timeline-history/>
-            <right-sidebar-timeline
-            :findLead="findLead"
-            :toggleRightDetailsSidebar="toggleRightDetailsSidebar"
-            :leadContacts="leadContacts"
-            :primaryContact="primaryContact"
-            />
+            <right-sidebar-timeline :toggleRightDetailsSidebar="toggleRightDetailsSidebar" />
         </div>
     </section>
 

@@ -8,7 +8,6 @@
     } from '../../../../../actions/LeadAction';
 
     export default {
-        props:['leadStatus', 'pipelines', 'owners', 'owner'],
         components:{
             DropdownOwnerList
         },
@@ -17,6 +16,9 @@
                 icons:{},
                 modalInstance:null,
                 errors:{},
+                owners:[],
+                owner:[],
+                pipelines:[],
                 pipelineStages:[],
                 selectedPipeline:null,
                 selectedPipelineStage:null,
@@ -25,22 +27,18 @@
                 isSubmitConfirmQualifyForm:null,
             }
         },
-        watch:{
-            "pipelines"(n){
-                try{
-                    if(n.length > 0){
-                        this.selectPipelineHandler(n[0]?.id);
-                    }
-                }catch(error){}
-            },
-            "owner"(o){
-                this.currentOwner = o;
-            }
-        },
         methods: {
             showModalHandler(){
                 this.errors = {};
-                this.currentOwner = this.owner;
+                this.owners = this.$store.getters.getOwners;
+                this.pipelines = this.$store.getters.getPipelinesWithStage;
+                this.currentOwner = this.owner = this.$store.getters.getCurrentOwner;
+                try{
+                    if(this.pipelines.length > 0){
+                        this.selectPipelineHandler(this.pipelines[0]?.id);
+                    }
+                }catch(error){}
+
                 this.modalInstance.show();
             },
             hideModalHandler(){

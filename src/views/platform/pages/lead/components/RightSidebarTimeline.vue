@@ -4,55 +4,67 @@
     import '@vueup/vue-quill/dist/vue-quill.snow.css';
     import '@vueup/vue-quill/dist/vue-quill.bubble.css';
     import ContactEditModal from './ContactEditModal.vue';
+    import StarRating from 'vue-star-rating';
+    import RightSidebarProperties from './RightSidebarProperties.vue';
     export default {
         components: {
             CustomScrollbar,
             QuillEditor,
             ContactEditModal,
+            StarRating,
+            RightSidebarProperties,
         },
-        props:['findLead', 'leadContacts', 'primaryContact', 'toggleRightDetailsSidebar'],
+        props:['toggleRightDetailsSidebar'],
         data() {
             return {
                 contacts:[],
                 contact:null,
                 lead:null,
                 address:null,
+                confidence:0,
+                leadProperties:[],
             }
         },
         watch:{
-            "leadContacts"(c){
-                this.contacts = c;
+            "confidence"(e){
+                console.log(e);
             },
-            "primaryContact"(p){
-                this.contact = p;
+            "$store.state.leadEdit.leadProperties"(payload){
+                this.leadProperties = payload;
             },
-            "findLead"(l){
-                this.lead = l;
-
+            "$store.state.leadEdit.leadContacts"(payload){
+                this.contacts = payload;
+            },
+            "$store.state.leadEdit.primaryContact"(payload){
+                this.contact = payload;
+            },
+            "$store.state.leadEdit.findLead"(lead){
+                this.lead = lead;
+                this.confidence = lead?.confidence;
                 var temp = '';
-                if(l?.address_line_two){
-                    temp+=l?.address_line_two;
-                    if(l?.address_line_one){
-                        temp+='/'+l?.address_line_one;
+                if(lead?.address_line_two){
+                    temp+=lead?.address_line_two;
+                    if(lead?.address_line_one){
+                        temp+='/'+lead?.address_line_one;
                     }
-                }else if(l?.address_line_one){
-                    temp+=l?.address_line_one;
+                }else if(lead?.address_line_one){
+                    temp+=lead?.address_line_one;
                 }
 
-                if(l?.city || l?.state || l?.post_code){
+                if(lead?.city || lead?.state || lead?.post_code){
                     temp+=", ";
                 }
 
-                if(l?.city){
-                    temp+=l?.city+" ";
+                if(lead?.city){
+                    temp+=lead?.city+" ";
                 }
 
-                if(l?.state){
-                    temp+=l?.state+" ";
+                if(lead?.state){
+                    temp+=lead?.state+" ";
                 }
 
-                if(l?.post_code){
-                    temp+=l?.post_code;
+                if(lead?.post_code){
+                    temp+=lead?.post_code;
                 }
                 if(temp != ''){
                     this.address = temp;
@@ -76,7 +88,7 @@
                             this.$nextTick(()=>{
                                 setTimeout(()=>{
                                     dropdownBody.style.height = '0px';
-                                }, 300);
+                                }, 200);
                             })
                         }
                     }
@@ -273,128 +285,23 @@
                 <div class="mb-1">
                     <div class="fs-12px text-soft mb-0">Confidence</div>
                     <div class="d-flex">
-                        <div class="fs-22px fw-bold text-head mb-0">
-                            *****
+                        <div class="mb-2">
+                            <star-rating 
+                            style="line-height: 20px;"
+                            :star-size="18"
+                            :rounded-corners="true"
+                            :border-width="2"
+                            inactive-color="#F8F9F9"
+                            active-color="#FF9529"
+                            border-color="#AEB6BF"
+                            active-border-color="#FF9529"
+                            :increment="0.5" v-model:rating="confidence"
+                            :show-rating="false"
+                             />
                         </div>
                     </div>
                 </div>
-
-                <form action="">
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Call Center Agent Name</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Recording Link</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Quarter Bill Amount</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Appointment Date & Time</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Level of the House</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Supply Phase</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Cash/Finance</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Electricity Retailer</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Electricity Distributor</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Panel Name & Number</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Inverter Brand & Size</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">System Size</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Battery Brand & Size</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Types of Roof</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">NMI Number</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Optimizer</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Export Limit Device</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Extras</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Power phases </div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Roof material</div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Number of storeys </div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Energy distributor </div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-
-                    <div class="mb-1">
-                        <div class="fs-12px text-soft mb-1">Unsolicited contact </div>
-                        <input class="form-control form-control-sm " type="text">
-                    </div>
-                </form>
+                <right-sidebar-properties/>
             </div>
             
             <div class="">
@@ -539,10 +446,7 @@
         </CustomScrollbar>
 
 
-        <ContactEditModal 
-        ref="contactEditModalRef"
-        :leadContacts="contacts"
-        />
+        <ContactEditModal ref="contactEditModalRef" />
 
 
     </div>

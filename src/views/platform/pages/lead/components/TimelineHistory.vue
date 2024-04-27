@@ -8,20 +8,44 @@ export default {
         CustomScrollbar,
         QuillEditor
     },
+    data() {
+        return {
+            counter:5,
+        }
+    },
+    methods: {
+        timelineScrollBarBottomHandler(time=0){
+            try{
+                var scroll = this.$refs['leadTimelineHistoryScrollBar'];
+                if(scroll){
+                    var ele = scroll.scrollEl;
+                    if(ele){
+                        setTimeout(()=>{
+                            //behavior:'smooth'
+                            ele.scroll({top:ele.scrollHeight});
+                        }, time);
+                    }
+                }
+            }catch(error){}
+        }
+    },
+    mounted() {
+        this.timelineScrollBarBottomHandler();
+    },
 }
 </script>
 
 <template>
     <div class="col-left">
-        <CustomScrollbar>
+        <CustomScrollbar ref="leadTimelineHistoryScrollBar">
             <div class="history-area">
                 <div class="text-center mb-1 mt-2">
                     <span class="text-soft">No older activity to display.</span>
                 </div>
-                <div class="history-row" v-for="(item, index) in 20" :key="index">
+                <div class="history-row" v-for="(item, index) in counter" :key="index">
 
                     <div class="text-center mb-1 mt-2 feed-updated-date">
-                        <span class="text-head updated-date"> {{ item%2 == 0?"Mon":"Sun" }} Nov, {{ Math.floor((Math.random()*100)+1) }} 2024</span>
+                        <span class="text-head updated-date" @click="timelineScrollBarBottomHandler()"> {{ item%2 == 0?"Mon":"Sun" }} Nov, {{ Math.floor((Math.random()*100)+1) }} 2024</span>
                     </div>
 
                     <div class="lead-feed-row d-flex justify-content-between">

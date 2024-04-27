@@ -7,13 +7,14 @@
     } from '../../../../../actions/LeadAction';
 
     export default {
-        props:['leadStatus', 'pipelines'],
         components:{
         },
         data(){
             return {
                 modalInstance:null,
                 errors:{},
+                leadStatus:[],
+                pipelines:[],
                 pipelineStages:[],
                 selectedStatus:null,
                 selectedPipeline:null,
@@ -27,6 +28,8 @@
         },
         methods: {
             showModalHandler(){
+                this.leadStatus = this.$store.getters.getLeadStatus;
+                this.pipelines = this.$store.getters.getPipelinesWithStage;
                 this.errors = {};
                 this.selectedStatus = null;
                 this.selectedPipeline = null;

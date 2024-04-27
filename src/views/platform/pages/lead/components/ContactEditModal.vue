@@ -4,7 +4,7 @@
 
 
     export default {
-        props:['leadContacts'],
+        props:[],
         components:{
         },
         data(){
@@ -28,9 +28,6 @@
             }
         },
         watch:{
-            "leadContacts"(c){
-                this.contacts = c;
-            },
             "contact"(contact){
                 if(contact){
                     Object.keys(contact).forEach(item=>{
@@ -42,6 +39,8 @@
         methods: {
             showModalHandler(contact=null){
                 this.errors = {};
+                this.contacts = this.$store.getters.getLeadContacts;
+                
                 if(contact){
                     this.contact = contact;
                 }else{

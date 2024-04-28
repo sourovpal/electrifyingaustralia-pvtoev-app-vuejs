@@ -1,8 +1,6 @@
 import api from "../actions/api";
 import VueCookies from "vue-cookies";
 
-const {lead_statuses} = VueCookies.get(import.meta.env.VITE_AUTH_APP);
-
 var leadTimelineHistory = {};
 try{
     leadTimelineHistory = {
@@ -69,7 +67,7 @@ try{
       },
       mutations: {
         setLeadEditTimelineData(state, payload) {
-
+            const {lead_statuses} = VueCookies.get(import.meta.env.VITE_AUTH_APP);
             const {lead, next_lead, prev_lead, lead_properties, pipelines, owners, lead_sources} = payload;
             state.findLead  = lead;
             state.prev_lead = prev_lead;

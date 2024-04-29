@@ -136,6 +136,81 @@ const MoveLeadStatusToPipeline = (payload)=>{
     });
 }
 
+const UpdateLeadConfidence = (payload, id)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.post(`/leads/confidence/${id}`, payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
+const CreateLeadContact = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.post(`/leads/contact/create`, payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
+const UpdateLeadContact = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.post(`/leads/contact/update`, payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
+const SearchLeadContact = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.post(`/leads/contact/search`, payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
+const DeleteLeadContact = (id)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.post(`/leads/contact/delete/${id}`)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
 export {
     FetchLeads,
     UpdateLeadPropertieHeaders,
@@ -146,4 +221,9 @@ export {
     FetchLeadPipelineWithStage,
     ConfirmQualify,
     MoveLeadStatusToPipeline,
+    UpdateLeadConfidence,
+    CreateLeadContact,
+    UpdateLeadContact,
+    SearchLeadContact,
+    DeleteLeadContact,
 }

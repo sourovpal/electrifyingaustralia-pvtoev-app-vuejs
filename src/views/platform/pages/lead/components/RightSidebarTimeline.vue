@@ -6,6 +6,11 @@
     import ContactEditModal from './ContactEditModal.vue';
     import StarRating from 'vue-star-rating';
     import RightSidebarProperties from './RightSidebarProperties.vue';
+    import {
+        UpdateLeadConfidence, 
+        DeleteLeadContact
+    } from '../../../../../actions/LeadAction';
+
     export default {
         components: {
             CustomScrollbar,
@@ -14,7 +19,7 @@
             StarRating,
             RightSidebarProperties,
         },
-        props:['toggleRightDetailsSidebar'],
+        props:['toggleRightDetailsSidebar', 'findLeadByIdHandler'],
         data() {
             return {
                 contacts:[],
@@ -26,9 +31,6 @@
             }
         },
         watch:{
-            "confidence"(e){
-                console.log(e);
-            },
             "$store.state.leadEdit.leadProperties"(payload){
                 this.leadProperties = payload;
             },
@@ -71,7 +73,7 @@
                 }
             },
         },
-        methods: {
+        methods: {            
             toggleRightSidebarDropdownBox(e){
                 e.stopPropagation();
                 var dropdownHeader = e.target.closest('.dropdown-header');
@@ -97,6 +99,41 @@
             selectPrimaryContactHandler(contact){
                 this.contact = contact;
             },
+            async deleteLeadContactHandler(contact){
+                try{
+                    this.$toast.clear();
+                    if(contact?.is_primary){
+                        return;
+                    }
+                    const res = await DeleteLeadContact(contact.id);
+                    var {message} = res;
+                    this.$toast[message.type](message.text);
+                }catch(error){
+                    console.log(error);
+                    try{
+                        var message = error.response.data.message;
+                        this.$toast[message.type](message.text);
+                    }catch(e){
+                        this.$toast.error('Oops, something went wrong');
+                    }
+                }
+            },
+            async confidenceHandler(){
+                try{
+
+                    const res = await UpdateLeadConfidence({
+                        confidence:this.confidence,
+                    }, this.lead?.id);
+
+                }catch(error){
+                    try{
+                        var message = error.response.data.message;
+                        this.$toast[message.type](message.text);
+                    }catch(e){
+                        this.$toast.error('Oops, something went wrong');
+                    }
+                }
+            },
             copyToClipboard(text=null){
                 this.$toast.clear();
                 if(text){
@@ -112,10 +149,10 @@
 <template>
     <div class="col-right" :class="{show:toggleRightDetailsSidebar}">
         <CustomScrollbar>
-            <div class="col-r-header d-flex justify-content-between align-items-center border-bottom">
+            <div class="col-r-header d-flex justify-content-between align-items-center border-bottom overflow-x-auto overflow-y-hidden">
                 <div class="left ps-3 py-1 d-flex justify-content-start align-items-center slim-scrollbar">
                     <div 
-                    v-for="(item, index) in contacts" 
+                    v-for="(item, index) in contacts"
                     class="circle-avatar me-2 cursor-pointer" 
                     :class="`${(contact?.id == item.id)?'shadow-border':''}`" 
                     @click="selectPrimaryContactHandler(item)"
@@ -141,10 +178,14 @@
                     <div class="dropdown-menu dropdown-menu-end shadow-md custom-dropdown-menu three-dot">
                         <span @click="$refs['contactEditModalRef'].showModalHandler(contact)" class="dropdown-item cursor-pointer text-head py-1">Edit Contact</span>
                         <span 
-                        class="dropdown-item cursor-pointer text-soft py-1" 
-                        :class="`${contact?.is_primary?'text-secondary cursor-no-drop':'text-head'}`">Remove Contact</span>
+                        :data-mdb-toggle="`${!contact?.is_primary?'modal':''}`"
+                        data-mdb-target="#deleteLeadContactModal"
+                        :class="`${contact?.is_primary?'cursor-no-drop text-soft':'cursor-pointer text-head'}`"
+                        class="dropdown-item py-1">Remove Contact</span>
+
                     </div>
                 </div>
+                
                 <div>
                     <table class="tbl-contact-info">
                         <tr v-if="contact?.email">
@@ -296,6 +337,7 @@
                             border-color="#AEB6BF"
                             active-border-color="#FF9529"
                             :increment="0.5" v-model:rating="confidence"
+                            @click="confidenceHandler()"
                             :show-rating="false"
                              />
                         </div>
@@ -319,7 +361,7 @@
                             <div class="lead-files">
                                 <div class="empty-state">
                                     <div class="icon icon--36">
-                                        <svg data-v-562e52ff="" xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 0 24 24" width="36px" fill="currentColor"><path data-v-562e52ff="" d="M0 0h24v24H0V0z" fill="none"></path><path data-v-562e52ff="" d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm0 12H4V6h5.17l2 2H20v10zm-8-4h2v2h2v-2h2v-2h-2v-2h-2v2h-2z"></path></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 0 24 24" width="36px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm0 12H4V6h5.17l2 2H20v10zm-8-4h2v2h2v-2h2v-2h-2v-2h-2v2h-2z"></path></svg>
                                     </div> 
                                     <div class="empty-state__body">
                                         <strong>Start a new project</strong>
@@ -347,7 +389,7 @@
                             <div class="lead-files">
                                 <div class="empty-state">
                                     <div class="icon icon--36">
-                                        <svg data-v-562e52ff="" xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 0 24 24" width="36px" fill="currentColor"><path data-v-562e52ff="" d="M0 0h24v24H0V0z" fill="none"></path><path data-v-562e52ff="" d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm0 12H4V6h5.17l2 2H20v10zm-8-4h2v2h2v-2h2v-2h-2v-2h-2v2h-2z"></path></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 0 24 24" width="36px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm0 12H4V6h5.17l2 2H20v10zm-8-4h2v2h2v-2h2v-2h-2v-2h-2v2h-2z"></path></svg>
                                     </div> 
                                     <div class="empty-state__body">
                                         <strong>Start a new project</strong>
@@ -375,7 +417,7 @@
                             <div class="lead-files">
                                 <div class="empty-state">
                                     <div class="icon icon--36">
-                                        <svg data-v-562e52ff="" xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 0 24 24" width="36px" fill="currentColor"><path data-v-562e52ff="" d="M0 0h24v24H0V0z" fill="none"></path><path data-v-562e52ff="" d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm0 12H4V6h5.17l2 2H20v10zm-8-4h2v2h2v-2h2v-2h-2v-2h-2v2h-2z"></path></svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 0 24 24" width="36px" fill="currentColor"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm0 12H4V6h5.17l2 2H20v10zm-8-4h2v2h2v-2h2v-2h-2v-2h-2v2h-2z"></path></svg>
                                     </div> 
                                     <div class="empty-state__body">
                                         <strong>Start a new project</strong>
@@ -446,7 +488,36 @@
         </CustomScrollbar>
 
 
-        <ContactEditModal ref="contactEditModalRef" />
+        <ContactEditModal
+        :findLeadByIdHandler="findLeadByIdHandler"
+        ref="contactEditModalRef"
+         />
+        <!-- Delete Contact Confirm Modal -->
+         <div class="modal fade" id="deleteLeadContactModal"  aria-hidden="true" aria-labelledby="deleteLeadContactModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-sm mx-auto">
+                <div class="modal-content">
+                    <div class="modal-header py-1">
+                        <div class="d-flex justify-content-center align-items-center py-0">
+                            <svg class="me-2 svg-5" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"></path></svg>
+                            <span class="text-hard fw-bold fs-16px">Delete</span>
+                        </div>
+                        <div>
+                            <button class="btn btn-light btn-sm btn-floating" data-mdb-dismiss="modal">
+                                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 -960 960 960" width="22"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <p class="fs-14px fw-bold text-center mb-1">Are you sure you want to delete this contact?</p>
+                        <p class="fs-12px text-center text-danger">This action cannot be undone! To confirm your intent, please click delete button.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <button class="btn btn-primary btn-sm" data-mdb-dismiss="modal">Close</button>
+                            <button class="btn btn-danger btn-sm" data-mdb-dismiss="modal" @click="deleteLeadContactHandler(contact)">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
 
 
     </div>

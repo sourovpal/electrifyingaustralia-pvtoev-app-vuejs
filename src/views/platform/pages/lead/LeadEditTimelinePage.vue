@@ -330,7 +330,10 @@ export default {
     <section class="h-100">
         <div class="col-area">
             <timeline-history/>
-            <right-sidebar-timeline :toggleRightDetailsSidebar="toggleRightDetailsSidebar" />
+            <right-sidebar-timeline 
+            :findLeadByIdHandler="findLeadByIdHandler"
+            :toggleRightDetailsSidebar="toggleRightDetailsSidebar"
+             />
         </div>
     </section>
 

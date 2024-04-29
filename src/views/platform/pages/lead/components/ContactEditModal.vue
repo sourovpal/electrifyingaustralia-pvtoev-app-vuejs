@@ -1,10 +1,14 @@
 <script>
     import { Modal } from "mdb-ui-kit";
     import {icons} from '../../../../../asset/svgicon';
-
+    import {
+        CreateLeadContact, 
+        UpdateLeadContact, 
+        SearchLeadContact,
+    } from '../../../../../actions/LeadAction'
 
     export default {
-        props:[],
+        props:['findLeadByIdHandler'],
         components:{
         },
         data(){
@@ -12,6 +16,7 @@
                 icons:{},
                 modalInstance:null,
                 errors:{},
+                id:null,
                 contacts:[],
                 contact:null,
                 title:null,
@@ -25,25 +30,41 @@
                 email_use:null,
                 phone_use:null,
                 intendedUse:['Home', 'Office', 'Work', 'Personal', 'Mobile'],
+                searchContacts:[],
+                isCreateNewContact:false,
+                isSubmitCreateNewContact:false,
             }
         },
         watch:{
-            "contact"(contact){
-                if(contact){
-                    Object.keys(contact).forEach(item=>{
-                        this.$data[item] = contact[item];
-                    });
-                }
+            "first_name"(val){
+                this.searchLeadContactHandler(val, ['first_name', 'last_name']);
+            },
+            "last_name"(val){
+                this.searchLeadContactHandler(val, ['first_name', 'last_name']);
+            },
+            "email"(val){
+                this.searchLeadContactHandler(val, ['email', 'another_emails']);
+            },
+            "phone_number"(val){
+                this.searchLeadContactHandler(val, ['phone_number', 'another_phones']);
+            },
+            "$store.state.leadEdit.leadContacts"(payload){
+                this.contacts = payload;
             },
         },
         methods: {
             showModalHandler(contact=null){
                 this.errors = {};
                 this.contacts = this.$store.getters.getLeadContacts;
-                
+                this.searchContacts = [];
                 if(contact){
+                    this.isCreateNewContact = false;
+                    Object.keys(contact).forEach(item=>{
+                        this.$data[item] = contact[item];
+                    });
                     this.contact = contact;
                 }else{
+                    this.isCreateNewContact = true;
                     this.contact = null;
                 }
                 this.modalInstance.show();
@@ -53,13 +74,21 @@
             },
             selectContactHandler(contact=null){
                 this.errors = {};
+                this.searchContacts = [];
                 if(contact){
+                    this.isCreateNewContact = false;
+                    Object.keys(contact).forEach(item=>{
+                        this.$data[item] = contact[item];
+                    });
                     this.contact = contact;
                 }else{
                     Object.keys(this.contact).forEach(item=>{
                         this.$data[item] = null;
                     });
                     this.contact = null;
+                    setTimeout(()=>{
+                        this.isCreateNewContact = true;
+                    },200);
                 }
             },
             addedAnatherPhoneHandler(){
@@ -78,7 +107,7 @@
                 }
                 delete this.errors['phone_number'];
                 if(!this.another_phones){this.another_phones = []}
-                this.another_phones.push({phone_number:'', phone_use:'',});
+                this.another_phones.push({phone_number:'', phone_use:''});
             },
             addedAnatherEmailHandler(){
                 if(this.email == null || this.email == ""){
@@ -96,8 +125,101 @@
                 }
                 delete this.errors['email'];
                 if(!this.another_emails){this.another_emails = []}
-                this.another_emails.push({email:'', email_use:'',});
+                this.another_emails.push({email:'', email_use:''});
             },
+            async searchLeadContactHandler(search, fields){
+                if(!this.isCreateNewContact){return;}
+                if(search==''){
+                    this.searchContacts = [];
+                    return;
+                }
+                try{
+                    var leadId = this.$route.params?.id??null;
+                    var payload = {lead_id:leadId, search:search, fields:fields};
+
+                    const res = await SearchLeadContact(payload);
+                    try{
+                        const {contacts} = res;
+                        this.searchContacts = contacts;
+                    }catch(error){}
+                }catch(error){}
+            },
+            async createLeadContactHandler(currentContact=null){
+                try{
+                    this.$toast.clear();
+                    this.isSubmitCreateNewContact = true;
+                    var res = {};
+                    var leadId = this.$route.params?.id??null;
+                    if(currentContact){
+                        var payload = {
+                            lead_id:leadId,
+                            contact_id:currentContact.id,
+                        };
+                        res = await CreateLeadContact(payload);
+                    }else{
+                        var phones = [];
+                        this.another_phones?.map((item)=>{
+                            if(item.phone_number != ''){
+                                phones.push(item);
+                            }
+                        });
+                        var emails = [];
+                        this.another_emails?.map((item)=>{
+                            if(item.email != ''){
+                                emails.push(item);
+                            }
+                        });
+                        var payload = {
+                            contact_id:this.id,
+                            lead_id:leadId,
+                            title:this.title,
+                            first_name:this.first_name,
+                            last_name:this.last_name,
+                            email:this.email,
+                            phone_number:this.phone_number,
+                            notes:this.notes,
+                            another_phones:phones,
+                            another_emails:emails,
+                            email_use:this.email_use,
+                            phone_use:this.phone_use,
+                        };
+                        if(this.contact){
+                            res = await UpdateLeadContact(payload);
+                        }else{
+                            res = await CreateLeadContact(payload);
+                        }
+                    }
+
+                    this.isSubmitCreateNewContact = false;
+                    this.findLeadByIdHandler();
+
+                    if(!currentContact){
+                        this.hideModalHandler();
+                    }
+
+                    try{
+                        var {message, contact} = res;
+                        if(!currentContact){
+                            this.$toast[message.type](message.text);
+                        }
+                        this.selectContactHandler(contact);
+                    }catch(error){}
+                    
+                }catch(error){
+                    try{
+                        this.errors = error.response.data.errors;
+                    }catch(error){}
+
+                    try{
+                        var message = error.response.data.message;
+                        this.$toast[message.type](message.text);
+                    }catch(e){
+                        this.$toast.error('Oops, something went wrong');
+                    }
+                }finally{
+                    this.isSubmitCreateNewContact = false;
+                }
+            }
         },
         mounted() {
             this.modalInstance = new Modal(this.$refs.leadQualifyModalRef);
@@ -127,9 +249,9 @@
                     <div class="modal-body px-0">
                         <ul class="contacts-list list-unstyled">
                             <li 
-                            v-for="(item, index) in contacts??[]" :key="index"
-                            :class="{active:(item.id == contact?.id)}"
+                            v-for="(item, index) in contacts" :key="index"
                             @click="selectContactHandler(item)"
+                            :class="(item.id == contact?.id)?'active':''"
                             class="list-item d-flex justify-content-start align-items-center">
                                 <div class="circle-avatar me-2 cursor-pointer" style="width: 40px; height: 40px;min-width:40px;">
                                     <img class="rounded-circle border" alt="avatar1" :src="item.avatar" />
@@ -155,19 +277,22 @@
                     <div class="modal-body px-0">
                         <div class="mb-3">
                             <label class="form-label-title">Title</label>
-                            <input v-model="title" type="text" class="form-control">
+                            <input @click="delete errors?.title" v-model="title" type="text" class="form-control">
+                            <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.title?.length">{{ errors?.title[0] }}</span>
                         </div>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label-title">First name</label>
-                                    <input v-model="first_name" type="text" class="form-control">
+                                    <input @click="delete errors?.first_name" v-model="first_name" type="text" class="form-control">
+                                    <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.first_name?.length">{{ errors?.first_name[0] }}</span>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label class="form-label-title">Last name</label>
-                                    <input v-model="last_name" type="text" class="form-control">
+                                    <input @click="delete errors?.last_name" v-model="last_name" type="text" class="form-control">
+                                    <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.last_name?.length">{{ errors?.last_name[0] }}</span>
                                 </div>
                             </div>
                         </div>
@@ -183,10 +308,10 @@
                                     v-model="phone_number" type="text" class="form-control">
                                 </div>
                             </div>
-                            <div class="col-lg-4">
+                            <div class="col-lg-4 mb-3 mb-lg-0">
                                 <div class="">
                                     <label class="form-label-title">Intended use</label>
-                                    <select class="form-control">
+                                    <select v-model="phone_use" class="form-control">
                                         <option value=""></option>
                                         <option v-for="(item, index) in intendedUse" :key="index" :selected="phone_use==item" :value="item">{{ item }}</option>
                                     </select>
@@ -234,7 +359,7 @@
                             <div class="col-lg-4 mb-3 mb-lg-0">
                                 <div class="">
                                     <label class="form-label-title">Intended use</label>
-                                    <select class="form-control">
+                                    <select v-model="email_use" class="form-control">
                                         <option value=""></option>
                                         <option v-for="(item, index) in intendedUse" :key="index" :selected="email_use==item" :value="item">{{ item }}</option>
                                     </select>
@@ -268,12 +393,36 @@
                             <div class="col-lg-4"><div @click="addedAnatherEmailHandler()" class="fs-14px text-primary cursor-pointer py-1 select-none">Add another email</div></div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label-title">Notes <span data-v-27371ed7="" class="text-soft fs-12px ms-1">(Optional)</span></label>
-                            <textarea v-model="notes" type="text" class="form-control" rows="3"></textarea>
+                            <label class="form-label-title">Notes <span class="text-soft fs-12px ms-1">(Optional)</span></label>
+                            <textarea @click="delete errors?.notes" v-model="notes" type="text" class="form-control" rows="3"></textarea>
+                            <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.notes?.length">{{ errors?.notes[0] }}</span>
+                        </div>
+                        <div class="mb-3" v-if="searchContacts.length">
+                            <label class="form-label-title">Existing Contacts</label>
+                            <div class="">
+                                <ul class="list-unstyled mb-0 search-contacts">
+                                    <li @click="createLeadContactHandler(item)" v-for="(item, index) in searchContacts" :key="index" class="list-item cursor-pointer" style="line-height: 18px;">
+                                        <span class="d-block fs-14px text-head fw-bold">
+                                            {{ item.title }} <span v-if="item.title && item.full_name"> - </span> {{ item.full_name }}
+                                        </span>
+                                        <span class="d-block fs-12px text-soft">
+                                            {{ item.phone_number }} <span v-if="item.email && item.phone_number"> - </span> {{ item.email }}
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                         <div class="d-flex justify-content-between align-items-center pt-2">
-                            <button @click="hideModalHandler()" class="btn btn-danger">Close</button>
-                            <button class="btn btn-primary">Save Change</button>
+                            <button @click="hideModalHandler()" class="btn btn-danger btn-sm">Close</button>
+                            <button :disabled="isSubmitCreateNewContact" @click="createLeadContactHandler()" type="submit" class="btn btn-primary btn-sm px-3 d-flex justify-content-center align-items-center">
+                                <div v-if="isSubmitCreateNewContact">
+                                    <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
+                                        <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                                    </svg>
+                                    <span>Submitting...</span>
+                                </div>
+                                <span v-if="!isSubmitCreateNewContact">Save Change</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -284,6 +433,17 @@
 
 </template>
 <style lang="scss" scoped>
+    .search-contacts{
+        .list-item{
+            padding:6px 15px;
+            background-color: #ffffff;
+            transition: all 0.3s ease-in-out;
+            border-radius:3px;
+            &:hover{
+                background-color: #f0f3f6;
+            }
+        }
+    }
     .border-error{
         border-color:rgb(220 76 100);
     }
@@ -298,9 +458,10 @@
             cursor: pointer;
             margin-bottom:8px;
             border-left:3px solid transparent;
+            background: #ffffff;
+            box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
             &:hover,
             &.active{
-                background-color:#ffffff;
                 border-left-color: #3b71ca;
             }
             .contact-details{

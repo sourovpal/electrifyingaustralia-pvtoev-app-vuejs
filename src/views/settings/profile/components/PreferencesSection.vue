@@ -10,12 +10,12 @@
                 <h2>Preferences</h2>
             </div>
         </div>
-        <div class="col-lg-6 col-12">
+        <div class="col-lg-5 col-12">
 
             <div class="settings-group-item">
                 <label class="form-label-title" for="">Map base layer style</label>
                 <div class="select-box">
-                    <select class="form-control form-control-input">
+                    <select class="form-control">
                         <option value="">Select Options</option>
                         <option value="">Select Options</option>
                         <option value="">Select Options</option>

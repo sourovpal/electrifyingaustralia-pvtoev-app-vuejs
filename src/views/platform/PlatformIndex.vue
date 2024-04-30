@@ -42,7 +42,7 @@ export default {
           return {
               label:item.title,
               path:'/platform/deals',
-              query:{status:btoa(item.title)},
+              query:{pipeline:btoa(item.title)},
               icon:'',
           };
         });

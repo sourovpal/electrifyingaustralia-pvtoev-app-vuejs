@@ -51,12 +51,14 @@ export default {
   position: relative;
   z-index: 99;
   padding-bottom:40px;
-    @media (min-width: 767px){
-        width:13rem;
-    }
-    @media (min-width: 1200px){
-        width:18rem;
-    }
+  @media (min-width: 767px){
+    width:13rem;
+    min-width: 13rem;
+  }
+  @media (min-width: 1200px){
+    width:18rem;
+    min-width: 18rem;
+  }
   .submenu-header{
     padding: 1.4rem;
     padding-bottom: 0.25rem;

@@ -1,10 +1,9 @@
 <script>
-import CustomScrollbar from 'custom-vue-scrollbar';
 import {UpdateProfilePassword, FetchProfile, UpdateProfile} from '../../../actions/ProfileAction';
 import {LogoutAction} from '../../../actions/AuthAction';
-import ChangePassword from './ChangePassword.vue';
-import EmailAddress from './EmailAddress.vue';
-import ActiveSessions from './ActiveSessions.vue';
+import ChangePassword from './components/ChangePassword.vue';
+import EmailAddress from './components/EmailAddress.vue';
+import ActiveSessions from './components/ActiveSessions.vue';
 
 export default {
     name:'AccountIndex',
@@ -19,7 +18,6 @@ export default {
       }
     },
     components:{
-        CustomScrollbar,
         ChangePassword,
         EmailAddress,
         ActiveSessions,
@@ -63,8 +61,7 @@ export default {
 
 <template>
 
-    <div id="account-index" class="content">
-        <CustomScrollbar thumbWidth="8">
+    <div id="account-index" class="content content-y-100vh">
             <div class="content-header">
                 <h1>Account</h1>
             </div>
@@ -85,19 +82,6 @@ export default {
                     <br><br><br>
                 </section>
             </div>            
-        </CustomScrollbar>
     </div>
 
 </template>
-
-<style>
-    #account-index .scrollbar__wrapper{
-        height: 100vh;
-    }
-    #account-index .scrollbar__wrapper .scrollbar__scroller{
-        height: 100%;
-    }
-    #account-index .scrollbar__wrapper .scrollbar__content.scrollbar__content--horizontal{
-        display: block;
-    }
-</style>

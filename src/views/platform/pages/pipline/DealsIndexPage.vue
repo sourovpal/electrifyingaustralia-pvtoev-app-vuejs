@@ -15,12 +15,7 @@
                 filterRightSidebar:false,
                 dataShowTable:false,
                 filterByAscDesc:true, // ASC True
-                settings: {
-                    suppressScrollY: true,
-                    suppressScrollX: false,
-                    wheelPropagation: false,
-                    wheelSpeed:0.4,
-                }
+                pipelines:[],
             }
         },
         created() {
@@ -31,13 +26,25 @@
             }
         },
         methods: {
-            scrollHanle(evt) {
-            // console.log(evt)
+            redirectFirstPipeline() {
+                // try{
+                //     var pipelines = this.$store.getters.getPipelines;
+                //     if(!this.$route.query?.pipeline){
+                //         var query = this.$route.query;
+                //         var first = pipelines[0];
+                //         query['pipeline'] = btoa(first.title);
+                //         this.$router.push({ path: '/platform/deals', query });
+                //     }
+                // }catch(error){}
             }
         },
+        created() {
+            this.redirectFirstPipeline();
+        },
         watch:{
-            "$route":function(from, to){
-                if(from.query.view && from.query.view === 'row'){
+            "$route"(from, to){
+                this.redirectFirstPipeline();
+                if(from.query?.view && from.query?.view === 'row'){
                     this.dataShowTable = true;
                 }else{
                     this.dataShowTable = false;

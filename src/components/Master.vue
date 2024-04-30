@@ -6,7 +6,8 @@ export default {
         SidebarNav,
     },    
     mounted() {
-        this.$store.dispatch('fetch_app_data');
+        this.$store.dispatch('setCookiesInAppData');
+        this.$store.dispatch('fetchAppData');
     },
 }
 

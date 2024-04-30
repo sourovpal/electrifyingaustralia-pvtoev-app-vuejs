@@ -1,9 +1,7 @@
 <script>
-    import {FetchProfile, UpdateProfile} from '../../../actions/ProfileAction';
+    import {FetchProfile, UpdateProfile} from '../../../../actions/ProfileAction';
     export default {
-        props: {
-            fetchUser: Object,
-        },
+        props:['fetchUser'],
         data() {
             return {
                 errors:{},
@@ -16,20 +14,20 @@
             }
         },        
         watch: {
-            fetchUser:{
-                handler(val){
-                    try{
-                        this.name         = val.name;
-                        this.display_name = val.display_name;
-                        this.job_title    = val.job_title;
-                        this.username     = val.username;
-                        this.company_name = val.company_name;
-                    }catch(error){}
-                },
-                immediate:true, deep:true,
+            "fetchUser"(val){
+                this.setData(val);
             }
         },
         methods: {
+            setData(data){
+                try{
+                    this.name = data.name;
+                    this.display_name = data.display_name;
+                    this.job_title    = data.job_title;
+                    this.username     = data.username;
+                    this.company_name = data.company_name;
+                }catch(error){}
+            },
             async formSubmitHandler(payload=null){
                 var data = {
                     action      :'basic_details',
@@ -42,12 +40,10 @@
                 
                 try{
                     const res = await UpdateProfile(data);
-                    
                     try{
                         const {message} = res;
                         this.$toast[message.type](message.text);
-                    }catch(error){
-                    }
+                    }catch(error){}
                     
                     try{
                         const {user} = res;
@@ -73,25 +69,7 @@
                 }
                 
             },
-        },
-        watch: {
-            '$store.state.count'(newValue, oldValue) {
-            console.log("new:"+newValue+" Old:"+oldValue)
-            }
-        },
-        mounted(){
-            try{
-                const {name, username, job_title, display_name} = this.$cookies.get(import.meta.env.VITE_AUTH_USER);
-                const {company_name} = this.$cookies.get(import.meta.env.VITE_AUTH_COMPANY);
-                this.name = name;
-                this.username = username;
-                this.job_title = job_title;
-                this.display_name = display_name;
-                this.company_name = company_name;
-            }catch(error){
-
-            }
-        },
+        },        
     }
 </script>
 <template>
@@ -101,32 +79,32 @@
                 <h2>Basic details</h2>
             </div>
         </div>
-        <div class="col-lg-6 col-12">
+        <div class="col-lg-5 col-12">
 
             <div class="settings-group-item">
                 <label class="form-label-title" for="">Full Name</label>
-                <input @focus="delete errors?.name" v-model="name" type="text" class="form-control form-control-input">
+                <input @focus="delete errors?.name" v-model="name" type="text" class="form-control">
                 <span class="form-input-commant" v-if="!errors?.name?.length">Your full name will appear on your customer facing proposals.</span>
                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.name?.length">{{ errors?.name[0] }}</span>
             </div>
 
             <div class="settings-group-item">
                 <label class="form-label-title" for="">Job title at {{ company_name }}</label>
-                <input @focus="delete errors?.job_title" v-model="job_title" type="text" class="form-control form-control-input">
+                <input @focus="delete errors?.job_title" v-model="job_title" type="text" class="form-control">
                 <span class="form-input-commant" v-if="!errors?.job_title?.length">Your job title may be used in proposals, email templates, etc.</span>
                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.job_title?.length">{{ errors?.job_title[0] }}</span>
               </div>
               
               <div class="settings-group-item">
                   <label class="form-label-title" for="">Display name</label>
-                  <input @focus="delete errors?.display_name" v-model="display_name" type="text" class="form-control form-control-input">
+                  <input @focus="delete errors?.display_name" v-model="display_name" type="text" class="form-control">
                   <span class="form-input-commant" v-if="!errors?.display_name?.length">Only visible to other users on your Pylon Observer team.</span>
                   <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.display_name?.length">{{ errors?.display_name[0] }}</span>
               </div>
               
               <div class="settings-group-item">
                   <label class="form-label-title" for="">Forum username</label>
-                  <input @focus="delete errors?.username" type="text" v-model="username" class="form-control form-control-input">
+                  <input @focus="delete errors?.username" type="text" v-model="username" class="form-control">
                   <span class="form-input-commant" v-if="!errors?.username?.length">Visible to other Pylon Observer users, including those outside your team, in the Feedback forum.</span>
                   <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.username?.length">{{ errors?.username[0] }}</span>
               </div>

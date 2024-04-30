@@ -1,5 +1,5 @@
 <script>
-import { UpdateProfile, UpdateProfilePassword } from '../../../actions/ProfileAction';
+import { UpdateProfile, UpdateProfilePassword } from '../../../../actions/ProfileAction';
 export default {
     props:{
         user:Object,
@@ -106,7 +106,7 @@ export default {
 
             <div class="settings-group-item">
                 <label class="form-label-title" for="">Email address</label>
-                <input @focus="delete errors?.email" v-model="email" type="text" class="form-control form-control-input">
+                <input @focus="delete errors?.email" v-model="email" type="text" class="form-control">
                 <span class="form-input-commant" v-if="!errors?.email?.length">When changing your account email address, you will be sent a email to validate your new email address.</span>
                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.email?.length">{{ errors?.email[0] }}</span>
             </div>
@@ -119,7 +119,7 @@ export default {
                         </svg>
                         <span>Submitting...</span>
                     </div>
-                    <span v-if="!isSubmitEmailChange">Change Email</span>
+                    <span v-if="!isSubmitEmailChange">Save Change</span>
                 </button>
             </div>
         </div>
@@ -133,12 +133,12 @@ export default {
             </p>
             <div class="px-4 pb-3 pt-2">
                 <label class="form-label-title">Verification Code</label>
-                <input @focus="delete errors?.email_otp" type="text" class="form-control form-control-input" v-model="email_otp" placeholder="">
+                <input @focus="delete errors?.email_otp" type="text" class="form-control" v-model="email_otp" placeholder="">
                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.email_otp?.length">{{ errors?.email_otp[0] }}</span>
             </div>
             <div class="px-4 mb-5 pb-4">
                 <label class="form-label-title">Your Current Password</label>
-                <input @focus="delete errors?.password" type="text" class="form-control form-control-input" v-model="password" placeholder="">
+                <input @focus="delete errors?.password" type="text" class="form-control" v-model="password" placeholder="">
                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.password?.length">{{ errors?.password[0] }}</span>
             </div>
             <button @click="showEmailOtpInputDialog=!showEmailOtpInputDialog">Cancel</button>

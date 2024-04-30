@@ -215,6 +215,11 @@ button[disabled],
   @media (min-width: 1200px){
     // left: 22rem;
   }
+  &.content-y-100vh{
+    height:100vh !important;
+    overflow-x:hidden !important;
+    overflow-y: auto !important;
+  }
 }
 
 .svg-disabled{

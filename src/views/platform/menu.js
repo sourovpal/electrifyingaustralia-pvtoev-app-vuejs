@@ -23,14 +23,7 @@ export const menus = async({lead_statuses, pipelines})=>{
                         path:'/platform/deals',
                         query:{},
                         icon:'',
-                        children:[
-                            {
-                                label:'All',
-                                path:'deals',
-                                query:{},
-                                icon:'',
-                            },
-                        ].concat(pipelines)
+                        children:[].concat(pipelines)
                     },
                     {
                         label:'Contacts',

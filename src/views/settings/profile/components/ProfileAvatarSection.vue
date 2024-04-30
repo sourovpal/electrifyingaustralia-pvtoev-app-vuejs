@@ -1,7 +1,8 @@
 <script>
+    import { Modal } from "mdb-ui-kit";
     import { Cropper } from 'vue-advanced-cropper'
     import 'vue-advanced-cropper/dist/style.css';
-    import {FetchProfile, UpdateProfile} from '../../../actions/ProfileAction';
+    import {FetchProfile, UpdateProfile} from '../../../../actions/ProfileAction';
     export default {
         props: {
             fetchUser: Object,
@@ -9,6 +10,7 @@
         data() {
             return {
                 errors:{},
+                modalInstance:null,
                 profile_avatar:null,
                 default_profile_avatar:null,
                 inputProfileImage:null,
@@ -22,21 +24,24 @@
             Cropper,
         },
         watch: {
-            fetchUser:{
-                handler(val){
-                    try{
-                        this.profile_avatar = val.profile_avatar;
-                        this.default_profile_avatar = val.default_profile_avatar;
-                    }catch(error){}
-                },
-                immediate:true, deep:true,
+            "fetchUser"(val){
+                try{
+                    this.profile_avatar = val.profile_avatar;
+                }catch(error){}
             }
         },
         methods: {
+            showModalHandler(){
+                this.modalInstance.show();
+            },
+            hideModalHandler(){
+                this.modalInstance.hide();
+            },
             async formSubmitHandler(payload=null){
-                console.log('yes')
+
                 var data = new FormData();
                 data.append('action', 'profile_photo_upload');
+
                 if(payload && payload.remove_profile_photo === 1 && this.profileImageFile){
 
                     this.profileImageRemoveConfirmDialog = false;
@@ -57,7 +62,7 @@
 
                 }else{
 
-                    this.errors = {profile_photo:['Please select profile photo.']};
+                    this.errors['profile_photo'] = ['Please select profile photo.'];
                     return ;
 
                 }
@@ -101,7 +106,7 @@
                 if(e.target.files && e.target.files.length){
                     var file = e.target.files[0];
                     if(file){
-                        this.$refs.showCropperModel.click();
+                        this.showModalHandler();
                         this.inputProfileImage = URL.createObjectURL(file);
                         e.target.value = '';
                     }else{
@@ -112,7 +117,7 @@
                 const { coordinates, canvas, } = this.$refs.cropper.getResult();
                 this.coordinates = coordinates;
                 this.profile_avatar = canvas.toDataURL();
-                this.$refs.closeCropperModel.click();
+                this.hideModalHandler();
                 this.inputProfileImage = null;
 
                 const response = await fetch(canvas.toDataURL());
@@ -121,77 +126,32 @@
             }
         },
         mounted(){
-            try{
-                const {phone_office, phone_mobile} = this.$cookies.get(import.meta.env.VITE_AUTH_USER);
-                this.phone_office = phone_office;
-                this.phone_mobile = phone_mobile;
-            }catch(error){
-
-            }
-        }
+            this.modalInstance = new Modal(this.$refs.prifileImageCroperModel);
+        },
     }
 </script>
 <template>
     <div class="row">
+
         <div class="col-lg-2 col-12 mb-3 mb-lg-0">
             <div class="settings-group-header">
                 <h2>Profile photo</h2>
             </div>
         </div>
-        <div class="col-lg-7 col-12">
+
+        <div class="col-lg-5 col-12">
             <div class="row">
 
-                <div v-if="profileImageRemoveConfirmDialog" class="confirm-dialog-area">
-                    <div class="confirm-dialog" style="max-width:380px;">
-                        <h1 class="text-hard fw-bold">Remove?</h1>
-                        <p>Are you ready to remove your profile photo?</p>
-                        <button @click="profileImageRemoveConfirmDialog=!profileImageRemoveConfirmDialog">Cancel</button>
-                        <button @click="formSubmitHandler({remove_profile_photo:1})">Confirm</button>
-                    </div>
-                </div>
-                <!-- Profile image cropper -->
-                <div class="modal fade" id="prifileImageCroperModel" tabindex="-1" role="dialog" aria-labelledby="prifileImageCroperModel" aria-hidden="true" >
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Resize Profile Photo</h5>
-                            <button type="button" class="close" data-mdb-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            </div>
-                            <div class="modal-body">
-                                <cropper
-                                    class="cropper"
-                                    :src="inputProfileImage"
-                                    ref="cropper"
-                                    :stencil-size="{
-                                        width: 200,
-                                        height: 200
-                                    }"
-                                    :stencil-props="{
-                                        handlers: {},
-                                        aspectRatio: 1,
-                                    }"
-                                    image-restriction="stencil"
-                                    :auto-zoom="false"
-                                    :zoom="5"
-                                />
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger btn-sm" data-mdb-dismiss="modal" ref="closeCropperModel">Close</button>
-                                <button type="button" class="btn btn-primary btn-sm" @click="prifilePhotoCrop">Crop</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="col-lg-9 col-8 pe-2">
 
-                <div class="col-lg-6 col-8 pe-2">
                     <div class="settings-group-item">
                         <label class="form-label-title" for="">Upload a photo</label>
-                        <input @click="delete errors?.profile_photo" @change="selectProfileImage" accept=".jpeg, .png, .jpg, .webp" type="file" class="form-control form-control-input">
+                        <input @click="delete errors?.profile_photo" @change="selectProfileImage" accept=".jpeg, .png, .jpg, .webp" type="file" class="form-control">
                         <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.profile_photo?.length">{{ errors?.profile_photo[0] }}</span>
                     </div>
+
                     <div class="d-flex">
+
                         <button :disabled="isSubmitProfileImage" @click="formSubmitHandler()" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
                             <div v-if="isSubmitProfileImage">
                                 <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
@@ -202,7 +162,6 @@
                             <span v-if="!isSubmitProfileImage">Save Settings</span>
                         </button>
                         
-                        <button ref="showCropperModel" data-mdb-toggle="modal" data-mdb-target="#prifileImageCroperModel" style="opacity: 0;visibility: hidden;"></button>
                         <button v-if="profile_avatar" :disabled="isSubmitProfileImageRemove" @click="profileImageRemoveConfirmDialog=!profileImageRemoveConfirmDialog" class="btn btn-danger ms-auto">
                             <div v-if="isSubmitProfileImageRemove">
                                 <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
@@ -212,15 +171,64 @@
                             </div>
                             <span v-if="!isSubmitProfileImageRemove">Remove</span>
                         </button>
+
                     </div>
                 </div>
                     
-                <div class="col-lg-3 col-4 text-center">
+                <div class="col-lg-3 col-4 text-end">
                     <div class="">
-                            <img class="img-thumbnail" style="width:100px;height:100px;" :src="profile_avatar??default_profile_avatar" alt="">
-                        </div>
+                        <img class="img-thumbnail" style="width:100px;height:100px;" :src="profile_avatar??default_profile_avatar" alt="">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Dialog -->
+    <div v-if="profileImageRemoveConfirmDialog" class="confirm-dialog-area">
+        <div class="confirm-dialog" style="max-width:380px;">
+            <h1 class="text-hard fw-bold">Remove?</h1>
+            <p>Are you ready to remove your profile photo?</p>
+            <button @click="profileImageRemoveConfirmDialog=!profileImageRemoveConfirmDialog">Cancel</button>
+            <button @click="formSubmitHandler({remove_profile_photo:1})">Confirm</button>
+        </div>
+    </div>
+
+    <!-- Profile image cropper -->
+    <div class="modal fade" ref="prifileImageCroperModel" tabindex="-1" role="dialog" aria-labelledby="prifileImageCroperModel" aria-hidden="true" >
+        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header mx-3 py-1">
+                <h5 class="modal-title" id="exampleModalLabel">Resize Profile Photo</h5>
+                <button type="button" class="btn btn-light btn-sm btn-floating" data-mdb-dismiss="modal" aria-label="Close">
+                    <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 -960 960 960" width="22"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"></path></svg>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <cropper
+                        class="cropper"
+                        :src="inputProfileImage"
+                        ref="cropper"
+                        :stencil-size="{
+                            width: 200,
+                            height: 200
+                        }"
+                        :stencil-props="{
+                            handlers: {},
+                            aspectRatio: 1,
+                        }"
+                        image-restriction="stencil"
+                        :auto-zoom="false"
+                        :zoom="5"
+                    />
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <button type="button" class="btn btn-danger btn-sm" data-mdb-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary btn-sm" @click="prifilePhotoCrop()">Crop</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
 </template>

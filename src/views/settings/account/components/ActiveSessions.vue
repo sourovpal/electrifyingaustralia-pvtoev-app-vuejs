@@ -1,5 +1,5 @@
 <script>
-import { UpdateProfilePassword } from '../../../actions/ProfileAction';
+import { UpdateProfilePassword } from '../../../../actions/ProfileAction';
 import CustomScrollbar from 'custom-vue-scrollbar';
 export default {
     props:{

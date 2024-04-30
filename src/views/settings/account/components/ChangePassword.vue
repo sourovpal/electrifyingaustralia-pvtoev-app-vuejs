@@ -1,5 +1,5 @@
 <script>
-import { UpdateProfilePassword } from '../../../actions/ProfileAction';
+import { UpdateProfilePassword } from '../../../../actions/ProfileAction';
 export default {
     data() {
       return{
@@ -14,27 +14,34 @@ export default {
     methods:{
         async changePasswordHandler(){
             try{
+
                 this.isSubmitPasswordChange = true;
+
                 const res = await UpdateProfilePassword({
                     current_password:this.current_password,
                     new_password:this.new_password,
                     confirm_password:this.confirm_password,
                 });
+
                 try{
                     const {message} = res;
                     this.$toast[message.type](message.text);
                 }catch(error){}
+
             }catch(error){
+
                 try{
                     var data = error.response.data;
                     this.errors = data.errors;
                 }catch(e){}
+
                 try{
                     var message = error.response.data.message;
                     this.$toast[message.type](message.text);
                 }catch(e){
                     this.$toast.error('Oops, something went wrong');
                 }
+
             }finally{
                 this.isSubmitPasswordChange = false;
             }
@@ -53,19 +60,19 @@ export default {
             
             <div class="settings-group-item">
                 <label class="form-label-title" for="">Current password</label>
-                <input @focus="delete errors?.current_password" v-model="current_password" type="text" class="form-control form-control-input">
+                <input @focus="delete errors?.current_password" v-model="current_password" type="text" class="form-control">
                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.current_password?.length">{{ errors?.current_password[0] }}</span>
             </div>
             
             <div class="settings-group-item">
                 <label class="form-label-title" for="">New password</label>
-                <input @focus="delete errors?.new_password" v-model="new_password" type="text" class="form-control form-control-input">
+                <input @focus="delete errors?.new_password" v-model="new_password" type="text" class="form-control">
                 <span class="form-input-commant" v-if="!errors?.new_password?.length">Please use at least 8 characters</span>
                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.new_password?.length">{{ errors?.new_password[0] }}</span>
             </div>
             <div class="settings-group-item">
                 <label class="form-label-title" for="">Confirm new password</label>
-                <input @focus="delete errors?.confirm_password" v-model="confirm_password" type="text" class="form-control form-control-input">
+                <input @focus="delete errors?.confirm_password" v-model="confirm_password" type="text" class="form-control">
                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.confirm_password?.length">{{ errors?.confirm_password[0] }}</span>
             </div>
             

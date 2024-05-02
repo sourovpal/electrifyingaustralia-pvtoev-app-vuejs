@@ -154,7 +154,7 @@
                 <div class="mb-4 position-relative">
                     <label class="form-label-title" for="">Move to another lead status</label>
                     <input @click="delete errors?.status" class="form-control cursor-pointer select-none" :value="selectedStatus?.name??'Select lead status'" type="text" data-mdb-toggle="dropdown" readonly>
-                    <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar" style="max-height:125px;">
+                    <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-" style="max-height:125px;">
                         <ul class="list-unstyled mb-0">
                             <li 
                             v-for="(item, index) in leadStatus" 
@@ -171,7 +171,7 @@
                 <div class="mb-2 position-relative">
                     <label class="form-label-title" for="">Move from lead to pipeline stage</label>
                     <input @click="delete errors?.pipeline" class="form-control cursor-pointer select-none" :value="selectedPipeline?.title??'Select pipeline'" type="text" data-mdb-toggle="dropdown" readonly>
-                    <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar" style="max-height:125px;">
+                    <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-" style="max-height:125px;">
                         <ul class="list-unstyled mb-0">
                             <li 
                             v-for="(item, index) in pipelines" 
@@ -192,7 +192,7 @@
                     :class="`${pipelineStages.length?'cursor-pointer':'cursor-no-drop'}`" 
                     :value="selectedPipelineStage?.name??'Select pipeline stage'"
                     type="text" data-mdb-toggle="dropdown" readonly>
-                    <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar" style="max-height:125px;">
+                    <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-" style="max-height:125px;">
                         <ul v-if="pipelineStages.length" class="list-unstyled mb-0">
                             <li 
                             v-for="(item, index) in pipelineStages" 

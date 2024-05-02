@@ -13,7 +13,7 @@
                 this.searchOwner = null;
             },
             filterOwners(){
-                return this.owners.filter((item) =>{
+                return this.owners?.filter((item) =>{
                     if(this.searchOwner){
                         if((item.name + item.email).toLowerCase().search(this.searchOwner.toLowerCase()) > -1){
                             return item;
@@ -64,7 +64,7 @@
                         </span>
                     </div>
     
-                    <div class="project-owner-team-members slim-scrollbar">
+                    <div class="project-owner-team-members slim-scrollbar-">
     
                         <div class="dropdown-header">
                             Change owner

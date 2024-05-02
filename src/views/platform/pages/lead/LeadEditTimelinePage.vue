@@ -40,7 +40,13 @@ export default {
 },
   data() {
     return {
-        fetch:"lead_properties,lead_sources,owners,pipelines",
+        fetch:{
+            lead_properties:1,
+            lead_sources:1,
+            owners:1,
+            pipelines:1,
+            contacts:1,
+        },
         icons:{},
         findLead:{},
         prevLead:null,
@@ -80,15 +86,17 @@ export default {
     toggleRightDetailsSidebarHandler(){
         this.toggleRightDetailsSidebar = !this.toggleRightDetailsSidebar;
     },
-    async findLeadByIdHandler(fetch=this.fetch){
+    async findLeadByIdHandler(payload={}){
         try{
             this.isLoading = true;
+
             var leadId = this.$route.params?.id??'';
-            var payload = {
-                lead_id:leadId,
-                fetch:fetch,
-            };
+
+            if(!payload['lead_id']){
+                payload['lead_id'] = leadId;
+            }
             const res = await FetchLeads(payload);
+            // await new Promise((m)=>setTimeout(m, 5000));
             try{
                 this.$store.commit('setLeadEditTimelineData', res);
                 this.isFirstLoading = false;
@@ -151,7 +159,7 @@ export default {
   mounted(){
         this.icons = icons;
         this.isFirstLoading = true;
-        this.findLeadByIdHandler();
+        this.findLeadByIdHandler(this.fetch);
     },
 }
 </script>
@@ -194,7 +202,7 @@ export default {
                 <button v-tippy='{ content:"Previous Lead", placement : "top" }' class="toolbar-btn btn btn-light btn-sm btn-floating me-3" :disabled="!prevLead">
                     <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14l-6-6z"></path></svg>
                 </button>
-                </router-link>
+            </router-link>
             <router-link :to="`${nextLead?`/platform/leads/${nextLead}`:''}`">
                 <button v-tippy='{ content:"Next Lead", placement : "top" }' class="toolbar-btn btn btn-light btn-sm btn-floating me-3"  :disabled="!nextLead">
                     <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M24 24H0V0h24v24z" fill="none" opacity=".87"></path><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6-1.41-1.41z"></path></svg>
@@ -331,6 +339,7 @@ export default {
         <div class="col-area">
             <timeline-history/>
             <right-sidebar-timeline 
+            :isFirstLoading="isFirstLoading"
             :findLeadByIdHandler="findLeadByIdHandler"
             :toggleRightDetailsSidebar="toggleRightDetailsSidebar"
              />

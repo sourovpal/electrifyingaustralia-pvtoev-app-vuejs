@@ -44,10 +44,11 @@ export default{
   font-weight: 700;
   color: #515253;
   padding: 6px 10px 6px 15px;
-  cursor: pointer;
   white-space: nowrap;
   background-color: #ffffff;
   width:12rem;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .tbl-header .tbl-tr .tbl-th.space{
   flex-basis: 100% !important;

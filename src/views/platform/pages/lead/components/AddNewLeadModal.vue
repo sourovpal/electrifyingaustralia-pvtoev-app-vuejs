@@ -118,7 +118,7 @@
                     const res = await CreateNewLead(data);
                     this.isSubmitCreateLeadForm = false;
                     try{
-                        this.fetchAllLeadsHandler(1);
+                        this.fetchAllLeadsHandler({page:1});
                         this.resetLeadForm();
                         var {message} = res;
                         this.$toast[message.type](message.text);
@@ -189,7 +189,7 @@
                         <div class="mb-3">
                             <label class="form-label-title" for="">Lead source <span class="text-soft fs-12px ms-1">(Optional)</span> </label>
                             <input @click="delete errors?.lead_source" class="form-control" v-model="source_title" type="text" data-mdb-toggle="dropdown">
-                            <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar" style="max-height:125px;">
+                            <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-" style="max-height:125px;">
                                 <ul class="list-unstyled mb-0">
                                     <li 
                                     v-for="(item, index) in filterLeadSource()" 
@@ -227,7 +227,7 @@
                         <div class="mb-3 position-relative">
                             <label class="form-label-title" for="">Lead status <span class="text-soft fs-12px ms-1">(Optional)</span> </label>
                             <input @click="delete errors?.lead_status" class="form-control cursor-pointer" :value="status?.name" type="text" data-mdb-toggle="dropdown" readonly>
-                            <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar" style="max-height:125px;">
+                            <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-" style="max-height:125px;">
                                 <ul class="list-unstyled mb-0">
                                     <li 
                                     v-for="(item, index) in leadStatus" 

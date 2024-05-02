@@ -33,7 +33,7 @@ export const menus = async({lead_statuses, pipelines})=>{
                         children:[
                             {
                                 label:'All',
-                                path:'?status=all',
+                                path:'/platform/contacts',
                                 query:{},
                                 icon:'',
                             },

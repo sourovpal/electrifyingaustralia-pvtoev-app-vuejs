@@ -15,6 +15,7 @@ import DataNotFound from './components/DataNotFound.vue';
 import AddNewLeadModal from './components/AddNewLeadModal.vue';
 import DeleteMultipleLeadWarningModal from './components/DeleteMultipleLeadWarningModal.vue';
 import DropdownOwnerList from './components/DropdownOwnerList.vue';
+import ColumnSorted from './components/ColumnSorted.vue';
 
 import {
     FetchLeads, 
@@ -39,12 +40,18 @@ export default {
         DataNotFound,
         DeleteMultipleLeadWarningModal,
         DropdownOwnerList,
+        ColumnSorted,
     },
     data() {
         return {
             icons:{},
             isLoading:false,
-            fetch:"headers,lead_properties,lead_sources,owners",
+            fetch:{
+                headers:1,
+                lead_properties:1,
+                lead_sources:1,
+                owners:1,
+            },
             limit:50,
             toggleFilterSidebar:false,
             selectedRows:[],
@@ -59,6 +66,8 @@ export default {
             isFirstLoading:false,
             filterQueryData:{},
             filterFetchInterval:null,
+            column:'updated_at',
+            order:'desc',
             pagination: {
                 total:0,
                 per_page:0,
@@ -73,7 +82,7 @@ export default {
     },
     watch:{
         "$route"(){
-            this.fetchAllLeadsHandler(this.pagination.current_page, this.limit);
+            this.fetchAllLeadsHandler({page:1});
         }
     },
     methods: {
@@ -106,53 +115,76 @@ export default {
                 }
             }catch(error){}
         },
-        async fetchAllLeadsHandler(page=this.pagination?.current_page, limit=this.limit, fetch=""){
+        leadSortedHandler(column){
+            if(this.column == column){
+                this.order = (this.order == 'desc')?'asc':'desc';
+            }else{
+                this.column = column;
+                this.order = 'desc';
+            }
+            this.fetchAllLeadsHandler();
+        },
+        async fetchAllLeadsHandler(payload={}){
             try{
                 this.isLoading = true;
                 var status = this.$route.query?.status??'';
-                var fetchArr = fetch.split(',');
-                var search = '';
-                var payload = {
-                    page, 
-                    limit
-                };
 
                 if(Object.keys(this.filterQueryData).length){
-                    search = btoa(JSON.stringify(this.filterQueryData));
+                    var search = btoa(JSON.stringify(this.filterQueryData));
+                    if(search != ''){
+                        payload['search'] = search;
+                    }
                 }
-                if(fetch != ""){
-                    payload['fetch'] = fetch;
-                }
+
                 if(status != ''){
                     payload['status'] = status;
                 }
-                if(search != ''){
-                    payload['search'] = search;
+
+                if(!payload['page']){
+                    payload['page'] = this.pagination?.current_page;
                 }
+
+                if(!payload['limit']){
+                    payload['limit'] = this.limit;
+                }
+
+                if(!payload['column']){
+                    payload['column'] = this.column;
+                }
+
+                if(!payload['order']){
+                    payload['order'] = this.order;
+                }
+
                 const res = await FetchLeads(payload);
+
                 try{
+
                     this.selectedRows = [];
                     this.isSelectedAllRows = false;
                     this.isSelectedAllRowsReset = false;
-                    const {leads, pagination, lead_properties, headers, owners, lead_sources} = res;
-                    this.fetchLeads = leads;
-                    this.pagination = pagination;
-                    if(fetchArr.includes('lead_properties')){
-                        this.leadProperties = lead_properties;
+
+                    this.fetchLeads = res?.leads;
+                    this.pagination = res?.pagination;
+
+                    if(payload['lead_properties']){
+                        this.leadProperties = res?.lead_properties;
                     }
-                    if(fetchArr.includes('headers')){
-                        this.disabledHeaderColumns = headers;
+                    if(payload['headers']){
+                        this.disabledHeaderColumns = res?.headers;
                     }
-                    if(fetchArr.includes('owners')){
-                        this.owners = owners;
+                    if(payload['owners']){
+                        this.owners = res?.owners;
                     }
-                    if(fetchArr.includes('lead_sources')){
-                        this.leadSources = lead_sources;
+                    if(payload['lead_sources']){
+                        this.leadSources = res?.lead_sources;
                     }
+
                 }catch(error){
                     throw new Error(error.message);
                 }
             }catch(error){
+                console.log(error);
                 try{
                     var message = error.response.data.message;
                     this.$toast[message.type](message.text);
@@ -314,7 +346,7 @@ export default {
     mounted() {
         this.icons = icons;
         this.isFirstLoading = true;
-        this.fetchAllLeadsHandler(this.pagination.current_page, this.limit, this.fetch);
+        this.fetchAllLeadsHandler(this.fetch);
         const {lead_statuses} = this.$cookies.get(import.meta.env.VITE_AUTH_APP);
         this.leadStatus = lead_statuses;
     },
@@ -469,7 +501,7 @@ export default {
 
         <button 
             :disabled="!pagination.prev_page" 
-            @click="pagination.prev_page && fetchAllLeadsHandler(pagination.prev_page)" 
+            @click="pagination.prev_page && fetchAllLeadsHandler({page:pagination?.prev_page})" 
             v-tippy='{ content:"Previous", placement : "top" }'
             class="toolbar-btn btn btn-light btn-floating me-3">
             <svg  class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>
@@ -478,7 +510,7 @@ export default {
         <button 
         :disabled="!pagination.next_page" 
         v-tippy='{ content:"Next", placement : "top" }'
-        @click="pagination.next_page && fetchAllLeadsHandler(pagination.next_page)" 
+        @click="pagination.next_page && fetchAllLeadsHandler({page:pagination?.next_page})" 
         class="toolbar-btn btn btn-light btn-floating me-3">
             <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
         </button>
@@ -514,9 +546,19 @@ export default {
 
             <div v-show="!disabledHeaderColumns.includes('lead')" class="tbl-th" style="width:20rem;flex-grow: 1;">Lead</div>
 
-            <div v-show="!disabledHeaderColumns.includes('source')" class="tbl-th" style="width:10rem;flex-grow: 1;">Source</div>
+            <div 
+            v-show="!disabledHeaderColumns.includes('source')" 
+            @click="leadSortedHandler('source')" 
+            class="tbl-th cursor-pointer" style="width:10rem;flex-grow: 1;">
+                Source <column-sorted field="source" :column="column" :order="order" />
+            </div>
             
-            <div v-show="!disabledHeaderColumns.includes('status')" class="tbl-th" style="width:12rem;flex-grow: 1;">Status</div>
+            <div 
+                v-show="!disabledHeaderColumns.includes('status')" 
+                @click="leadSortedHandler('status')" 
+                class="tbl-th cursor-pointer" style="width:12rem;flex-grow: 1;">
+                Status <column-sorted field="status" :column="column" :order="order" />
+            </div>
             
             <div v-show="!disabledHeaderColumns.includes('phone_number')" class="tbl-th text-end" style="width:12rem;flex-grow: 1;">Phone Number</div>
             
@@ -530,7 +572,12 @@ export default {
 
             <div v-show="!disabledHeaderColumns.includes('state')" class="tbl-th" style="width:10rem;flex-grow: 1;">State</div>
 
-            <div v-show="!disabledHeaderColumns.includes('post_code')" class="tbl-th" style="width:10rem;flex-grow: 1;">Postcode</div>
+            <div 
+            v-show="!disabledHeaderColumns.includes('post_code')" 
+            @click="leadSortedHandler('post_code')" 
+            class="tbl-th cursor-pointer" style="width:10rem;flex-grow: 1;">
+                Postcode <column-sorted field="post_code" :column="column" :order="order" />
+            </div>
 
             <div v-show="!disabledHeaderColumns.includes('country')" class="tbl-th" style="width:10rem;flex-grow: 1;">Country</div>
             
@@ -546,8 +593,19 @@ export default {
             </div>
 
 
-            <div v-show="!disabledHeaderColumns.includes('last_update')" class="tbl-th" style="width:10rem;flex-grow: 1;">Last Update</div>
-            <div v-show="!disabledHeaderColumns.includes('first_create')" class="tbl-th" style="width:10rem;flex-grow: 1;">Created At</div>
+            <div 
+            v-show="!disabledHeaderColumns.includes('last_update')" 
+            @click="leadSortedHandler('updated_at')" 
+            class="tbl-th cursor-pointer" style="width:10rem;flex-grow: 1;">
+                Last Update
+                <column-sorted field="updated_at" :column="column" :order="order" />
+            </div>
+            <div 
+            v-show="!disabledHeaderColumns.includes('first_create')" 
+            @click="leadSortedHandler('created_at')" 
+            class="tbl-th cursor-pointer" style="width:10rem;flex-grow: 1;">
+            Created At <column-sorted field="created_at" :column="column" :order="order" />
+            </div>
 
             <div v-show="!disabledHeaderColumns.includes('owner')" class="tbl-th" style="width:10rem;flex-grow: 1;">Owner</div>
 
@@ -708,6 +766,7 @@ export default {
     }
 </style>
 <style scoped lang="scss">
+
 .copy-phone-number{
     border: none;
     outline: none;

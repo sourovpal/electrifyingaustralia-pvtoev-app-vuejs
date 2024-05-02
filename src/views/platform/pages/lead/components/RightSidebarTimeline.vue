@@ -6,6 +6,7 @@
     import ContactEditModal from './ContactEditModal.vue';
     import StarRating from 'vue-star-rating';
     import RightSidebarProperties from './RightSidebarProperties.vue';
+    import { Skeletor } from 'vue-skeletor';
     import {
         UpdateLeadConfidence, 
         DeleteLeadContact
@@ -18,8 +19,9 @@
             ContactEditModal,
             StarRating,
             RightSidebarProperties,
+            Skeletor,
         },
-        props:['toggleRightDetailsSidebar', 'findLeadByIdHandler'],
+        props:['toggleRightDetailsSidebar', 'findLeadByIdHandler', 'isFirstLoading'],
         data() {
             return {
                 contacts:[],
@@ -109,7 +111,6 @@
                     var {message} = res;
                     this.$toast[message.type](message.text);
                 }catch(error){
-                    console.log(error);
                     try{
                         var message = error.response.data.message;
                         this.$toast[message.type](message.text);
@@ -150,7 +151,7 @@
     <div class="col-right" :class="{show:toggleRightDetailsSidebar}">
         <CustomScrollbar>
             <div class="col-r-header d-flex justify-content-between align-items-center border-bottom overflow-x-auto overflow-y-hidden">
-                <div class="left ps-3 py-1 d-flex justify-content-start align-items-center slim-scrollbar">
+                <div class="left ps-3 py-1 d-flex justify-content-start align-items-center">
                     <div 
                     v-for="(item, index) in contacts"
                     class="circle-avatar me-2 cursor-pointer" 
@@ -160,6 +161,11 @@
                     :key="index">
                         <img class="rounded-circle border" alt="avatar1" :src="item.avatar" />
                     </div>
+
+                    <div v-if="isFirstLoading" class="circle-avatar me-2 cursor-pointer" v-for="(item, index) in 2" :key="index">
+                        <Skeletor style="width:32px;height:32px;border-radius:50%;" />
+                    </div>
+
                 </div>
 
                 <div class="right pe-3 py-1 d-flex justify-content-end align-items-center">
@@ -171,7 +177,10 @@
 
             <div class="personal-info px-3 py-3 border-bottom">
                 <div class="d-flex justify-content-between align-items-center mb-1 position-relative">
-                    <h3 class="user-name fs-18px fw-bold text-head mb-0">{{ contact?.full_name }}</h3>
+                    <h3 class="user-name fs-18px fw-bold text-head mb-0">
+                        {{ contact?.full_name }}
+                        <Skeletor v-if="isFirstLoading" width="70%" />
+                    </h3>
                     <button data-mdb-toggle="dropdown" class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
                         <svg class="svg-3" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
                     </button>
@@ -187,12 +196,18 @@
                 </div>
                 
                 <div>
-                    <table class="tbl-contact-info">
+                    <table class="tbl-contact-info w-100">
+                        
+                        <tr v-if="isFirstLoading"><td width="100%"><Skeletor width="65%" /></td></tr>
+                        <tr v-if="isFirstLoading"><td width="100%"><Skeletor width="80%" /></td></tr>
+
                         <tr v-if="contact?.email">
                             <td class="fs-16px" width="10%">
                                 <svg class="svg-5" width="20px" height="20px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z"/></svg>
                             </td>
-                            <td class="fs-16px"><a class="d-block user-email text-head" :href="`mailto:${contact?.email}`">{{ contact?.email }}</a></td>
+                            <td class="fs-16px">
+                                <a class="d-block user-email text-head" :href="`mailto:${contact?.email}`">{{ contact?.email }}</a>                                
+                            </td>
                             <td class="hover" width="20%">
                                 <div class="d-flex justify-content-end align-items-center">
                                     <button 
@@ -206,6 +221,7 @@
                                 </div>
                             </td>
                         </tr>
+
                         <!-- Another Emails -->
                         <tr v-for="(item, index) in contact?.another_emails??[]" :key="index">
                             <td class="fs-16px" width="10%">
@@ -232,7 +248,10 @@
                             <td class="fs-16px" width="10%">
                                 <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 0 24 24" width="20"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56-.35-.12-.74-.03-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"></path></svg>
                             </td>
-                            <td class="fs-16px"><a class="d-block text-head user-phone" :href="`tel:${contact?.phone_number}`">{{ contact?.phone_number }}</a></td>
+                            <td class="fs-16px">
+                                <a class="d-block text-head user-phone" :href="`tel:${contact?.phone_number}`">{{ contact?.phone_number }}</a>
+                                <Skeletor v-if="isFirstLoading" width="70%" />
+                            </td>
                             <td class="hover" width="20%">
                                 <div class="d-flex justify-content-end align-items-center">
                                     <button 

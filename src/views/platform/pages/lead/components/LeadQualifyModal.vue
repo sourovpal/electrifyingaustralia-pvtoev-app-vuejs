@@ -153,7 +153,7 @@
                 <div class="mb-3 position-relative">
                     <label class="form-label-title" for="">Select a pipeline <span class="text-soft fs-12px ms-1">(Required)</span> </label>
                     <input @click="delete errors?.pipeline" class="form-control cursor-pointer select-none" :value="selectedPipeline?.title" type="text" data-mdb-toggle="dropdown" readonly>
-                    <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar" style="max-height:125px;">
+                    <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-" style="max-height:125px;">
                         <ul class="list-unstyled mb-0">
                             <li 
                             v-for="(item, index) in pipelines" 
@@ -175,7 +175,7 @@
                     :class="`${pipelineStages.length?'cursor-pointer':'cursor-no-drop'}`" 
                     :value="selectedPipelineStage?.name"
                     type="text" data-mdb-toggle="dropdown" readonly>
-                    <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar" style="max-height:125px;">
+                    <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-" style="max-height:125px;">
                         <ul v-if="pipelineStages.length" class="list-unstyled mb-0">
                             <li 
                             v-for="(item, index) in pipelineStages" 
@@ -192,7 +192,7 @@
                 <div class="mb-3 position-relative">
                     <label class="form-label-title" for="">Start a workflow <span class="text-soft fs-12px ms-1">(Optional)</span> </label>
                     <input @click="delete errors?.lead_status" class="form-control cursor-pointer select-none" type="text" data-mdb-toggle="dropdown" readonly>
-                    <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar" style="max-height:125px;">
+                    <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-" style="max-height:125px;">
                         <ul class="list-unstyled mb-0">
                             <li 
                             v-for="(item, index) in []" 

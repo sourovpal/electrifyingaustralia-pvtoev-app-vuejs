@@ -1,6 +1,6 @@
 <script>
     import { Modal } from "mdb-ui-kit";
-    import {CreateNewLead} from '../../../../../actions/LeadAction';
+    import {CreateNewLead} from '../../../../actions/LeadAction';
     import DropdownOwnerList from './DropdownOwnerList.vue';
     export default {
         props:['leadSources', 'leadStatus', 'owners', 'fetchAllLeadsHandler'],

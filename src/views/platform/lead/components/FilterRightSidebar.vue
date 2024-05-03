@@ -1,7 +1,7 @@
 <script>
-import {propertiesIconList} from '../../../../../asset/svgicon.js';
+import {propertiesIconList} from '../../../../asset/svgicon.js';
 export default {
-    props:['leadProperties', 'owners', 'leadSources', 'filterQueryData'],
+    props:['leadProperties', 'owners', 'leadSources', 'filterQueryData', 'toggleFilterSidebarHandler'],
     data() {
         return {
             propertiesIconList:{},
@@ -179,7 +179,7 @@ export default {
                 </div>
                 <h1 class="title fw-bold text-hard">Filter</h1>
             </div>
-            <div class="close" @click="$emit('toggle-filter', false);">
+            <div class="close" @click="toggleFilterSidebarHandler()">
                 <svg class="svg-5"  xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path  d="M0 0h24v24H0z" fill="none"></path> <path  d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
             </div>
         </div>
@@ -442,12 +442,16 @@ export default {
     width: 288px;
     height: 100%;
     background: #f5f5f5;
-    right: 0;
+    right: -300px;
     z-index: 999;
     box-shadow: rgba(0, 0, 0, 0.15) -1.95px 1.95px 2.6px;
     user-select: none;
+    transition: all 0.3s ease-in-out;
     .close{
         cursor: pointer;
+    }
+    &.show {
+        right: 0px !important;
     }
     .header{
         padding: 15px 12px;

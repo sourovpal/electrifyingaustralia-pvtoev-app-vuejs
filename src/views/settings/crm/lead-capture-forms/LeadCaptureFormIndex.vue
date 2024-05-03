@@ -1,23 +1,17 @@
 <script>
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
-
 export default {
   name:'AccountIndex',
     data() {
       return{
       }
     },
-    components:{
-        vueCustomScrollbar,
-    }
   }
   
 </script>
 
 <template>
 
-  <vue-custom-scrollbar :settings="{ suppressScrollY: false, suppressScrollX: false, wheelPropagation: false, wheelSpeed:0.5 }" class="content">
+  <div class="content content-y-100vh">
     
     <div class="content-header">
         <h1>Lead Capture Forms</h1>
@@ -28,7 +22,7 @@ export default {
 
             <div class="row">
                 <div class="col-lg-10">
-                    <table class="table table-sm table-striped table-hover">
+                    <table class="table table-bordered table-sm table-striped table-hover table-light">
                         <thead>
                             <tr>
                                 <th class="fw-bold" width="20%" scope="col">Form Name</th>
@@ -89,7 +83,7 @@ export default {
         </section>
     </div>
 
-  </vue-custom-scrollbar>
+  </div>
 
 </template>
 

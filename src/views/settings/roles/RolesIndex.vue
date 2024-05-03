@@ -174,7 +174,7 @@
                         </button>
                     </div>
 
-                    <div class="fw-bold d-flex justify-content-center align-items-center me-3 text-overflow-ellipsis fs-16px" style="min-width: 8rem;">{{ pagination.from??0 }} - {{ pagination.to??0 }} of  {{ pagination.total }}</div>
+                    <div class="fw-bold d-flex justify-content-center align-items-center me-3 text-overflow-ellipsis fs-16px" style="min-width: 4rem;">{{ pagination.from??0 }} - {{ pagination.to??0 }} of  {{ pagination.total }}</div>
                     
                     <button 
                     :disabled="!pagination.prev_page" 

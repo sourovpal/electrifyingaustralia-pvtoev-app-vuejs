@@ -1,6 +1,4 @@
 <script>
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
 import Datatable from '../../../components/Datatable/Datatable.vue';
 import DatatableHeader from '../../../components/Datatable/DatatableHeader.vue';
 import DatatableBody from '../../../components/Datatable/DatatableBody.vue';
@@ -14,7 +12,6 @@ export default {
       }
     },
     components:{
-        vueCustomScrollbar,
         Datatable,
         DatatableHeader,
         DatatableBody,

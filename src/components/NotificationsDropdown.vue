@@ -1,12 +1,6 @@
 <script>
 
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
-
 export default{
-    components:{
-        vueCustomScrollbar
-    },
     data(){
         return{
             status:false,
@@ -33,7 +27,7 @@ export default{
         </a>
     </div>
     
-    <vue-custom-scrollbar class="notification-body"  :settings="settings">
+    <div class="notification-body">
         <a href="" class="notifications-item unread">
             <div class="notifications-content-wrapper">
                 <div class="notifications-icon">
@@ -272,7 +266,7 @@ export default{
             </div>
             <div class="notifications-marker"></div>
         </a>
-    </vue-custom-scrollbar>
+    </div>
 
     
 </div>

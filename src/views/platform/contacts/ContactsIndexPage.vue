@@ -1,14 +1,14 @@
 <script>
 
-    import SearchBar from '../../../../components/SearchBar.vue';
-    import ActionBar from '../../../../components/ActionBar/ActionBar.vue';
-    import LeftActionBar from '../../../../components/ActionBar/LeftActionBar.vue';
-    import RightActionBar from '../../../../components/ActionBar/RightActionBar.vue';
-    import Datatable from '../../../../components/Datatable/Datatable.vue';
-    import DatatableHeader from '../../../../components/Datatable/DatatableHeader.vue';
-    import DatatableBody from '../../../../components/Datatable/DatatableBody.vue';
+    import SearchBar from '../../../components/SearchBar.vue';
+    import ActionBar from '../../../components/ActionBar/ActionBar.vue';
+    import LeftActionBar from '../../../components/ActionBar/LeftActionBar.vue';
+    import RightActionBar from '../../../components/ActionBar/RightActionBar.vue';
+    import Datatable from '../../../components/Datatable/Datatable.vue';
+    import DatatableHeader from '../../../components/Datatable/DatatableHeader.vue';
+    import DatatableBody from '../../../components/Datatable/DatatableBody.vue';
 
-    import {FetchContact} from '../../../../actions/ContactAction';
+    import {FetchContact} from '../../../actions/ContactAction';
 
     export default {
         components: {

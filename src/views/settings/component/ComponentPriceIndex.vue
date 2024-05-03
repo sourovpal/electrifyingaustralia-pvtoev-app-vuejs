@@ -1,6 +1,4 @@
 <script>
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
 
 export default {
   name:'AccountIndex',
@@ -8,16 +6,13 @@ export default {
       return{
       }
     },
-    components:{
-        vueCustomScrollbar,
-    }
   }
   
 </script>
 
 <template>
 
-  <vue-custom-scrollbar :settings="{ suppressScrollY: false, suppressScrollX: false, wheelPropagation: false, wheelSpeed:0.5 }" class="content">
+  <div class="content content-y-100vh">
     
     <div class="content-header">
         <h1>Component prices</h1>
@@ -27,12 +22,12 @@ export default {
         <section class="">
             
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-3">
                     <div class="settings-group-header">
                         <h2>Components list</h2>
                     </div>
                 </div>
-                <div class="col-lg-5 col-9">
+                <div class="col-lg-5 col-12">
 
                     <div class="settings-group-item">
                         <a href="/settings/component-prices/panel" class="card card-shadow  py-3 px-3">
@@ -80,13 +75,13 @@ export default {
             </div>
             <hr class="mt-4 mb-5">
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-3">
                     <div class="settings-group-header">
                         <h2>Uploaded files</h2>
                     </div>
                 </div>
-                <div class="col-lg-8 col-9">
-                    <table class="table table-sm table-striped table-hover">
+                <div class="col-lg-8 col-12">
+                    <table class="table table-bordered table-sm table-striped table-hover table-light">
                         <thead>
                             <tr>
                                 <th class="text-muted" width="15%" scope="col">File name</th>
@@ -275,7 +270,7 @@ export default {
         </section>
     </div>
 
-  </vue-custom-scrollbar>
+  </div>
 
 </template>
 

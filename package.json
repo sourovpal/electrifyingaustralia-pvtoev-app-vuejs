@@ -28,7 +28,6 @@
     "vue": "^3.4.14",
     "vue-advanced-cropper": "^2.8.8",
     "vue-cookies": "^1.8.3",
-    "vue-custom-scrollbar": "^1.4.4",
     "vue-draggable-next": "^2.2.1",
     "vue-json-pretty": "^1.9.4",
     "vue-json-viewer": "^3.0.4",

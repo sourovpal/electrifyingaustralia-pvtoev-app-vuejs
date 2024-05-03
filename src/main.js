@@ -13,7 +13,6 @@ import ToastPlugin from 'vue-toast-notification';
 
 
 import 'mdb-ui-kit/css/mdb.min.css';
-import "vue-custom-scrollbar/dist/vueScrollbar.css"; // remove
 import 'custom-vue-scrollbar/dist/style.css';
 import 'tippy.js/dist/tippy.css'
 import 'vue-toast-notification/dist/theme-bootstrap.css';

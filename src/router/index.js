@@ -19,10 +19,10 @@ import LibraryIndex from '../views/library/LibraryIndex.vue';
 import WebSite from '../components/WebSite.vue';
 
 // Platform
-import LeadIndexPage from "../views/platform/pages/lead/LeadIndexPage.vue";
-import LeadEditTimelinePage from "../views/platform/pages/lead/LeadEditTimelinePage.vue";
-import DealsIndexPage from '../views/platform/pages/pipline/DealsIndexPage.vue';
-import ContactsIndexPage from '../views/platform/pages/contacts/ContactsIndexPage.vue';
+import LeadIndexPage from "../views/platform/lead/LeadIndexPage.vue";
+import LeadEditTimelinePage from "../views/platform/lead/LeadEditTimelinePage.vue";
+import DealsIndexPage from '../views/platform/pipline/DealsIndexPage.vue';
+import ContactsIndexPage from '../views/platform/contacts/ContactsIndexPage.vue';
 
 
 

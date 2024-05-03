@@ -1,6 +1,6 @@
 <script>
     import { Modal } from "mdb-ui-kit";
-    import { DeleteMultipleLeads } from '../../../../../actions/LeadAction';
+    import { DeleteMultipleLeads } from '../../../../actions/LeadAction';
 
     export default {
         props:['fetchAllLeadsHandler', 'selectedRows'],

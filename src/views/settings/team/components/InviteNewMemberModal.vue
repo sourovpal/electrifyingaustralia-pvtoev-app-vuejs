@@ -107,7 +107,7 @@ export default{
                 <label class="form-label-title mb-0">Email:</label>
             </div>
             <div class="col-8 me-auto d-flex justify-content-start align-items-center flex-direction-column">
-                <input @click="delete errors?.email" v-model="email" class="form-control form-control-input" type="text">
+                <input @click="delete errors?.email" v-model="email" class="form-control" type="text">
                 <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.email?.length">{{ errors?.email[0] }}</span>
             </div>
         </div>
@@ -116,8 +116,8 @@ export default{
               <label class="form-label-title mb-0">Role:</label>
           </div>
           <div class="col-8 me-auto d-flex justify-content-start align-items-center flex-direction-column position-relative">
-              <div class="select-box w-100">
-                <input readonly="true" v-model="access_role" class="form-control form-control-input cursor-pointer" type="text" data-mdb-toggle="dropdown">
+              <div class="w-100 position-relative">
+                <input readonly="true" v-model="access_role" class="form-control cursor-pointer" type="text" data-mdb-toggle="dropdown">
                 <div class="dropdown-menu custom-form-select roles overflow-auto" style="max-height:7.5rem;">
                   <ul class="list-unstyled mb-0">
                       <li 
@@ -125,7 +125,7 @@ export default{
                       v-for="(item, index) in roles" 
                       :key="index"
                       v-show="access_role != item.name"
-                      :class="`dropdown-item`">
+                      :class="`dropdown-item text-hard fw-bold fs-14px d-flex py-1`">
                       {{ item.name }}
                       </li>
                   </ul>

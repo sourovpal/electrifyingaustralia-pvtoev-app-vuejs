@@ -200,6 +200,13 @@ button[disabled],
 .line-height-22px{
   line-height: 22px;
 }
+
+@media (min-width:992px) {
+  .w-lg-75{
+    width:75% !important;
+  }
+}
+
 .cursor-pointer{
   cursor: pointer;
 }
@@ -210,7 +217,7 @@ button[disabled],
   right:0;
   overflow: hidden;
   @media (max-width: 767px){
-    padding-top:4rem;
+    margin-top:4rem;
   }
   @media (min-width: 1200px){
     // left: 22rem;

@@ -1,6 +1,6 @@
 <script>
 
-    import SearchBar from '../../../../components/SearchBar.vue';
+    import SearchBar from '../../../components/SearchBar.vue';
     import CustomScrollbar from 'custom-vue-scrollbar';
     import FilterRightSidebar from './FilterRightSidebar.vue';
 
@@ -146,7 +146,7 @@
         </section>
 
         <!-- Card Pipline -->        
-        <CustomScrollbar v-if="!dataShowTable" class="pip-body-scrollbar" thumbWidth="8" direction="horizontal" :style="{overflowY:'hidden' }">
+        <div v-if="!dataShowTable" class="pip-body-scrollbar" :style="{overflowY:'hidden' }">
             <section class="pipline d-table">
                 <div class="piplien-body d-flex flex-row">
                     
@@ -206,7 +206,7 @@
 
                 </div>
             </section>
-        </CustomScrollbar>
+        </div>
         <!-- Card Pipline End -->
 
         <!-- Pipline Table Data -->
@@ -425,7 +425,7 @@
     
     </template>
     
-    <style scoped lang="scss">
+<style scoped lang="scss">
     .toolbar-btn{
         width:35px !important;
         height: 35px !important;
@@ -748,32 +748,29 @@
             }
         }
     }
-
-
-    </style>
-    <style>
-        .pipline-list .piplien-body,
-        .pipline-list .pip-body-scrollbar{
-            height:calc(88vh + 5px) !important;        
-        }
-        .pipline-list .piplien-state .scrollbar__wrapper{
-            height: 100% !important;
-        }
-        .pipline-list .piplien-state .scrollbar__thumbPlaceholder{
-            /* width:3px !important; */
-        }
-        .pipline-list .piplien-state .scrollbar__content.scrollbar__content--horizontal{
-            min-height: 75vh;
-            width: 100% !important;
-        }
-        .pipline-list.content > .scrollbar__wrapper > .scrollbar__thumbPlaceholder--vertical{
-            display: none !important;
-        }
-
-        .pipline-list.content > .pipline__table > .scrollbar__wrapper > .scrollbar__thumbPlaceholder--vertical{
-            display: block !important;
-        }
-        .pipline-list .active-svg-tbl{
-            fill:#3295ff !important;
-        }
-    </style>
+</style>
+<style>
+    .pipline-list .piplien-body,
+    .pipline-list .pip-body-scrollbar{
+        height:calc(100vh - 102px) !important;        
+    }
+    .pipline-list .piplien-state .scrollbar__wrapper{
+        height: 100% !important;
+    }
+    .pipline-list .piplien-state .scrollbar__thumbPlaceholder{
+        /* width:3px !important; */
+    }
+    .pipline-list .piplien-state .scrollbar__content.scrollbar__content--horizontal{
+        min-height: 75vh;
+        width: 100% !important;
+    }
+    .pipline-list.content > .scrollbar__wrapper > .scrollbar__thumbPlaceholder--vertical{
+        display: none !important;
+    }
+    .pipline-list.content > .pipline__table > .scrollbar__wrapper > .scrollbar__thumbPlaceholder--vertical{
+        display: block !important;
+    }
+    .pipline-list .active-svg-tbl{
+        fill:#3295ff !important;
+    }
+</style>

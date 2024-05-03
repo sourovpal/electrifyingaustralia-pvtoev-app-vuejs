@@ -1,9 +1,9 @@
 <script>
 
-import SearchBar from '../../../../components/SearchBar.vue';
-import ActionBar from '../../../../components/ActionBar/ActionBar.vue';
-import LeftActionBar from '../../../../components/ActionBar/LeftActionBar.vue';
-import RightActionBar from '../../../../components/ActionBar/RightActionBar.vue';
+import SearchBar from '../../../components/SearchBar.vue';
+import ActionBar from '../../../components/ActionBar/ActionBar.vue';
+import LeftActionBar from '../../../components/ActionBar/LeftActionBar.vue';
+import RightActionBar from '../../../components/ActionBar/RightActionBar.vue';
 import LeadQualifyModal from './components/LeadQualifyModal.vue';
 import LeadReCategoriseModal from './components/LeadReCategoriseModal.vue';
 import EditLeadModal from './components/EditLeadModal.vue';
@@ -12,13 +12,13 @@ import CustomScrollbar from 'custom-vue-scrollbar';
 
 import { Skeletor } from 'vue-skeletor';
 import DropdownOwnerList from './components/DropdownOwnerList.vue';
-import {icons} from '../../../../asset/svgicon.js';
+import {icons} from '../../../asset/svgicon.js';
 import {
     FetchLeads,
     FetchLeadPipelineWithStage,
     UpdateMultipelLeadStatus,
     UpdateMultipelLeadOwner,
-} from '../../../../actions/LeadAction';
+} from '../../../actions/LeadAction';
 
 import TimelineHistory from './components/TimelineHistory.vue';
 import RightSidebarTimeline from './components/RightSidebarTimeline.vue';
@@ -96,7 +96,6 @@ export default {
                 payload['lead_id'] = leadId;
             }
             const res = await FetchLeads(payload);
-            // await new Promise((m)=>setTimeout(m, 5000));
             try{
                 this.$store.commit('setLeadEditTimelineData', res);
                 this.isFirstLoading = false;

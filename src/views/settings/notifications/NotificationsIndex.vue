@@ -1,7 +1,4 @@
 <script>
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
-
 export default {
   name:'ProfileIndex',
     data() {
@@ -9,7 +6,6 @@ export default {
       }
     },
     components:{
-        vueCustomScrollbar,
     }
   }
   
@@ -17,7 +13,7 @@ export default {
 
 <template>
 
-  <vue-custom-scrollbar :settings="{ suppressScrollY: false, suppressScrollX: false, wheelPropagation: false, wheelSpeed:0.5 }" class="content">
+  <div class="content content-y-100vh">
     
     <div class="content-header">
         <h1>Notifications</h1>
@@ -187,7 +183,7 @@ export default {
         </section>
     </div>
 
-  </vue-custom-scrollbar>
+  </div>
 
 </template>
 

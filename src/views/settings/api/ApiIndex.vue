@@ -1,6 +1,4 @@
 <script>
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
 import CreateApiTokenModal from './components/CreateApiTokenModal.vue';
 import AddADestinationModal from './components/AddADestinationModal.vue';
 export default {
@@ -10,7 +8,6 @@ export default {
       }
     },
     components:{
-        vueCustomScrollbar,
         CreateApiTokenModal,
         AddADestinationModal
     }
@@ -20,7 +17,7 @@ export default {
 
 <template>
 
-  <vue-custom-scrollbar :settings="{ suppressScrollY: false, suppressScrollX: false, wheelPropagation: false, wheelSpeed:0.5 }" class="content">
+  <div class="content content-y-100vh">
     
     <div class="content-header">
         <h1>API settings</h1>
@@ -30,7 +27,7 @@ export default {
         <section class="">
 
             <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-8 col-12">
                     <div class="card pt-3 pb-2 px-3 d-flex flex-row justify-content-start align-items-center shadow-0 settings__item--wide">
                         <div class="mx-3">
                             <img src="https://static.getpylon.com/images/app/ui/onboarding_api.png" style="width:120px;height:120px;">
@@ -57,7 +54,7 @@ export default {
             
             
             <div class="row mt-5">
-                <div class="col-lg-8 col-3">
+                <div class="col-lg-8 col-12">
                     <div class="settings-group-header">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h2 class="fw-bold">API tokens</h2>
@@ -86,7 +83,7 @@ export default {
 
             
             <div class="row mt-5">
-                <div class="col-lg-8 col-3">
+                <div class="col-lg-8 col-12">
                     <div class="settings-group-header">
                         <div class="d-flex justify-content-between align-items-center mb-2">
                             <h2 class="fw-bold">Webhook destinations</h2>
@@ -117,7 +114,7 @@ export default {
         </section>
     </div>
 
-  </vue-custom-scrollbar>
+  </div>
 
 </template>
 

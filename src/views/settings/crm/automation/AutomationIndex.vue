@@ -1,7 +1,4 @@
 <script>
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
-
 export default {
   name:'ProfileIndex',
     data() {
@@ -11,7 +8,6 @@ export default {
       }
     },
     components:{
-        vueCustomScrollbar,
     }
   }
   
@@ -19,7 +15,7 @@ export default {
 
 <template>
 
-  <vue-custom-scrollbar :settings="{ suppressScrollY: false, suppressScrollX: false, wheelPropagation: false, wheelSpeed:0.5 }" class="content">
+  <div class="content content-y-100vh">
     
     <div class="content-header">
         <h1>CRM Automations</h1>
@@ -29,12 +25,12 @@ export default {
         <section class="">
 
             <div class="row">
-                <div class="col-lg-3 mb-3">
+                <div class="col-lg-2 mb-3">
                     <div class="settings-group-header">
                         <h2>Default Opportunity Owner</h2>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-5">
                     <div class="settings-group-item owner-list-dropdown">
                         <label class="form-label-title">Select Default Owner</label>
                         <button class="owner-dropdown-toggler" data-mdb-toggle="dropdown" aria-expanded="false">
@@ -196,7 +192,7 @@ export default {
         </section>
     </div>
 
-  </vue-custom-scrollbar>
+  </div>
 
 </template>
 <style lang="scss" scoped>

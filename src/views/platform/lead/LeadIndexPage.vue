@@ -1,13 +1,13 @@
 <script>
 
-import {icons} from '../../../../asset/svgicon.js';
-import SearchBar from '../../../../components/SearchBar.vue';
-import ActionBar from '../../../../components/ActionBar/ActionBar.vue';
-import LeftActionBar from '../../../../components/ActionBar/LeftActionBar.vue';
-import RightActionBar from '../../../../components/ActionBar/RightActionBar.vue';
-import Datatable from '../../../../components/Datatable/Datatable.vue';
-import DatatableHeader from '../../../../components/Datatable/DatatableHeader.vue';
-import DatatableBody from '../../../../components/Datatable/DatatableBody.vue';
+import {icons} from '../../../asset/svgicon.js';
+import SearchBar from '../../../components/SearchBar.vue';
+import ActionBar from '../../../components/ActionBar/ActionBar.vue';
+import LeftActionBar from '../../../components/ActionBar/LeftActionBar.vue';
+import RightActionBar from '../../../components/ActionBar/RightActionBar.vue';
+import Datatable from '../../../components/Datatable/Datatable.vue';
+import DatatableHeader from '../../../components/Datatable/DatatableHeader.vue';
+import DatatableBody from '../../../components/Datatable/DatatableBody.vue';
 import HeaderPropertiesDropdown from './components/HeaderPropertiesDropdown.vue';
 import FilterRightSidebar from './components/FilterRightSidebar.vue';
 import DataTableSkeletor from './components/DataTableSkeletor.vue';
@@ -22,7 +22,7 @@ import {
     UpdateLeadPropertieHeaders,
     UpdateMultipelLeadStatus, 
     UpdateMultipelLeadOwner,
-} from '../../../../actions/LeadAction';
+} from '../../../actions/LeadAction';
 
 export default {
     components: {
@@ -86,6 +86,13 @@ export default {
         }
     },
     methods: {
+        updateUrlQuery(query={}){
+            var current = this.$route.query;
+            this.$router.push({path:'/platform/leads', query:{...current, ...query}});
+        },
+        toggleFilterSidebarHandler(){
+            this.toggleFilterSidebar = !this.toggleFilterSidebar;
+        },
         resetFilterSidebar(show){
             try{
                 if(show){
@@ -94,7 +101,7 @@ export default {
                     this.toggleFilterSidebar = false;
                     if(Object.keys(this.filterQueryData).length){
                         this.filterQueryData = {};
-                        this.fetchAllLeadsHandler(1);
+                        this.fetchAllLeadsHandler({page:1});
                     }
                 }
             }catch(error){}
@@ -122,12 +129,14 @@ export default {
                 this.column = column;
                 this.order = 'desc';
             }
-            this.fetchAllLeadsHandler();
+            this.updateUrlQuery({column:this.column, order:this.order});
         },
         async fetchAllLeadsHandler(payload={}){
             try{
                 this.isLoading = true;
-                var status = this.$route.query?.status??'';
+
+                var query = this.$route.query??{};
+                payload = {...payload, ...query};
 
                 if(Object.keys(this.filterQueryData).length){
                     var search = btoa(JSON.stringify(this.filterQueryData));
@@ -136,12 +145,10 @@ export default {
                     }
                 }
 
-                if(status != ''){
-                    payload['status'] = status;
-                }
-
                 if(!payload['page']){
                     payload['page'] = this.pagination?.current_page;
+                }else{
+
                 }
 
                 if(!payload['limit']){
@@ -501,7 +508,7 @@ export default {
 
         <button 
             :disabled="!pagination.prev_page" 
-            @click="pagination.prev_page && fetchAllLeadsHandler({page:pagination?.prev_page})" 
+            @click="pagination.prev_page && updateUrlQuery({page:pagination?.prev_page})" 
             v-tippy='{ content:"Previous", placement : "top" }'
             class="toolbar-btn btn btn-light btn-floating me-3">
             <svg  class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>
@@ -510,7 +517,7 @@ export default {
         <button 
         :disabled="!pagination.next_page" 
         v-tippy='{ content:"Next", placement : "top" }'
-        @click="pagination.next_page && fetchAllLeadsHandler({page:pagination?.next_page})" 
+        @click="pagination.next_page && updateUrlQuery({page:pagination?.next_page})" 
         class="toolbar-btn btn btn-light btn-floating me-3">
             <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
         </button>
@@ -532,7 +539,8 @@ export default {
     <Datatable>
 
         <FilterRightSidebar 
-        v-if="toggleFilterSidebar" 
+        :class="{show:toggleFilterSidebar}" 
+        :toggleFilterSidebarHandler="toggleFilterSidebarHandler" 
         @toggle-filter="(e)=> resetFilterSidebar(e)"
         @filter-data-in-database="(key, value, isFetch)=> filterDataInDatabase(key, value, isFetch)"
         :lead-properties="leadProperties"

@@ -2,12 +2,12 @@
 <template>
 
     <div class="row">
-        <div class="col-lg-3 col-3">
+        <div class="col-lg-2 col-3">
             <div class="settings-group-header">
                 <h2>Pricing</h2>
             </div>
         </div>
-        <div class="col-lg-8 col-9">
+        <div class="col-lg-5 col-12">
                 <div class="list-group pricing-list-group">
                     
                     <!-- <transition-group name="flip-list" tag="div">

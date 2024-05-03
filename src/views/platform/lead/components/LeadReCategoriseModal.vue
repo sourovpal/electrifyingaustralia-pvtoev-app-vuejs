@@ -1,44 +1,39 @@
 <script>
     import { Modal } from "mdb-ui-kit";
-    import DropdownOwnerList from './DropdownOwnerList.vue';
-    import {icons} from '../../../../../asset/svgicon';
 
     import {
-        ConfirmQualify
-    } from '../../../../../actions/LeadAction';
+        ConfirmQualify,
+        MoveLeadStatusToPipeline
+    } from '../../../../actions/LeadAction';
 
     export default {
         components:{
-            DropdownOwnerList
         },
         data(){
             return {
-                icons:{},
                 modalInstance:null,
                 errors:{},
-                owners:[],
-                owner:[],
+                leadStatus:[],
                 pipelines:[],
                 pipelineStages:[],
+                selectedStatus:null,
                 selectedPipeline:null,
                 selectedPipelineStage:null,
                 currentOwner:null,
                 commant:null,
-                isSubmitConfirmQualifyForm:null,
+                isSubmitConfirmMoveForm:null,
             }
+        },
+        watch:{
         },
         methods: {
             showModalHandler(){
-                this.errors = {};
-                this.owners = this.$store.getters.getOwners;
+                this.leadStatus = this.$store.getters.getLeadStatus;
                 this.pipelines = this.$store.getters.getPipelinesWithStage;
-                this.currentOwner = this.owner = this.$store.getters.getCurrentOwner;
-                try{
-                    if(this.pipelines.length > 0){
-                        this.selectPipelineHandler(this.pipelines[0]?.id);
-                    }
-                }catch(error){}
-
+                this.errors = {};
+                this.selectedStatus = null;
+                this.selectedPipeline = null;
+                this.selectedPipelineStage = null;
                 this.modalInstance.show();
             },
             hideModalHandler(){
@@ -46,6 +41,8 @@
             },
             async selectPipelineHandler(id){
                 try{
+                    this.errors = {};
+                    this.selectedStatus = null;
                     var pipeline = this.pipelines.find(item=>item.id === id);
                     this.selectedPipelineStage = null;
                     if(pipeline){
@@ -69,6 +66,8 @@
             },
             selectPipelineStageHandler(id){
                 try{
+                    this.errors = {};
+                    this.selectedStatus = null;
                     var stage = this.pipelineStages.find(item=>item.id === id);
                     if(stage){
                         this.selectedPipelineStage = stage;
@@ -77,32 +76,33 @@
                     }
                 }catch(error){}
             },
-            selectOwnerHandler(owner){
-                this.currentOwner = owner;
+            selectStatusHandler(id){
+                try{
+                    this.errors = {};
+                    this.selectedPipeline = null;
+                    this.selectedPipelineStage = null;
+                    var status = this.leadStatus.find(item=>item.id === id);
+                    if(status){
+                        this.selectedStatus = status;
+                    }else{
+                        this.errors['status'] = ['Status not found.'];
+                    }
+                }catch(error){}
             },
-            async confirmQualifyHandler(){
+            async confirmMoveLeadHandler(){
                 try{
                     this.$toast.clear();
                     this.errors = {};
-                    this.isSubmitConfirmQualifyForm = true;
+                    this.isSubmitConfirmMoveForm = true;
                     var leadId = this.$route.params?.id??null;
                     var data = {
                         lead:leadId,
+                        status:this.selectedStatus?.id??null,
                         pipeline:this.selectedPipeline?.id??null,
                         pipeline_stage:this.selectedPipelineStage?.id??null,
-                        commant:this.commant,
                     };
-                    if(typeof this.currentOwner?.id == 'number'){
-                        data['owner'] = btoa(this.currentOwner?.id);
-                    }else{
-                        if(this.currentOwner){
-                            data['owner'] = this.currentOwner?.id;
-                        }else{
-                            data['owner'] = null;
-                        }
-                    }
-                    const res = await ConfirmQualify(data);
-                    this.isSubmitConfirmQualifyForm = false;
+                    const res = await MoveLeadStatusToPipeline(data);
+                    this.isSubmitConfirmMoveForm = false;
                     try{
                         var {message} = res;
                         this.$toast[message.type](message.text);
@@ -121,13 +121,12 @@
                         this.$toast.error('Oops, something went wrong');
                     }
                 }finally{
-                    this.isSubmitConfirmQualifyForm = false;
+                    this.isSubmitConfirmMoveForm = false;
                 }
             }
         },
         mounted() {
             this.modalInstance = new Modal(this.$refs.leadQualifyModalRef);
-            this.icons = icons;
         },
     }
 </script>
@@ -135,12 +134,12 @@
 <template>
 
 <div class="modal fade add-new-lead-modal" id="leadQualifyModalRef" ref="leadQualifyModalRef" aria-hidden="true" aria-labelledby="leadQualifyModalRef" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered- modal-sm mx-auto" style="max-width: 350px;">
+    <div class="modal-dialog modal-dialog-centered- modal-md mx-auto" style="max-width: 420px;">
         <div class="modal-content">
             <div class="modal-header py-2">
                 <div class="d-flex justify-content-center align-items-center py-0">
-                    <svg class="svg-5 me-1" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"></path> <circle cx="15.5" cy="9.5" r="1.5"></circle> <circle cx="8.5" cy="9.5" r="1.5"></circle> <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm0-2.5c2.33 0 4.32-1.45 5.12-3.5h-1.67c-.69 1.19-1.97 2-3.45 2s-2.75-.81-3.45-2H6.88c.8 2.05 2.79 3.5 5.12 3.5z"></path></svg>
-                    <span class="text-hard fw-bold fs-16px">Congratulations!</span>
+                    <svg class="svg-5 me-2" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-40q-186 0-313-69.5T40-280q0-69 64-126.5T280-494v82q-73 23-116.5 59T120-280q0 64 108 112t252 48q144 0 252-48t108-112q0-37-43.5-73T680-412v-82q112 30 176 87.5T920-280q0 101-127 170.5T480-40ZM360-200v-440H160v-80h640v80H600v440h-80v-200h-80v200h-80Zm120-560q-33 0-56.5-23.5T400-840q0-33 23.5-56.5T480-920q33 0 56.5 23.5T560-840q0 33-23.5 56.5T480-760Z"/></svg>
+                    <span class="text-hard fw-bold fs-16px">Move lead</span>
                 </div>
                 <div>
                     <button class="btn btn-light btn-sm btn-floating d-lg-none" @click="hideModalHandler()">
@@ -149,10 +148,29 @@
                 </div>
             </div>
             <div class="modal-body">
+                <p class="fs-16px mb-4 text-center">
+                    This operation will not count as a <strong>conversion</strong>. Use this functionality only to fix mistakes or recategorise leads in a way that should not count towards your team's reporting goals. 
+                </p>
+                <div class="mb-4 position-relative">
+                    <label class="form-label-title" for="">Move to another lead status</label>
+                    <input @click="delete errors?.status" class="form-control cursor-pointer select-none" :value="selectedStatus?.name??'Select lead status'" type="text" data-mdb-toggle="dropdown" readonly>
+                    <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-" style="max-height:125px;">
+                        <ul class="list-unstyled mb-0">
+                            <li 
+                            v-for="(item, index) in leadStatus" 
+                            :key="index"
+                            @click="selectStatusHandler(item.id)"
+                            :class="`dropdown-item text-hard fw-bold fs-14px d-flex py-1 ${selectedStatus?.id == item.id?'selected':''}`">
+                            {{ item.name }}
+                            </li>
+                        </ul>
+                    </div>
+                    <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.status?.length">{{ errors?.status[0] }}</span>
+                </div>
 
-                <div class="mb-3 position-relative">
-                    <label class="form-label-title" for="">Select a pipeline <span class="text-soft fs-12px ms-1">(Required)</span> </label>
-                    <input @click="delete errors?.pipeline" class="form-control cursor-pointer select-none" :value="selectedPipeline?.title" type="text" data-mdb-toggle="dropdown" readonly>
+                <div class="mb-2 position-relative">
+                    <label class="form-label-title" for="">Move from lead to pipeline stage</label>
+                    <input @click="delete errors?.pipeline" class="form-control cursor-pointer select-none" :value="selectedPipeline?.title??'Select pipeline'" type="text" data-mdb-toggle="dropdown" readonly>
                     <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-" style="max-height:125px;">
                         <ul class="list-unstyled mb-0">
                             <li 
@@ -167,13 +185,12 @@
                     <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.pipeline?.length">{{ errors?.pipeline[0] }}</span>
                 </div>
 
-                <div class="mb-3 position-relative">
-                    <label class="form-label-title" for="">Select a stage <span class="text-soft fs-12px ms-1">(Required)</span> </label>
+                <div class="mb-4 position-relative">
                     <input 
                     @click="delete errors?.pipeline_stage" 
-                    class="form-control select-none" 
+                    class="form-control select-none"
                     :class="`${pipelineStages.length?'cursor-pointer':'cursor-no-drop'}`" 
-                    :value="selectedPipelineStage?.name"
+                    :value="selectedPipelineStage?.name??'Select pipeline stage'"
                     type="text" data-mdb-toggle="dropdown" readonly>
                     <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-" style="max-height:125px;">
                         <ul v-if="pipelineStages.length" class="list-unstyled mb-0">
@@ -189,59 +206,16 @@
                     <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.pipeline_stage?.length">{{ errors?.pipeline_stage[0] }}</span>
                 </div>
 
-                <div class="mb-3 position-relative">
-                    <label class="form-label-title" for="">Start a workflow <span class="text-soft fs-12px ms-1">(Optional)</span> </label>
-                    <input @click="delete errors?.lead_status" class="form-control cursor-pointer select-none" type="text" data-mdb-toggle="dropdown" readonly>
-                    <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-" style="max-height:125px;">
-                        <ul class="list-unstyled mb-0">
-                            <li 
-                            v-for="(item, index) in []" 
-                            :key="index"
-                            @click="selectleadStatus(item)"
-                            :class="`dropdown-item text-hard fw-bold fs-14px d-flex py-1 ${status?.id == item.id?'selected':''}`">
-                            {{ item.name }}
-                            <svg v-if="item.is_lost" class="svg-5 ms-auto" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"></path></svg>
-                            </li>
-                        </ul>
-                    </div>
-                    <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.lead_status?.length">{{ errors?.lead_status[0] }}</span>
-                </div>
-
-                <div class="mb-3 add-new-lead-owner-list-dropdown position-relative">
-                    <label class="form-label-title" for="">Owner <span class="text-soft fs-12px ms-1">(Optional)</span></label>
-                    <div class="form-control cursor-pointer owner-form-control select-none" data-mdb-toggle="dropdown" @click="delete errors?.owner">
-                        <div class="owner-info">
-                            <div class="circle-avatar me-2">
-                                <img v-if="currentOwner" class="avatar" :src="currentOwner?.profile_avatar" alt="">
-                                <img v-if="!owner" class="avatar" :src="icons?.avatar" alt="">
-                            </div>
-                            <div class="owner-name fs-16px fw--bold text-hard">{{ currentOwner?.name??'No Owner' }}</div>
-                        </div>
-                    </div>
-                    <dropdown-owner-list 
-                    ref="dropdownOwnerListRef" 
-                    :select-owner-handler="selectOwnerHandler" 
-                    :owners="owners" 
-                    :owner="currentOwner" />
-                    <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.owner?.length">{{ errors?.owner[0] }}</span>
-                </div>
-
-                <div class="mb-3 position-relative">
-                    <label class="form-label-title" for="">Leave a comment <span class="text-soft fs-12px ms-1">(Optional)</span> </label>
-                    <textarea v-model="commant" class="form-control" rows="3" @click="delete errors?.owner"></textarea>
-                    <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.commant?.length">{{ errors?.commant[0] }}</span>
-                </div>
-
                 <div class="d-flex justify-content-between align-items-center">
                     <button @click="hideModalHandler()" class="btn btn-sm btn-danger">Close</button>
-                    <button :disabled="isSubmitConfirmQualifyForm" @click="confirmQualifyHandler()" type="submit" class="btn btn-primary btn-sm px-3 d-flex justify-content-center align-items-center">
-                        <div v-if="isSubmitConfirmQualifyForm">
+                    <button :disabled="isSubmitConfirmMoveForm" @click="confirmMoveLeadHandler()" type="submit" class="btn btn-primary btn-sm px-3 d-flex justify-content-center align-items-center">
+                        <div v-if="isSubmitConfirmMoveForm">
                             <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
                                 <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
                             </svg>
                             <span>Submitting...</span>
                         </div>
-                        <span v-if="!isSubmitConfirmQualifyForm">Confirm Qualify</span>
+                        <span v-if="!isSubmitConfirmMoveForm">Confirm Move</span>
                     </button>
                 </div>
             </div>

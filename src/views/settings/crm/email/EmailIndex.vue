@@ -1,8 +1,4 @@
 <script>
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
-
-
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import '@vueup/vue-quill/dist/vue-quill.bubble.css';
@@ -18,7 +14,6 @@ export default {
       }
     },
     components:{
-        vueCustomScrollbar,
         QuillEditor
     }
   }
@@ -27,7 +22,7 @@ export default {
 
 <template>
 
-  <vue-custom-scrollbar :settings="{ suppressScrollY: false, suppressScrollX: false, wheelPropagation: false, wheelSpeed:0.5 }" class="content">
+  <div class="content content-y-100vh">
     
     <div class="content-header">
         <h1>Email & SMS sending</h1>
@@ -38,14 +33,14 @@ export default {
 
             <div class="row">
 
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>Connected email account</h2>
                         <span class="sub-title">Sync your inbox and see your conversations in Pylon CRM.</span>
                     </div>
                 </div>
 
-                <div class="col-lg-6 col-9">
+                <div class="col-lg-5 col-12">
                     <p class="">Your email address <span class="mx-1 fw-bold">connections@electrifyingaustralia.com.au</span> is not yet connected.</p>
                     <div>
                         <button class="btn btn-primary fw-bold">Connect your email</button>
@@ -58,14 +53,14 @@ export default {
 
             <div class="row">
 
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>SMS sending</h2>
                         <span class="sub-title">Chat with your customers in Pylon CRM.</span>
                     </div>
                 </div>
 
-                <div class="col-lg-6 col-9">
+                <div class="col-lg-5 col-12">
                     <p class="">SMS integration coming soon.</p>
                 </div>
 
@@ -77,14 +72,14 @@ export default {
 
             <div class="row">
 
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>SMS sending</h2>
                         <span class="sub-title">Chat with your customers in Pylon CRM.</span>
                     </div>
                 </div>
 
-                <div class="col-lg-5 col-9">
+                <div class="col-lg-5 col-12">
                     <QuillEditor theme="snow" placeholder="Insert text here ..." />
                     <div class="mt-3">
                         <button class="btn btn-primary fw-bold">Save Settings</button>
@@ -97,14 +92,14 @@ export default {
 
             <div class="row">
 
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>User Email Signature</h2>
                         <span class="sub-title">This will be be used instead of your company wide email signature.</span>
                     </div>
                 </div>
 
-                <div class="col-lg-5 col-9">
+                <div class="col-lg-5 col-12">
                     <QuillEditor theme="snow" placeholder="Insert text here ..." />
                     <div class="mt-3">
                         <button class="btn btn-primary fw-bold">Save Settings</button>
@@ -117,15 +112,15 @@ export default {
 
             <div class="row">
 
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>Email Templates</h2>
                         <span class="sub-title">Setup email templates so you quickly send out emails to your customers</span>
                     </div>
                 </div>
 
-                <div class="col-lg-8 col-9">
-                    <table class="table table-sm table-striped table-hover">
+                <div class="col-lg-8 col-12">
+                    <table class="table table-bordered table-sm table-striped table-hover table-light">
                         <thead>
                             <tr>
                                 <th class="fw-bold" width="35%" scope="col">Name</th>
@@ -208,14 +203,14 @@ export default {
 
 
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>SMS Templates</h2>
                         <span class="sub-title">Setup sms templates so you quickly send out text messages to your customers</span>
                     </div>
                 </div>
-                <div class="col-lg-8 col-9">
-                    <table class="table table-sm table-striped table-hover">
+                <div class="col-lg-8 col-12">
+                    <table class="table table-bordered table-sm table-striped table-hover table-light">
                         <thead>
                             <tr>
                                 <th class="fw-bold" width="35%" scope="col">Name</th>
@@ -296,7 +291,7 @@ export default {
         </section>
     </div>
 
-  </vue-custom-scrollbar>
+  </div>
 
 </template>
 <style lang="scss" scoped>

@@ -1,23 +1,17 @@
 <script>
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
-
 export default {
   name:'AccountIndex',
     data() {
       return{
       }
     },
-    components:{
-        vueCustomScrollbar,
-    }
   }
   
 </script>
 
 <template>
 
-  <vue-custom-scrollbar :settings="{ suppressScrollY: false, suppressScrollX: false, wheelPropagation: false, wheelSpeed:0.5 }" class="content">
+  <div class="content content-y-100vh">
     
     <div class="content-header">
         <h1>Job Sheets</h1>
@@ -26,13 +20,13 @@ export default {
     <div class="content-body">
         <section class="">
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12">
                     <div class="settings-group-header">
                         <h2>Bill of materials</h2>
                         <p class="sub-title">The bill of materials contains all the physical items that are needed to complete the job.</p>
                     </div>
                 </div>
-                <div class="col-lg-8 col-9">
+                <div class="col-lg-8 col-12">
                     <div class="settings-group-header">
                         <h2 class="text-muted">Default items</h2>
                     </div>
@@ -101,7 +95,7 @@ export default {
         </section>
     </div>
 
-  </vue-custom-scrollbar>
+  </div>
 
 </template>
 

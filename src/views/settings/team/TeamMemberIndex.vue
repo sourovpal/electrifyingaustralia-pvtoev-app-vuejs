@@ -182,7 +182,7 @@
                         </button>
                     </div>
 
-                    <div class="fw-bold d-flex justify-content-center align-items-center me-3 text-overflow-ellipsis fs-16px" style="min-width: 8rem;">{{ pagination.from }} - {{ pagination.to }} of  {{ pagination.total }}</div>
+                    <div class="fw-bold d-flex justify-content-center align-items-center me-3 text-overflow-ellipsis fs-16px" style="min-width: 4rem;">{{ pagination.from }} - {{ pagination.to }} of  {{ pagination.total }}</div>
                     
                     <button 
                     :disabled="!pagination.prev_page" 
@@ -309,10 +309,7 @@
         padding-top:2px !important;
         padding-bottom: 2px !important;
     }
-    .team-members .scrollbar__wrapper{
-        height:calc(100vh - 7rem + 3px);
-    }
-    .team-members .scrollbar__scroller{
-        height: 100%;
+    .team-members .tbl-custom-data-table{
+        height: calc(100vh - 107px) !important;   
     }
 </style>

@@ -1,6 +1,4 @@
 <script>
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
 import { VueDraggableNext } from 'vue-draggable-next';
 
 export default {
@@ -15,7 +13,6 @@ export default {
       }
     },
     components:{
-        vueCustomScrollbar,
         VueDraggableNext
     },
     methods:{
@@ -26,7 +23,7 @@ export default {
 
 <template>
 
-  <vue-custom-scrollbar :settings="{ suppressScrollY: false, suppressScrollX: false, wheelPropagation: false, wheelSpeed:0.5 }" class="content">
+  <div class="content content-y-100vh">
     
     <div class="content-header">
         <h1>Task workflows</h1>
@@ -36,7 +33,7 @@ export default {
         <section class="">
 
             <div class="row">
-                <div class="col-lg-9 col-9">
+                <div class="col-lg-7 col-12">
 
                     <vue-draggable-next class="lead-status-list" tag="div" :list="items" handle=".handle">
                         <div class="section-box d-flex justify-content-start align-items-center" v-for="(item, index) in items" :key="item.id">
@@ -73,7 +70,7 @@ export default {
         </section>
     </div>
 
-  </vue-custom-scrollbar>
+  </div>
 
 </template>
 <style lang="scss" scoped>

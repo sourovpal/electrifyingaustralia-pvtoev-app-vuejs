@@ -1,27 +1,21 @@
 <script>
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
-
 export default {
   name:'ProfileIndex',
     data() {
       return{
       }
     },
-    components:{
-        vueCustomScrollbar,
-    }
   }
   
 </script>
 
 <template>
 
-  <vue-custom-scrollbar :settings="{ suppressScrollY: false, suppressScrollX: false, wheelPropagation: false, wheelSpeed:0.5 }" class="content">
+  <div class="content content-y-100vh">
     
     <div class="content-header">
         <h1 class="mb-3">Proposal legals</h1>
-        <p class="w-75 sub-title pe-5">
+        <p class="w-lg-75 sub-title pe-5">
             The settings below change the way your solar proposals work. Changes to these settings will take <strong>immediate effect</strong> on your web proposals.
             <br><br>
             They will not change PDFs you have downloaded, or e-signature requests that have already been sent.
@@ -32,13 +26,13 @@ export default {
         <section class="">
 
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12">
                     <div class="settings-group-header">
                         <h2>Terms and conditions</h2>
                         <span class="sub-title">These documents are your contract with your customers.</span>
                     </div>
                 </div>
-                <div class="col-lg-5 col-9">
+                <div class="col-lg-5 col-12">
                     <div class="settings-group-item mb-2">
                         <label for="" class="form-label-title">Terms & conditions content</label>
                     </div>
@@ -58,7 +52,7 @@ export default {
                                 This includes everything you need in a Standard Sales Contract. Learn more <a href="">here</a>.</p>
                                 <div class="settings-group-item" data-toggle="list-group-input-toggle">
                                     <label class="form-label-title" for="">Starting at:</label>
-                                    <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                                    <input type="text" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -82,7 +76,7 @@ export default {
 
                     <div class="settings-group-item">
                         <label class="form-label-title" for="">Terms & conditions footer</label>
-                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg" value="##">
+                        <input type="text" class="form-control" value="##">
                         <span class="form-input-commant">This text appears in the footer of your T&Cs pages.</span>
                     </div>
                     
@@ -94,13 +88,13 @@ export default {
                                 <label style="width:75%;font-weight: 100;" class="form-label-title" for="">	Milestone name</label>
                             </div>
                             <div class="d-flex mb-2">
-                                <input type="number" style="width:25%;" class="form-control form-control-sm form-control-input form-control-lg" value="10">
-                                <input type="text" style="width:47%;" class="form-control form-control-sm form-control-input form-control-lg me-3" value="Deposit">
+                                <input type="number" style="width:25%;" class="form-control" value="10">
+                                <input type="text" style="width:47%;" class="form-control me-3" value="Deposit">
                                 <button style="width:20%" class="btn btn-danger">Delete</button>
                             </div>
                             <div class="d-flex">
-                                <input type="number" style="width:25%;" class="form-control form-control-sm form-control-input form-control-lg" value="90">
-                                <input type="text" style="width:47%;" class="form-control form-control-sm form-control-input form-control-lg me-3" value="Installation Completion">
+                                <input type="number" style="width:25%;" class="form-control" value="90">
+                                <input type="text" style="width:47%;" class="form-control me-3" value="Installation Completion">
                                 <button style="width:20%" class="btn btn-danger">Delete</button>
                             </div>
                             <div class="mt-3">
@@ -112,8 +106,8 @@ export default {
 
                     <div class="settings-group-item">
                         <label class="form-label-title" for="">Installation completion turn around</label>
-                        <div class="select-box">
-                            <select class="form-control form-control-sm form-control-input form-control-lg" name="" id="">
+                        <div class="">
+                            <select class="form-control" name="" id="">
                                 <option value="">New</option>
                             </select>
                         </div>
@@ -122,7 +116,7 @@ export default {
 
                     <div class="settings-group-item">
                         <label class="form-label-title" for="">Default Special Conditions</label>
-                        <textarea class="form-control form-control-sm form-control-input form-control-lg" rows="2"></textarea>
+                        <textarea class="form-control" rows="2"></textarea>
                         <span class="form-input-commant">This content will appear in the Schedule 1 — Special Conditions page of all future proposals.</span>
                     </div>
 
@@ -136,12 +130,12 @@ export default {
             <hr class="mt-4 mb-5">
 
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12">
                     <div class="settings-group-header">
                         <h2>Warranty</h2>
                     </div>
                 </div>
-                <div class="col-lg-5 col-9">
+                <div class="col-lg-5 col-12">
                     <div class="settings-group-item">
                         <label class="form-label-title" for="">Warranty content</label>
                         <router-link to="/settings/proposal-legals/warranty" class="fw-bold py-3 d-flex">
@@ -157,7 +151,7 @@ export default {
                     </div>
                     <div class="settings-group-item">
                         <label class="form-label-title" for="">Workmanship warranty duration (years)</label>
-                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                        <input type="text" class="form-control">
                         <span class="form-input-commant">If left blank, this detail will be omitted from your proposal.</span>
                     </div>
                     <div class="">
@@ -171,7 +165,7 @@ export default {
         </section>
     </div>
 
-  </vue-custom-scrollbar>
+  </div>
 
 </template>
 

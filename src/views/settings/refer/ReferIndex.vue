@@ -1,7 +1,4 @@
 <script>
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
-
 export default {
   name:'AccountIndex',
     data() {
@@ -9,7 +6,6 @@ export default {
       }
     },
     components:{
-        vueCustomScrollbar,
     }
   }
   
@@ -17,7 +13,7 @@ export default {
 
 <template>
 
-  <vue-custom-scrollbar :settings="{ suppressScrollY: false, suppressScrollX: false, wheelPropagation: false, wheelSpeed:0.5 }" class="content">
+  <div class="content content-y-100vh">
     
     <div class="content-header">
         <h1>Refer a friend</h1>
@@ -46,7 +42,7 @@ export default {
             
             
             <div class="row">
-                <div class="col-lg-6 col-3">
+                <div class="col-lg-6 col-12">
                     <div class="settings-group-header">
                         <h2 class="fw-initial">Earn free credits</h2>
                         <p class="sub-title">
@@ -59,9 +55,9 @@ export default {
             </div>
 
             <div class="row">
-                <div class="col-lg-4 col-3"><br>
+                <div class="col-lg-4 col-12"><br>
                     <div class="settings-group-item">
-                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                        <input type="text" class="form-control">
                     </div>
                     <div class="">
                         <button class="btn btn-primary fw-bold">Send invitation</button>
@@ -72,14 +68,14 @@ export default {
             <hr class="mt-4 mb-5">
 
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12">
                     <div class="settings-group-header">
                         <h2 class="">Existing referrals</h2>
-                        <p class="sub-title mt-4">You haven't sent any referrals yet.</p>
+                        <p class="sub-title mt-2">You haven't sent any referrals yet.</p>
                     </div>
                 </div>
-                <div class="col-lg-8 col-8">
-                    <table class="table table-sm table-striped table-hover">
+                <div class="col-lg-8 col-12">
+                    <table class="table table-bordered table-sm table-striped table-hover table-light">
                         <thead>
                             <tr>
                                 <th class="fw-bold" scope="col">Username</th>
@@ -138,7 +134,7 @@ export default {
         </section>
     </div>
 
-  </vue-custom-scrollbar>
+  </div>
 
 </template>
 

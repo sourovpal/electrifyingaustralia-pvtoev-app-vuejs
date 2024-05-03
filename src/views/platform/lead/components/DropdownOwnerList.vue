@@ -1,5 +1,5 @@
 <script>
-    import {icons} from '../../../../../asset/svgicon.js';
+    import {icons} from '../../../../asset/svgicon.js';
     export default {
         props:['owners', 'owner', 'selectOwnerHandler'],
         data() {

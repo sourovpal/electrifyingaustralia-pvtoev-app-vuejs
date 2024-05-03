@@ -1,23 +1,16 @@
-<script>
-    import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-    import "vue-custom-scrollbar/dist/vueScrollbar.css";
-    
-    export default {
-      name:'AccountIndex',
-        data() {
-          return{
-          }
-        },
-        components:{
-            vueCustomScrollbar,
+<script>    
+export default {
+    name:'AccountIndex',
+    data() {
+        return{
         }
-      }
-      
-    </script>
+    },
+}      
+</script>
     
-    <template>
+<template>
     
-      <vue-custom-scrollbar :settings="{ suppressScrollY: false, suppressScrollX: false, wheelPropagation: false, wheelSpeed:0.5 }" class="content">
+    <div class="content content-y-100vh">
         
         <div class="content-header">
             <h1>Templates</h1>
@@ -27,13 +20,13 @@
             <section class="">
 
                 <div class="row">
-                    <div class="col-lg-3 col-3">
+                    <div class="col-lg-2 col-12">
                         <div class="settings-group-header">
                             <h2>Proposal sharing</h2>
                             <p class="sub-title">These templates will be available in the email composer when sharing a proposal.</p>
                         </div>
                     </div>
-                    <div class="col-lg-5 col-9">
+                    <div class="col-lg-5 col-12">
                         <div class="settings-group-header">
                             <p class="sub-title">You don't have any custom email templates yet. When sharing your proposals via email, our default template will be used.</p>
                         </div>
@@ -58,12 +51,12 @@
                 </div>
                 <hr class="mt-4 mb-5">
                 <div class="row">
-                    <div class="col-lg-3 col-3">
+                    <div class="col-lg-2 col-12">
                         <div class="settings-group-header">
                             <h2>E-signature requests</h2>
                         </div>
                     </div>
-                    <div class="col-lg-5 col-9">
+                    <div class="col-lg-5 col-12">
                         
                         <div class="settings-group-item">
                             <a href="/settings/component-prices/panel" class="card card-shadow  py-3 px-3">
@@ -80,7 +73,7 @@
             </section>
         </div>
     
-      </vue-custom-scrollbar>
+      </div>
     
     </template>
     

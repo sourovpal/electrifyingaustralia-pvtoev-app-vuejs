@@ -152,7 +152,7 @@ export default {
 
                           <label class="form-label-title" for="">Countries</label>
 
-                          <div class="form-control form-control-input form-control-tags-input px-2" :class="`${showCountryList?'focus':''}`">
+                          <div class="form-control form-control-tags-input px-2" :class="`${showCountryList?'focus':''}`">
 
                             <label v-for="(country, index) in selectedCountry" :key="index" class="tag-lable">{{ country }}
                               <span @click="removeSelectedCountry(country)" class="close-tag">&times;</span>
@@ -205,11 +205,8 @@ export default {
     min-height: 33px;
     display: flex;
     flex-wrap: wrap;
-    padding-top: 2px !important;
+    padding-top: 0px !important;
     padding-bottom: 0px !important;
-    &.focus{
-      border-bottom: 2px solid #007ee5 !important;
-    }
     .tags-input{
       border: none;
       outline: none;

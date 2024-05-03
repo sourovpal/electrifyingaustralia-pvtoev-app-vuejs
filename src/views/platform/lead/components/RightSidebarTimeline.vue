@@ -10,7 +10,7 @@
     import {
         UpdateLeadConfidence, 
         DeleteLeadContact
-    } from '../../../../../actions/LeadAction';
+    } from '../../../../actions/LeadAction';
 
     export default {
         components: {

@@ -122,7 +122,7 @@ export default{
                     <label class="form-label-title mb-0">Name:</label>
                 </div>
                 <div class="col-7 me-auto d-flex justify-content-start align-items-center flex-direction-column">
-                    <input @click="delete errors?.name" v-model="name" class="form-control form-control-input" type="text">
+                    <input @click="delete errors?.name" v-model="name" class="form-control" type="text">
                     <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.name?.length">{{ errors?.name[0] }}</span>
                   </div>
                 </div>
@@ -131,7 +131,7 @@ export default{
                     <label class="form-label-title mb-0">Email Address:</label>
                   </div>
                   <div class="col-7 me-auto d-flex justify-content-start align-items-center flex-direction-column">
-                    <input  v-model="email" class="form-control form-control-input cursor-no-drop" type="text" readonly >
+                    <input  v-model="email" class="form-control cursor-no-drop" type="text" readonly >
                   </div>
                 </div>
                 <div class="row settings-group-item mb-3">
@@ -139,7 +139,7 @@ export default{
                     <label class="form-label-title mb-0">Phone (office):</label>
                   </div>
                   <div class="col-7 me-auto d-flex justify-content-start align-items-center flex-direction-column">
-                    <input @click="delete errors?.phone_office"  v-model="phone_office" class="form-control form-control-input" type="text">
+                    <input @click="delete errors?.phone_office"  v-model="phone_office" class="form-control" type="text">
                     <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.phone_office?.length">{{ errors?.phone_office[0] }}</span>
                   </div>
                 </div>
@@ -148,7 +148,7 @@ export default{
                     <label class="form-label-title mb-0">Phone (mobile):</label>
                   </div>
                   <div class="col-7 me-auto d-flex justify-content-start align-items-center flex-direction-column">
-                    <input @click="delete errors?.phone_mobile"  v-model="phone_mobile" class="form-control form-control-input" type="text">
+                    <input @click="delete errors?.phone_mobile"  v-model="phone_mobile" class="form-control" type="text">
                     <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.phone_mobile?.length">{{ errors?.phone_mobile[0] }}</span>
                   </div>
             </div>
@@ -157,8 +157,8 @@ export default{
                   <label class="form-label-title mb-0">Role:</label>
                 </div>
                 <div class="col-7 me-auto d-flex justify-content-start align-items-center flex-direction-column position-relative">
-                  <div class="select-box w-100">
-                    <input readonly v-model="access_role" class="form-control form-control-input" :class="`${is_owner?'cursor-no-drop':'cursor-pointer'}`" type="text" data-mdb-toggle="dropdown">
+                  <div class="position-relative w-100">
+                    <input readonly v-model="access_role" class="form-control" :class="`${is_owner?'cursor-no-drop':'cursor-pointer'}`" type="text" data-mdb-toggle="dropdown">
                     <div v-show="is_owner!=1" class="dropdown-menu custom-form-select roles overflow-auto" style="max-height:7.5rem;">
                         <ul class="list-unstyled mb-0">
                           <li 
@@ -166,7 +166,7 @@ export default{
                           v-for="(item, index) in roles" 
                           :key="index"
                           v-show="access_role != item.name"
-                          :class="`dropdown-item`">
+                          :class="`dropdown-item text-hard fw-bold fs-14px d-flex py-1`">
                           {{ item.name }}
                         </li>
                       </ul>

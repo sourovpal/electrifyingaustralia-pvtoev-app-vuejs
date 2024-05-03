@@ -1,23 +1,17 @@
 <script>
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
-
 export default {
   name:'ProfileIndex',
     data() {
       return{
       }
     },
-    components:{
-        vueCustomScrollbar,
-    }
   }
   
 </script>
 
 <template>
 
-  <vue-custom-scrollbar :settings="{ suppressScrollY: false, suppressScrollX: false, wheelPropagation: false, wheelSpeed:0.5 }" class="content">
+  <div class="content content-y-100vh">
     
     <div class="content-header">
         <h1 class="mb-3">Proposal preferences</h1>
@@ -32,15 +26,15 @@ export default {
         <section class="">
 
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>Visual design</h2>
                     </div>
                 </div>
-                <div class="col-lg-5 col-9">
+                <div class="col-lg-5 col-12">
                     <div class="settings-group-item">
                         <label class="form-label-title" for="">Accent colour</label>
-                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg" value="">
+                        <input type="text" class="form-control" value="">
                         <span class="form-input-commant">This colour is used in charts, tables, and to emphasise other elements on the proposal.</span>
                     </div>
                     <div>
@@ -52,13 +46,13 @@ export default {
             <hr class="mt-4 mb-5">
 
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>Acceptance</h2>
                         <span class="sub-title">Allow your customers to accept your proposals smoothly.</span>
                     </div>
                 </div>
-                <div class="col-lg-5 col-9">
+                <div class="col-lg-5 col-12">
                     <div class="settings-group-item">
                         <label class="form-label-title d-flex justify-content-start align-items-center">
                             <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
@@ -90,13 +84,13 @@ export default {
             <hr class="mt-4 mb-5">
 
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>Sidebar logo</h2>
                         <span class="sub-title">This logo will appear in the acceptance sidebar of your solar proposals.</span>
                     </div>
                 </div>
-                <div class="col-lg-5 col-9">
+                <div class="col-lg-5 col-12">
                     
                     <div class="settings-group-item">
                         <div class="mb-3">
@@ -105,7 +99,7 @@ export default {
                         <div class="row">
                             <div class="col-md-8">
                                 <div class="settings-group-item mb-1">
-                                    <input type="file" class="form-control form-control-sm form-control-input form-control-lg">
+                                    <input type="file" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-4 text-end">
@@ -126,16 +120,16 @@ export default {
             <hr class="mt-4 mb-5">
 
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>Proposal Video Link</h2>
                         <span class="sub-title">Enhance your proposal by embedding a company video of your choice. This video will appear after the Cover Page. Supports both Vimeo and Youtube.</span>
                     </div>
                 </div>
-                <div class="col-lg-5 col-9">
+                <div class="col-lg-5 col-12">
                     <div class="settings-group-item">
                         <label class="form-label-title" for="">Sidebar Video Link</label>
-                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg" placeholder="https://">
+                        <input type="text" class="form-control" placeholder="https://">
                         <span class="form-input-commant">If left blank, this will be omitted from your proposal.</span>
                     </div>
                     <div class="">
@@ -147,13 +141,13 @@ export default {
             <hr class="mt-4 mb-5">
             
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>Contact details</h2>
                         <span class="sub-title">These details are used on the front page and quote page.</span>
                     </div>
                 </div>
-                <div class="col-lg-5 col-9">
+                <div class="col-lg-5 col-12">
                     <div class="settings-group-item">
                         <label class="form-label-title d-flex justify-content-start align-items-center">
                             <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
@@ -170,34 +164,34 @@ export default {
             <hr class="mt-4 mb-5">
 
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>Quote details</h2>
                         <span class="sub-title">The quote page of your proposal can be completed by your customers to begin purchasing from you.</span>
                     </div>
                 </div>
-                <div class="col-lg-5 col-9">
+                <div class="col-lg-5 col-12">
 
                     <div class="settings-group-item">
                         <label class="form-label-title" for="">Default proposal currency</label>
-                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                        <input type="text" class="form-control">
                     </div>
 
                     <div class="settings-group-item">
                         <label class="form-label-title" for="">Acceptance message</label>
-                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                        <input type="text" class="form-control">
                         <span class="form-input-commant">This text appears on the Quote page of your proposal.</span>
                     </div>
 
                     <div class="settings-group-item">
                         <label class="form-label-title" for="">Footer message</label>
-                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                        <input type="text" class="form-control">
                         <span class="form-input-commant">This text appears in the footer of every page of your proposal.</span>
                     </div>
 
                     <div class="settings-group-item">
                         <label class="form-label-title" for="">Days offer valid for</label>
-                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                        <input type="text" class="form-control">
                         <span class="form-input-commant">When you create a design, its proposal will be 'valid until' the creation date plus this many days. If you leave this blank, 'valid until' will not be displayed.</span>
                     </div>
 
@@ -228,7 +222,7 @@ export default {
                             <input type="radio" class="btn-check" name="options2" id="option30" autocomplete="off" />
                             <label class="btn btn-secondary fw-bold" for="option30">Fixed amount</label>
                         </div>
-                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                        <input type="text" class="form-control">
                     </div>
 
                     <div class="settings-group-item">
@@ -239,13 +233,13 @@ export default {
                                 <label style="width:75%;font-weight: 100;" class="form-label-title" for="">	Milestone name</label>
                             </div>
                             <div class="d-flex mb-2">
-                                <input type="number" style="width:25%;" class="form-control form-control-sm form-control-input form-control-lg" value="10">
-                                <input type="text" style="width:47%;" class="form-control form-control-sm form-control-input form-control-lg me-3" value="Deposit">
+                                <input type="number" style="width:25%;" class="form-control" value="10">
+                                <input type="text" style="width:47%;" class="form-control me-3" value="Deposit">
                                 <button style="width:20%" class="btn btn-danger">Delete</button>
                             </div>
                             <div class="d-flex">
-                                <input type="number" style="width:25%;" class="form-control form-control-sm form-control-input form-control-lg" value="90">
-                                <input type="text" style="width:47%;" class="form-control form-control-sm form-control-input form-control-lg me-3" value="Installation Completion">
+                                <input type="number" style="width:25%;" class="form-control" value="90">
+                                <input type="text" style="width:47%;" class="form-control me-3" value="Installation Completion">
                                 <button style="width:20%" class="btn btn-danger">Delete</button>
                             </div>
                         </div>
@@ -264,12 +258,12 @@ export default {
             <hr class="mt-4 mb-5">
 
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>Automatic reference numbers</h2>
                     </div>
                 </div>
-                <div class="col-lg-5 col-9">
+                <div class="col-lg-5 col-12">
 
                     <div class="list-group mb-3">
                         <div class="list-group-item px-3 py-2">
@@ -286,7 +280,7 @@ export default {
                                 <p class="ps-1 commant">Projects will be assigned reference numbers sequentially as they are created.</p>
                                 <div class="settings-group-item" data-toggle="list-group-input-toggle">
                                     <label class="form-label-title" for="">Starting at:</label>
-                                    <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                                    <input type="text" class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -301,7 +295,7 @@ export default {
 
                     <div class="settings-group-item">
                         <label class="form-label-title" for="">Automatic reference number prefix</label>
-                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg" value="##">
+                        <input type="text" class="form-control" value="##">
                         <span class="form-input-commant">Your automatically-generated reference numbers will begin with this prefix. Must be 2 or 3 letters.</span>
                     </div>
                     <div class="">
@@ -313,32 +307,32 @@ export default {
             <hr class="mt-4 mb-5">
 
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>Bank details</h2>
                         <span class="sub-title">Your bank details will appear on the Quote page of your proposal. This gives your customers an immediate avenue for payment.</span>
                     </div>
                 </div>
-                <div class="col-lg-5 col-9">
+                <div class="col-lg-5 col-12">
                     <div class="settings-group-item">
                         <label class="form-label-title" for="">Name of bank</label>
-                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                        <input type="text" class="form-control">
                     </div>
                     <div class="settings-group-item">
                         <label class="form-label-title" for="">Account name</label>
-                        <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                        <input type="text" class="form-control">
                     </div>
                     <div class="row">
                         <div class="col-6">
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">BSB</label>
-                                <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                                <input type="text" class="form-control">
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="settings-group-item">
                                 <label class="form-label-title" for="">Account number</label>
-                                <input type="text" class="form-control form-control-sm form-control-input form-control-lg">
+                                <input type="text" class="form-control">
                             </div>
                         </div>
                     </div>
@@ -351,13 +345,13 @@ export default {
             <hr class="mt-4 mb-5">
 
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>Proposal pages</h2>
                         <span class="sub-title">You can also select pages for each project. This setting will apply to all projects that don't have their own preferences.</span>
                     </div>
                 </div>
-                <div class="col-lg-7 col-9">
+                <div class="col-lg-7 col-12">
 
                     <div class="proposal-pages">
                         <div>
@@ -680,13 +674,13 @@ export default {
             <hr class="mt-4 mb-5">
 
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>Proposal Watermark</h2>
                         <span class="sub-title">You can also upload an image to appear in the background of every page of your proposal</span>
                     </div>
                 </div>
-                <div class="col-lg-5 col-9">
+                <div class="col-lg-5 col-12">
                     <div class="settings-group-item mb-2">
                         <label class="form-label-title">Watermark Upload</label>
                     </div>
@@ -712,7 +706,7 @@ export default {
         </section>
     </div>
 
-  </vue-custom-scrollbar>
+  </div>
 
 </template>
 

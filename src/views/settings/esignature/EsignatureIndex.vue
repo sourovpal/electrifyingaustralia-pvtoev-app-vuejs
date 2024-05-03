@@ -1,6 +1,4 @@
 <script>
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
 import { SmartTagz } from "smart-tagz";
 import "smart-tagz/dist/smart-tagz.css";
 
@@ -12,7 +10,6 @@ export default {
       }
     },
     components:{
-        vueCustomScrollbar,
         SmartTagz
     }
   }
@@ -21,7 +18,7 @@ export default {
 
 <template>
 
-  <vue-custom-scrollbar :settings="{ suppressScrollY: false, suppressScrollX: false, wheelPropagation: false, wheelSpeed:0.5 }" class="content">
+  <div class="content content-y-100vh">
     
     <div class="content-header">
         <h1>E-signature requests</h1>
@@ -31,13 +28,13 @@ export default {
         <section class="">
 
             <div class="row">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>Successful signatures</h2>
                         <span class="sub-title">These settings define what happens when a customer signs one of your proposals.</span>
                     </div>
                 </div>
-                <div class="col-lg-5 col-9">
+                <div class="col-lg-5 col-12">
 
                     <div class="settings-group-item">
                         <div class="">
@@ -86,14 +83,14 @@ export default {
 
 
             <div class="row mt-4">
-                <div class="col-lg-3 col-3">
+                <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>Templates</h2>
                         <span class="sub-title">These templates will be available in the email composer when sharing a proposal.</span>
                     </div>
                 </div>
-                <div class="col-lg-8 col-9">
-                    <table class="table table-sm table-striped- table-hover">
+                <div class="col-lg-8 col-12">
+                    <table class="table table-bordered table-sm table-striped table-hover table-light">
                         <thead>
                             <tr>
                                 <th class="fw-bold" width="30%" scope="col">Name</th>
@@ -220,7 +217,7 @@ export default {
         </section>
     </div>
 
-  </vue-custom-scrollbar>
+  </div>
 
 </template>
 

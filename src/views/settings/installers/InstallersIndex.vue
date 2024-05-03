@@ -347,10 +347,7 @@
         padding-top:2px !important;
         padding-bottom: 2px !important;
     }
-    .installer-list .scrollbar__wrapper{
-        height:calc(100vh - 7rem + 3px);
-    }
-    .installer-list .scrollbar__scroller{
-        height: 100%;
+    .installer-list .tbl-custom-data-table{
+        height: calc(100vh - 107px) !important;   
     }
 </style>

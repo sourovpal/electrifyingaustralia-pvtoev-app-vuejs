@@ -1,6 +1,4 @@
 <script>
-import vueCustomScrollbar from 'vue-custom-scrollbar/src/vue-scrollbar.vue'
-import "vue-custom-scrollbar/dist/vueScrollbar.css";
 import JsonViewer from 'vue-json-viewer';
 
 export default {
@@ -94,8 +92,7 @@ export default {
             }
         }
 },
-components:{
-        vueCustomScrollbar,
+    components:{
         JsonViewer
     }
   }
@@ -129,9 +126,9 @@ components:{
                         <div class="card-header">
                             <h4 class="mb-0 text-muted fs-14px fw-bold">Event data</h4>
                         </div>
-                        <vueCustom-scrollbar class="card-body p-0 mb-3" style="height: calc(100vh - 180px);">
+                        <div class="card-body p-0 mb-3" style="height: calc(100vh - 180px);">
                             <json-viewer :value="sample" :expand-depth="10"></json-viewer>
-                        </vueCustom-scrollbar>
+                        </div>
                     </div>
                 </div>
             </div>

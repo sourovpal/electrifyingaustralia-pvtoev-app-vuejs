@@ -1,11 +1,11 @@
 <script>
     import { Modal } from "mdb-ui-kit";
-    import {icons} from '../../../../../asset/svgicon';
+    import {icons} from '../../../../asset/svgicon';
     import {
         CreateLeadContact, 
         UpdateLeadContact, 
         SearchLeadContact,
-    } from '../../../../../actions/LeadAction'
+    } from '../../../../actions/LeadAction'
 
     export default {
         props:['findLeadByIdHandler'],

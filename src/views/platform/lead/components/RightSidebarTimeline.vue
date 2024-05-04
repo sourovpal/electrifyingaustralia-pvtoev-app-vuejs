@@ -33,16 +33,16 @@
             }
         },
         watch:{
-            "$store.state.leadEdit.leadProperties"(payload){
+            "$store.state.lead.leadProperties"(payload){
                 this.leadProperties = payload;
             },
-            "$store.state.leadEdit.leadContacts"(payload){
+            "$store.state.lead.leadContacts"(payload){
                 this.contacts = payload;
             },
-            "$store.state.leadEdit.primaryContact"(payload){
+            "$store.state.lead.primaryContact"(payload){
                 this.contact = payload;
             },
-            "$store.state.leadEdit.findLead"(lead){
+            "$store.state.lead.findLead"(lead){
                 this.lead = lead;
                 this.confidence = lead?.confidence;
                 var temp = '';
@@ -332,7 +332,7 @@
                 <div class="mb-1">
                     <div class="fs-12px text-soft mb-0">Value</div>
                     <div class="d-flex">
-                        <div class="fs-14px fw-bold text-head mb-0">{{ lead?.estimated_value??' - ' }}</div>
+                        <div class="fs-14px fw-bold text-head mb-0">{{ lead?.estimated_value??'$0.00' }}</div>
                     </div>
                 </div>
                 <div class="mb-1">

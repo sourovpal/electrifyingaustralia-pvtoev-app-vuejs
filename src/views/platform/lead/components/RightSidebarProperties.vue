@@ -7,10 +7,10 @@
             }
         },
         watch: {
-            "$store.state.leadEdit.leadProperties"(payload){
+            "$store.state.lead.leadProperties"(payload){
                 this.leadProperties = payload;
             },
-            "$store.state.leadEdit.leadCustomProperties"(payload){
+            "$store.state.lead.leadCustomProperties"(payload){
                 this.leadCustomPropertiesHandler(payload);
             }
         },

@@ -16,6 +16,7 @@ import AddNewLeadModal from './components/AddNewLeadModal.vue';
 import DeleteMultipleLeadWarningModal from './components/DeleteMultipleLeadWarningModal.vue';
 import DropdownOwnerList from './components/DropdownOwnerList.vue';
 import ColumnSorted from './components/ColumnSorted.vue';
+import UploadSpreadsheetModal from './components/UploadSpreadsheetModal.vue';
 
 import {
     FetchLeads, 
@@ -28,19 +29,20 @@ export default {
     components: {
         SearchBar,
         ActionBar,
+        Datatable,
+        DataNotFound,
+        ColumnSorted,
+        DatatableBody,
         LeftActionBar,
         RightActionBar,
-        Datatable,
-        DatatableBody,
         DatatableHeader,
         AddNewLeadModal,
-        HeaderPropertiesDropdown,
-        FilterRightSidebar,
         DataTableSkeletor,
-        DataNotFound,
-        DeleteMultipleLeadWarningModal,
         DropdownOwnerList,
-        ColumnSorted,
+        FilterRightSidebar,
+        UploadSpreadsheetModal,
+        HeaderPropertiesDropdown,
+        DeleteMultipleLeadWarningModal,
     },
     data() {
         return {
@@ -480,7 +482,7 @@ export default {
                     </div>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="#">Upload spreadsheet...</a></li>
+                <li @click="$refs['UploadSpreadsheetModalRef'].showModalHandler()"><a class="dropdown-item cursor-pointer">Upload spreadsheet...</a></li>
                 <li><a class="dropdown-item" href="#">Connect to lead providers</a></li>
                 </ul>
             </div>
@@ -761,10 +763,15 @@ export default {
     :lead-status="leadStatus"
     :owners="owners"
     />
+
     <delete-multiple-lead-warning-modal
     ref="DeleteMultipleLeadModalRef"
     :selectedRows="selectedRows"
     :fetchAllLeadsHandler="fetchAllLeadsHandler"
+    />
+
+    <upload-spreadsheet-modal
+    ref="UploadSpreadsheetModalRef"
     />
 
 </template>

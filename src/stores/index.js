@@ -1,12 +1,12 @@
 import { createStore } from 'vuex';
 import app from './app';
-import leadEdit from './leadEdit';
+import lead from './lead';
 
 
 const store = createStore({
   modules:{
     app:app,
-    leadEdit:leadEdit
+    lead:lead
   }
 });
 export default store;

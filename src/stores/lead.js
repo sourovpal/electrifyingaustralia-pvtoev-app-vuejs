@@ -67,30 +67,50 @@ try{
       },
       mutations: {
         setLeadEditTimelineData(state, payload) {
-            const {lead_statuses} = VueCookies.get(import.meta.env.VITE_AUTH_APP);
-            const {lead, next_lead, prev_lead, lead_properties, pipelines, owners, lead_sources} = payload;
-            state.findLead  = lead;
-            state.prev_lead = prev_lead;
-            state.next_lead = next_lead;
+
+          const {lead_statuses} = VueCookies.get(import.meta.env.VITE_AUTH_APP);
+
+          const {lead, next_lead, prev_lead, lead_properties, pipelines, owners, lead_sources} = payload;
+
+          state.findLead  = lead;
+
+          state.leadCustomProperties = lead?.custom_properties;
+
+          state.prev_lead = prev_lead;
+          state.next_lead = next_lead;
+
+          if(owners){
             state.owners = owners;
+          }
+
+          if(pipelines){
             state.pipelines = pipelines;
+          }
+
+          if(lead_properties){
             state.leadProperties = lead_properties;
+          }
+
+          if(lead_sources){
             state.leadSources = lead_sources;
+          }
+          
+          if(lead_statuses){
             state.leadStatus = lead_statuses;
-            state.leadCustomProperties = lead?.custom_properties;
+          }
 
-            if(lead?.contacts?.length){
-                state.leadContacts = lead?.contacts;
-                if(lead?.contact){
-                    state.primaryContact = lead.contact;
-                }else{
-                    state.primaryContact = lead?.contacts[0];
-                }
-            }
+          if(lead?.contacts?.length){
+              state.leadContacts = lead?.contacts;
+              if(lead?.contact){
+                  state.primaryContact = lead.contact;
+              }else{
+                  state.primaryContact = lead?.contacts[0];
+              }
+          }
 
-            if(lead?.owner){
-                state.currentOwner = lead?.owner;
-            }
+          if(lead?.owner){
+              state.currentOwner = lead?.owner;
+          }
         }
       },
       actions: {

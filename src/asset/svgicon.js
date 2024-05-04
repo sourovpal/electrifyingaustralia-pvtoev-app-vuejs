@@ -13,7 +13,10 @@ const propertiesIconList = {
 const icons = {
     avatar:'/src/asset/icon/white-avatar.png',
     empty_folder:'/src/asset/icon/empty-folder-1.png',
+    fetch_error:'/src/asset/icon/fetch-error.svg',
+    server_error:'/src/asset/icon/server-error.svg',
 };
+
 
 
 

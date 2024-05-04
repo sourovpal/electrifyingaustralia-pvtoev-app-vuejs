@@ -48,7 +48,7 @@
             "phone_number"(val){
                 this.searchLeadContactHandler(val, ['phone_number', 'another_phones']);
             },
-            "$store.state.leadEdit.leadContacts"(payload){
+            "$store.state.lead.leadContacts"(payload){
                 this.contacts = payload;
             },
         },

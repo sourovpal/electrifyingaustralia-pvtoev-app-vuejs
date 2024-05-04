@@ -63,22 +63,22 @@ export default {
     "$route"(){
         this.findLeadByIdHandler();
     },
-    "$store.state.leadEdit.findLead"(lead){
+    "$store.state.lead.findLead"(lead){
         this.findLead = lead;
     },
-    "$store.state.leadEdit.prev_lead"(prev){
+    "$store.state.lead.prev_lead"(prev){
         this.prevLead = prev;
     },
-    "$store.state.leadEdit.next_lead"(next){
+    "$store.state.lead.next_lead"(next){
         this.nextLead = next;
     },
-    "$store.state.leadEdit.owners"(owners){
+    "$store.state.lead.owners"(owners){
         this.owners = owners;
     },
-    "$store.state.leadEdit.currentOwner"(owner){
+    "$store.state.lead.currentOwner"(owner){
         this.owner = owner;
     },
-    "$store.state.leadEdit.leadStatus"(status){
+    "$store.state.lead.leadStatus"(status){
         this.leadStatus = status;
     },
   },
@@ -344,12 +344,8 @@ export default {
              />
         </div>
     </section>
-
     
   </section>
-
-<!-- ============================ -->
-
 </template>
 
 <style scoped lang="scss">

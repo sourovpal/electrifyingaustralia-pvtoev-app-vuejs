@@ -20,7 +20,6 @@ export default {
   },
   methods:{
     menubarToggle(state = true){
-
       if(!this.showChildren && state){
 
           this.showChildren = true;
@@ -36,7 +35,7 @@ export default {
           });
 
       }else{
-
+        
           this.$nextTick(()=>{
             
             if(this.showChildren){

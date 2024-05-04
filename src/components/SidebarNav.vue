@@ -149,7 +149,7 @@ export default{
     top: 0;
     left: 0;
     bottom: 0;
-    background-color: #f5f5f5;
+    background-color: #e8ebef;
     width: 4rem;
     height: 100%;
     padding: 0;

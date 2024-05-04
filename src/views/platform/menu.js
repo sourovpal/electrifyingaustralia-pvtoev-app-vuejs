@@ -5,6 +5,22 @@ export const menus = async({lead_statuses, pipelines})=>{
         try{
             return resolve([    
                     {
+                        name:'tasks',
+                        label:'Tasks',
+                        path:'/platform/tasks',
+                        query:{},
+                        icon:'',
+                        children:[
+                            {
+                                label:'All',
+                                path:'tasks',
+                                query:{},
+                                icon:'',
+                            },            
+                        ].concat([])
+                    },
+                    {
+                        name:'leads',
                         label:'Leads',
                         path:'/platform/leads',
                         query:{},
@@ -19,6 +35,7 @@ export const menus = async({lead_statuses, pipelines})=>{
                         ].concat(lead_statuses)
                     },
                     {
+                        name:'pipeline',
                         label:'Pipelines',
                         path:'/platform/deals',
                         query:{},
@@ -26,6 +43,7 @@ export const menus = async({lead_statuses, pipelines})=>{
                         children:[].concat(pipelines)
                     },
                     {
+                        name:'contacts',
                         label:'Contacts',
                         path:'/platform/contacts',
                         query:{},

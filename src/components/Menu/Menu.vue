@@ -1,26 +1,38 @@
 <script>
-import MenuGroup from './MenuGroup.vue';
 import CustomScrollbar from 'custom-vue-scrollbar';
+import SlideUpDown from 'vue-slide-up-down'
 export default {
+    props:['menus', 'title'],
     components:{
-        MenuGroup,
-        CustomScrollbar
+        CustomScrollbar,
+        SlideUpDown,
     },
     data(){
         return{
-        
+            isMenuActive:null,
         }
     },
-    props:['menus', 'title'],
-    methods:{
-        toggle(i){
-            this.$refs.menugroup.forEach((item, index)=>{
-                if(i != index){
-                    item.menubarToggle(false);
+    watch: {
+        "menus"(menus){
+            try{
+                var path = this.$route.path;
+                var find = menus?.find((item)=>item.path == path);
+                if(find){
+                    this.isMenuActive = find?.name;
                 }
-            });
+            }catch(error){}
+            
         }
-    }
+    },
+    methods: {
+        toggleSubmenuHandler(name){
+            if(this.isMenuActive == name){
+                this.isMenuActive = null;
+            }else{
+                this.isMenuActive = name;
+            }
+        }
+    },
 }
 </script>
 
@@ -32,9 +44,46 @@ export default {
             </div>
     
             <div class="submenu-body">
+                <div v-for="(menu, index) in menus" :key="index">
+
+                    <div v-if="menu.separator">
+                        <hr class="mx-4">
+                    </div>
+                  
+                    <div v-if="!menu.separator" :class="`submenu-group ${(isMenuActive == menu.name)?'active-group':''}` ">
+
+                        <router-link 
+                        class="submenu-heading" 
+                        :to="{path:menu.path, query:menu.query}" 
+                        @click="toggleSubmenuHandler(menu.name)">
+
+                          {{  menu.label }}
+
+                          <div class="icon ms-auto">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
+                          </div>
+
+                        </router-link>
+                        <slide-up-down :active="(isMenuActive == menu.name)" :duration="300">
+                            <div class="submenu-list" ref="submenu">
+                      
+                              <router-link 
+                              :to="{path:sub.path, query:sub.query}" 
+                              v-for="sub in menu.children" v-slot="{route}" 
+                              :key="sub" class="submenu-link">
     
-                <menu-group ref="menugroup" @click="toggle(index)" v-for="(menu, index) in menus" :key="index" :menu="menu" />
+                                <span :class="(route.fullPath == $route.fullPath)?'active':''" class="sub-menu-text">
+                                  {{ sub.label }}
+                                </span>
     
+                                <span v-if="sub.icon" v-html="sub.icon"></span>
+    
+                              </router-link>
+                      
+                            </div>
+                        </slide-up-down>
+                    </div>
+                </div>
             </div>
         </CustomScrollbar>
     </section>
@@ -43,7 +92,7 @@ export default {
 <style scoped lang="scss">
 .sidebar--submenu{
   top:0;
-  background-color: #ffffff;
+  background-color: #f5f7fa;
   width: 18rem;
   max-height: 100vh;
   height: 100vh;
@@ -53,10 +102,10 @@ export default {
   position: relative;
   z-index: 99;
     @media (min-width: 767px){
-        width:13rem;
+        min-width:13rem;
     }
     @media (min-width: 1200px){
-        width:18rem;
+        min-width:16rem;
     }
   .submenu-header{
     padding: 1.5rem;
@@ -72,5 +121,98 @@ export default {
         font-weight: 600;
     }
   }
+  .submenu-body{
+    padding:0px 8px;
+  }
 }
 </style>
+
+<style scoped lang="scss">
+    .submenu-group{
+        border-radius: 5px;
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+        margin-bottom: 3px;
+        background: #ffffff;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+      &.active-group{
+        .submenu-heading{
+            border-bottom-color:#dddddd;
+        }
+        .icon{
+          svg{
+            transform: rotate(90deg);
+          }
+        }
+      }
+      .submenu-heading{
+        display: flex;
+        margin-top: 0.25rem;
+        width: 100%;
+        padding:0.5rem 1rem;
+        font-size: .9375rem;
+        font-weight: 600;
+        color: rgba(31,41,51,.87);
+        background: transparent;
+        border: 0;
+        text-decoration: none;
+        transition:all 0.2s;
+        border-bottom: 1px solid transparent;
+        &:hover,
+        &.router-link-active{
+          color:#449eff;
+        }        
+        .icon{
+          display:flex;
+          justify-content:center;
+          align-items: center;
+          svg{
+            transition: all 0.3s;
+          }
+        }
+      }
+      .submenu-list{
+        /* height: 0px; */
+        overflow-y: hidden;
+        transition:all 0.3s;
+        .submenu-link{
+            padding: 0.5rem 1rem;
+            font-size: .875rem;
+            color: rgba(31,41,51,.87);
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            line-height: 1;
+            letter-spacing: .025em;
+            width: 100%;
+            background: transparent;
+            border: 0;
+            cursor: pointer;
+            text-decoration: none;
+            transition:all 0.2s;
+            height: 32px;
+            &:hover,
+            &.router-link-active .active{
+                color:#007bff;
+            }
+            .sub-menu-text{
+                display: block;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+        }
+      }
+  }
+  </style>
+  <style>
+    .sidebar--submenu .scrollbar__wrapper{
+      height: 100vh !important;
+    }
+    .sidebar--submenu .scrollbar__wrapper .scrollbar__scroller{
+      height: 100% !important;
+    }
+  </style>

@@ -6,6 +6,7 @@
     import ContactEditModal from './ContactEditModal.vue';
     import StarRating from 'vue-star-rating';
     import RightSidebarProperties from './RightSidebarProperties.vue';
+    import ImagePreviewModal from './ImagePreviewModal.vue';
     import { Skeletor } from 'vue-skeletor';
     import {
         UpdateLeadConfidence, 
@@ -20,6 +21,7 @@
             StarRating,
             RightSidebarProperties,
             Skeletor,
+            ImagePreviewModal,
         },
         props:['toggleRightDetailsSidebar', 'findLeadByIdHandler', 'isFirstLoading'],
         data() {
@@ -500,17 +502,23 @@
                                 <input accept=".xlsx,.xls,.csv,.png,.jpeg,.jpg,.pdf,.doc,.docx,.pages,.svg" type="file" multiple="multiple" style="display: none;">
                             </div>
                         </div>
+                        <div class="">
+                            <button @click="$refs['imagePreviewModalRef'].showModalHandler({id:1,image:'https://img.freepik.com/free-photo/beautiful-tree-middle-field-covered-with-grass-with-tree-line-background_181624-29267.jpg?t=st=1715071800~exp=1715075400~hmac=b65bbe4e54c1639f65c7687a3b2345511999f749b34a2a16f61352fd48d1fdc8&w=826'})">Click</button>
+                        </div>
                     </div>
                 </div>
                 <div style="height:10rem;"></div>
             </div>
         </CustomScrollbar>
 
-
+        <!-- Modal Area -->
         <ContactEditModal
         :findLeadByIdHandler="findLeadByIdHandler"
         ref="contactEditModalRef"
          />
+        <ImagePreviewModal
+        ref="imagePreviewModalRef"
+        />
         <!-- Delete Contact Confirm Modal -->
          <div class="modal fade" id="deleteLeadContactModal"  aria-hidden="true" aria-labelledby="deleteLeadContactModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered modal-sm mx-auto">

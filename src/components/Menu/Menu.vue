@@ -18,18 +18,18 @@ export default {
                 var path = this.$route.path;
                 var find = menus?.find((item)=>item.path == path);
                 if(find){
-                    this.isMenuActive = find?.name;
+                    this.isMenuActive = find?.label;
                 }
             }catch(error){}
             
         }
     },
     methods: {
-        toggleSubmenuHandler(name){
-            if(this.isMenuActive == name){
+        toggleSubmenuHandler(label){
+            if(this.isMenuActive == label){
                 this.isMenuActive = null;
             }else{
-                this.isMenuActive = name;
+                this.isMenuActive = label;
             }
         }
     },
@@ -50,12 +50,12 @@ export default {
                         <hr class="mx-4">
                     </div>
                   
-                    <div v-if="!menu.separator" :class="`submenu-group ${(isMenuActive == menu.name)?'active-group':''}` ">
+                    <div v-if="!menu.separator" :class="`submenu-group ${(isMenuActive == menu.label)?'active-group':''}` ">
 
                         <router-link 
                         class="submenu-heading" 
                         :to="{path:menu.path, query:menu.query}" 
-                        @click="toggleSubmenuHandler(menu.name)">
+                        @click="toggleSubmenuHandler(menu.label)">
 
                           {{  menu.label }}
 
@@ -64,7 +64,7 @@ export default {
                           </div>
 
                         </router-link>
-                        <slide-up-down :active="(isMenuActive == menu.name)" :duration="300">
+                        <slide-up-down :active="(isMenuActive == menu.label)" :duration="300">
                             <div class="submenu-list" ref="submenu">
                       
                               <router-link 

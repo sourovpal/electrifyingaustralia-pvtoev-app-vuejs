@@ -12,6 +12,7 @@
         UpdateLeadConfidence, 
         DeleteLeadContact
     } from '../../../../actions/LeadAction';
+    import {icons} from '../../../../asset/svgicon';
 
     export default {
         components: {
@@ -26,12 +27,19 @@
         props:['toggleRightDetailsSidebar', 'findLeadByIdHandler', 'isFirstLoading'],
         data() {
             return {
+                icons:{},
                 contacts:[],
                 contact:null,
                 lead:null,
                 address:null,
                 confidence:0,
                 leadProperties:[],
+                images:[
+                    {id:1,image:'https://img.freepik.com/free-vector/abstract-modern-background-with-rainbow-flowing-waves-design_1048-14415.jpg'},
+                    {id:2,image:'https://img.freepik.com/premium-photo/artistic-placement-vibrant-fall-foliage-flat-lay-method-seasonal-symbolism_908985-34739.jpg'},
+                    {id:3,image:'https://as2.ftcdn.net/v2/jpg/01/12/10/13/1000_F_112101336_hmRfXjKrEfHTg5F2L6TYgPe41qPtJHDr.jpg'},
+                    {id:4,image:'sourov-pal-2024.pdf'},
+                ],
             }
         },
         watch:{
@@ -145,7 +153,32 @@
                     return text;
                 }
                 this.$toast.error('Oops, Not found.');
+            },
+            getFileIconHandler(name='img.png'){
+                var ext = name.split('.').pop().toLocaleLowerCase();
+                var imgExt = ['jpg','jpeg','png','gif','bmp','svg','webp'];
+                var icon = '';
+                if(imgExt.includes(ext)){
+                    icon = icons['file_img'];
+                }else if(ext == 'pdf'){
+                    icon = icons['file_pdf'];
+                }else{
+                    icon = icons['file_document'];
+                }
+                return icon;
+            },
+            shortenFileNameHandler(fileName) {
+                if (fileName.length <= 20) {
+                    return fileName;
+                } else {
+                    const firstPart = fileName.substring(0, 20);
+                    const lastPart = fileName.substring(fileName.length - 10);
+                    return `${firstPart} ... ${lastPart}`;
+                }
             }
+        },
+        mounted() {
+            this.icons = icons;
         },
     }
 </script>
@@ -500,10 +533,20 @@
                                     </div>
                                 </div> 
                                 <input accept=".xlsx,.xls,.csv,.png,.jpeg,.jpg,.pdf,.doc,.docx,.pages,.svg" type="file" multiple="multiple" style="display: none;">
+                                <div class="">
+                                    <ul class="list-unstyled mt-3 file-list">
+                                        <li class="file-list-item cursor-pointer pt-1 border-bottom pb-1 d-flex justify-content-between align-items-center text-head" 
+                                        v-for="(item, index) in images" :key="index">
+                                            <div @click="$refs['imagePreviewModalRef'].showModalHandler(item)">
+                                                <img class="me-2" width="25" :src="getFileIconHandler()" alt="">
+                                                <span class="fs-12px">{{shortenFileNameHandler(item?.image) }}</span>
+                                            </div>
+                                            <span class="file-size fs-12px">124.24kb</span>
+                                            <span class="download-file fs-14px" @click="console.log('download')"><svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg></span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                        <div class="">
-                            <button @click="$refs['imagePreviewModalRef'].showModalHandler({id:1,image:'https://img.freepik.com/free-photo/beautiful-tree-middle-field-covered-with-grass-with-tree-line-background_181624-29267.jpg?t=st=1715071800~exp=1715075400~hmac=b65bbe4e54c1639f65c7687a3b2345511999f749b34a2a16f61352fd48d1fdc8&w=826'})">Click</button>
                         </div>
                     </div>
                 </div>
@@ -517,6 +560,7 @@
         ref="contactEditModalRef"
          />
         <ImagePreviewModal
+        :images="images"
         ref="imagePreviewModalRef"
         />
         <!-- Delete Contact Confirm Modal -->
@@ -546,6 +590,38 @@
 </template>
 
 <style lang="scss" scoped>
+    .file-list{
+        .file-list-item{
+            position: relative;
+            .file-size,
+            .download-file{
+                position: absolute;
+                right: 0;
+                top:50%;
+                transform: translateY(-50%);
+            }
+            .file-size{
+                opacity: 1;
+                z-index:9;
+                transition: opacity 0.5s linear;
+            }
+            .download-file{
+                opacity: 0;
+                z-index: -9;
+                transition: opacity 0.5s linear;
+            }
+            &:hover{
+                .file-size{
+                    opacity: 0;
+                    z-index: -9;
+                }
+                .download-file{
+                    opacity: 1;
+                    z-index:9;
+                }
+            }
+        }
+    }
     .col-right{
         flex-grow: 1;
         width: 24rem;

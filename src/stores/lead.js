@@ -67,8 +67,14 @@ try{
       },
       mutations: {
         setLeadEditTimelineData(state, payload) {
-
-          const {lead_statuses} = VueCookies.get(import.meta.env.VITE_AUTH_APP);
+          var app = window.localStorage.getItem(import.meta.env.VITE_AUTH_APP);
+          if(app){
+            app = JSON.parse(app);
+            const {lead_statuses} = app;
+            if(lead_statuses){
+              state.leadStatus = lead_statuses;
+            }
+          }
 
           const {lead, next_lead, prev_lead, lead_properties, pipelines, owners, lead_sources} = payload;
 
@@ -95,10 +101,6 @@ try{
             state.leadSources = lead_sources;
           }
           
-          if(lead_statuses){
-            state.leadStatus = lead_statuses;
-          }
-
           if(lead?.contacts?.length){
               state.leadContacts = lead?.contacts;
               if(lead?.contact){

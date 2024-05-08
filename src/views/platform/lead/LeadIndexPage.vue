@@ -85,7 +85,10 @@ export default {
     watch:{
         "$route"(){
             this.fetchAllLeadsHandler({page:1});
-        }
+        },
+        "$store.state.app.lead_statuses"(status){
+            this.leadStatus = status;
+        },
     },
     methods: {
         updateUrlQuery(query={}){
@@ -356,8 +359,9 @@ export default {
         this.icons = icons;
         this.isFirstLoading = true;
         this.fetchAllLeadsHandler(this.fetch);
-        const {lead_statuses} = this.$cookies.get(import.meta.env.VITE_AUTH_APP);
-        this.leadStatus = lead_statuses;
+        try{
+            this.leadStatus = this.$store.getters.getLeadStatuses;
+        }catch(error){}
     },
 }
 </script>

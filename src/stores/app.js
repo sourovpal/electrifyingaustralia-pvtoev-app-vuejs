@@ -28,38 +28,39 @@ try{
       },
     },
     mutations: {
-      set_cookies_in_app_data(state){
+      async set_cookies_in_app_data(state){
+          var app = window.localStorage.getItem(import.meta.env.VITE_AUTH_APP);
 
-        var {lead_statuses, pipelines, permissions, company} = VueCookies.get(import.meta.env.VITE_AUTH_APP)??{};
-        var user = VueCookies.get(import.meta.env.VITE_AUTH_USER)??{};
+          if(app){
+            app = JSON.parse(app);
+            var {lead_statuses, pipelines, permissions, company} = app;
+          }
+          var user = VueCookies.get(import.meta.env.VITE_AUTH_USER)??{};
 
         try{
-          state.lead_statuses = lead_statuses;
+          state.lead_statuses = lead_statuses??[];
         }catch(error){}
 
         try{
-          state.pipelines = pipelines;
+          state.pipelines = pipelines??[];
         }catch(error){}
 
         try{
-          state.permissions = permissions;
+          state.permissions = permissions??[];
         }catch(error){}
 
         try{
-          state.company = company;
+          state.company = company??{};
         }catch(error){}
         
         try{
-          state.user = user;
+          state.user = user??{};
         }catch(error){}
 
       },
-      set_app_data(state, data) {
-        
-        VueCookies.remove(import.meta.env.VITE_AUTH_APP, '/');
-        VueCookies.set(import.meta.env.VITE_AUTH_APP, data, '1y', '/');
-        state.lead_statuses = data.lead_statuses;
-        state.pipelines = data.pipelines;
+      set_app_data(context, data) {
+        window.localStorage.removeItem(import.meta.env.VITE_AUTH_APP)
+        window.localStorage.setItem(import.meta.env.VITE_AUTH_APP, JSON.stringify(data))
       }
     },
     actions: {

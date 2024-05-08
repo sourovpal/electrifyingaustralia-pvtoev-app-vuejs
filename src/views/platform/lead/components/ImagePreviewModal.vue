@@ -5,15 +5,11 @@
     export default {
         components:{
         },
+        props:['images'],
         data(){
             return {
                 modalInstance:null,
-                icons:[],
-                images:[
-                    {id:1,image:'https://img.freepik.com/free-photo/beautiful-tree-middle-field-covered-with-grass-with-tree-line-background_181624-29267.jpg?t=st=1715071800~exp=1715075400~hmac=b65bbe4e54c1639f65c7687a3b2345511999f749b34a2a16f61352fd48d1fdc8&w=826'},
-                    {id:2,image:'https://img.freepik.com/free-photo/mesmerizing-view-silhouette-tree-savanna-plains-during-sunset_181624-18108.jpg?t=st=1715067763~exp=1715068363~hmac=7d4bb3cb30ba2740c3de1b098aa902fc98c710cf4fd582cfa52063ec62d1bb7b'},
-                    {id:3,image:'https://images.pexels.com/photos/719396/pexels-photo-719396.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'},
-                ],
+                icons:{},                
                 preview_img:null,
                 prev_img:null,
                 next_img:null,
@@ -31,7 +27,14 @@
             imagePreviewHandler(img){
                 if(!img){return;}
                 try{
-                    this.preview_img = img;
+                    var ext = img?.image?.split('.').pop().toLocaleLowerCase();
+                    var imgExt = ['jpg','jpeg','png','gif','bmp','svg','webp'];
+                    if(imgExt.includes(ext)){
+                        this.preview_img = img;
+                    }else{
+                        this.preview_img = null;
+                    }
+
                     var index = this.images?.findIndex(item=>item.id == img.id);
                     if(index > -1){
                         var prev = this.images[index-1];
@@ -61,18 +64,32 @@
 
 <template>
 
-<div class="modal fade" id="imagePreviewModalRef" ref="imagePreviewModalRef" aria-hidden="true" aria-labelledby="imagePreviewModalRef" tabindex="-1">
+<div 
+@keyup.left="imagePreviewHandler(prev_img)"
+@keyup.right="imagePreviewHandler(next_img)"
+@keyup.esc="imagePreviewHandler(next_img)"
+class="modal fade" id="imagePreviewModalRef" ref="imagePreviewModalRef" aria-hidden="true" aria-labelledby="imagePreviewModalRef" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-xl position-relative">
         <div class="modal-content">
             <div class="modal-left">
                 <div>
-                    <button :disabled="!prev_img" @click="imagePreviewHandler(prev_img)" class="btn btn-white btn-lg btn-floating">
+                    <button 
+                    :disabled="!prev_img" 
+                    @click="imagePreviewHandler(prev_img)" 
+                    class="btn btn-white btn-lg btn-floating">
                         <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -960 960 960" width="28px" fill="#5f6368"><path d="M560-240 320-480l240-240 56 56-184 184 184 184-56 56Z"/></svg>
                     </button>
                 </div>
             </div>
-            <div class="modal-body px-0">
-                <img :src="preview_img?.image" alt="">
+            <div class="modal-body px-0 py-0">
+                <img v-if="preview_img" :src="preview_img?.image" alt="">
+                <div v-if="!preview_img" class="">
+                    <div class="fs-18px text-head text-center">
+                        Sorry, you cannot preview this file at the moment.
+                        <br>
+                        Please <a href="">click here</a> to download. 
+                    </div>
+                </div>
             </div>
             <div class="modal-right">
                 <div>
@@ -81,7 +98,10 @@
                     </button>
                 </div>
                 <div>
-                    <button :disabled="!next_img" @click="imagePreviewHandler(next_img)"  class="btn btn-white btn-lg btn-floating">
+                    <button 
+                    :disabled="!next_img" 
+                    @click="imagePreviewHandler(next_img)"  
+                    class="btn btn-white btn-lg btn-floating">
                         <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -960 960 960" width="28px" fill="#5f6368"><path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/></svg>
                     </button>
                 </div>
@@ -94,6 +114,7 @@
                     </button>
                 </div>
             </div>
+            <span class="preview-img-name">{{  preview_img?.image }}</span>
         </div>
     </div>
 </div>
@@ -114,6 +135,18 @@
     display: flex;
     flex-direction: row;
     background: transparent !important;
+    .preview-img-name{
+        position: absolute;
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        line-height: 22px;
+        color: #000000;
+        white-space: nowrap;
+        max-width: 350px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
     button{
         box-shadow: none !important;
         background-color: #ffffff;

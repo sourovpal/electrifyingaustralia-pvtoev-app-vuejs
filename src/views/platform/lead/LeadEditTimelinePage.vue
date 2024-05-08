@@ -127,7 +127,6 @@ export default {
             this.findLead['status'] = {...status};
 
         }catch(error){
-            console.log(error);
             try{
                 var message = error.response.data.message;
                 this.$toast[message.type](message.text);

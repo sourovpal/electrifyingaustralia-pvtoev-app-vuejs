@@ -15,6 +15,9 @@ const icons = {
     empty_folder:'/src/asset/icon/empty-folder-1.png',
     fetch_error:'/src/asset/icon/fetch-error.svg',
     server_error:'/src/asset/icon/server-error.svg',
+    file_pdf:'/src/asset/icon/file-pdf.svg',
+    file_img:'/src/asset/icon/file-png.svg',
+    file_document:'/src/asset/icon/file-pdf.svg',
 };
 
 

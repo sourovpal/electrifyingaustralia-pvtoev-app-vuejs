@@ -133,8 +133,8 @@ export default {
         transition: all 0.3s ease-in-out;
         cursor: pointer;
         margin-bottom: 3px;
-        background: #ffffff;
-        box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+        /* background: #ffffff; */
+        /* box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px; */
       &.active-group{
         .submenu-heading{
             border-bottom-color:#dddddd;

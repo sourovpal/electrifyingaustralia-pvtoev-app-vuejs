@@ -116,7 +116,7 @@ export default {
     },
     async updateLeadStatusHandler(status){
         try{
-            if(this.findLead?.status && this.findLead?.status?.id == atob(status.id)){
+            if(this.findLead?.status && this.findLead?.status?.id == status?.id){
                 return;
             }
             var data = {

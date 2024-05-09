@@ -13,6 +13,7 @@
         DeleteLeadContact
     } from '../../../../actions/LeadAction';
     import {icons} from '../../../../asset/svgicon';
+    import UploadeFiles from './rightsidebar/UploadeFiles.vue';
 
     export default {
         components: {
@@ -23,6 +24,7 @@
             RightSidebarProperties,
             Skeletor,
             ImagePreviewModal,
+            UploadeFiles,
         },
         props:['toggleRightDetailsSidebar', 'findLeadByIdHandler', 'isFirstLoading'],
         data() {
@@ -40,6 +42,7 @@
                     {id:3,image:'https://as2.ftcdn.net/v2/jpg/01/12/10/13/1000_F_112101336_hmRfXjKrEfHTg5F2L6TYgPe41qPtJHDr.jpg'},
                     {id:4,image:'sourov-pal-2024.pdf'},
                 ],
+                progress:0,
             }
         },
         watch:{
@@ -506,50 +509,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="dropdown-box border-bottom">
-                    <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center show">
-                        <span class="fw-bold fs-14px text-uppercase text-head d-block">Uploaded files</span>
-                        <div class="">
-                            <button 
-                            class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent"
-                            @click="toggleRightSidebarDropdownBox"
-                            >
-                                <svg class="svg-3" height="18px" viewBox="0 0 24 24" width="18px" xmlns="http://www.w3.org/2000/svg"><path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="dropdown-body" style="height:100%;">
-                        <div class=" px-3 py-1 pb-2 fs-12px">
-                            <div class="lead-files">
-                                <div class="empty-state">
-                                    <div class="icon icon--36">
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="36px" viewBox="0 0 24 24" width="36px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"></path><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"></path></svg>
-                                    </div> 
-                                    <div class="empty-state__body">
-                                        Attach files to store power bills,
-                                        <br>
-                                        site photos, and other information.
-                                        <button class="btn-text">Browse files</button>
-                                    </div>
-                                </div> 
-                                <input accept=".xlsx,.xls,.csv,.png,.jpeg,.jpg,.pdf,.doc,.docx,.pages,.svg" type="file" multiple="multiple" style="display: none;">
-                                <div class="">
-                                    <ul class="list-unstyled mt-3 file-list">
-                                        <li class="file-list-item cursor-pointer pt-1 border-bottom pb-1 d-flex justify-content-between align-items-center text-head" 
-                                        v-for="(item, index) in images" :key="index">
-                                            <div @click="$refs['imagePreviewModalRef'].showModalHandler(item)">
-                                                <img class="me-2" width="25" :src="getFileIconHandler()" alt="">
-                                                <span class="fs-12px">{{shortenFileNameHandler(item?.image) }}</span>
-                                            </div>
-                                            <span class="file-size fs-12px">124.24kb</span>
-                                            <span class="download-file fs-14px" @click="console.log('download')"><svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path></svg></span>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
+                <uploade-files
+                :images="images"
+                />
+
                 <div style="height:10rem;"></div>
             </div>
         </CustomScrollbar>
@@ -590,38 +554,6 @@
 </template>
 
 <style lang="scss" scoped>
-    .file-list{
-        .file-list-item{
-            position: relative;
-            .file-size,
-            .download-file{
-                position: absolute;
-                right: 0;
-                top:50%;
-                transform: translateY(-50%);
-            }
-            .file-size{
-                opacity: 1;
-                z-index:9;
-                transition: opacity 0.5s linear;
-            }
-            .download-file{
-                opacity: 0;
-                z-index: -9;
-                transition: opacity 0.5s linear;
-            }
-            &:hover{
-                .file-size{
-                    opacity: 0;
-                    z-index: -9;
-                }
-                .download-file{
-                    opacity: 1;
-                    z-index:9;
-                }
-            }
-        }
-    }
     .col-right{
         flex-grow: 1;
         width: 24rem;

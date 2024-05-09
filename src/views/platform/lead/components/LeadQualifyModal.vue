@@ -17,7 +17,7 @@
                 modalInstance:null,
                 errors:{},
                 owners:[],
-                owner:[],
+                owner:{},
                 pipelines:[],
                 pipelineStages:[],
                 selectedPipeline:null,
@@ -92,14 +92,10 @@
                         pipeline_stage:this.selectedPipelineStage?.id??null,
                         commant:this.commant,
                     };
-                    if(typeof this.currentOwner?.id == 'number'){
-                        data['owner'] = btoa(this.currentOwner?.id);
+                    if(this.currentOwner){
+                        data['owner'] = this.currentOwner?.id;
                     }else{
-                        if(this.currentOwner){
-                            data['owner'] = this.currentOwner?.id;
-                        }else{
-                            data['owner'] = null;
-                        }
+                        data['owner'] = null;
                     }
                     const res = await ConfirmQualify(data);
                     this.isSubmitConfirmQualifyForm = false;

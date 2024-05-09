@@ -99,9 +99,13 @@
                         this.pipeline = pipeline;
                         this.stages = stages;
                         this.title = pipeline.title;
-                        this.pipelineId = pipeline.id;
                         this.is_sales_pipeline = pipeline.is_sales_pipeline;
-                        this.$router.push({path:`/settings/crm/leads/${pipeline.id}`})
+                        if(this.pipelineId == 'new-pipelines'){
+                            this.$router.push({path:`/settings/crm/leads/${pipeline.id}`})
+                        }else{
+                            this.pipelineId = pipeline.id;
+                        }
+
                     }catch(error){
                         throw new Error(error.message);
                     }

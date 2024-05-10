@@ -10,20 +10,35 @@
         <select class="form-control" v-else-if="field.type === 'select'" :name="field.name" v-model="formData[field.name]">
           <option v-for="(option, optionIndex) in field.options" :key="optionIndex" :value="option">{{ option }}</option>
         </select>
-        <select class="form-control" v-else-if="field.type === 'multiple-select'" :name="field.name" v-model="formData[field.name]" multiple>
+        <select @blur="submitForm(field.name)"  class="form-control" v-else-if="field.type === 'multiple-select'" :name="field.name" v-model="formData[field.name]" multiple>
           <option v-for="(option, optionIndex) in field.options" :key="optionIndex" :value="option">{{ option }}</option>
         </select>
       </div>
       <button type="submit">Submit</button>
     </form>
     <pre>{{ formData }}</pre>
+
+    <MultipleSelectVue  :options="['Option 1', 'Option 2', 'Option 3']" @select="handleSelect" />
+
   </div>
 </template>
 
 <script>
+import MultipleSelectVue from './forms/MultipleSelect.vue';
 export default {
+  components:{
+    MultipleSelectVue
+  },
+  props: {
+    options: {
+      type: Array,
+      required: true
+    }
+  },
   data() {
     return {
+      isOpen: false,
+      selectedOption: null,
       formFields: [
         { name: "fullName", label: "Full Name", type: "text", placeholder: "Type name" },
         { name: "email", label: "Email", type: "text", placeholder: "Type email" },
@@ -39,12 +54,7 @@ export default {
         "email": "admin1234@gmail.com",
         "message": "Hello Sourov",
         "subscribe": true,
-        "languages": [
-            "English",
-            "French",
-            "Spanish"
-        ]
-        }
+      },
     };
   },
   methods: {
@@ -52,6 +62,10 @@ export default {
         console.log(name, this.formData[name]);
       // Handle form submission logic here
       console.log("Form submitted with data:", this.formData);
+    },
+    handleSelect(selectedOptions) {
+      console.log('Selected options:', selectedOptions);
+      // Do something with the selected options
     }
   }
 };

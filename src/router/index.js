@@ -109,7 +109,7 @@ const routes = [
         name:'Website',
         path:'/',
         component:WebSite,
-        redirect: "/app",
+        // redirect: "/app",
     },
     { 
         name:"root",

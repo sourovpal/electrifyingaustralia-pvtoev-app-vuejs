@@ -74,7 +74,7 @@ app.mount('#app');
 
 router.beforeEach(async(to, from, next) => {
   
-  const NotCheckPaths = ['/forbidden'];
+  const NotCheckPaths = ['/forbidden', '/'];
   const IfAuthNotAllowPaths = ['/login', '/register'];
   const user = VueCookies.get(import.meta.env.VITE_AUTH_USER);
   const token = VueCookies.get(import.meta.env.VITE_AUTH_TOKEN);

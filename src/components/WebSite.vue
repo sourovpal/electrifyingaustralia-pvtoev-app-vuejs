@@ -10,15 +10,18 @@
         <select class="form-control" v-else-if="field.type === 'select'" :name="field.name" v-model="formData[field.name]">
           <option v-for="(option, optionIndex) in field.options" :key="optionIndex" :value="option">{{ option }}</option>
         </select>
-        <select @blur="submitForm(field.name)"  class="form-control" v-else-if="field.type === 'multiple-select'" :name="field.name" v-model="formData[field.name]" multiple>
+
+        <!-- <select @blur="submitForm(field.name)"  class="form-control" v-else-if="field.type === 'multiple-select'" :name="field.name" v-model="formData[field.name]" multiple>
           <option v-for="(option, optionIndex) in field.options" :key="optionIndex" :value="option">{{ option }}</option>
-        </select>
+        </select> -->
+
+        <MultipleSelectVue v-else-if="field.type === 'multiple-select'" :options="['Option 1', 'Option 2', 'Option 3']" 
+        v-model="formData[field.name]" />
+
       </div>
       <button type="submit">Submit</button>
     </form>
     <pre>{{ formData }}</pre>
-
-    <MultipleSelectVue  :options="['Option 1', 'Option 2', 'Option 3']" @select="handleSelect" />
 
   </div>
 </template>
@@ -28,12 +31,6 @@ import MultipleSelectVue from './forms/MultipleSelect.vue';
 export default {
   components:{
     MultipleSelectVue
-  },
-  props: {
-    options: {
-      type: Array,
-      required: true
-    }
   },
   data() {
     return {
@@ -56,6 +53,11 @@ export default {
         "subscribe": true,
       },
     };
+  },
+  watch:{
+    selectedOption(v){
+      console.log(selectedOption);
+    }
   },
   methods: {
     submitForm(name) {

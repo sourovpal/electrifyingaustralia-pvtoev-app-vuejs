@@ -1,21 +1,32 @@
 <template>
   <div class="col-4 mx-auto">
     <form @submit.prevent="submitForm">
+      
       <div class="mb-3" v-for="(field, index) in formFields" :key="index">
         <label :for="field.name">{{ field.label }}</label>
+
         <input @blur="submitForm(field.name)" class="form-control" v-if="field.type === 'text'" :type="field.type" :placeholder="field.placeholder" :name="field.name" v-model="formData[field.name]" />
+
         <textarea class="form-control" v-else-if="field.type === 'textarea'" :placeholder="field.placeholder" :name="field.name" v-model="formData[field.name]"></textarea>
+
         <input v-else-if="field.type === 'checkbox'" :type="field.type" :name="field.name" v-model="formData[field.name]" />
+        
         <input v-else-if="field.type === 'radio'" :type="field.type" :name="field.name" :value="field.value" v-model="formData[field.name]" />
-        <select class="form-control" v-else-if="field.type === 'select'" :name="field.name" v-model="formData[field.name]">
-          <option v-for="(option, optionIndex) in field.options" :key="optionIndex" :value="option">{{ option }}</option>
-        </select>
 
-        <!-- <select @blur="submitForm(field.name)"  class="form-control" v-else-if="field.type === 'multiple-select'" :name="field.name" v-model="formData[field.name]" multiple>
-          <option v-for="(option, optionIndex) in field.options" :key="optionIndex" :value="option">{{ option }}</option>
-        </select> -->
+        <MultipleSelectVue
+        v-else-if="field.type === 'multiple-select'" 
+        :name="field.name"
+        @change="(value, name)=>submitForm(name, value)"
+        :options="['Option 1', 'Option 2', 'Option 3', 'html', 'css', 'js', 'php', 'java', 'javascript', 'jquery']" 
+        :value="formData[field.name]"
+        v-model="formData[field.name]" />
 
-        <MultipleSelectVue v-else-if="field.type === 'multiple-select'" :options="['Option 1', 'Option 2', 'Option 3']" 
+        <SingleSelect
+        v-else-if="field.type === 'select'" 
+        :name="field.name"
+        @change="(value, name)=>submitForm(name, value)"
+        :options="['Option 1', 'Option 2', 'Option 3', 'html', 'css', 'js', 'php', 'java', 'javascript', 'jquery']" 
+        :value="formData[field.name]"
         v-model="formData[field.name]" />
 
       </div>
@@ -28,9 +39,11 @@
 
 <script>
 import MultipleSelectVue from './forms/MultipleSelect.vue';
+import SingleSelect from './forms/SingleSelect.vue';
 export default {
   components:{
-    MultipleSelectVue
+    MultipleSelectVue,
+    SingleSelect,
   },
   data() {
     return {
@@ -51,6 +64,10 @@ export default {
         "email": "admin1234@gmail.com",
         "message": "Hello Sourov",
         "subscribe": true,
+        languages: [
+          "html",
+          "Option 1"
+        ]
       },
     };
   },
@@ -60,7 +77,7 @@ export default {
     }
   },
   methods: {
-    submitForm(name) {
+    submitForm(name, value=null) {
         console.log(name, this.formData[name]);
       // Handle form submission logic here
       console.log("Form submitted with data:", this.formData);

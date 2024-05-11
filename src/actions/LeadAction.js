@@ -211,6 +211,21 @@ const DeleteLeadContact = (id)=>{
     });
 }
 
+const LeadPropertieUpdate = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.post(`/leads/propertie/update`, payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
 export {
     FetchLeads,
     UpdateLeadPropertieHeaders,
@@ -226,4 +241,5 @@ export {
     UpdateLeadContact,
     SearchLeadContact,
     DeleteLeadContact,
+    LeadPropertieUpdate,
 }

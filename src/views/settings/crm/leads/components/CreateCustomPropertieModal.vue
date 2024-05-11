@@ -15,13 +15,12 @@ export default {
             modalInstance:null,
             label:null,
             selectedPipelineTitle:null,
-            html_tag:null,
+            default_value:null,
             data_type:null,
             unique_id:null,
-            attributes:null,
             selectedDataTypeId:null,
             showSingleChoiceInput:false,
-            choiceValues:[],
+            options:[],
             datatypeList:[],
             pipelines:[],
             isCustomizeUniqueId:false,
@@ -40,7 +39,10 @@ export default {
                 if(!val){
                     this.unique_id = null;
                 }else{
-                    this.unique_id = `${this.pipeline_title} ${val}`.trim().replace(/\s+/g, '_').toLowerCase();
+                    this.unique_id = `${this.pipeline_title} ${val}`.trim()
+                    .replace(/[^\w\s]/g, '')
+                    .replace(/\s+/g, '_')
+                    .toLowerCase();
                 }
             }
         },
@@ -53,11 +55,11 @@ export default {
             this.data_type = null;
             this.unique_id = null;
             this.visibility = 1;
-            this.attributes = null;
             this.isCustomizeUniqueId = false;
             this.propertieId = null;
             this.selectedDataTypeId = null;
-            this.choiceValues = [];
+            this.options = [];
+            this.default_value = null;
             this.selectedPipelineTitle = null;
             if(propertieId){
                 this.propertieId = propertieId;
@@ -82,19 +84,17 @@ export default {
                             this.data_type = propertie.data_type;
                             this.unique_id = propertie.unique_id;
                             this.visibility = propertie.visibility;
-                            this.attributes = propertie.attributes;
                             if(propertie.data_type_id === 'single_choice' || propertie.data_type_id === 'multiple_choice'){
                                 this.showSingleChoiceInput = true;
-                                if(this.attributes.values){
-                                    this.choiceValues = this.attributes.values;
+                                if(propertie.options){
+                                    this.options = propertie.options;
                                 }
                             }else{
                                 this.showSingleChoiceInput = false;
-                                this.choiceValues = [];
+                                this.options = [];
                             }
                             if(pipelines){
                                 this.pipelines = pipelines;
-
                             }
                         }else{
                             this.$toast.error('Invalid Data Type.');
@@ -117,14 +117,12 @@ export default {
             if(select){
                 this.selectedDataTypeId = select.id;
                 this.data_type = select.data_type;
-                this.html_tag  = select.html_tag;
-                this.attributes = select.attributes;
 
                 if(select.id === 'single_choice' || select.id === 'multiple_choice'){
                     this.showSingleChoiceInput = true;
                 }else{
                     this.showSingleChoiceInput = false;
-                    this.choiceValues = [];
+                    this.options = [];
                 }
 
             }
@@ -134,7 +132,7 @@ export default {
                 this.$toast.clear();
 
                 if(this.selectedDataTypeId === 'single_choice' || this.selectedDataTypeId === 'multiple_choice'){
-                    this.attributes['values'] = this.choiceValues.map((item, index)=>{
+                    this.options= this.options.map((item, index)=>{
                         return  {...item, id:index+1};
                     });
                 }
@@ -144,12 +142,11 @@ export default {
                     pipeline_id:this.pipelineId,
                     label:this.label,
                     data_type:this.data_type,
-                    html_tag:this.html_tag,
                     unique_id:this.unique_id,
                     visibility:this.visibility?1:0,
-                    attributes:this.attributes,
+                    options:this.options,
+                    default_value:this.default_value,
                 };
-
                 this.isSubmitProperties = true;
                 const res = await CreateLeadPropertie(data);
 
@@ -159,15 +156,14 @@ export default {
                     this.pipelineId = 0;
                     this.label = null;
                     this.data_type = null;
-                    this.html_tag = null;
                     this.unique_id = null;
                     this.visibility = 1;
-                    this.attributes = null;
                     this.hideModalHandler();
                     this.fetchPropertieDataHandler();
                 }catch(error){}
 
             }catch(error){
+                console.log(error)
                 try{
                     var data = error.response.data;
                     this.errors = data.errors;
@@ -187,7 +183,7 @@ export default {
                 this.$toast.clear();
 
                 if(this.selectedDataTypeId === 'single_choice' || this.selectedDataTypeId === 'multiple_choice'){
-                    this.attributes['values'] = this.choiceValues.map((item, index)=>{
+                    this.options = this.options.map((item, index)=>{
                         return  {...item, id:index+1};
                     });
                 }
@@ -196,7 +192,8 @@ export default {
                     pipeline_id:this.pipelineId,
                     label:this.label,
                     visibility:this.visibility?1:0,
-                    attributes:this.attributes,
+                    options:this.options,
+                    default_value:this.default_value,
                 };
 
                 this.isSubmitProperties = true;
@@ -207,10 +204,8 @@ export default {
                     this.pipelineId = 0;
                     this.label = null;
                     this.data_type = null;
-                    this.html_tag = null;
                     this.unique_id = null;
                     this.visibility = 1;
-                    this.attributes = null;
                     this.hideModalHandler();
                     this.fetchPropertieDataHandler();
                 }catch(error){}
@@ -264,13 +259,13 @@ export default {
 
                         <div class="form-group mb-3">
                             <label class="form-label-title" for="">Label</label>
-                            <input @focus="delete errors?.label" class="form-control form-control-input" v-model="label" type="text">
+                            <input @focus="delete errors?.label" class="form-control" v-model="label" type="text">
                             <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.label?.length">{{ errors?.label[0] }}</span>
                         </div>
 
                         <div class="form-group mb-3 position-relative">
                             <label class="form-label-title" for="">Data Type</label>
-                            <input @focus="delete errors?.data_type" :class="isEdit?'no-drop':''" class="form-control form-control-input" readonly type="text" data-mdb-toggle="dropdown" :value="`${data_type??'Select Data Type'}`">
+                            <input @focus="delete errors?.data_type" :class="isEdit?'no-drop':''" class="form-control cursor-pointer" readonly type="text" data-mdb-toggle="dropdown" :value="`${data_type??'Select Data Type'}`">
                             <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.data_type?.length">{{ errors?.data_type[0] }}</span>
                             <div v-show="!isEdit" class="dropdown-menu custom-form-select data-type overflow-auto" style="max-height:10rem;">
                                 <ul class="list-unstyled mb-0">
@@ -290,9 +285,9 @@ export default {
                             <label class="form-label-title" for="">Allowed values</label>
                             <div class="list-group ">
 
-                                <vue-draggable-next class="lead-status-list" tag="div" :list="choiceValues" handle=".handle">
+                                <vue-draggable-next class="lead-status-list" tag="div" :list="options" handle=".handle">
 
-                                    <div class="" v-for="(item, index) in choiceValues" :key="item.id">
+                                    <div class="" v-for="(item, index) in options" :key="item.id">
                                         <div class="list-group-item py-0 border-bottom-0 border-top">
                                             <div class="box-info d-flex justify-content-start align-items-center">
                                                 <div class="handle">
@@ -301,7 +296,7 @@ export default {
                                                 <input class="form-control form-control-sm ps-1 broder-right-1" type="text" :value="item.label" @change="(input)=>{item.label=input.target.value}">
                                                 <input class="form-control form-control-sm ps-1" type="text" :value="item.value" @change="(input)=>{item.value=input.target.value}">
                                                 <div class="action-dropdown">
-                                                    <div @click="choiceValues.splice(index, 1)" class="action" data-mdb-toggle="dropdown" aria-expanded="false">
+                                                    <div @click="options.splice(index, 1)" class="action" data-mdb-toggle="dropdown" aria-expanded="false">
                                                         <svg class="delete-item" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/></svg>
                                                     </div>
                                                 </div>
@@ -312,7 +307,7 @@ export default {
                                 </vue-draggable-next>
 
                                 <div class="list-group-item bg-light text-center add-new-lead-status" 
-                                    @click="choiceValues.push({id:choiceValues.length+1, label:`Label`, value:'Value'})">
+                                    @click="options.push({id:options.length+1, label:`Label`, value:'Value'})">
                                     Add Value
                                 </div>
 
@@ -327,7 +322,7 @@ export default {
                                     <svg v-if="!isCustomizeUniqueId" class="unchecked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
                                     <svg v-if="isCustomizeUniqueId" class="checked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
                                 </label>
-                                <input @focuse="delete errors?.unique_id" :class="(isEdit || !isCustomizeUniqueId)?'no-drop':''" :readonly="!isCustomizeUniqueId || isEdit" v-model="unique_id" class="form-control form-control-input" type="text">
+                                <input @focuse="delete errors?.unique_id" :class="(isEdit || !isCustomizeUniqueId)?'no-drop':''" :readonly="!isCustomizeUniqueId || isEdit" v-model="unique_id" class="form-control" type="text">
                             </div>
                             <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.unique_id?.length">{{ errors?.unique_id[0] }}</span>
                         </div>
@@ -335,7 +330,7 @@ export default {
 
                         <div v-if="isEdit" class="form-group mb-3 position-relative">
                             <label class="form-label-title" for="">Move Propertie</label>
-                            <input @focus="delete errors?.pipeline_id" class="form-control form-control-input" readonly type="text" data-mdb-toggle="dropdown" :value="`${selectedPipelineTitle??'Move Propertie'}`">
+                            <input @focus="delete errors?.pipeline_id" class="form-control" readonly type="text" data-mdb-toggle="dropdown" :value="`${selectedPipelineTitle??'Move Propertie'}`">
                             <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.pipeline_id?.length">{{ errors?.pipeline_id[0] }}</span>
                             <div class="dropdown-menu custom-form-select data-type overflow-auto" style="max-height:10rem;">
                                 <ul class="list-unstyled mb-0">

@@ -11,7 +11,6 @@
             return {
                 leadProperties:[],
                 formData:{},
-                previousStatusFormdata:{},
             }
         },
         watch: {
@@ -19,8 +18,9 @@
                 this.leadProperties = payload;
             },
             "$store.state.lead.leadCustomProperties"(payload){
-                this.previousStatusFormdata = this.formData = payload??{};
-            }
+                this.formData = {};
+                this.formData = payload??{};
+            },
         },
         methods: {
             manageYesOrNoHandler(action, unique_id){
@@ -36,23 +36,21 @@
             async updateLeadCustomPropertieHandler(unique_id, value=null){
                 var leadId = this.$route.params?.id??null;
                 if(Object.keys(this.formData).includes(unique_id)){
-                    // console.log(this.previousStatusFormdata[unique_id], this.formData[unique_id])
-                    if(this.previousStatusFormdata[unique_id] != this.formData[unique_id]){
-                        var data = {
-                            propertie:{
-                                key:unique_id, 
-                                value:this.formData[unique_id]
-                            },
-                            lead_id:leadId,
-                        };
-                        const res = await LeadPropertieUpdate(data);
-                    }
+                    var data = {
+                        propertie:{
+                            key:unique_id, 
+                            value:this.formData[unique_id]
+                        },
+                        lead_id:leadId,
+                    };
+                    const res = await LeadPropertieUpdate(data);
                 }
             }
         },
         mounted() {
+            this.formData = {};
             this.leadProperties = this.$store.getters.getLeadProperties;
-            this.previousStatusFormdata = this.formData = this.$store.getters.getLeadCustomProperties??{};
+            this.formData = this.$store.getters.getLeadCustomProperties??{};
         },
     }
 </script>
@@ -128,7 +126,7 @@
         <MultipleSelectVue
         v-else-if="field?.data_type_id === 'multiple_choice'" 
         :name="field?.unique_id"
-        :options="field?.options" 
+        :options="field?.options??[]" 
         @change="updateLeadCustomPropertieHandler"
         :value="formData[field?.unique_id]"
         v-model="formData[field.unique_id]" />
@@ -140,7 +138,7 @@
         <SingleSelect
         v-else-if="field?.data_type_id === 'single_choice'" 
         :name="field?.unique_id"
-        :options="field?.options" 
+        :options="field?.options??[]" 
         @change="updateLeadCustomPropertieHandler"
         :value="formData[field?.unique_id]"
         v-model="formData[field.unique_id]" />

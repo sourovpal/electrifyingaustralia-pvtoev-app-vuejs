@@ -6,7 +6,6 @@
     import ContactEditModal from './ContactEditModal.vue';
     import StarRating from 'vue-star-rating';
     import RightSidebarProperties from './RightSidebarProperties.vue';
-    import ImagePreviewModal from './ImagePreviewModal.vue';
     import { Skeletor } from 'vue-skeletor';
     import {
         UpdateLeadConfidence, 
@@ -23,7 +22,6 @@
             StarRating,
             RightSidebarProperties,
             Skeletor,
-            ImagePreviewModal,
             UploadeFiles,
         },
         props:['toggleRightDetailsSidebar', 'findLeadByIdHandler', 'isFirstLoading'],
@@ -522,11 +520,7 @@
         <ContactEditModal
         :findLeadByIdHandler="findLeadByIdHandler"
         ref="contactEditModalRef"
-         />
-        <ImagePreviewModal
-        :images="images"
-        ref="imagePreviewModalRef"
-        />
+         />        
         <!-- Delete Contact Confirm Modal -->
          <div class="modal fade" id="deleteLeadContactModal"  aria-hidden="true" aria-labelledby="deleteLeadContactModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered modal-sm mx-auto">

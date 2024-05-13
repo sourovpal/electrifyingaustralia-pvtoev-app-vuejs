@@ -17,7 +17,7 @@ const icons = {
     server_error:'/src/asset/icon/server-error.svg',
     file_pdf:'/src/asset/icon/file-pdf.svg',
     file_img:'/src/asset/icon/file-png.svg',
-    file_document:'/src/asset/icon/file-pdf.svg',
+    file_document:'/src/asset/icon/file-document.svg',
 };
 
 

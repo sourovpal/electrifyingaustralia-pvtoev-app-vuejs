@@ -63,7 +63,7 @@ try{
         },
         getLeadHasPipelines(){
             return state.leadHasPipelines;
-        }
+        },
       },
       mutations: {
         setLeadEditTimelineData(state, payload) {
@@ -77,7 +77,6 @@ try{
           }
 
           const {lead, next_lead, prev_lead, lead_properties, pipelines, owners, lead_sources} = payload;
-
           state.findLead  = lead;
 
           state.leadCustomProperties = lead?.custom_properties;

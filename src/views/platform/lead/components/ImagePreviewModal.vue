@@ -5,12 +5,13 @@
     export default {
         components:{
         },
-        props:['images'],
+        props:['files'],
         data(){
             return {
                 modalInstance:null,
                 icons:{},                
                 preview_img:null,
+                preview_status:false,
                 prev_img:null,
                 next_img:null,
             }
@@ -26,29 +27,29 @@
             },
             imagePreviewHandler(img){
                 if(!img){return;}
+                this.preview_status = false;
                 try{
-                    var ext = img?.image?.split('.').pop().toLocaleLowerCase();
+                    var ext = img?.extension?.toLocaleLowerCase();
                     var imgExt = ['jpg','jpeg','png','gif','bmp','svg','webp'];
                     if(imgExt.includes(ext)){
-                        this.preview_img = img;
-                    }else{
-                        this.preview_img = null;
+                        this.preview_status = true;
                     }
+                    this.preview_img = img;
 
-                    var index = this.images?.findIndex(item=>item.id == img.id);
+                    var index = this.files?.findIndex(item=>item.id == img.id);
                     if(index > -1){
-                        var prev = this.images[index-1];
+                        var prev = this.files[index-1];
                         if(prev){
                             this.prev_img = prev;
                         }else{
-                            prev = this.images[this.images?.length - 1];
+                            prev = this.files[this.files?.length - 1];
                             this.prev_img = prev;
                         }
-                        var next = this.images[index+1];
+                        var next = this.files[index+1];
                         if(next){
                             this.next_img = next;
                         }else{
-                            next = this.images[0];
+                            next = this.files[0];
                             this.next_img = next;
                         }
                     }
@@ -82,8 +83,8 @@ class="modal fade" id="imagePreviewModalRef" ref="imagePreviewModalRef" aria-hid
                 </div>
             </div>
             <div class="modal-body px-0 py-0">
-                <img v-if="preview_img" :src="preview_img?.image" alt="">
-                <div v-if="!preview_img" class="">
+                <img v-if="preview_status" :src="preview_img?.file_path" alt="">
+                <div v-else class="">
                     <div class="fs-18px text-head text-center">
                         Sorry, you cannot preview this file at the moment.
                         <br>
@@ -114,7 +115,7 @@ class="modal fade" id="imagePreviewModalRef" ref="imagePreviewModalRef" aria-hid
                     </button>
                 </div>
             </div>
-            <span class="preview-img-name">{{  preview_img?.image }}</span>
+            <span class="preview-img-name">{{  preview_img?.name }}</span>
         </div>
     </div>
 </div>

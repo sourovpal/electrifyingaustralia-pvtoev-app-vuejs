@@ -59,15 +59,15 @@
     
     <div class="mb-1 lead-propertie-input" v-for="(field, index) in leadProperties" :key="index">
 
-        <label class="fs-12px text-soft" :for="field?.name">{{ field?.label }}</label>
+        <label class="fs-12px text-soft d-block mb-1" :for="field?.name">{{ field?.label }}</label>
 
 
 
         <input  
-        v-if="field?.data_type_id === 'free_text'" 
-        class="form-control" type="text" 
+        v-if="field?.data_type_id === 'free_text' || field?.data_type_id === 'read_only'" 
+        class="form-control" type="text"
         @blur="updateLeadCustomPropertieHandler(field.unique_id)"
-        :name="field?.unique_id" 
+        :name="field?.unique_id"
         v-model="formData[field.unique_id]" />
 
 
@@ -112,14 +112,26 @@
 
 
 
-
-
-        <div v-else-if="field?.data_type_id === 'yes_or_no'" class="btn-group d-block shadow-0">
-            <button @click="manageYesOrNoHandler('yes', field.unique_id)" class="btn btn-sm btn-primary" :class="{'active':formData[field.unique_id]==1}">Yes</button>
-            <button @click="manageYesOrNoHandler('', field.unique_id)" class="btn btn-sm btn-primary fw-bold" :class="{'active':formData[field.unique_id] != -1 && formData[field.unique_id]!= 1}">&times;</button>
-            <button @click="manageYesOrNoHandler('no', field.unique_id)" class="btn btn-sm btn-primary" :class="{'active':formData[field.unique_id] == -1}">No</button>
+        <div v-else-if="field?.data_type_id === 'yes_or_no'" class="tri-state-toggle">
+            <button 
+            @click="manageYesOrNoHandler('yes', field.unique_id)"
+            :class="{'active':formData[field.unique_id]==1}" 
+            class="tri-state-toggle-button text-head">
+                Yes
+            </button>
+            <button 
+            @click="manageYesOrNoHandler('', field.unique_id)" 
+            :class="{'active':formData[field.unique_id] != -1 && formData[field.unique_id]!= 1}"
+            class="tri-state-toggle-button fs-20px text-head">
+                &times;
+            </button>
+            <button 
+            @click="manageYesOrNoHandler('no', field.unique_id)" 
+            :class="{'active':formData[field.unique_id] == -1}"
+            class="tri-state-toggle-button text-head">
+                No
+            </button>
         </div>
-
 
 
 
@@ -154,5 +166,46 @@
         &:hover{
             background-color: #ffffff;
         }
+    }
+
+
+    .tri-state-toggle {
+        background: rgb(165 170 174 / 0%);
+        border-radius: 0px;
+        display: inline-block;
+        overflow: hidden;
+        display: inline-flex;
+        flex-direction: row;
+        transition: all 500ms ease;
+        width:145px;
+        border: 1px solid #dddddd;
+        border-radius: 5px;
+    }
+    .tri-state-toggle-button {
+        border-radius: 0px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        background-color: transparent;
+        border: 0px solid transparent;
+        margin: 2px;
+        cursor: pointer;
+        flex-grow: 1;
+        transition:all 0.5s ease;
+    }
+
+    .tri-state-toggle-button.active {
+        background:#ffffff;
+        border: 1px solid rgba(207,207,207,0.6);
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.1);
+        color: #6744B1;
+        font-weight: 500;
+        transition: all .5s ease-in;
+    }
+
+    .tri-state-toggle-button:focus {
+        outline: none;
     }
 </style>

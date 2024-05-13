@@ -1,7 +1,7 @@
 <template>
   <div class="custom-select dropdown position-relative" @click="toggleDropdown">
-    <div class="form-control form-control-tags-input px-2">
-      <label v-for="(option, index) in selectedOptions" :key="index" class="tag-lable">
+    <div class="form-control form-control-tags-input px-2" :class="{active:isOpen}">
+      <label v-for="(option, index) in selectedOptions" :key="index" class="tag-lable text-head">
         {{ option }} <span @click.stop="removeOption(option)" class="close-tag">&times;</span>
       </label>
     </div>
@@ -11,7 +11,7 @@
           v-for="(option, index) in options"
           :key="index"
           @click="toggleOption(option?.value??option )"
-          :class="{ 'selected': isSelected(option?.value??option ) }"
+          :class="{ 'selected active': isSelected(option?.value??option ) }"
           class="dropdown-item text-hard fw-bold fs-14px d-flex py-1"
         >
         {{ option?.value??option  }}
@@ -76,31 +76,31 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .dropdown-menu{
   max-height:155px;
   overflow-y: auto;
   user-select: none;
 }
 .form-control-tags-input{
-  min-height: 35.77px;
+  min-height: 28.75px;
   display: flex;
   flex-wrap: wrap;
   padding-top: 0px !important;
   padding-bottom: 0px !important;
   cursor: pointer;
-  &:hover{
+  &.active{
     border-color: #3b71ca;
     box-shadow: inset 0 0 0 1px #3b71ca;
   }
   .tag-lable{
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     border: 1px solid #d3d3d3;
     padding: 2px 8px;
     border-radius: 2px;
     background: #eaedf1;
-    line-height: 21.77px;
+    line-height: 13.77px;
     margin: 3px 6px 3px 0px;
     user-select: none;
     .close-tag{
@@ -113,6 +113,7 @@ export default {
       padding: 0px 2px;
       transition: all 0.2s ease-in-out;
       line-height: 10px;
+      display: none;
       &:hover{
         color:rgb(255, 34, 68);
       }

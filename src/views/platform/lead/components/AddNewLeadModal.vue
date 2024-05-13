@@ -27,24 +27,30 @@
         },
         watch: {
             "leadStatus"(status){
-                if(status[0]){
-                    this.status = status[0];
-                    this.currentStatus = status[0];
-                }
+                try{
+                    if(status[0]){
+                        this.status = status[0];
+                        this.currentStatus = status[0];
+                    }
+                }catch(error){}
             },
             "owners"(owners){
-                const {user_id} = this.$cookies.get(import.meta.env.VITE_AUTH_USER);
-                this.owner = owners.find((item)=>item.id == user_id);
-                this.currentOwner = this.owner;
+                try{
+                    const {email} = this.$cookies.get(import.meta.env.VITE_AUTH_USER);
+                    this.owner = owners.find((item)=>item.email == email);
+                    this.currentOwner = this.owner;
+                }catch(error){}
             }
         },
         methods: {
             resetLeadForm(){
-                this.error = {};
-                this.name = this.address = this.phone_email =
-                this.title = this.source = null;
-                this.status = this.currentStatus;
-                this.owner = this.currentOwner;
+                try{
+                    this.error = {};
+                    this.name = this.address = this.phone_email =
+                    this.title = this.source = null;
+                    this.status = this.currentStatus;
+                    this.owner = this.currentOwner;
+                }catch(error){}
             },
             showModalHandler(){
                 this.resetLeadForm();
@@ -55,8 +61,10 @@
                 this.modalInstance.hide();
             },
             selectLeadSource(source){
-                this.source = source;
-                this.source_title = source.title;
+                try{
+                    this.source = source;
+                    this.source_title = source.title;
+                }catch(error){}
             },
             selectleadStatus(status){
                 this.status = status;
@@ -65,41 +73,49 @@
                 this.owner = owner;
             },
             addNewTagHandler(event){
-                delete this.errors?.tags;
-                event.preventDefault()
-                let val = event.target.value.trim()
-                if (val.length > 0) {
-                    var index = this.tags.indexOf(val);
-                    if(index > -1){
-                        return this.errors['tags'] = [`${val} already added.`];
-                    }else{
-                        this.tags.push(val);
+                try{
+                    delete this.errors?.tags;
+                    event.preventDefault()
+                    let val = event.target.value.trim()
+                    if (val.length > 0) {
+                        var index = this.tags.indexOf(val);
+                        if(index > -1){
+                            return this.errors['tags'] = [`${val} already added.`];
+                        }else{
+                            this.tags.push(val);
+                        }
                     }
-                }
-                event.target.value = '';
+                    event.target.value = '';
+                }catch(error){}
             },
             removeTagHandler(tag=null){
-                var index = -1;
-                if(tag){
-                    index = this.tags.indexOf(tag);
-                }else if(this.tags.length > 0){
-                    index = this.tags.length - 1;
-                }
-                if(index > -1){
-                    this.deleteCountry = this.tags[index];
-                    this.tags.splice(index, 1);
-                }
+                try{
+                    var index = -1;
+                    if(tag){
+                        index = this.tags.indexOf(tag);
+                    }else if(this.tags.length > 0){
+                        index = this.tags.length - 1;
+                    }
+                    if(index > -1){
+                        this.deleteCountry = this.tags[index];
+                        this.tags.splice(index, 1);
+                    }
+                }catch(error){}
             },
             filterLeadSource(){
-                return this.leadSources.filter((item) =>{
-                    if(this.source_title){
-                        if((item.title).toLowerCase().search(this.source_title.toLowerCase()) > -1){
+                try{
+                    return this.leadSources.filter((item) =>{
+                        if(this.source_title){
+                            if((item.title).toLowerCase().search(this.source_title.toLowerCase()) > -1){
+                                return item;
+                            }
+                        }else{
                             return item;
                         }
-                    }else{
-                        return item;
-                    }
-                });
+                    });
+                }catch(error){
+                    return [];
+                }
             },
             async createNewLeadHandler(){
                 try{
@@ -243,7 +259,7 @@
                         </div>
                         <div class="mb-3 add-new-lead-owner-list-dropdown">
                             <label class="form-label-title" for="">Owner <span class="text-soft fs-12px ms-1">(Optional)</span></label>
-                            <div @click="$refs['dropdownOwnerListRef']?.resetSearchOwner()" class="form-control cursor-pointer owner-form-control" data-mdb-toggle="dropdown" >
+                            <div @mouseover="delete errors?.lead_owner" @click="$refs['dropdownOwnerListRef']?.resetSearchOwner()" class="form-control cursor-pointer owner-form-control" data-mdb-toggle="dropdown" >
                                 <div class="owner-info">
                                     <div class="circle-avatar me-2">
                                         <img class="avatar" :src="owner?.profile_avatar" alt="">
@@ -256,6 +272,7 @@
                             :select-owner-handler="selectOwnerHandler" 
                             :owners="owners" 
                             :owner="owner" />
+                            <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.lead_owner?.length">{{ errors?.lead_owner[0] }}</span>
                         </div>
                         <div class="mb-3">
                             <label class="form-label-title" for="">Tags <span class="text-soft fs-12px ms-1">(Optional)</span> </label>

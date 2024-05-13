@@ -17,7 +17,7 @@ import DeleteMultipleLeadWarningModal from './components/DeleteMultipleLeadWarni
 import DropdownOwnerList from './components/DropdownOwnerList.vue';
 import ColumnSorted from './components/ColumnSorted.vue';
 import UploadSpreadsheetModal from './components/UploadSpreadsheetModal.vue';
-
+import moment from 'moment';
 import {
     FetchLeads, 
     UpdateLeadPropertieHeaders,
@@ -79,7 +79,8 @@ export default {
                 last_page:0,
                 from:0,
                 to:0,
-            }
+            },
+            moment:null,
         }
     },
     watch:{
@@ -210,18 +211,30 @@ export default {
         },
         fetchCustomProperties(leadProperties, propertie){
             try{
+
                 if(leadProperties){
-                    var current = leadProperties.find(item=>item.unique_id === propertie.unique_id);
+
+                    var current = leadProperties[propertie.unique_id];
+
                     if(current){
-                        var value = current?.value;
                         if(propertie.data_type_id == 'yes_or_no'){
-                            if(value == '1' || value == 1){
+                            if(current == '1' || current == 1){
                                 return 'Yes';
                             }else{
                                 return "No";
                             }
                         }
-                        return value;
+                        if(propertie.data_type_id == 'date' && current){
+                            return this.moment(current).format("DD/MM/YYYY");
+                        }
+                        if(propertie.data_type_id == 'date_and_time' && current){
+                            return this.moment(current).format("DD/MM/YYYY hh:mm a")
+                        }
+                        else if(typeof current == 'object'){
+                            return current?.join(', ');
+                        }else{
+                            return current;
+                        }
                     }
                 }
                 return null;
@@ -362,6 +375,7 @@ export default {
         try{
             this.leadStatus = this.$store.getters.getLeadStatuses;
         }catch(error){}
+        this.moment = moment;
     },
 }
 </script>
@@ -720,9 +734,9 @@ export default {
                 v-show="!disabledHeaderColumns.includes(propertie.unique_id)"
                 class="tbl-td" style="width:12rem;flex-grow: 1;">
                     <span 
-                    :class="fetchCustomProperties(lead.custom_properties, propertie)?.length > 25?'hover-scroll':''"
+                    :class="fetchCustomProperties(lead.custom_properties, propertie)?.length > 30?'hover-scroll':''"
                     class="text-overflow-ellipsis w-100">
-                        {{ fetchCustomProperties(lead.custom_properties, propertie) }}
+                        {{ fetchCustomProperties(lead.custom_properties, propertie)}}
                     </span>
                 </div>
 

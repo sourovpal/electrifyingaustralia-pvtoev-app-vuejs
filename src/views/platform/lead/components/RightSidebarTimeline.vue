@@ -12,7 +12,7 @@
         DeleteLeadContact
     } from '../../../../actions/LeadAction';
     import {icons} from '../../../../asset/svgicon';
-    import UploadeFiles from './rightsidebar/UploadeFiles.vue';
+    import UploadeFiles from './sections/UploadeFiles.vue';
 
     export default {
         components: {

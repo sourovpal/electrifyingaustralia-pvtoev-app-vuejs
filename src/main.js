@@ -10,7 +10,7 @@ import { plugin as VueTippy } from 'vue-tippy'
 import VueCookies from 'vue-cookies';
 
 import ToastPlugin from 'vue-toast-notification';
-
+import VueLazyLoad from 'vue3-lazyload';
 
 import 'mdb-ui-kit/css/mdb.min.css';
 import 'custom-vue-scrollbar/dist/style.css';
@@ -46,6 +46,7 @@ app.use(ToastPlugin, {
   position: 'bottom',
   duration:5000,
 });
+app.use(VueLazyLoad, {});
 app.use(
   VueTippy,
   {

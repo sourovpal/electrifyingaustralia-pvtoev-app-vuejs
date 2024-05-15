@@ -5,7 +5,7 @@
         components:{
             ImagePreviewModal
         },
-        props:['files'],
+        props:['files', 'imagePreview'],
         data(){
             return {
                 modalInstance:null,
@@ -45,7 +45,7 @@
             },
             showPreviewModalHandler(item){
                 this.hideModalHandler();
-                this.$refs['imagePreviewModalRef'].showModalHandler(item);
+                this.imagePreview(item);
             },
             shortenFileNameHandler(fileName, length=20) {
                 if (fileName.length <= length) {
@@ -99,11 +99,6 @@
         </div>
     </div>
 </div>
-
-<ImagePreviewModal
-:files="files"
-ref="imagePreviewModalRef"
-/>
 
 </template>
 

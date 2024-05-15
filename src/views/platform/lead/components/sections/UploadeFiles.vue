@@ -283,6 +283,7 @@ export default {
         
         <show-all-files-modal
         :files="leadFiles"
+        :imagePreview="(item)=>$refs['imagePreviewModalRef'].showModalHandler(item)"
         ref="ShowAllFilesModalRef"
         />
 

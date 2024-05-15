@@ -13,6 +13,16 @@ export default{
             libraryLogo: '/src/asset/sidebar-image/reshot-icon-business-folder.svg',
             paymentLogo: '/src/asset/sidebar-image/reshot-icon-payment-method.svg',
             confirmDialog:false,
+            platform_url:'/platform'
+        }
+    },
+    watch: {
+        "$store.state.lead.leadPrevUrl"(leadPrevUrl){
+            if(leadPrevUrl){
+                this.platform_url = leadPrevUrl;
+            }else{
+                this.platform_url = '/platform';
+            }
         }
     },
     methods:{
@@ -59,7 +69,7 @@ export default{
             </div>
             
             <div class="nav-item">
-                <router-link v-tippy='{ content:"Platform", placement : "right" }' to="/platform" class="navbar-brand nav-link">
+                <router-link v-tippy='{ content:"Platform", placement : "right" }' :to="platform_url" class="navbar-brand nav-link">
                     <img style="width:22px;height:22px;object-fit: cover;" :src="platformLogo" alt="">
                 </router-link>
             </div>

@@ -46,6 +46,7 @@ export default {
     },
     data() {
         return {
+            fullpath:null,
             icons:{},
             isLoading:false,
             fetch:{
@@ -67,7 +68,6 @@ export default {
             leadProperties:[],
             isFirstLoading:false,
             filterQueryData:{},
-            filterFetchInterval:null,
             column:'updated_at',
             order:'desc',
             pagination: {
@@ -81,10 +81,12 @@ export default {
                 to:0,
             },
             moment:null,
+            instanceSettimeout:null,
         }
     },
     watch:{
-        "$route"(){
+        "$route"(to){
+            this.fullpath = to?.fullPath;
             this.fetchAllLeadsHandler({page:1});
         },
         "$store.state.app.lead_statuses"(status){
@@ -101,31 +103,31 @@ export default {
         },
         resetFilterSidebar(show){
             try{
+                if(!this.toggleFilterSidebar){
+                    this.toggleFilterSidebar = true;
+                    return;
+                }
                 if(show){
                     this.toggleFilterSidebar = true;
                 }else{
+                    this.$refs['filterRightSidebarRef'].resetFilterHandler();
                     this.toggleFilterSidebar = false;
                     if(Object.keys(this.filterQueryData).length){
                         this.filterQueryData = {};
-                        this.fetchAllLeadsHandler({page:1});
+                        setTimeout(()=>{
+                            this.fetchAllLeadsHandler({page:1});
+                        }, 1000);
                     }
                 }
             }catch(error){}
         },
-        filterDataInDatabase(key, value=null, isFetch=false){
+        filterDataInDatabase(filter){
             try{
-                if((value != null && value != "") || value === 0){
-                    this.filterQueryData = {...this.filterQueryData, [key]:value};
-                    clearInterval(this. filterFetchInterval);
-                }else{
-                    delete this.filterQueryData[key];
-                    clearInterval(this. filterFetchInterval);
-                }
-                if(isFetch){
-                    this.filterFetchInterval = setTimeout(()=>{
-                        this.fetchAllLeadsHandler();
-                    },1000);
-                }
+                clearInterval(this.instanceSettimeout);
+                this.filterQueryData = filter;
+                this.instanceSettimeout = setTimeout(()=>{
+                    this.fetchAllLeadsHandler();
+                },1000);
             }catch(error){}
         },
         leadSortedHandler(column){
@@ -145,8 +147,8 @@ export default {
                 payload = {...payload, ...query};
 
                 if(Object.keys(this.filterQueryData).length){
-                    var search = btoa(JSON.stringify(this.filterQueryData));
-                    if(search != ''){
+                    var search = JSON.stringify(this.filterQueryData);
+                    if(search){
                         payload['search'] = search;
                     }
                 }
@@ -215,7 +217,6 @@ export default {
                 if(leadProperties){
 
                     var current = leadProperties[propertie.unique_id];
-
                     if(current){
                         if(propertie.data_type_id == 'yes_or_no'){
                             if(current == '1' || current == 1){
@@ -330,13 +331,11 @@ export default {
                 var data = {};
 
                 if(owner){
-                    data['owner'] = owner.id;
-                }else{
-                    data['owner'] = "MA==";
+                    data['owner'] = owner?.id;
                 }
 
                 if(lead){
-                    data['leads'] = [lead.id];
+                    data['leads'] = [lead?.id];
                 }else{
                     data['leads'] = this.selectedRows;
                 }
@@ -366,7 +365,7 @@ export default {
                 return phone;
             }
             this.$toast.error('Oops, Empty phone number.');
-        }
+        },
     },
     mounted() {
         this.icons = icons;
@@ -376,6 +375,11 @@ export default {
             this.leadStatus = this.$store.getters.getLeadStatuses;
         }catch(error){}
         this.moment = moment;
+        this.fullpath = this.$route?.fullPath;
+        this.$store.dispatch('setLeadPrevUrl', null);
+    },
+    beforeUnmount() {
+        this.$store.dispatch('setLeadPrevUrl', this.fullpath);
     },
 }
 </script>
@@ -462,16 +466,16 @@ export default {
                 <circle style="stroke: rgb(59, 113, 202);" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
             </svg>
         </div>
+
+
         <div class="btn-group  me-3" v-if="Object.keys(filterQueryData).length">
             <button class="btn btn-success btn-sm">{{ Object.keys(filterQueryData).length }} active filter</button>
             <button @click="resetFilterSidebar(false)" class="btn btn-success btn-sm px-2 active">
-                <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+                <svg v-if="toggleFilterSidebar" xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="currentColor"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+                <svg v-else xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="currentColor"><path   d="M0 0h24v24H0z" fill="none"></path> <path   d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path></svg>
             </button>
         </div>
-
-        <button 
-        v-if="!Object.keys(filterQueryData).length" 
-        class="toolbar-btn btn btn-light btn-floating me-3 d-none d-xl-block" 
+        <button v-else class="toolbar-btn btn btn-light btn-floating me-3 d-none d-xl-block" 
         v-tippy='{ content:"Filter Leads", placement : "top" }'
         @click="toggleFilterSidebar=!toggleFilterSidebar">
             <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path   d="M0 0h24v24H0z" fill="none"></path> <path   d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path></svg>
@@ -519,25 +523,25 @@ export default {
         
         <!-- Show current Lead Range -->
         <div class="fw-bold d-flex justify-content-center align-items-center me-2 text-overflow-ellipsis fs-16px d-none d-xl-block" style="min-width: 2rem;">
-            {{ pagination.from??0 }} - {{ pagination.to??0 }} of  {{ pagination.total }}
+            {{ pagination?.from??0 }} - {{ pagination?.to??0 }} of  {{ pagination?.total??0 }}
         </div>
         <div v-if="!Object.keys(filterQueryData).length" class="fw-bold d-flex justify-content-center align-items-center me-2 text-overflow-ellipsis fs-16px d-block d-xl-none" style="min-width: 2rem;">
-            {{ pagination.from??0 }} - {{ pagination.to??0 }} of  {{ pagination.total }}
+            {{ pagination?.from??0 }} - {{ pagination?.to??0 }} of  {{ pagination?.total??0 }}
         </div>
         <!-- Show current Lead Range End -->
 
         <button 
-            :disabled="!pagination.prev_page" 
-            @click="pagination.prev_page && updateUrlQuery({page:pagination?.prev_page})" 
+            :disabled="!pagination?.prev_page" 
+            @click="pagination?.prev_page && updateUrlQuery({page:pagination?.prev_page})" 
             v-tippy='{ content:"Previous", placement : "top" }'
             class="toolbar-btn btn btn-light btn-floating me-3">
             <svg  class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg>
         </button>
     
         <button 
-        :disabled="!pagination.next_page" 
+        :disabled="!pagination?.next_page" 
         v-tippy='{ content:"Next", placement : "top" }'
-        @click="pagination.next_page && updateUrlQuery({page:pagination?.next_page})" 
+        @click="pagination?.next_page && updateUrlQuery({page:pagination?.next_page})" 
         class="toolbar-btn btn btn-light btn-floating me-3">
             <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
         </button>
@@ -562,11 +566,11 @@ export default {
         :class="{show:toggleFilterSidebar}" 
         :toggleFilterSidebarHandler="toggleFilterSidebarHandler" 
         @toggle-filter="(e)=> resetFilterSidebar(e)"
-        @filter-data-in-database="(key, value, isFetch)=> filterDataInDatabase(key, value, isFetch)"
+        @filter-data-in-database="(filter)=> filterDataInDatabase(filter)"
         :lead-properties="leadProperties"
         :lead-sources="leadSources"
-        :filter-query-data="filterQueryData"
         :owners="owners"
+        ref="filterRightSidebarRef"
          />
 
         <datatable-header class="" v-if="isFirstLoading || fetchLeads.length">
@@ -734,9 +738,9 @@ export default {
                 v-show="!disabledHeaderColumns.includes(propertie.unique_id)"
                 class="tbl-td" style="width:12rem;flex-grow: 1;">
                     <span 
-                    :class="fetchCustomProperties(lead.custom_properties, propertie)?.length > 30?'hover-scroll':''"
+                    :class="fetchCustomProperties(lead?.custom_properties, propertie)?.length > 30?'hover-scroll':''"
                     class="text-overflow-ellipsis w-100">
-                        {{ fetchCustomProperties(lead.custom_properties, propertie)}}
+                        {{ fetchCustomProperties(lead?.custom_properties, propertie)}}
                     </span>
                 </div>
 

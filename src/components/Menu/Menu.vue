@@ -1,6 +1,6 @@
 <script>
 import CustomScrollbar from 'custom-vue-scrollbar';
-import SlideUpDown from 'vue-slide-up-down'
+import SlideUpDown from 'vue-slide-up-down';
 export default {
     props:['menus', 'title'],
     components:{

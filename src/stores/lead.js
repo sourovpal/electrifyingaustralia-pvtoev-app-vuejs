@@ -5,6 +5,7 @@ var leadTimelineHistory = {};
 try{
     leadTimelineHistory = {
       state:{
+        leadPrevUrl:null,
         findLead:{},
         prev_lead:null,
         next_lead:null,
@@ -22,6 +23,9 @@ try{
         leadStatus:[],
       },
       getters:{
+        getLeadPrevUrl(state){
+          return state.leadPrevUrl;
+        },
         getFindLead(state){
           return {...state.findLead};
         },
@@ -112,10 +116,15 @@ try{
           if(lead?.owner){
               state.currentOwner = lead?.owner;
           }
+        },
+        SET_LEAD_PREV_URL(state, payload){
+          state.leadPrevUrl = payload;
         }
       },
       actions: {
-          
+          setLeadPrevUrl({commit}, payload){
+            commit('SET_LEAD_PREV_URL', payload);
+          }
       },
   };
   

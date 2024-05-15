@@ -142,6 +142,18 @@ const routes = [
                 redirect: "/platform/leads",
                 children: [
                     {
+                        name:"tasks",
+                        path:'tasks',
+                        component: LeadIndexPage,
+                        meta:{
+                            auth:true,
+                            progress:true,
+                            title:'Home Page',
+                            permissions:[],
+                        },
+                        children:[],
+                    },
+                    {
                         name:"leads",
                         path:'leads',
                         component: LeadIndexPage,

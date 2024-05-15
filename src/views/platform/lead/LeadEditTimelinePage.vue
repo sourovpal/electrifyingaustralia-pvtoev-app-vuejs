@@ -24,141 +24,147 @@ import TimelineHistory from './components/TimelineHistory.vue';
 import RightSidebarTimeline from './components/RightSidebarTimeline.vue';
 
 export default {
-  components: {
-    SearchBar,
-    ActionBar,
-    LeftActionBar,
-    RightActionBar,
-    CustomScrollbar,
-    Skeletor,
-    DropdownOwnerList,
-    LeadQualifyModal,
-    LeadReCategoriseModal,
-    EditLeadModal,
-    TimelineHistory,
-    RightSidebarTimeline,
-},
-  data() {
-    return {
-        fetch:{
-            lead_properties:1,
-            lead_sources:1,
-            owners:1,
-            pipelines:1,
-            contacts:1,
+    components: {
+        SearchBar,
+        ActionBar,
+        LeftActionBar,
+        RightActionBar,
+        CustomScrollbar,
+        Skeletor,
+        DropdownOwnerList,
+        LeadQualifyModal,
+        LeadReCategoriseModal,
+        EditLeadModal,
+        TimelineHistory,
+        RightSidebarTimeline,
+    },
+    data() {
+        return {
+            fullPath:null,
+            fetch:{
+                lead_properties:1,
+                lead_sources:1,
+                owners:1,
+                pipelines:1,
+                contacts:1,
+            },
+            icons:{},
+            findLead:{},
+            prevLead:null,
+            nextLead:null,
+            owner:null,
+            owners:[],
+            leadStatus:[],
+            isLoading:false,
+            isFirstLoading:false,
+            toggleRightDetailsSidebar:false,
+        }
+    },
+    watch:{
+        "$route"(){
+            this.findLeadByIdHandler();
         },
-        icons:{},
-        findLead:{},
-        prevLead:null,
-        nextLead:null,
-        owner:null,
-        owners:[],
-        leadStatus:[],
-        isLoading:false,
-        isFirstLoading:false,
-        toggleRightDetailsSidebar:false,
-    }
-  },
-  watch:{
-    "$route"(){
-        this.findLeadByIdHandler();
+        "$store.state.lead.findLead"(lead){
+            this.findLead = lead;
+        },
+        "$store.state.lead.prev_lead"(prev){
+            this.prevLead = prev;
+        },
+        "$store.state.lead.next_lead"(next){
+            this.nextLead = next;
+        },
+        "$store.state.lead.owners"(owners){
+            this.owners = owners;
+        },
+        "$store.state.lead.currentOwner"(owner){
+            this.owner = owner;
+        },
+        "$store.state.lead.leadStatus"(status){
+            this.leadStatus = status;
+        },
     },
-    "$store.state.lead.findLead"(lead){
-        this.findLead = lead;
-    },
-    "$store.state.lead.prev_lead"(prev){
-        this.prevLead = prev;
-    },
-    "$store.state.lead.next_lead"(next){
-        this.nextLead = next;
-    },
-    "$store.state.lead.owners"(owners){
-        this.owners = owners;
-    },
-    "$store.state.lead.currentOwner"(owner){
-        this.owner = owner;
-    },
-    "$store.state.lead.leadStatus"(status){
-        this.leadStatus = status;
-    },
-  },
-  methods: {
-    toggleRightDetailsSidebarHandler(){
-        this.toggleRightDetailsSidebar = !this.toggleRightDetailsSidebar;
-    },
-    async findLeadByIdHandler(payload={}){
-        try{
-            this.isLoading = true;
-
-            var leadId = this.$route.params?.id??'';
-
-            if(!payload['lead_id']){
-                payload['lead_id'] = leadId;
-            }
-            const res = await FetchLeads(payload);
+    methods: {
+        toggleRightDetailsSidebarHandler(){
+            this.toggleRightDetailsSidebar = !this.toggleRightDetailsSidebar;
+        },
+        async findLeadByIdHandler(payload={}){
             try{
-                this.$store.commit('setLeadEditTimelineData', res);
-                this.isFirstLoading = false;
+                this.isLoading = true;
+
+                var leadId = this.$route.params?.id??'';
+
+                if(!payload['lead_id']){
+                    payload['lead_id'] = leadId;
+                }
+                const res = await FetchLeads(payload);
+                try{
+                    this.$store.commit('setLeadEditTimelineData', res);
+                    this.isFirstLoading = false;
+                }catch(error){
+                    throw new Error(error.message);
+                }
             }catch(error){
-                throw new Error(error.message);
+                try{
+                    var message = error.response.data.message;
+                    this.$toast[message.type](message.text);
+                }catch(e){
+                    this.$toast.error('Oops, something went wrong');
+                }
+            }finally{
+                this.isFirstLoading = false;
+                this.isLoading = false;
             }
-        }catch(error){
+        },
+        async updateLeadStatusHandler(status){
             try{
-                var message = error.response.data.message;
-                this.$toast[message.type](message.text);
-            }catch(e){
-                this.$toast.error('Oops, something went wrong');
-            }
-        }finally{
-            this.isFirstLoading = false;
-            this.isLoading = false;
-        }
-    },
-    async updateLeadStatusHandler(status){
-        try{
-            if(this.findLead?.status && this.findLead?.status?.id == status?.id){
-                return;
-            }
-            var data = {
-                leads:[this.findLead.id],
-                status:status.id,
-            };
-            const res = await UpdateMultipelLeadStatus(data);
-            this.findLead['status'] = {...status};
+                if(this.findLead?.status && this.findLead?.status?.id == status?.id){
+                    return;
+                }
+                var data = {
+                    leads:[this.findLead.id],
+                    status:status.id,
+                };
+                const res = await UpdateMultipelLeadStatus(data);
+                this.findLead['status'] = {...status};
 
-        }catch(error){
-            try{
-                var message = error.response.data.message;
-                this.$toast[message.type](message.text);
-            }catch(e){
-                this.$toast.error('Oops, something went wrong');
+            }catch(error){
+                try{
+                    var message = error.response.data.message;
+                    this.$toast[message.type](message.text);
+                }catch(e){
+                    this.$toast.error('Oops, something went wrong');
+                }
             }
-        }
-    },
-    async updateLeadOwnerHandler(owner=null){
-        try{
-            var data = {
-                owner:owner?.id,
-                leads:[this.findLead?.id],
-            };
-            const res = await UpdateMultipelLeadOwner(data);
-            this.owner = this.currentOwner = owner;
-            this.findLead['owner'] = owner;
-        }catch(error){
+        },
+        async updateLeadOwnerHandler(owner=null){
             try{
-                var message = error.response.data.message;
-                this.$toast[message.type](message.text);
-            }catch(e){
-                this.$toast.error('Oops, something went wrong');
+                var data = {
+                    owner:owner?.id,
+                    leads:[this.findLead?.id],
+                };
+                const res = await UpdateMultipelLeadOwner(data);
+                this.owner = this.currentOwner = owner;
+                this.findLead['owner'] = owner;
+            }catch(error){
+                try{
+                    var message = error.response.data.message;
+                    this.$toast[message.type](message.text);
+                }catch(e){
+                    this.$toast.error('Oops, something went wrong');
+                }
             }
-        }
+        },
     },
-  },
-  mounted(){
+    mounted(){
         this.icons = icons;
         this.isFirstLoading = true;
         this.findLeadByIdHandler(this.fetch);
+        this.fullpath = this.$route?.fullPath;
+        this.$store.dispatch('setLeadPrevUrl', null);
     },
+    beforeUnmount(){
+        this.$store.dispatch('setLeadPrevUrl', this.fullpath);
+    }
 }
 </script>
 

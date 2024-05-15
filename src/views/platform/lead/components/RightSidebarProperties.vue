@@ -15,6 +15,7 @@
                 formData:{},
                 proptected:null,
                 moment: null,
+                editProperties:{},
             }
         },
         watch: {
@@ -24,9 +25,17 @@
             "$store.state.lead.leadCustomProperties"(payload){
                 this.formData = {};
                 this.formData = payload??{};
+                this.editProperties = {};
             },
         },
         methods: {
+            enabledPropertieEditHandler(unique_id){
+                if(Object.keys(this.editProperties).includes(unique_id)){
+                    delete this.editProperties[unique_id];
+                }else{
+                    this.editProperties[unique_id] = true;
+                }
+            },
             manageYesOrNoHandler(action, unique_id){
                 if(action == 'yes'){
                     this.formData[unique_id] = 1;
@@ -49,6 +58,7 @@
                     };
                     const res = await LeadPropertieUpdate(data);
                 }
+                this.enabledPropertieEditHandler(unique_id);
             },
             dateTimeFormat(date, format){
                 if(date){
@@ -71,16 +81,18 @@
                     this.proptected = target;
                     this.proptected.classList.remove('protected');
                 }
+            },
+            getFormValueHandler(unique_id){
+                if(this.formData[unique_id]){
+                    return this.formData[unique_id];
+                }
+                return "–";
             }
         },
         mounted() {
             this.formData = {};
             this.leadProperties = this.$store.getters.getLeadProperties;
             this.formData = this.$store.getters.getLeadCustomProperties??{};  
-            this.$el.addEventListener('click', this.protectedInputFieldHandler);
-        },
-        beforeDestroy() {
-           window.removeEventListener('click', this.protectedInputFieldHandler);
         },
         created() {
             this.moment = moment;
@@ -94,33 +106,52 @@
     
             <label class="fs-12px text-soft d-block" :for="field?.unique_id">{{ field?.label }}</label>
     
-            <div class="protected propertie-warpper"  v-if="field?.data_type_id === 'free_text' || field?.data_type_id === 'read_only'" :data-value="formData[field.unique_id]">
-                <input class="form-control form-control-sm fw-bold text-head" type="text"
+            <div v-if="field?.data_type_id === 'free_text' || field?.data_type_id === 'read_only'">
+
+                <div @click="enabledPropertieEditHandler(field.unique_id)" v-if="!editProperties[field.unique_id]" class="form-control form-control-sm text-overflow-ellipsis">
+                    <span class="text-head fw-bold input-value-preview">{{ getFormValueHandler(field.unique_id) }}</span>
+                </div>
+
+                <input v-else class="form-control form-control-sm fw-bold text-head" type="text"
                 @blur="updateLeadCustomPropertieHandler(field.unique_id, $event)"
                 :name="field?.unique_id" v-model="formData[field.unique_id]" />
+
             </div>
     
     
     
-            <div class="protected propertie-warpper"  v-else-if="field?.data_type_id === 'real_number'"  :data-value="formData[field.unique_id]">
-                <input class="form-control form-control-sm fw-bold text-head" type="number" 
+            <div  v-else-if="field?.data_type_id === 'real_number'">
+
+                <div @click="enabledPropertieEditHandler(field.unique_id)" v-if="!editProperties[field.unique_id]" class="form-control form-control-sm text-overflow-ellipsis">
+                    <span class="text-head fw-bold input-value-preview">{{ getFormValueHandler(field.unique_id) }}</span>
+                </div>
+
+                <input v-else class="form-control form-control-sm fw-bold text-head" type="number" 
                 @blur="updateLeadCustomPropertieHandler(field.unique_id)"
-                :name="field?.unique_id" 
-                v-model="formData[field.unique_id]" />
+                :name="field?.unique_id" v-model="formData[field.unique_id]" />
+
             </div>
     
     
     
     
-            <div  class="protected propertie-warpper" v-else-if="field?.data_type_id === 'date'"  :data-value="dateTimeFormat(formData[field.unique_id], 'DD/MM/YYYY')">
-                <input class="form-control form-control-sm fw-bold text-head" type="date" 
+            <div  v-else-if="field?.data_type_id === 'date'">
+                <div @click="enabledPropertieEditHandler(field.unique_id)" v-if="!editProperties[field.unique_id]" class="form-control form-control-sm text-overflow-ellipsis">
+                    <span class="text-head fw-bold input-value-preview">{{ getFormValueHandler(field.unique_id) }}</span>
+                </div>
+
+                <input v-else class="form-control form-control-sm fw-bold text-head" type="date" 
                 @blur="updateLeadCustomPropertieHandler(field.unique_id)"
                 :name="field?.unique_id" v-model="formData[field.unique_id]" />
             </div>
     
     
-            <div class="protected propertie-warpper" v-else-if="field?.data_type_id === 'date_and_time'"  :data-value="dateTimeFormat(formData[field.unique_id], 'DD/MM/YYYY hh:mm a')">
-                <input class="form-control form-control-sm fw-bold text-head" type="datetime-local" 
+            <div v-else-if="field?.data_type_id === 'date_and_time'">
+                <div @click="enabledPropertieEditHandler(field.unique_id)" v-if="!editProperties[field.unique_id]" class="form-control form-control-sm text-overflow-ellipsis">
+                    <span class="text-head fw-bold input-value-preview">{{ getFormValueHandler(field.unique_id) }}</span>
+                </div>
+
+                <input v-else class="form-control form-control-sm fw-bold text-head" type="datetime-local" 
                 @blur="updateLeadCustomPropertieHandler(field.unique_id)"
                 :name="field?.unique_id" v-model="formData[field.unique_id]" />
             </div>
@@ -129,8 +160,13 @@
     
     
             
-            <div class="protected propertie-warpper" v-else-if="field?.data_type_id === 'multiline_free_text'"  :data-value="formData[field.unique_id]">
-                <textarea class="form-control form-control-sm fw-bold text-head" :name="field?.unique_id" 
+            <div v-else-if="field?.data_type_id === 'multiline_free_text'">
+
+                <div @click="enabledPropertieEditHandler(field.unique_id)" v-if="!editProperties[field.unique_id]" class="form-control form-control-sm text-overflow-ellipsis">
+                    <span class="text-head fw-bold input-value-preview">{{ getFormValueHandler(field.unique_id) }}</span>
+                </div>
+
+                <textarea v-else class="form-control form-control-sm fw-bold text-head" :name="field?.unique_id" 
                 @blur="updateLeadCustomPropertieHandler(field.unique_id)" rows="1"
                 v-model="formData[field.unique_id]"></textarea>
             </div>
@@ -158,32 +194,24 @@
                 </button>
             </div>
     
-    
-    
-            <MultipleSelectVue
-            v-else-if="field?.data_type_id === 'multiple_choice'" 
-            :name="field?.unique_id"
-            :options="field?.options??[]" 
-            @change="updateLeadCustomPropertieHandler"
-            :value="formData[field?.unique_id]"
-            v-model="formData[field.unique_id]" />
+
+
+            <MultipleSelectVue v-else-if="field?.data_type_id === 'multiple_choice'" :name="field?.unique_id" 
+            :options="field?.options??[]" @change="updateLeadCustomPropertieHandler" 
+            :value="formData[field?.unique_id]" v-model="formData[field.unique_id]" :usebg="true" />
             
     
     
-            <SingleSelect
-            v-else-if="field?.data_type_id === 'single_choice'" 
-            :name="field?.unique_id"
-            :options="field?.options??[]" 
-            @change="updateLeadCustomPropertieHandler"
-            :value="formData[field?.unique_id]"
-            v-model="formData[field.unique_id]" />
+            <SingleSelect v-else-if="field?.data_type_id === 'single_choice'" :name="field?.unique_id"
+            :options="field?.options??[]" @change="updateLeadCustomPropertieHandler" 
+            :value="formData[field?.unique_id]" v-model="formData[field.unique_id]" :usebg="true"/>
     
     
         </div>
     </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .lead-propertie-input {
     .form-control{
         border-color:rgb(189 189 189 / 55%) !important;
@@ -197,34 +225,9 @@
         }
     }
 }
-.protected{
-    position: relative;
-    &::before{
-        position: absolute;
-        content:attr(data-value);
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 100%;
-        height: 100%;
-        background-color:#f5f7fa;
-        z-index: 9;
-        border-radius: 5px;
-        cursor: pointer;
-        padding-left: 12px;
-        padding-top: 3px;
-        border:1px solid rgb(189 189 189 / 55%);
-        font-size:12px;
-        font-weight:bold;
-        color:#364a63 !important;
-        letter-spacing:0.2px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        :hover{
-            background-color: #ffffff;
-        }
-    }
+.text-overflow-ellipsis{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 </style>

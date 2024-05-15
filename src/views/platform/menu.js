@@ -26,7 +26,7 @@ export const menus = async({lead_statuses, pipelines})=>{
                         children:[
                             {
                                 label:'All',
-                                path:'leads',
+                                path:'/platform/leads',
                                 query:{},
                                 icon:'',
                             },            

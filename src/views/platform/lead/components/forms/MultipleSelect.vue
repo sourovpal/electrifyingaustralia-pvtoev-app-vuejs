@@ -1,10 +1,17 @@
 <template>
-  <div class="custom-select dropdown position-relative" @click="toggleDropdown">
-    <div class="form-control form-control-tags-input px-2" :class="{active:isOpen}">
+  <div class="custom-select dropdown position-relative">
+
+    <div v-if="!selectedOptions?.length && usebg && !isOpen && !isEdit" @click="isEdit=!isEdit"
+    class="form-control form-control-sm form-control-tags-input" :class="{bg:usebg}">
+      <span class="fw-bold text-head d-flex justify-content-center align-items-center">–</span>
+    </div>
+
+    <div v-else class="form-control form-control-sm form-control-tags-input px-1" :class="{active:isOpen, bg:usebg}" @click="toggleDropdown">
       <label v-for="(option, index) in selectedOptions" :key="index" class="tag-lable text-head">
         {{ option }} <span @click.stop="removeOption(option)" class="close-tag">&times;</span>
       </label>
     </div>
+
 
     <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-" v-show="isOpen" :class="{show:isOpen}" @click="(e)=>e.stopPropagation()">
         <div
@@ -35,16 +42,22 @@ export default {
       type: String,
       default:'select',
     },
+    usebg: {
+      type: Boolean,
+      default:false,
+    },
   },
   data() {
     return {
       isOpen: false,
-      selectedOptions: this.value
+      selectedOptions: this.value,
+      isEdit:false,
     };
   },
   methods: {
     toggleDropdown() {
       this.isOpen = !this.isOpen;
+      this.isEdit = false;
     },
     toggleOption(option) {
       const index = this.selectedOptions.indexOf(option);
@@ -89,6 +102,13 @@ export default {
   padding-top: 0px !important;
   padding-bottom: 0px !important;
   cursor: pointer;
+  &.bg{
+    background-color: #f5f7fa;
+    border-color:rgba(189, 189, 189, 0.55);
+  }
+  &:hover{
+    background-color: #ffffff;
+  }
   &.active{
     border-color: #3b71ca;
     box-shadow: inset 0 0 0 1px #3b71ca;

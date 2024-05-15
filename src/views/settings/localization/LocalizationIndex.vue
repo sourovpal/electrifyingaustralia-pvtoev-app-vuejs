@@ -1,5 +1,4 @@
 <script>
-import CustomScrollbar from 'custom-vue-scrollbar';
 import {FetchLocalization, UpdateLocalization} from '../../../actions/LocalizationAction';
 export default {
   name:'ProfileIndex',
@@ -13,9 +12,6 @@ export default {
       deleteCountry:null,
       isSubmitLocalization:false,
     }
-  },
-  components:{
-    CustomScrollbar,
   },
   watch:{
     searchInput:function(n, o){
@@ -133,8 +129,7 @@ export default {
 </script>
 
 <template>
-  <div class="content add-custom-scrollbar">
-    <CustomScrollbar thumbWidth="8">
+  <div class="content content-y-100vh">
       <div class="content-header">
           <h1>Localisation</h1>
       </div>
@@ -196,8 +191,6 @@ export default {
               <br><br><br>
           </section>
       </div>
-  
-    </CustomScrollbar>
   </div>
 </template>
 <style lang="scss" scoped>

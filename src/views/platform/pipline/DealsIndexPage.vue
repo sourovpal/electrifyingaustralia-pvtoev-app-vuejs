@@ -3,29 +3,73 @@
     import SearchBar from '../../../components/SearchBar.vue';
     import CustomScrollbar from 'custom-vue-scrollbar';
     import FilterRightSidebar from './FilterRightSidebar.vue';
+    import PipelineStateLeadDetails from './components/PipelineStateLeadDetails.vue';
+    import LoadingStateLeads from './components/LoadingStateLeads.vue';
+    import PipelineSkeletor from './components/PipelineSkeletor.vue';
+    import { Skeletor } from 'vue-skeletor';
+    import './style.scss';
 
+    import {FetchPipelineWithStagesWithLeads} from '../../../actions/PipelineAction';
+
+    
     export default {
         components: {
             SearchBar,
             CustomScrollbar,
             FilterRightSidebar,
+            PipelineStateLeadDetails,
+            LoadingStateLeads,
+            PipelineSkeletor,
+            Skeletor,
         },
         data() {
             return {
                 filterRightSidebar:false,
                 dataShowTable:false,
                 filterByAscDesc:true, // ASC True
-                pipelines:[],
+                pipeline:{},
+                stages:[],
+                leadLastId:{},
+                isLoadings:{},
+                isMounted:false,
+                components:{},
             }
         },
         created() {
             if(this.$route.query.view && this.$route.query.view === 'row'){
-                    this.dataShowTable = true;
+                this.dataShowTable = true;
             }else{
                 this.dataShowTable = false;
             }
         },
         methods: {
+            async fetchPipelineWithStages(){
+                try{
+                    const res = await FetchPipelineWithStagesWithLeads();
+                    try{
+                        const {pipeline, stages} = res;
+                        this.pipeline = pipeline;
+                        this.stages = stages;
+                        if(stages){
+                            this.stages.map(async({id, leads}, index)=>{
+                                this.isLoadings[id] = false;
+                                if(!this.components[id]){
+                                    this.components[id] = [];
+                                }
+                                if(leads?.length){
+                                    this.leadLastId[id] = leads.pop()?.id;
+                                    this.components[id].push({
+                                        data:leads,
+                                    });
+                                }
+                            });
+                        }
+                        this.isMounted = false;
+                    }catch(error){
+
+                    }
+                }catch(error){}
+            },
             redirectFirstPipeline() {
                 // try{
                 //     var pipelines = this.$store.getters.getPipelines;
@@ -36,10 +80,21 @@
                 //         this.$router.push({ path: '/platform/deals', query });
                 //     }
                 // }catch(error){}
+            },
+            async infiniteLoadedLeads(event, id){
+                this.isMounted = false;
+                if(!this.components[id]){
+                    this.components[id] = [];
+                }
+                var position = (100 / event.target.scrollHeight) * (event.target.clientHeight + event.scrollTop);
+                if(position > 75 && !this.isLoadings[id]){ // 80%
+
+                    this.isLoadings[id] = true;
+                    await new Promise((resolve)=>setTimeout(()=>resolve(true), 5000));
+                    this.isLoadings[id] = false;
+                    console.log('Hello')
+                }
             }
-        },
-        created() {
-            this.redirectFirstPipeline();
         },
         watch:{
             "$route"(from, to){
@@ -50,7 +105,11 @@
                     this.dataShowTable = false;
                 }
             }
-        }
+        },
+        mounted() {
+            this.isMounted = true;
+            this.fetchPipelineWithStages();
+        },
     }
 </script>
     
@@ -63,8 +122,11 @@
             <div class="row border-bottom px-3 py-1">
                 <div class="col-md-6">
                     <div class="d-flex flex-row justify-content-start align-items-center">
-                        <h5 class="m-0 ps-1 fs-20px fw-bold title-dark">Selas</h5>
-                        <div class="ms-5">
+                        <h5 class="m-0 ps-1 fs-20px fw-bold title-dark">
+                            <span v-if="!isMounted">Sales</span>
+                            <Skeletor v-else style="width:5rem;height:15px;" />
+                        </h5>
+                        <div class="ms-3">
                             <button type="button" class="toolbar-btn btn btn-light btn-lg btn-floating" data-mdb-ripple-init>
                                 <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
                             </button>
@@ -152,41 +214,30 @@
                     
                     
                     <FilterRightSidebar 
-                    :class="filterRightSidebar?'show':''"
+                    :class="{show:filterRightSidebar}"
                     @toggle-filter="(e)=> filterRightSidebar = e" />
 
-                    <div class="piplien-state" v-for="(item, index) in [1,2,3,4,5,6,7,8,9,10]" :key="index">
+                    <pipeline-skeletor v-if="isMounted" />
+
+                    <div class="piplien-state" v-for="(stage, index) in stages" :key="index">
                         <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">Newly qualified</h3>
-                            <span class="fs-12px text-head">71 Deals</span>
+                            <h3 class="fs-18px text-head fw-bold mb-1">{{ stage.name }}</h3>
+                            <span class="fs-12px text-head">{{ stage?.leads?.length }} Deals</span>
                         </div>
                         <div class="py-1 value-bar">
                             <div class="px-3 d-flex justify-content-between align-items-center">
                                 <span class="text-head fw-bold fs-12px">Value</span>
                                 <span class="text-head fw-bold fs-12px">$0.00</span>
                             </div>
-                        </div>  
-                        <CustomScrollbar thumbWidth="3.5" direction="horizontal" :style="{height: '100%' }">
+                        </div>
+
+                        <CustomScrollbar :simulateScroll="true" thumbWidth="3.5" direction="horizontal"  @scroll="infiniteLoadedLeads($event, stage.id)">
                             <div class="pip-body px-2">
-                                <a v-for="(item, index) in 10" :key="index" class="" href="">
-                                    <div class="pip-item">
-                                        <h5 class="pip-title">2 Muriel Street, Maryborough</h5>
-                                        <p class="pip-sub-title">Mrs. CHERYL · Mrs. CHERYL 4650 QLD 21/02/12:00 PM Phone</p>
-                                        <div class="pip-user d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <img class="pip-user-avatar" src="https://www.gravatar.com/avatar/31abcedd82c87dd621142af7f4dbe722?s=64&d=mp&r=PG" alt="">
-                                                <span class="pip-value">$-</span>
-                                            </div>
-                                            <div class="fs-16px star-value d-flex justify-content-start align-items-center">
-                                                <span class="me-1">1</span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 0 24 24" width="16px" fill="#de911d" class="icon icon--star icon--inline"><path d="M0 0h24v24H0z" fill="none"></path><path d="M0 0h24v24H0z" fill="none"></path> <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>
-                                            </div>
-                                        </div>
-                                        <div class="pip-source">EA call center</div>
-                                    </div>
-                                </a>
+                                <component v-for="(component, index) in components[stage.id]??[]" :key="index" is="pipeline-state-lead-details" :data="component.data" :index="index"></component>
+                                <loading-state-leads :show="isLoadings[stage.id]" :size="1" />
                             </div>
                         </CustomScrollbar>
+
                     </div>
 
                     <!-- Empty State -->
@@ -210,7 +261,7 @@
         <!-- Card Pipline End -->
 
         <!-- Pipline Table Data -->
-        <section v-if="dataShowTable" class="pipline__table">
+        <section v-else class="pipline__table">
 
             <FilterRightSidebar 
             :class="filterRightSidebar?'show':''"
@@ -424,351 +475,17 @@
       </section>
     
     </template>
-    
-<style scoped lang="scss">
-    .toolbar-btn{
-        width:35px !important;
-        height: 35px !important;
-    }
-    .value-bar{
-        background-color: #e5f4ff;
-        border-bottom: 1px solid #80c6ff;
-        border-top: 1px solid #80c6ff;
-    }
-    .piplien-body{
-        background-color: #f5f7fa;
-    }
-    .pipline-scrollbar{
-        display: flex;
-        flex-direction: row;
-        height: 100%;
-    }
-    .piplien-state{
-        width:272px;
-        max-width:300px;
-        &:last-child{
-            .pip-header{
-                padding-right:20px;
-                &::before,
-                &::after{
-                    display: none;
-                }
-            }
-        }
-    }
-    .pip-header{
-        background-color: #ffffff;
-        position: relative;
-        &::before{
-            content: "";
-            position: absolute;
-            top:-1px;
-            right: 0;
-            width: 1px;
-            height: 53%;
-            background-color: #dddddd;
-            transform: rotate(-15deg);
-            z-index: 1;
-        }
-        &::after{
-            content: "";
-            position: absolute;
-            bottom:-1px;
-            right: 0;
-            width: 1px;
-            height:53%;
-            background-color: #dddddd;
-            transform: rotate(15deg);
-            z-index: 1;
-        }
-    }
-    .pip-body{
-        width:100%;
-        height:100%;
-        padding-bottom: 200px;
-        .pip-item{
-            background-color: #ffffff;
-            border-radius: 4px;
-            margin: 15px 0px;
-            padding: 13px;
-            height: 125px;
-            overflow: hidden;
-            box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-            .pip-title{
-                font-size: 16px;
-                font-weight: 700;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                width: 225px;
-                margin-bottom: 5px;
-                color:#007ee5;
-            }
-            .pip-sub-title{
-                font-size: 14px;
-                line-height: 18px;
-                margin-bottom: 3px;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical; 
-            }
-            .pip-user{
-                line-height:18px;
-                .pip-user-avatar{
-                    width: 20px;
-                    height: 20px;
-                    border-radius: 50%;
-                    background: #f1f1f1;
-                    object-fit: cover;
-                }
-                .pip-value{
-                    color: #1f2933;
-                    font-size: .875rem;
-                    font-weight: 700;
-                    line-height: 1.5rem;
-                    margin-left: .5rem;
-                }
-                .star-value{
-                    color: #de911d;
-                }
-            }
-            .pip-source{
-                font-size: 14px;
-                font-weight: 500;
-                color: #696767;
-                line-height: 20px;   
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
-                width: 225px;
-            }
-        }        
-    } 
-    .text-overflow-ellipsis{
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden;
-    }
-    .line-height-15px{
-        line-height: 15px;
-    }
-
-    .owner-dropdown-toggler{
-        cursor: pointer;
-        width: auto!important;
-        border:none;
-        outline: none;
-        padding:3px 25px 3px 0px;
-        background-color: transparent;
-        position: relative;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        &::before{
-            content: '';
-            position: absolute;
-            right:5px;
-            top:45%;
-            transform: translateY(-50%) rotate(45deg);
-            border:0.25rem solid transparent;
-            border-bottom-color: rgb(164, 164, 164);
-            border-right-color: rgb(164, 164, 164);
-        }
-        .icon{
-            width: 1.5rem;
-            height: 1.5rem;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            img{
-                border-radius: 50%;
-                width:100%;
-                height:100%;
-
-            }
-        }
-    }
-    .owner-list-dropdown{
-        .dropdown-menu{
-            z-index: 1000;
-            max-width: 19rem;
-            width: 16rem;
-            padding: 0.5rem 0;
-            margin: 0.125rem 0 0;
-            font-size: 1rem;
-            color: #292b2c;
-            text-align: left;
-            background-color: #fff;
-            background-clip: padding-box;
-            border-radius: 0.25rem;
-            box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-            &::before{
-                content: "";
-                position: absolute;
-                top: -7px;
-                right: 30px;
-                border: 7px solid #f1f0f0;
-                border-right-color: white;
-                border-bottom-color: white;
-                transform: rotate(45deg);
-                border-bottom-color: transparent;
-                border-right-color: transparent;
-            }
-            &::after{
-                content: "";
-                position: absolute;
-                top: -6px;
-                right: 30px;
-                border: 7px solid white;
-                border-right-color: white;
-                border-bottom-color: white;
-                transform: rotate(45deg);
-                border-bottom-color: transparent;
-                border-right-color: transparent;
-            }
-            @media screen and (max-width: 766px) {
-                &::after,
-                &::before{
-                    left:30px;
-                    right:auto !important;
-                }
-            }
-            .dropdown-header{
-                font-size: .75rem;
-                padding: 0 0.5rem;
-                font-weight: 700;
-                line-height: 1.5rem;
-                margin-bottom: 0;
-                padding-top: 0.5rem;
-            }
-            .dropdown-item.noselect{
-                display: flex;
-                justify-content: flex-start;
-                align-items: center;
-                margin-right: 10px;
-                user-select: none;
-                border-bottom: 1px solid #dddddd;
-                img{
-                    width: 1.5rem;
-                    height: 1.5rem;
-                    border-radius: 50%;
-                    margin-right:10px;
-                }
-                span{
-                    display: inline-block;
-                    line-height: 18px;
-                }
-            }
-            .project-owner-team-members{
-                max-width:19rem;
-                max-height:350px;
-                .dropdown-item{
-                    display: flex;
-                    justify-content: flex-start;
-                    align-items: center;
-                    cursor: pointer;
-                    user-select: none;
-                    img{
-                        width: 1.5rem;
-                        height: 1.5rem;
-                        border-radius: 50%;
-                        margin-right:10px;
-                    }
-                    span{
-                        display: inline-block;
-                        line-height: 18px;
-                    }
-                }
-            }
-        }
-        .dropdown-body{
-            .dropdown-input{
-                .project-owner-filter{
-                    background: #f5f7fa;
-                    font-size: .875rem;
-                    padding: 0.5rem 1rem;
-                    border: 0;
-                    width: 100%;
-                }
-            }
-        }
-    }
-    .dropdown-sorted{
-        position: relative;
-        .dropdown-sorted-list{
-            width:calc(100% + 2rem);
-            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-            border-radius: 4px;
-
-            &::before {
-                content: "";
-                position: absolute;
-                top: -7px;
-                right: 18px;
-                border: 7px solid #f1f0f0;
-                border-right-color: white;
-                border-bottom-color: white;
-                transform: rotate(45deg);
-                border-bottom-color: transparent;
-                border-right-color: transparent;
-            }
-            &::after {
-                content: "";
-                position: absolute;
-                top: -6px;
-                right: 18px;
-                border: 7px solid white;
-                border-right-color: white;
-                border-bottom-color: white;
-                transform: rotate(45deg);
-                border-bottom-color: transparent;
-                border-right-color: transparent;
-            }
-            .ascending-menu, 
-            .descending-menu{
-                li.active{
-                    position: relative;
-                    &::after {
-                        content: "";
-                        position: absolute;
-                        top: 50%;
-                        transform: translateY(-50%);
-                        left: 0px;
-                        width: 4px;
-                        height: 30px;
-                        background: #3b71ca;
-                        border-top-right-radius: 5px;
-                        border-bottom-right-radius: 5px;
-                    }
-                }
-            }
-        }
-    }
-</style>
 <style>
     .pipline-list .piplien-body,
     .pipline-list .pip-body-scrollbar{
         height:calc(100vh - 102px) !important;        
     }
-    .pipline-list .piplien-state .scrollbar__wrapper{
+    .pipline-list .piplien-state .scrollbar__scroller{
+        scroll-behavior: smooth !important;
         height: 100% !important;
     }
-    .pipline-list .piplien-state .scrollbar__thumbPlaceholder{
-        /* width:3px !important; */
-    }
-    .pipline-list .piplien-state .scrollbar__content.scrollbar__content--horizontal{
-        min-height: 75vh;
-        width: 100% !important;
-    }
-    .pipline-list.content > .scrollbar__wrapper > .scrollbar__thumbPlaceholder--vertical{
-        display: none !important;
-    }
-    .pipline-list.content > .pipline__table > .scrollbar__wrapper > .scrollbar__thumbPlaceholder--vertical{
-        display: block !important;
+    .pipline-list .piplien-state .scrollbar__wrapper{
+        height: calc(79vh - 5px) !important;
     }
     .pipline-list .active-svg-tbl{
         fill:#3295ff !important;

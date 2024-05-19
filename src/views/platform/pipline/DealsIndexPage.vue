@@ -9,7 +9,10 @@
     import { Skeletor } from 'vue-skeletor';
     import './style.scss';
 
-    import {FetchPipelineWithStagesWithLeads} from '../../../actions/PipelineAction';
+    import {
+        FetchPipelineWithStagesWithLeads, 
+        FetchLeadsByPipelineStageId
+    } from '../../../actions/PipelineAction';
 
     
     export default {
@@ -52,16 +55,21 @@
                         this.stages = stages;
                         if(stages){
                             this.stages.map(async({id, leads}, index)=>{
-                                this.isLoadings[id] = false;
-                                if(!this.components[id]){
-                                    this.components[id] = [];
-                                }
-                                if(leads?.length){
-                                    this.leadLastId[id] = leads.pop()?.id;
-                                    this.components[id].push({
-                                        data:leads,
-                                    });
-                                }
+                                try{
+                                    this.isLoadings[id] = false;
+                                    if(!this.components[id]){
+                                        this.components[id] = [];
+                                    }
+                                    if(leads?.length){
+                                        this.components[id].push({
+                                            data:leads,
+                                        });
+                                        var len = leads.length;
+                                        if(len >= 20){
+                                            this.leadLastId[id] = leads[len - 1]?.id;
+                                        }
+                                    }
+                                }catch(error){}
                             });
                         }
                         this.isMounted = false;
@@ -83,16 +91,47 @@
             },
             async infiniteLoadedLeads(event, id){
                 this.isMounted = false;
+
+                if(!this.leadLastId[id] || this.isLoadings[id]){
+                    return;
+                }
+
                 if(!this.components[id]){
                     this.components[id] = [];
                 }
+
                 var position = (100 / event.target.scrollHeight) * (event.target.clientHeight + event.scrollTop);
-                if(position > 75 && !this.isLoadings[id]){ // 80%
+                
+                if(position >= 99 && !this.isLoadings[id]){ // 80%
 
                     this.isLoadings[id] = true;
-                    await new Promise((resolve)=>setTimeout(()=>resolve(true), 5000));
-                    this.isLoadings[id] = false;
-                    console.log('Hello')
+
+                    var payload = {
+                        stage_id:id,
+                        last_id:this.leadLastId[id],
+                    }
+                    const res = await FetchLeadsByPipelineStageId(payload);
+
+                    try{
+
+                        const {leads} = res;
+
+                        if(leads?.length){
+
+                            this.components[id].push({
+                                data:leads,
+                            });
+
+                            var len = leads.length;
+
+                            if(len >= 20){
+                                this.leadLastId[id] = leads[len - 1]?.id;
+                            }else{
+                                delete this.leadLastId[id];
+                            }
+                        }
+                        this.isLoadings[id] = false;
+                    }catch(error){}
                 }
             }
         },
@@ -233,8 +272,9 @@
 
                         <CustomScrollbar :simulateScroll="true" thumbWidth="3.5" direction="horizontal"  @scroll="infiniteLoadedLeads($event, stage.id)">
                             <div class="pip-body px-2">
-                                <component v-for="(component, index) in components[stage.id]??[]" :key="index" is="pipeline-state-lead-details" :data="component.data" :index="index"></component>
-                                <loading-state-leads :show="isLoadings[stage.id]" :size="1" />
+                                <component v-for="(component, index) in components[stage.id]??[]" 
+                                :key="index" :is="`pipeline-state-lead-details`" :data="component.data" :index="index" />
+                                <loading-state-leads :show="isLoadings[stage.id] && this.leadLastId[stage.id]" :size="1" />
                             </div>
                         </CustomScrollbar>
 

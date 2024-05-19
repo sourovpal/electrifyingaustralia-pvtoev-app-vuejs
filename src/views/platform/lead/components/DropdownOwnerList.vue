@@ -56,7 +56,7 @@
                         </span>
                     </div>
 
-                    <div v-if="!owner" class="dropdown-item noselect" @click="selectOwnerHandler(null)">
+                    <div v-else class="dropdown-item noselect" @click="selectOwnerHandler(null)">
                         <img :src="icons?.avatar" draggable="false" alt="No Owner's avatar" class="project-owner__profile-photo" />
                         <span class="fs-14px fw-bold">
                             No Owner

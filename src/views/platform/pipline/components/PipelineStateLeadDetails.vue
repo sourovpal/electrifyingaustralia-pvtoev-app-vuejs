@@ -8,19 +8,20 @@ export default {
 <template>
     <a v-for="(item, index) in data??[]" :key="index" class="" href="">
         <div class="pip-item">
-            <h5 class="pip-title">{{ item.name }}</h5>
-            <p class="pip-sub-title">Mrs. CHERYL · Mrs. CHERYL 4650 QLD 21/02/12:00 PM Phone</p>
+            <h5 class="pip-title">{{ item?.contact?.full_name??'Example More than 100 million people' }}</h5>
+            <p class="pip-sub-title">{{ item.title??'More than 100 million people across 185 countries use ChatGPT weekly to learn' }}</p>
             <div class="pip-user d-flex justify-content-between align-items-center">
                 <div>
-                    <img class="pip-user-avatar" src="https://www.gravatar.com/avatar/31abcedd82c87dd621142af7f4dbe722?s=64&d=mp&r=PG" alt="">
+                    <img v-if="item.owner" class="pip-user-avatar" :src="item?.owner?.profile_avatar" alt="">
+                    <img v-else class="pip-user-avatar" src="https://www.gravatar.com/avatar/31abcedd82c87dd621142af7f4dbe722?s=64&d=mp&r=PG" alt="">
                     <span class="pip-value">$-</span>
                 </div>
                 <div class="fs-16px star-value d-flex justify-content-start align-items-center">
-                    <span class="me-1">1</span>
+                    <span class="me-1">{{ item.confidence }}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" height="16px" viewBox="0 0 24 24" width="16px" fill="#de911d" class="icon icon--star icon--inline"><path d="M0 0h24v24H0z" fill="none"></path><path d="M0 0h24v24H0z" fill="none"></path> <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"></path></svg>
                 </div>
             </div>
-            <div class="pip-source">EA call center</div>
+            <div class="pip-source text-soft">{{ item?.source?.title??'Lead source name' }}</div>
         </div>
     </a>
     
@@ -78,7 +79,6 @@ export default {
         .pip-source{
             font-size: 14px;
             font-weight: 500;
-            color: #696767;
             line-height: 20px;   
             white-space: nowrap;
             text-overflow: ellipsis;

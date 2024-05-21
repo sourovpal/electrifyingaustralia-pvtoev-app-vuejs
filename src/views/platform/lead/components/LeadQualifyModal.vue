@@ -28,11 +28,11 @@
             }
         },
         methods: {
-            showModalHandler(){
+            showModalHandler(owner=null){
                 this.errors = {};
                 this.owners = this.$store.getters.getOwners;
                 this.pipelines = this.$store.getters.getPipelinesWithStage;
-                this.currentOwner = this.owner = this.$store.getters.getCurrentOwner;
+                this.currentOwner = this.owner = owner || this.$store.getters.getCurrentOwner;
                 try{
                     if(this.pipelines.length > 0){
                         this.selectPipelineHandler(this.pipelines[0]?.id);
@@ -209,7 +209,7 @@
                         <div class="owner-info">
                             <div class="circle-avatar me-2">
                                 <img v-if="currentOwner" class="avatar" :src="currentOwner?.profile_avatar" alt="">
-                                <img v-if="!owner" class="avatar" :src="icons?.avatar" alt="">
+                                <img v-else class="avatar" :src="icons?.avatar" alt="">
                             </div>
                             <div class="owner-name fs-16px fw--bold text-hard">{{ currentOwner?.name??'No Owner' }}</div>
                         </div>

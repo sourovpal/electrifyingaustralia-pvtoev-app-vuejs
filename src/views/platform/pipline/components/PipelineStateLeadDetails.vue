@@ -6,7 +6,7 @@ export default {
 </script>
 
 <template>
-    <a v-for="(item, index) in data??[]" :key="index" class="" href="">
+    <a v-for="(item, index) in data??[]" :key="index" class="" href="" draggable="true">
         <div class="pip-item">
             <h5 class="pip-title">{{ item?.contact?.full_name??'Example More than 100 million people' }}</h5>
             <p class="pip-sub-title">{{ item.title??'More than 100 million people across 185 countries use ChatGPT weekly to learn' }}</p>

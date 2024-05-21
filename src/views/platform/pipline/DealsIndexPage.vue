@@ -29,13 +29,27 @@
             return {
                 filterRightSidebar:false,
                 dataShowTable:false,
-                filterByAscDesc:true, // ASC True
+                filterByAscDesc:false, // ASC True
                 pipeline:{},
                 stages:[],
                 leadLastId:{},
                 isLoadings:{},
+                isLoading:false,
                 isMounted:false,
                 components:{},
+                payload:{},
+                ascending:[
+                    {field:'updated_at', sorted:'asc', title:'Least recently updated first'},
+                    {field:'created_at', sorted:'asc', title:'Least recently created first'},
+                    {field:'estimated_value', sorted:'asc', title:'Least valuable first'},
+                    {field:'confidence', sorted:'asc', title:'Least stars first'},
+                ],
+                descending:[
+                    {field:'updated_at', sorted:'desc', title:'Most recently updated first'},
+                    {field:'created_at', sorted:'desc', title:'Most recently created first'},
+                    {field:'estimated_value', sorted:'desc', title:'Most valuable first'},
+                    {field:'confidence', sorted:'desc', title:'Most stars first'},
+                ],
             }
         },
         created() {
@@ -45,38 +59,54 @@
                 this.dataShowTable = false;
             }
         },
+        watch:{
+            "$route"(){
+                this.fetchPipelineWithStages();
+            }
+        },
         methods: {
-            async fetchPipelineWithStages(){
+            async urlQueryUpdate(payload={}){
+                this.$route.push('/platform/deals', {...this.$route.query, ...payload});
+                this.fetchPipelineWithStages();
+            },
+            async fetchPipelineWithStages(payload={}){
                 try{
-                    const res = await FetchPipelineWithStagesWithLeads();
-                    try{
-                        const {pipeline, stages} = res;
-                        this.pipeline = pipeline;
-                        this.stages = stages;
-                        if(stages){
-                            this.stages.map(async({id, leads}, index)=>{
-                                try{
-                                    this.isLoadings[id] = false;
-                                    if(!this.components[id]){
-                                        this.components[id] = [];
-                                    }
-                                    if(leads?.length){
-                                        this.components[id].push({
-                                            data:leads,
-                                        });
-                                        var len = leads.length;
-                                        if(len >= 20){
-                                            this.leadLastId[id] = leads[len - 1]?.id;
-                                        }
-                                    }
-                                }catch(error){}
-                            });
-                        }
-                        this.isMounted = false;
-                    }catch(error){
+                    this.isLoading = true;
+                    this.payload = {...this.$route.query, ...payload};
+                    const res = await FetchPipelineWithStagesWithLeads(this.payload);
+                    const {pipeline, stages, properties} = res;
 
+                    this.stages = [];
+                    this.pipeline = {};
+                    this.components = {}; 
+                    this.isLoadings = {};
+
+                    this.pipeline = pipeline;
+                    this.stages = stages;
+                    if(stages){
+                        this.stages.map(async({id, leads}, index)=>{
+                            try{
+                                this.isLoadings[id] = false;
+                                if(!this.components[id]){
+                                    this.components[id] = [];
+                                }
+                                if(leads?.length){
+                                    this.components[id].push({
+                                        data:leads,
+                                    });
+                                    var len = leads.length;
+                                    if(len >= 20){
+                                        this.leadLastId[id] = leads[len - 1]?.id;
+                                    }
+                                }
+                            }catch(error){}
+                        });
                     }
+                    this.isMounted = this.isLoading = false;  
                 }catch(error){}
+                finally{
+                    this.isMounted = this.isLoading = false;
+                }
             },
             redirectFirstPipeline() {
                 // try{
@@ -91,7 +121,6 @@
             },
             async infiniteLoadedLeads(event, id){
                 this.isMounted = false;
-
                 if(!this.leadLastId[id] || this.isLoadings[id]){
                     return;
                 }
@@ -102,13 +131,14 @@
 
                 var position = (100 / event.target.scrollHeight) * (event.target.clientHeight + event.scrollTop);
                 
-                if(position >= 99 && !this.isLoadings[id]){ // 80%
+                if(position >= 80 && !this.isLoadings[id]){ // 80%
 
                     this.isLoadings[id] = true;
 
                     var payload = {
                         stage_id:id,
                         last_id:this.leadLastId[id],
+                        ...this.payload
                     }
                     const res = await FetchLeadsByPipelineStageId(payload);
 
@@ -129,25 +159,27 @@
                             }else{
                                 delete this.leadLastId[id];
                             }
+                        }else{
+                            delete this.leadLastId[id];
                         }
                         this.isLoadings[id] = false;
                     }catch(error){}
                 }
-            }
-        },
-        watch:{
-            "$route"(from, to){
-                this.redirectFirstPipeline();
-                if(from.query?.view && from.query?.view === 'row'){
-                    this.dataShowTable = true;
-                }else{
-                    this.dataShowTable = false;
+            },
+            scrollbarAddClassHandler(e){
+                var scrollbar = e.target.closest('.scrollbar__wrapper')
+                if(scrollbar && scrollbar?.classList.contains('scroll')){
+                    scrollbar.classList.remove('scroll');
+                }else if(scrollbar){
+                    scrollbar.classList.add('scroll');
                 }
             }
         },
         mounted() {
             this.isMounted = true;
             this.fetchPipelineWithStages();
+            this.$el.addEventListener('mousedown', this.scrollbarAddClassHandler);
+            this.$el.addEventListener('mouseup',  this.scrollbarAddClassHandler);
         },
     }
 </script>
@@ -158,28 +190,28 @@
         <search-bar></search-bar>
 
         <section class="tools-bar">
-            <div class="row border-bottom px-3 py-1">
+            <div class="row border-bottom py-1 mx-0">
                 <div class="col-md-6">
                     <div class="d-flex flex-row justify-content-start align-items-center">
                         <h5 class="m-0 ps-1 fs-20px fw-bold title-dark">
-                            <span v-if="!isMounted">Sales</span>
+                            <span v-if="!isMounted">{{ pipeline?.title }}</span>
                             <Skeletor v-else style="width:5rem;height:15px;" />
                         </h5>
                         <div class="ms-3">
-                            <button type="button" class="toolbar-btn btn btn-light btn-lg btn-floating" data-mdb-ripple-init>
+                            <button :disabled="isLoading" @click="fetchPipelineWithStages()" type="button" class="toolbar-btn btn btn-light btn-lg btn-floating">
                                 <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"></path> <path d="M0 0h24v24H0z" fill="none"></path></svg>
                             </button>
                         </div>
                         <div class="mx-2">
                             <router-link to="?view=row">
-                                <button type="button" class="toolbar-btn btn btn-light btn-lg btn-floating" data-mdb-ripple-init>
+                                <button type="button" class="toolbar-btn btn btn-light btn-lg btn-floating">
                                     <svg :class="` ${dataShowTable?'active-svg-tbl':''} svg-5`" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h12v-4H9v4zm0 5h12v-4H9v4zM9 5v4h12V5H9z"></path></svg>
                                 </button>
                             </router-link>
                         </div>
                         <div class="mx-2">
                             <router-link to="?view=column">
-                                <button type="button" class="toolbar-btn btn btn-light btn-lg btn-floating" data-mdb-ripple-init>
+                                <button type="button" class="toolbar-btn btn btn-light btn-lg btn-floating">
                                     <svg :class="` ${!dataShowTable?'active-svg-tbl':''} svg-5`" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M10 18h5V5h-5v13zm-6 0h5V5H4v13zM16 5v13h5V5h-5z"></path></svg>
                                 </button>
                             </router-link>
@@ -188,6 +220,11 @@
                 </div> <!-- End Col -->
                 <div class="col-md-6">
                     <div class="d-flex flex-row justify-content-end align-items-center">
+                        <div v-if="isLoading" class="me-3">
+                            <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
+                                <circle style="stroke: rgb(59, 113, 202);" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                            </svg>
+                        </div>
                         <div class="dropdown-sorted">
                             <button 
                             data-mdb-toggle="dropdown" 
@@ -201,43 +238,51 @@
                             <div class="dropdown-menu dropdown-menu-end dropdown-sorted-list" @click="(event)=>event.stopPropagation()">
                                 <div class="d-flex justify-content-between align-items-center p-2">
                                     <button 
-                                    @click="filterByAscDesc = true" 
-                                    class="btn btn-sm" 
-                                    :class="filterByAscDesc?'btn-primary':'btn-outline-secondary'">
-                                        <span class="me-1">
-                                            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="currentcolor"><path  d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"></path></svg>
-                                        </span>
-                                        Ascending
-                                    </button>
-                                    <button @click="filterByAscDesc = false" class="btn btn-sm" :class="!filterByAscDesc?'btn-primary':'btn-outline-secondary'">
+                                    @click="filterByAscDesc = false" 
+                                    class="btn btn-sm" :class="!filterByAscDesc?'btn-primary':'btn-outline-primary'">
                                         <span class="me-1">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="currentcolor"><path  d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"></path></svg>
                                         </span>
                                         Descending
                                     </button>
+                                    <button 
+                                    @click="filterByAscDesc = true" 
+                                    class="btn btn-sm" 
+                                    :class="filterByAscDesc?'btn-primary':'btn-outline-primary'">
+                                        <span class="me-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="currentcolor"><path  d="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z"></path></svg>
+                                        </span>
+                                        Ascending
+                                    </button>
                                 </div>
                                 <div class="tab-content" id="ex1-content">
                                     <ul :class="filterByAscDesc?'fade show active':''" class="list-unstyled mb-0 ascending-menu tab-pane">
-                                        <li class="active"><a class="dropdown-item" href="#">Least recently updated first</a></li>
-                                        <li><a class="dropdown-item" href="#">Least recently created first</a></li>
-                                        <li><a class="dropdown-item" href="#">Least valuable first</a></li>
-                                        <li><a class="dropdown-item" href="#">Least stars first</a></li>
+                                        <li 
+                                        v-for="(item, index) in ascending"
+                                        :key="index" :class="{active:(payload['field'] == item?.field &&  payload['sorted'] == item?.sorted)}"
+                                        @click="fetchPipelineWithStages({field:item?.field, sorted:item?.sorted})"
+                                        >
+                                            <a class="dropdown-item cursor-pointer">{{ item?.title }}</a>
+                                        </li>
                                         <li><hr class="dropdown-divider m-0" /></li>
-                                        <li><a class="dropdown-item" href="#">Manual</a></li>
+                                        <li><a class="dropdown-item cursor-pointer">Manual</a></li>
                                     </ul>
                                     <ul :class="!filterByAscDesc?'fade show active':''" class="list-unstyled mb-0 descending-menu tab-pane">
-                                        <li><a class="dropdown-item" href="#">Most recently updated first</a></li>
-                                        <li><a class="dropdown-item" href="#">Most recently created first</a></li>
-                                        <li><a class="dropdown-item" href="#">Most valuable first</a></li>
-                                        <li><a class="dropdown-item" href="#">Most stars first</a></li>
+                                        <li 
+                                        v-for="(item, index) in descending"
+                                        :key="index" :class="{active:(payload['field'] == item?.field &&  payload['sorted'] == item?.sorted)}"
+                                        @click="fetchPipelineWithStages({field:item?.field, sorted:item?.sorted})"
+                                        >
+                                            <a class="dropdown-item cursor-pointer">{{ item?.title }}</a>
+                                        </li>
                                         <li><hr class="dropdown-divider m-0" /></li>
-                                        <li><a class="dropdown-item" href="#">Manual</a></li>
+                                        <li><a class="dropdown-item cursor-pointer">Manual</a></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                         <div class="ms-2">
-                            <button @click="filterRightSidebar = !filterRightSidebar" type="button" class="toolbar-btn btn btn-light btn-lg btn-floating" data-mdb-ripple-init>
+                            <button @click="filterRightSidebar = !filterRightSidebar" type="button" class="toolbar-btn btn btn-light btn-lg btn-floating">
                                 <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="22" viewBox="0 0 24 24" width="22"><path  d="M0 0h24v24H0z" fill="none"></path> <path  d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path></svg>
                             </button>
                         </div>
@@ -248,7 +293,7 @@
 
         <!-- Card Pipline -->        
         <div v-if="!dataShowTable" class="pip-body-scrollbar" :style="{overflowY:'hidden' }">
-            <section class="pipline d-table">
+            <section class="pipline d-table w-100">
                 <div class="piplien-body d-flex flex-row">
                     
                     
@@ -258,15 +303,23 @@
 
                     <pipeline-skeletor v-if="isMounted" />
 
-                    <div class="piplien-state" v-for="(stage, index) in stages" :key="index">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1">{{ stage.name }}</h3>
-                            <span class="fs-12px text-head">{{ stage?.leads?.length }} Deals</span>
+                    <div 
+                    class="piplien-state" :class="{own:stage?.status==2, lost:stage?.status==1}"
+                    v-for="(stage, index) in stages" :key="index">
+                        <div class="pip-header ps-3 pe-2 py-2 d-flex flex-column">
+                            <h3 class="fs-18px text-head fw-bold mb-0 fw-bold text-overflow-ellipsis">{{ stage.name }}</h3>
+                            <span class="fs-12px text-head fw-bold">{{ stage?.total_leads }} Deals</span>
+                            <div class="pip-header-arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="64" viewBox="0 0 8 56" width="8">
+                                    <path d="M0 0h16v64H0z" fill="none"></path> 
+                                    <path d="M0,0 1,0 8,28 1,56 0,56 7,28z"></path>
+                                </svg>
+                            </div>
                         </div>
                         <div class="py-1 value-bar">
                             <div class="px-3 d-flex justify-content-between align-items-center">
                                 <span class="text-head fw-bold fs-12px">Value</span>
-                                <span class="text-head fw-bold fs-12px">$0.00</span>
+                                <span class="text-head fw-bold fs-12px">${{ stage?.total_estimated_value }}</span>
                             </div>
                         </div>
 
@@ -274,22 +327,22 @@
                             <div class="pip-body px-2">
                                 <component v-for="(component, index) in components[stage.id]??[]" 
                                 :key="index" :is="`pipeline-state-lead-details`" :data="component.data" :index="index" />
-                                <loading-state-leads :show="isLoadings[stage.id] && this.leadLastId[stage.id]" :size="1" />
+                                <loading-state-leads :show="isLoadings[stage.id] && leadLastId[stage.id]" :size="1" />
                             </div>
                         </CustomScrollbar>
 
                     </div>
 
                     <!-- Empty State -->
-                    <div class="piplien-state">
-                        <div class="pip-header px-3 py-2 d-flex flex-column">
-                            <h3 class="fs-18px text-head fw-bold mb-1" style="opacity: 0;">Newly qualified</h3>
-                            <span class="fs-12px text-head" style="opacity: 0;">71 Deals</span>
+                    <div class="piplien-state" style="flex-grow: 1;max-width: 100%;">
+                        <div class="pip-header ps-3 pe-2 py-2 d-flex flex-column">
+                            <h3 class="fs-18px text-head fw-bold mb-0" style="opacity: 0;">-</h3>
+                            <span class="fs-12px text-head" style="opacity: 0;">-</span>
                         </div>
                         <div class="py-1 value-bar">
                             <div class="px-3 d-flex justify-content-between align-items-center">
-                                <span class="text-head fw-bold fs-12px" style="opacity: 0;">Value</span>
-                                <span class="text-head fw-bold fs-12px" style="opacity: 0;">$0.00</span>
+                                <span class="text-head fw-bold fs-12px" style="opacity: 0;">-</span>
+                                <span class="text-head fw-bold fs-12px" style="opacity: 0;">-</span>
                             </div>
                         </div>  
                     </div>
@@ -515,7 +568,7 @@
       </section>
     
     </template>
-<style>
+<style lang="scss">
     .pipline-list .piplien-body,
     .pipline-list .pip-body-scrollbar{
         height:calc(100vh - 102px) !important;        
@@ -523,6 +576,9 @@
     .pipline-list .piplien-state .scrollbar__scroller{
         scroll-behavior: smooth !important;
         height: 100% !important;
+    }
+    .pipline-list .piplien-state .scroll .scrollbar__scroller{
+        scroll-behavior: auto !important;
     }
     .pipline-list .piplien-state .scrollbar__wrapper{
         height: calc(79vh - 5px) !important;

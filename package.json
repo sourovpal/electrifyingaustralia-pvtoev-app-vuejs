@@ -41,8 +41,7 @@
     "vue-toast-notification": "^3.1.2",
     "vue3-lazyload": "^0.3.8",
     "vue3-mui": "^2.0.0-beta-12b",
-    "vue3-select-option-search": "^0.0.6",
-    "vuex": "^4.0.2"
+    "vue3-select-option-search": "^0.0.6"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",

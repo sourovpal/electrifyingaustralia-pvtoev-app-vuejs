@@ -4,6 +4,8 @@ import BasicDetailsSection from './components/BasicDetailsSection.vue';
 import ContactSection from './components/ContactSection.vue';
 import ProfileAvatarSection from './components/ProfileAvatarSection.vue';
 import PreferencesSection from './components/PreferencesSection.vue';
+import {useAppStore} from '../../../stores/app';
+import {ref, provide} from 'vue';
 
 export default {
     name:'ProfileIndex',
@@ -12,6 +14,18 @@ export default {
         ContactSection,
         PreferencesSection,
         ProfileAvatarSection,
+    },
+    setup(props) {
+        const appStore = useAppStore();
+        const user = ref({});
+        function updateUser(obj){
+            user.value = obj;
+        }
+        provide('user_profile', {
+            user,
+            updateUser
+        })
+        return {appStore, user, updateUser};
     },
     data() {
         return{
@@ -29,7 +43,7 @@ export default {
 
                 const res = await FetchProfile();
                 const {user} = res;
-                
+                this.updateUser(user);
                 this.fetchUser = user;
                 this.isLoading = false;
 
@@ -52,13 +66,15 @@ export default {
     mounted() {
 
         try{
-            const user = this.$store.getters.getUser;
-            const company = this.$store.getters.getCompany;
+            const user = this.appStore.getUser;
+            const company = this.appStore.getCompany;
             this.fetchUser = {...user, ...company};
+            this.updateUser(this.fetchUser);
         }catch(error){}
 
         this.fetchProfileData();
     },
+    
 }
 
 </script>
@@ -73,7 +89,7 @@ export default {
             <div class="content-body">
                 <section class="">
 
-                    <BasicDetailsSection :fetch-user="fetchUser" />
+                    <BasicDetailsSection />
                     <hr class="mt-4 mb-5">
 
                     <ContactSection :fetch-user="fetchUser" />

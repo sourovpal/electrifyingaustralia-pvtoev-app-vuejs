@@ -5,9 +5,14 @@
         ConfirmQualify,
         MoveLeadStatusToPipeline
     } from '../../../../actions/LeadAction';
+    import {useLeadStore} from '../../../../stores/lead';
+    import {useAppStore} from '../../../../stores/app';
 
     export default {
-        components:{
+        setup(props) {
+            const leadStore = useLeadStore();
+            const appStore = useAppStore();
+            return {leadStore, appStore};
         },
         data(){
             return {
@@ -28,8 +33,8 @@
         },
         methods: {
             showModalHandler(){
-                this.leadStatus = this.$store.getters.getLeadStatus;
-                this.pipelines = this.$store.getters.getPipelinesWithStage;
+                this.leadStatus = this.leadStore.getLeadStatus;
+                this.pipelines = this.leadStore.getPipelinesWithStage;
                 this.errors = {};
                 this.selectedStatus = null;
                 this.selectedPipeline = null;

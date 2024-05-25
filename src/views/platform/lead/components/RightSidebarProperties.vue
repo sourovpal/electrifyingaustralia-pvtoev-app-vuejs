@@ -4,10 +4,19 @@
     import {LeadPropertieUpdate} from '../../../../actions/LeadAction';
     import moment from 'moment';
 
+    import {useLeadStore} from '../../../../stores/lead';
+    import {useAppStore} from '../../../../stores/app';
+
+
     export default {
         components:{
             MultipleSelectVue,
             SingleSelect,
+        },
+        setup(props) {
+            const leadStore = useLeadStore();
+            const appStore = useAppStore();
+            return {leadStore, appStore};
         },
         data() {
             return {
@@ -19,10 +28,10 @@
             }
         },
         watch: {
-            "$store.state.lead.leadProperties"(payload){
+            "leadStore.getLeadProperties"(payload){
                 this.leadProperties = payload;
             },
-            "$store.state.lead.leadCustomProperties"(payload){
+            "leadStore.getLeadCustomProperties"(payload){
                 this.formData = {};
                 this.formData = payload??{};
                 this.editProperties = {};
@@ -91,8 +100,8 @@
         },
         mounted() {
             this.formData = {};
-            this.leadProperties = this.$store.getters.getLeadProperties;
-            this.formData = this.$store.getters.getLeadCustomProperties??{};  
+            this.leadProperties = this.leadStore.getLeadProperties;
+            this.formData = this.leadStore.getLeadCustomProperties??{};
         },
         created() {
             this.moment = moment;

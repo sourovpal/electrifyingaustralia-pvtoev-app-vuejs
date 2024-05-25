@@ -13,6 +13,8 @@
     } from '../../../../actions/LeadAction';
     import {icons} from '../../../../asset/svgicon';
     import UploadeFiles from './sections/UploadeFiles.vue';
+    import {useLeadStore} from '../../../../stores/lead';
+    import {useAppStore} from '../../../../stores/app';
 
     export default {
         components: {
@@ -25,6 +27,11 @@
             UploadeFiles,
         },
         props:['toggleRightDetailsSidebar', 'findLeadByIdHandler', 'isFirstLoading'],
+        setup(props) {
+            const leadStore = useLeadStore();
+            const appStore = useAppStore();
+            return {leadStore, appStore};
+        },
         data() {
             return {
                 icons:{},
@@ -34,26 +41,21 @@
                 address:null,
                 confidence:0,
                 leadProperties:[],
-                images:[
-                    {id:1,image:'https://img.freepik.com/free-vector/abstract-modern-background-with-rainbow-flowing-waves-design_1048-14415.jpg'},
-                    {id:2,image:'https://img.freepik.com/premium-photo/artistic-placement-vibrant-fall-foliage-flat-lay-method-seasonal-symbolism_908985-34739.jpg'},
-                    {id:3,image:'https://as2.ftcdn.net/v2/jpg/01/12/10/13/1000_F_112101336_hmRfXjKrEfHTg5F2L6TYgPe41qPtJHDr.jpg'},
-                    {id:4,image:'sourov-pal-2024.pdf'},
-                ],
+                images:[],
                 progress:0,
             }
         },
         watch:{
-            "$store.state.lead.leadProperties"(payload){
+            "leadStore.getLeadProperties"(payload){
                 this.leadProperties = payload;
             },
-            "$store.state.lead.leadContacts"(payload){
+            "leadStore.getLeadContacts"(payload){
                 this.contacts = payload;
             },
-            "$store.state.lead.primaryContact"(payload){
+            "leadStore.getPrimaryContact"(payload){
                 this.contact = payload;
             },
-            "$store.state.lead.findLead"(lead){
+            "leadStore.getFindLead"(lead){
                 this.lead = lead;
                 this.confidence = lead?.confidence;
                 var temp = '';

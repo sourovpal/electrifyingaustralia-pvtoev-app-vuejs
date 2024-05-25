@@ -1,7 +1,15 @@
 <script>
     import {FetchProfile, UpdateProfile} from '../../../../actions/ProfileAction';
+    import {inject} from 'vue';
+    import Storage from '../../../../helpers/Storage';
+    import {CONFIG} from '../../../../config';
+
     export default {
-        props:['fetchUser'],
+        setup(props) {
+            const {user, updateUser} = inject('user_profile');
+            const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
+            return {user, updateUser, userStorage};
+        },
         data() {
             return {
                 errors:{},
@@ -12,23 +20,24 @@
                 company_name:null,
                 isSubmitBasicDetails:false,
             }
-        },        
-        watch: {
-            "fetchUser"(val){
-                this.setData(val);
+        },    
+        watch:{
+            'user'(n){
+                this.setData();
             }
         },
         methods: {
-            setData(data){
+            setData(){
                 try{
-                    this.name = data.name;
-                    this.display_name = data.display_name;
-                    this.job_title    = data.job_title;
-                    this.username     = data.username;
-                    this.company_name = data.company_name;
+                    this.name = this.user.name;
+                    this.display_name = this.user.display_name;
+                    this.job_title    = this.user.job_title;
+                    this.username     = this.user.username;
+                    this.company_name = this.user.company_name;
                 }catch(error){}
             },
             async formSubmitHandler(payload=null){
+                this.$toast.clear();
                 var data = {
                     action      :'basic_details',
                     name        :this.name,
@@ -37,9 +46,10 @@
                     display_name:this.display_name,
                 };
                 this.isSubmitBasicDetails = true;
-                
                 try{
                     const res = await UpdateProfile(data);
+                    this.updateUser(res.user);
+                    this.userStorage.set(res.user);
                     try{
                         const {message} = res;
                         this.$toast[message.type](message.text);
@@ -47,8 +57,7 @@
                     
                     try{
                         const {user} = res;
-                        this.$cookies.remove(import.meta.env.VITE_AUTH_USER, '/');
-                        this.$cookies.set(import.meta.env.VITE_AUTH_USER, user, '1y', '/');
+                        
                     }catch(error){
                     }
                     
@@ -69,7 +78,18 @@
                 }
                 
             },
-        },        
+        },
+        computed:{
+            isResetButtonActive(){
+                return !(this.name == this.user.name
+                && this.display_name == this.user.display_name
+                && this.job_title    == this.user.job_title
+                && this.username     == this.user.username
+                && this.company_name == this.user.company_name);
+            }
+        },
+        mounted() {
+        },    
     }
 </script>
 <template>
@@ -116,9 +136,12 @@
                           </svg>
                           <span>Submitting...</span>
                       </div>
-                      <span v-if="!isSubmitBasicDetails">Save Settings</span>
+                      <span v-else>Save Settings</span>
                   </button>
-                  <button class="btn btn-danger fw-bold ms-auto">Reset</button>
+                  <button 
+                  v-if="isResetButtonActive" 
+                  @click="setData()"
+                  class="btn btn-danger fw-bold ms-auto">Reset</button>
               </div>
           </div>
       </div>

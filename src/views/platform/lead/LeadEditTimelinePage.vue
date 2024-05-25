@@ -22,6 +22,8 @@ import {
 
 import TimelineHistory from './components/TimelineHistory.vue';
 import RightSidebarTimeline from './components/RightSidebarTimeline.vue';
+import {useLeadStore} from '../../../stores/lead';
+import {useAppStore} from '../../../stores/app';
 
 export default {
     components: {
@@ -37,6 +39,11 @@ export default {
         EditLeadModal,
         TimelineHistory,
         RightSidebarTimeline,
+    },
+    setup(props) {
+        const leadStore = useLeadStore();
+        const appStore = useAppStore();
+        return {leadStore, appStore};
     },
     data() {
         return {
@@ -64,22 +71,22 @@ export default {
         "$route"(){
             this.findLeadByIdHandler();
         },
-        "$store.state.lead.findLead"(lead){
+        "leadStore.getFindLead"(lead){
             this.findLead = lead;
         },
-        "$store.state.lead.prev_lead"(prev){
+        "leadStore.getPrevLead"(prev){
             this.prevLead = prev;
         },
-        "$store.state.lead.next_lead"(next){
+        "leadStore.getNextLead"(next){
             this.nextLead = next;
         },
-        "$store.state.lead.owners"(owners){
+        "leadStore.getOwners"(owners){
             this.owners = owners;
         },
-        "$store.state.lead.currentOwner"(owner){
+        "leadStore.getCurrentOwner"(owner){
             this.owner = owner;
         },
-        "$store.state.lead.leadStatus"(status){
+        "leadStore.getLeadStatus"(status){
             this.leadStatus = status;
         },
     },
@@ -98,7 +105,7 @@ export default {
                 }
                 const res = await FetchLeads(payload);
                 try{
-                    this.$store.commit('setLeadEditTimelineData', res);
+                    this.leadStore.setLeadEditTimelineData(res);
                     this.isFirstLoading = false;
                 }catch(error){
                     throw new Error(error.message);
@@ -160,10 +167,10 @@ export default {
         this.isFirstLoading = true;
         this.findLeadByIdHandler(this.fetch);
         this.fullpath = this.$route?.fullPath;
-        this.$store.dispatch('setLeadPrevUrl', null);
+        this.leadStore.setLeadPrevUrl(null);
     },
     beforeUnmount(){
-        this.$store.dispatch('setLeadPrevUrl', this.fullpath);
+        this.leadStore.setLeadPrevUrl(this.fullpath);
     }
 }
 </script>

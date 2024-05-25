@@ -38,6 +38,7 @@ export const useAppStore = defineStore('app', {
 
   actions: {
     async fetchAppData() {
+      this.setLocalStorageData();
       try{
           await api.get(`/app`).then((res)=>{
             this.setLocalStorageData(res.data);
@@ -46,7 +47,6 @@ export const useAppStore = defineStore('app', {
           });
       }catch(error){}
     },
-
     setLocalStorageData(payload=null){
       var data = {};
       if(payload){
@@ -57,7 +57,7 @@ export const useAppStore = defineStore('app', {
         data = appStorage.get();
       }
 
-      if(Object.keys(data)?.length > 0){
+      if(Object.keys(data??{})?.length > 0){
         var {lead_statuses, pipelines, permissions, company} = data;
       }else{
         return;

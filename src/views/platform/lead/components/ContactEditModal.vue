@@ -7,9 +7,15 @@
         SearchLeadContact,
     } from '../../../../actions/LeadAction'
 
+    import {useLeadStore} from '../../../../stores/lead';
+    import {useAppStore} from '../../../../stores/app';
+
     export default {
         props:['findLeadByIdHandler'],
-        components:{
+        setup(props) {
+            const leadStore = useLeadStore();
+            const appStore = useAppStore();
+            return {leadStore, appStore};
         },
         data(){
             return {
@@ -55,7 +61,7 @@
         methods: {
             showModalHandler(contact=null){
                 this.errors = {};
-                this.contacts = this.$store.getters.getLeadContacts;
+                this.contacts = this.leadStore.getLeadContacts;
                 this.searchContacts = [];
                 if(contact){
                     this.isCreateNewContact = false;

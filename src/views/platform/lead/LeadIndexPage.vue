@@ -24,6 +24,8 @@ import {
     UpdateMultipelLeadStatus, 
     UpdateMultipelLeadOwner,
 } from '../../../actions/LeadAction';
+import {useLeadStore} from '../../../stores/lead';
+import {useAppStore} from '../../../stores/app';
 
 export default {
     components: {
@@ -43,6 +45,11 @@ export default {
         UploadSpreadsheetModal,
         HeaderPropertiesDropdown,
         DeleteMultipleLeadWarningModal,
+    },
+    setup(props) {
+        const leadStore = useLeadStore();
+        const appStore = useAppStore();
+        return {leadStore, appStore};
     },
     data() {
         return {
@@ -89,7 +96,7 @@ export default {
             this.fullpath = to?.fullPath;
             this.fetchAllLeadsHandler({page:1});
         },
-        "$store.state.app.lead_statuses"(status){
+        "appStore.getLeadStatuses"(status){
             this.leadStatus = status;
         },
     },
@@ -376,10 +383,10 @@ export default {
         }catch(error){}
         this.moment = moment;
         this.fullpath = this.$route?.fullPath;
-        this.$store.dispatch('setLeadPrevUrl', null);
+        this.leadStore.setLeadPrevUrl(null);
     },
     beforeUnmount() {
-        this.$store.dispatch('setLeadPrevUrl', this.fullpath);
+        this.leadStore.setLeadPrevUrl(this.fullpath);
     },
 }
 </script>

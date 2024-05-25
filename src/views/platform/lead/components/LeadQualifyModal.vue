@@ -7,9 +7,18 @@
         ConfirmQualify
     } from '../../../../actions/LeadAction';
 
+    import {useLeadStore} from '../../../../stores/lead';
+    import {useAppStore} from '../../../../stores/app';
+
+
     export default {
         components:{
             DropdownOwnerList
+        },
+        setup(props) {
+            const leadStore = useLeadStore();
+            const appStore = useAppStore();
+            return {leadStore, appStore};
         },
         data(){
             return {
@@ -30,9 +39,9 @@
         methods: {
             showModalHandler(owner=null){
                 this.errors = {};
-                this.owners = this.$store.getters.getOwners;
-                this.pipelines = this.$store.getters.getPipelinesWithStage;
-                this.currentOwner = this.owner = owner || this.$store.getters.getCurrentOwner;
+                this.owners = this.leadStore.getOwners;
+                this.pipelines = this.leadStore.getPipelinesWithStage;
+                this.currentOwner = this.owner = owner || this.leadStore.getCurrentOwner;
                 try{
                     if(this.pipelines.length > 0){
                         this.selectPipelineHandler(this.pipelines[0]?.id);

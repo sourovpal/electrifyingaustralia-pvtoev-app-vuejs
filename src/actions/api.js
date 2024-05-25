@@ -1,14 +1,18 @@
 import axios from "axios";
-import VueCookies from 'vue-cookies';
+import { CONFIG } from "../config";
+import Storage from "../helpers/storage";
 
-var token = VueCookies.get(import.meta.env.VITE_AUTH_TOKEN);
+const securityStorage = new Storage(CONFIG.VITE_AUTH_TOKEN);
+const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
 
 const headers = {};
-if(token){
-    headers['Authorization'] = 'Bearer '+ token;
+
+if(!!securityStorage.get() && !!userStorage.get()){
+    headers['Authorization'] = 'Bearer '+ securityStorage.get();
 }
+
 const instance = axios.create({
-    baseURL: `${import.meta.env.VITE_API_BASE_URL}`,
+    baseURL: `${CONFIG.VITE_API_BASE_URL}`,
     timeout: 60000,
     withCredentials: false,
     headers: {
@@ -30,10 +34,8 @@ instance.interceptors.response.use(function (response) {
     return response;
     }, function (error) {
         if (error.response.status === 401){
-            VueCookies.remove(import.meta.env.VITE_AUTH_USER, '/');
-            VueCookies.remove(import.meta.env.VITE_AUTH_COMPANY, '/');
-            VueCookies.remove(import.meta.env.VITE_AUTH_TOKEN, '/');
-            VueCookies.remove(import.meta.env.VITE_AUTH_APP, '/');
+            userStorage.remove();
+            securityStorage.remove();
             window.location.replace('/login');
         }
         return Promise.reject(error);

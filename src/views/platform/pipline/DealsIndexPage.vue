@@ -2,7 +2,7 @@
 
     import SearchBar from '../../../components/SearchBar.vue';
     import CustomScrollbar from 'custom-vue-scrollbar';
-    import FilterRightSidebar from './FilterRightSidebar.vue';
+    import FilterRightSidebar from './components/FilterRightSidebar.vue';
     import PipelineStateLeadDetails from './components/PipelineStateLeadDetails.vue';
     import LoadingStateLeads from './components/LoadingStateLeads.vue';
     import PipelineSkeletor from './components/PipelineSkeletor.vue';

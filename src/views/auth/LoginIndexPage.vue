@@ -1,77 +1,76 @@
-<script>
+<script setup>
   import {LoginAction} from '../../actions/AuthAction';
-  export default {
-    data() {
-      return {
-        username:'sourovpal35@gmail.com',
-        password:'12345678',
-        errors:{},
-        isSubmit:false,
-      }
-    },
-    methods: {
-      async submitLoginForm(e){
-        e.preventDefault();
-        if(this.isSubmit){
-          return false;
-        }
-        this.isSubmit = true;
+  import {reactive, onMounted} from 'vue';
+  import Storage from "../../helpers/storage";
+  import {useAuthStore} from '../../stores/auth';
+  import {useAppStore} from '../../stores/app';
+  import {useToast} from 'vue-toast-notification';
+  import { CONFIG } from "../../config";
+
+  const authStore = useAuthStore();
+  const appStore = useAppStore();
+
+  const $toast = useToast(CONFIG.TOAST);
+
+  const form = reactive({
+    username:'sourovpal35@gmail.com',
+    password:'12345678',
+  });
+
+  const data = reactive({
+    errors:{},
+    isSubmit:false,
+  });
+  
+  async function submitLoginForm(e){
+
+    e.preventDefault();
+    if(data.isSubmit){
+      return false;
+    }
+    data.isSubmit = true;
+    try{
+      const res = await LoginAction(form);
+      if(res){
         try{
-          
-          const res = await LoginAction({
-            username:this.username,
-            password:this.password,
-          });
-          if(res){
-            try{
-              const {user, access_token, company, app} = res;
+          const {user, access_token} = res;
+          authStore.setUser(user);
+          authStore.setAccessToken(access_token.token);
+        }catch(e){}
+        
+        try{
 
-              this.$cookies.remove(import.meta.env.VITE_AUTH_USER, '/');
-              this.$cookies.remove(import.meta.env.VITE_AUTH_COMPANY, '/');
-              this.$cookies.remove(import.meta.env.VITE_AUTH_TOKEN, '/');
-              this.$cookies.remove(import.meta.env.VITE_AUTH_APP, '/');
-
-              this.$cookies.set(import.meta.env.VITE_AUTH_USER, user);
-              this.$cookies.set(import.meta.env.VITE_AUTH_TOKEN, (access_token.token));
-              if(app){
-                this.$cookies.set(import.meta.env.VITE_AUTH_APP, app);
-              }
-              
-            }catch(e){}
-            
-            try{
-
-              this.$toast[res.message.type](res.message.text);
-              if(res.message.redirect_url){
-                  window.location.replace(res.message.redirect_url);
-                  return false;
-              }else{
-                  window.location.replace('/app');
-                  return false;
-              }
-            }catch(e){
-            }
+          const {message} = res;
+          this.$toast[message.type](message.text);
+          if(message.redirect_url){
+              window.location.replace(res.message.redirect_url);
+              return false;
+          }else{
+              console.log('app')
+              window.location.replace('/app');
+              return false;
           }
-        }catch(error){
-
-          try{
-            var data = error.response.data;
-            this.errors = data.errors;
-          }catch(e){}
-
-          try{
-            var data = error.response.data.message;
-            this.$toast[data.type](data.text);
-          }catch(e){
-            this.$toast.error('Oops, something went wrong');
-          }
-          
-        }finally{
-          this.isSubmit = false;
+        }catch(e){
+          console.log(e);
         }
-        return false;
       }
-    },
+    }catch(error){
+
+      try{
+        data.errors = error.response.data.errors;
+      }catch(e){}
+
+      try{
+        var {message} = error.response.data;
+        data.$toast[message.type](message.text);
+      }catch(e){
+        this.$toast.error('Oops, something went wrong');
+      }
+      
+    }finally{
+      data.isSubmit = false;
+    }
+    return false;
   }
 </script>
 
@@ -87,25 +86,25 @@
                 <div class="row justify-content-center">
                     <div class="col-md-6 col-lg-4">
                         <div class="login-wrap p-0">
-                        <form @submit.prevent="submitLoginForm" method="post" class="signin-form">
+                        <form @submit.prevent="submitLoginForm($event)" method="post" class="signin-form">
                             <div class="form-group mb-3">
-                                <input @focus="delete errors?.username" v-model="username" type="text" class="login-form-control" placeholder="Username or Email Address">
-                                <span class="text-center fs-14px text-danger py-1 w-100 d-block" v-if="errors?.username?.length">{{ errors?.username[0] }}</span>
+                                <input @focus="delete data.errors?.username" v-model="form.username" type="text" class="login-form-control" placeholder="Username or Email Address">
+                                <span class="text-center fs-14px text-danger py-1 w-100 d-block" v-if="data.errors?.username?.length">{{ errors?.username[0] }}</span>
                               </div>
                               <div class="form-group mb-3">
-                                <input @focus="delete errors?.password" v-model="password" id="password-field" type="password" class="login-form-control" placeholder="Password">
+                                <input @focus="delete data.errors?.password" v-model="form.password" id="password-field" type="password" class="login-form-control" placeholder="Password">
                                 <span class="fa fa-fw fa-eye field-icon toggle-password"></span>
-                                <span class="text-center fs-14px text-danger py-1 w-100 d-block" v-if="errors?.password?.length">{{ errors?.password[0] }}</span>
+                                <span class="text-center fs-14px text-danger py-1 w-100 d-block" v-if="data.errors?.password?.length">{{ errors?.password[0] }}</span>
                             </div>
                             <div class="form-group">
-                              <button :disabled="isSubmit" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
-                                <div v-if="isSubmit">
+                              <button :disabled="data.isSubmit" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
+                                <div v-if="data.isSubmit">
                                   <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;">
                                     <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
                                   </svg>
                                   <span>Loading...</span>
                                 </div>
-                                <span v-if="!isSubmit">Sign In</span>
+                                <span v-else="!data.isSubmit">Sign In</span>
                               </button>
                             </div>
                             <div class="form-group d-md-flex">

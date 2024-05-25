@@ -1,95 +1,100 @@
-<script>
+<script setup>
+import {reactive} from 'vue';
+import {useToast} from 'vue-toast-notification';
 import ProfileDropdown from './ProfileDropdown.vue';
 import NotificationsDropdown from './NotificationsDropdown.vue';
 import {LogoutAction} from '../actions/AuthAction';
+import Storage from "../helpers/Storage";
+import { CONFIG } from "../config";
 
-export default{
-    components: { ProfileDropdown, NotificationsDropdown },
-    data() {
-        return {
-            homeLogo: '/src/asset/sidebar-image/reshot-icon-home.svg',
-            platformLogo: '/src/asset/sidebar-image/reshot-icon-growth-chart.svg',
-            mapLogo: '/src/asset/sidebar-image/reshot-icon-tracking.svg',
-            libraryLogo: '/src/asset/sidebar-image/reshot-icon-business-folder.svg',
-            paymentLogo: '/src/asset/sidebar-image/reshot-icon-payment-method.svg',
-            confirmDialog:false,
-            platform_url:'/platform'
+const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
+const appStorage = new Storage(CONFIG.VITE_AUTH_APP);
+const securityStorage = new Storage(CONFIG.VITE_AUTH_TOKEN);
+
+const $toast = useToast(CONFIG.TOAST);
+
+const data = reactive({
+    homeLogo: '/src/asset/sidebar-image/reshot-icon-home.svg',
+    platformLogo: '/src/asset/sidebar-image/reshot-icon-growth-chart.svg',
+    mapLogo: '/src/asset/sidebar-image/reshot-icon-tracking.svg',
+    libraryLogo: '/src/asset/sidebar-image/reshot-icon-business-folder.svg',
+    paymentLogo: '/src/asset/sidebar-image/reshot-icon-payment-method.svg',
+    confirmDialog:false,
+    platform_url:'/platform'
+});
+
+// watch: {
+//     "$store.state.lead.leadPrevUrl"(leadPrevUrl){
+//         if(leadPrevUrl){
+//             this.platform_url = leadPrevUrl;
+//         }else{
+//             this.platform_url = '/platform';
+//         }
+//     }
+// },
+
+async function logoutHandler(){
+    try{
+        const res = await LogoutAction();
+        this.userStorage.remove();
+        this.appStorage.remove();
+        this.securityStorage.remove();
+        try{
+            const {message} = res;
+            this.$toast[message.type](message.text);
+        }catch(error){
+            console.log(error);
         }
-    },
-    watch: {
-        "$store.state.lead.leadPrevUrl"(leadPrevUrl){
-            if(leadPrevUrl){
-                this.platform_url = leadPrevUrl;
-            }else{
-                this.platform_url = '/platform';
+        setTimeout(()=>{
+            if(res){
+                window.location.replace('/login');
             }
-        }
-    },
-    methods:{
-        async logoutHandler(){
-            this.confirmDialog = false;
-            try{
-                const res = await LogoutAction();
-                this.$cookies.remove(import.meta.env.VITE_AUTH_USER, '/');
-                this.$cookies.remove(import.meta.env.VITE_AUTH_COMPANY, '/');
-                this.$cookies.remove(import.meta.env.VITE_AUTH_TOKEN, '/');
-                this.$cookies.remove(import.meta.env.VITE_AUTH_APP, '/');
-                try{
-                    const {message} = res;
-                    this.$toast[message.type](message.text);
-                }catch(error){}
-                setTimeout(()=>{
-                    if(res){
-                        window.location.replace('/login');
-                    }
-                },1000);
-            }catch(error){
-                this.$toast['error'](error.message);
-            }
-        },
+        },1000);
+    }catch(error){
+        this.$toast['error'](error.message);
     }
 }
 </script>
 
 <template>
-    <div v-if="confirmDialog" class="confirm-dialog-area">
+    <!-- <div v-if="data.confirmDialog" class="confirm-dialog-area">
         <div class="confirm-dialog" style="max-width:350px;">
             <h1 class="fw-bold text-dark">Logout</h1>
             <p class="text-hard">Are you ready to logout your account?</p>
-            <button @click="confirmDialog=!confirmDialog">Cancel</button>
+            <button @click="data.confirmDialog=!data.confirmDialog">Cancel</button>
             <button @click="logoutHandler">Confirm</button>
         </div>
-    </div>
+    </div> -->
     <nav class="navbar navbar-vertical d-none d-md-flex shadow-none">
         <div class="navbar-top">
             <div class="nav-item">
                 <router-link to="/app" v-tippy='{ content:"Home", placement : "right" }' class="navbar-brand nav-link" data-mdb-toggle="tooltip" data-mdb-placement="right">
-                    <img style="width:26px;height:26px;object-fit: cover;" :src="homeLogo" alt="">
+                    <img style="width:26px;height:26px;object-fit: cover;" :src="data.homeLogo" alt="">
                 </router-link>
             </div>
             
             <div class="nav-item">
-                <router-link v-tippy='{ content:"Platform", placement : "right" }' :to="platform_url" class="navbar-brand nav-link">
-                    <img style="width:22px;height:22px;object-fit: cover;" :src="platformLogo" alt="">
+                <router-link v-tippy='{ content:"Platform", placement : "right" }' :to="data.platform_url" class="navbar-brand nav-link">
+                    <img style="width:22px;height:22px;object-fit: cover;" :src="data.platformLogo" alt="">
                 </router-link>
             </div>
             
             <div class="nav-item">
                 
                 <router-link to="/map" v-tippy='{ content:"Map", placement : "right" }' class="navbar-brand nav-link">
-                    <img style="width:30px;height:30px;object-fit: cover;" :src="mapLogo" alt="">
+                    <img style="width:30px;height:30px;object-fit: cover;" :src="data.mapLogo" alt="">
                 </router-link>
             </div>
             
             <div class="nav-item">
                 <router-link v-tippy='{ content:"Library", placement : "right" }' to="/library" class="navbar-brand nav-link">
-                    <img style="width:28px;height:28px;object-fit: cover;" :src="libraryLogo" alt="">
+                    <img style="width:28px;height:28px;object-fit: cover;" :src="data.libraryLogo" alt="">
                 </router-link>
             </div>
             
             <div class="nav-item">
                 <router-link v-tippy='{ content:"Payments", placement : "right" }' to="/payments" class="navbar-brand nav-link">
-                    <img style="width:24px;height:24px;object-fit: cover;" :src="paymentLogo" alt="">
+                    <img style="width:24px;height:24px;object-fit: cover;" :src="data.paymentLogo" alt="">
                 </router-link>
             </div>
 
@@ -136,7 +141,7 @@ export default{
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><title>account</title><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" /></svg>
                     </a>
                 </div>
-                <ProfileDropdown :confirmDialog="(e)=>confirmDialog=e" class="dropdown-menu dropdown-menu-end" />
+                <ProfileDropdown :confirmDialog="(e)=>logoutHandler()" class="dropdown-menu dropdown-menu-end" />
             </div>
         </div>
     </nav>

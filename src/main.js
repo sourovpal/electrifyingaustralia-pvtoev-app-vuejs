@@ -1,22 +1,24 @@
-import { createApp, watch, onUpdated } from 'vue';
+import { createApp, ref, provide } from 'vue';
 import App from './App.vue';
 import router from './router';
-import stores from './stores';
 import * as mdb from 'mdb-ui-kit';
 
 import VueProgressBar from "@aacassandra/vue3-progressbar";
 
-import { plugin as VueTippy } from 'vue-tippy'
-import VueCookies from 'vue-cookies';
+import { plugin as VueTippy } from 'vue-tippy';
 
 import ToastPlugin from 'vue-toast-notification';
+
 import VueLazyLoad from 'vue3-lazyload';
+
+import { createPinia } from 'pinia';
 
 import 'mdb-ui-kit/css/mdb.min.css';
 import 'custom-vue-scrollbar/dist/style.css';
 import 'tippy.js/dist/tippy.css'
 import 'vue-toast-notification/dist/theme-bootstrap.css';
 import 'vue-skeletor/dist/vue-skeletor.css';
+
 
 
 const VueProgressBarOptions = {
@@ -34,19 +36,33 @@ const VueProgressBarOptions = {
   autoFinish:false,
 };
 
+var appData = ref({});
+
+function updateAppData(key, val){
+  try{
+    appData.value = appData.value[key] = val;
+  }catch(error){}
+}
+
+const pinia = createPinia();
 var app = createApp(App);
 
-
+app.provide('app_data', {
+  appData:appData.value,
+  updateAppData:updateAppData,
+})
 
 app.use(VueProgressBar, VueProgressBarOptions);
-app.use(stores);
+app.use(pinia);
 app.use(router);
-app.use(VueCookies, { expires: '1y', path: window.location.origin})
+
 app.use(ToastPlugin, {
   position: 'bottom',
   duration:5000,
 });
+
 app.use(VueLazyLoad, {});
+
 app.use(
   VueTippy,
   {
@@ -62,7 +78,6 @@ app.use(
   
 app.mount('#app');
 
-
 // app.config.errorHandler = (err, instance, info) => {
 //   console.log(err, instance, info);
 // }
@@ -72,70 +87,15 @@ app.mount('#app');
 //+++++++++++++++++ Router Middleware ++++++++++++++
 // ==================================================
 
-
 router.beforeEach(async(to, from, next) => {
-  
-  const NotCheckPaths = ['/forbidden', '/'];
-  const IfAuthNotAllowPaths = ['/login', '/register'];
-  const user = VueCookies.get(import.meta.env.VITE_AUTH_USER);
-  const token = VueCookies.get(import.meta.env.VITE_AUTH_TOKEN);
-
-  if (to.meta.progress) {
-    app.config.globalProperties.$Progress.start();
-  }
-  if(IfAuthNotAllowPaths.includes(to.path)){
-      if(user == null || token == null){
-          return next();
-      }else{
-        return next(from.path);
-      }
-  }else if(NotCheckPaths.includes(to.path)){
-    return next();
-  }
-
-  // Check Auth
   try{
-
-    if(to.meta.auth){
-
-      if(user != null && token != null){
-
-        if(to.meta.permissions && to.meta.permissions.length){
-
-          const checkPermission = to.meta.permissions.map(permission=>stores.getters.getPermissions.includes(permission));
-
-          if(checkPermission.includes(true)){
-
-            return next();
-
-          }else{
-
-            return next('/forbidden');
-
-          }
-
-        }else{
-
-          return next();
-
-        }
-
-      }else{
-
-        return next('/login');
-
-      }
-    }
+    return next();
   }catch(e){
       throw new Error(e);
   }
-
-  
 });
 
 
 router.afterEach((to, from)=>{
-  if (to.meta.progress) {
-    app.config.globalProperties.$Progress.finish();
-  }
+  app.config.globalProperties.$Progress.finish();
 });

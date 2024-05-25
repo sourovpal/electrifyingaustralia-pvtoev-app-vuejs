@@ -1,85 +1,89 @@
 import api from "../actions/api";
-import VueCookies from "vue-cookies";
-var app = {};
-try{
-  app = {
-    state:{
-      user:null,
-      company:{},
-      lead_statuses:[],
-      pipelines:[],
-      permissions:[],
+import Storage from "../helpers/storage";
+import { defineStore } from 'pinia';
+import { CONFIG } from "../config";
+
+const appStorage = new Storage(CONFIG.VITE_AUTH_APP);
+const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
+
+export const useAppStore = defineStore('app', {
+
+  state: () => {
+    return {
+        user:null,
+        company:{},
+        lead_statuses:[],
+        pipelines:[],
+        permissions:[],
+    }
+  },
+
+  getters:{
+    getUser(state){
+      return state.user;
     },
-    getters:{
-      getUser(state){
-        return {...state.user};
-      },
-      getCompany(state){
-        return {...state.company};
-      },
-      getLeadStatuses(state){
-        return [...state.lead_statuses];
-      },
-      getPipelines(state){
-        return [...state.pipelines];
-      },
-      getPermissions(state){
-        return [...state.permissions];
-      },
+    getCompany(state){
+      return state.company;
     },
-    mutations: {
-      async set_cookies_in_app_data(state){
-          var app = window.localStorage.getItem(import.meta.env.VITE_AUTH_APP);
+    getLeadStatuses(state){
+      return state.lead_statuses;
+    },
+    getPipelines(state){
+      return state.pipelines;
+    },
+    getPermissions(state){
+      return state.permissions;
+    },
+  },
 
-          if(app){
-            app = JSON.parse(app);
-            var {lead_statuses, pipelines, permissions, company} = app;
-          }
-          var user = VueCookies.get(import.meta.env.VITE_AUTH_USER)??{};
+  actions: {
+    async fetchAppData() {
+      try{
+          await api.get(`/app`).then((res)=>{
+            this.setLocalStorageData(res.data);
+          }).catch((error)=>{
+            console.log(error);
+          });
+      }catch(error){}
+    },
 
-        try{
-          state.lead_statuses = lead_statuses??[];
-        }catch(error){}
-
-        try{
-          state.pipelines = pipelines??[];
-        }catch(error){}
-
-        try{
-          state.permissions = permissions??[];
-        }catch(error){}
-
-        try{
-          state.company = company??{};
-        }catch(error){}
-        
-        try{
-          state.user = user??{};
-        }catch(error){}
-
-      },
-      set_app_data(context, data) {
-        window.localStorage.removeItem(import.meta.env.VITE_AUTH_APP)
-        window.localStorage.setItem(import.meta.env.VITE_AUTH_APP, JSON.stringify(data))
+    setLocalStorageData(payload=null){
+      var data = {};
+      if(payload){
+        data = payload;
+        appStorage.remove();
+        appStorage.set(payload);
+      }else{
+        data = appStorage.get();
       }
-    },
-    actions: {
-        async fetchAppData({commit}) {
-          try{
-              await api.get(`/app`).then((res)=>{
-                commit('set_cookies_in_app_data');
-                return commit('set_app_data', res.data);
-              }).catch((error)=>{});
-          }catch(error){}
-        },
-        async setCookiesInAppData({commit}){
-          return commit('set_cookies_in_app_data');
-        }
-    },
-  };
-  
-}catch(error){
-  
-}
 
-export default app;
+      if(Object.keys(data)?.length > 0){
+        var {lead_statuses, pipelines, permissions, company} = data;
+      }else{
+        return;
+      }
+
+      try{
+        this.lead_statuses = lead_statuses??[];
+      }catch(error){}
+
+      try{
+        this.pipelines = pipelines??[];
+      }catch(error){}
+
+      try{
+        this.permissions = permissions??[];
+      }catch(error){}
+
+      try{
+        this.company = company??{};
+      }catch(error){}
+      
+      try{
+        this.user = userStorage.get()??{};
+      }catch(error){}
+       
+    },
+  }
+
+});

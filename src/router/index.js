@@ -2,6 +2,8 @@ import { createRouter, createWebHistory} from "vue-router";
 
 import { isAuthorized, checkPermission } from "../stores/auth";
 
+const loginPath = '/login';
+
 const routes = [
     {
         name:'Website',
@@ -13,15 +15,13 @@ const routes = [
         name:"root",
         path:'/',
         component:()=>import('../components/Master.vue'),
-        beforeEnter:()=>isAuthorized(),
-        beforeEnter:()=>checkPermission([]),
+        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
         children: [
             { 
                 name:"AppPath",
                 path: '/app',
                 component:()=>import('../views/home/HomeIndex.vue'),
-                beforeEnter:()=>isAuthorized(),
-                beforeEnter:()=>checkPermission([]),
+                beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                 meta:{
                     title:'Home Page',
                 },
@@ -32,8 +32,7 @@ const routes = [
                 name:"PlatformIndexPath",
                 path: '/platform',
                 component:()=>import('../views/platform/PlatformIndex.vue'),
-                beforeEnter:()=>isAuthorized(),
-                beforeEnter:()=>checkPermission([]),
+                beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                 meta:{
                     title:'Home Page',
                 },
@@ -43,8 +42,7 @@ const routes = [
                         name:"tasks",
                         path:'tasks',
                         component:()=>import('../views/platform/lead/LeadIndexPage.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -54,8 +52,7 @@ const routes = [
                         name:"leads",
                         path:'leads',
                         component:()=>import('../views/platform/lead/LeadIndexPage.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -65,8 +62,7 @@ const routes = [
                         name:"leadsEdit",
                         path:'leads/:id',
                         component:()=>import('../views/platform/lead/LeadEditTimelinePage.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -76,8 +72,7 @@ const routes = [
                         name:"deals",
                         path:'deals',
                         component:()=>import('../views/platform/pipline/DealsIndexPage.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -87,8 +82,7 @@ const routes = [
                         name:"contacts",
                         path:'contacts',
                         component:()=>import('../views/platform/contacts/ContactsIndexPage.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -100,8 +94,7 @@ const routes = [
                 name:"MapIndex",
                 path: '/map',
                 component:()=>import('../views/map/MapIndex.vue'),
-                beforeEnter:()=>isAuthorized(),
-                beforeEnter:()=>checkPermission([]),
+                beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                 meta:{
                     title:'Home Page',
                 },
@@ -112,8 +105,7 @@ const routes = [
                 name:"LibraryIndex",
                 path: '/library',
                 component:()=>import('../views/library/LibraryIndex.vue'),
-                beforeEnter:()=>isAuthorized(),
-                beforeEnter:()=>checkPermission([]),
+                beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                 meta:{
                     title:'Home Page',
                 },
@@ -124,8 +116,7 @@ const routes = [
                 name:"PaymentIndex",
                 path: '/payments',
                 component:()=>import('../views/payment/PaymentIndex.vue'),
-                beforeEnter:()=>isAuthorized(),
-                beforeEnter:()=>checkPermission([]),
+                beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                 meta:{
                     title:'Home Page',
                 },
@@ -137,8 +128,7 @@ const routes = [
                 path: '/settings',
                 redirect: "/settings/profile",
                 component:()=>import('../views/settings/SettingsIndex.vue'),
-                beforeEnter:()=>isAuthorized(),
-                beforeEnter:()=>checkPermission([]),
+                beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                 meta:{
                     title:'Home Page',
                 },
@@ -147,8 +137,7 @@ const routes = [
                         name:'ProfileSettingPage',
                         path:'profile',
                         component:()=>import('../views/settings/profile/ProfileIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -157,8 +146,7 @@ const routes = [
                         name:'SettingsAccountPage',
                         path:'account',
                         component:()=>import('../views/settings/account/AccountIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -167,8 +155,7 @@ const routes = [
                         name:'SettingsNotificationPage',
                         path:'notifications',
                         component:()=>import('../views/settings/notifications/NotificationsIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -177,8 +164,7 @@ const routes = [
                         name:'SettingsReferPage',
                         path:'refer',
                         component:()=>import('../views/settings/refer/ReferIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -187,8 +173,7 @@ const routes = [
                         name:'SettingsCompanyDetailsPage',
                         path:'company',
                         component:()=>import('../views/settings/company/CompanyDetailsIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -197,8 +182,7 @@ const routes = [
                         name:'SettingsLocalizationPage',
                         path:'Localization',
                         component:()=>import('../views/settings/localization/LocalizationIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -207,8 +191,7 @@ const routes = [
                         name:'SettingsInstallersPage',
                         path:'installers',
                         component:()=>import('../views/settings/installers/InstallersIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -217,8 +200,7 @@ const routes = [
                         name:'SettingsInstallerCreate',
                         path:'installers/new',
                         component:()=>import('../views/settings/installers/InstallerCreate.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -227,8 +209,7 @@ const routes = [
                         name:'SettingsInstallerEdit',
                         path:'installers/edit/:id',
                         component:()=>import('../views/settings/installers/InstallerEdit.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -237,8 +218,7 @@ const routes = [
                         name:'SettingsProposalPage',
                         path:'proposals',
                         component:()=>import('../views/settings/proposal/PreferenceIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -247,8 +227,7 @@ const routes = [
                         name:'SettingsAboutPage',
                         path:'about-us',
                         component:()=>import('../views/settings/about/AboutIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -257,8 +236,7 @@ const routes = [
                         name:'SettingsLegalsPage',
                         path:'proposal-legals',
                         component:()=>import('../views/settings/proposal-legals/LegalsIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -267,8 +245,7 @@ const routes = [
                         name:'ProposalLegalsWarranty',
                         path:'proposal-legals/warranty',
                         component:()=>import('../views/settings/proposal-legals/ProposalWarranty.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -277,8 +254,7 @@ const routes = [
                         name:'SolarDesignIndex',
                         path:'design',
                         component:()=>import('../views/settings/solardesign/SolarDesignIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -287,8 +263,7 @@ const routes = [
                         name:'ComponentPriceIndex',
                         path:'component-prices',
                         component:()=>import('../views/settings/component/ComponentPriceIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -297,8 +272,7 @@ const routes = [
                         name:'PackageIndex',
                         path:'packages',
                         component:()=>import('../views/settings/packages/PackageIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -307,8 +281,7 @@ const routes = [
                         name:'JobShootIndex',
                         path:'job-sheets',
                         component:()=>import('../views/settings/job/JobSheetsIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -317,8 +290,7 @@ const routes = [
                         name:'FinancingIndex',
                         path:'financing',
                         component:()=>import('../views/settings/financing/FinancingIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -327,8 +299,7 @@ const routes = [
                         name:'EmailTemplatesIndex',
                         path:'email-templates',
                         component:()=>import('../views/settings/email-templates/EmailTemplatesIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -337,8 +308,7 @@ const routes = [
                         name:'RolesIndex',
                         path:'roles',
                         component:()=>import('../views/settings/roles/RolesIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -347,8 +317,7 @@ const routes = [
                         name:'RoleEdit',
                         path:'roles/edit/:id',
                         component:()=>import('../views/settings/roles/EditRole.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -357,8 +326,7 @@ const routes = [
                         name:'TeamMemberIndex',
                         path:'team-members',
                         component:()=>import('../views/settings/team/TeamMemberIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -367,8 +335,7 @@ const routes = [
                         name:'BillingIndex',
                         path:'billing',
                         component:()=>import('../views/settings/billing/BillingIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -377,8 +344,7 @@ const routes = [
                         name:'ApiIndex',
                         path:'api',
                         component:()=>import('../views/settings/api/ApiIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -387,8 +353,7 @@ const routes = [
                         name:'Apilogs',
                         path:'api/logs',
                         component:()=>import('../views/settings/api/Apilogs.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -397,8 +362,7 @@ const routes = [
                         name:'ApiEventLogs',
                         path:'api/event-logs',
                         component:()=>import('../views/settings/api/EventLogs.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -407,8 +371,7 @@ const routes = [
                         name:'ApiEventDetails',
                         path:'api/event-logs/details/:id',
                         component:()=>import('../views/settings/api/EventDetails.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -417,8 +380,7 @@ const routes = [
                         name:'IntegrationsIndex',
                         path:'integrations',
                         component:()=>import('../views/settings/integrations/IntegrationsIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -427,8 +389,7 @@ const routes = [
                         name:'EsignatureIndex',
                         path:'esignature',
                         component:()=>import('../views/settings/esignature/EsignatureIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -437,8 +398,7 @@ const routes = [
                         name:'AccreditationIndex',
                         path:'accreditations',
                         component:()=>import('../views/settings/accreditation/AccreditationIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -449,15 +409,13 @@ const routes = [
                 name:"CrmIndex",
                 path: '/settings/crm',
                 component:()=>import('../views/settings/SettingsIndex.vue'),
-                beforeEnter:()=>isAuthorized(),
-                beforeEnter:()=>checkPermission([]),
+                beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                 children: [
                     {
                         name:'EmailIndex',
                         path:'email',
                         component:()=>import('../views/settings/crm/email/EmailIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -466,8 +424,7 @@ const routes = [
                         name:'LeadProviderEmailIndex',
                         path:'lead-provider-emails',
                         component:()=>import('../views/settings/crm/lead-provider-email/LeadProviderEmailIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -476,8 +433,7 @@ const routes = [
                         name:'LeadsIndex',
                         path:'leads',
                         component:()=>import('../views/settings/crm/leads/LeadsIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -486,8 +442,7 @@ const routes = [
                         name:'LeadCustomProperties',
                         path:'leads/properties',
                         component:()=>import('../views/settings/crm/leads/CustomProperties.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -496,8 +451,7 @@ const routes = [
                         name:'PipelineEdit',
                         path:'leads/:id',
                         component:()=>import('../views/settings/crm/leads/PipelineEdit.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -506,8 +460,7 @@ const routes = [
                         name:'WorkflowIndex',
                         path:'workflows',
                         component:()=>import('../views/settings/crm/workflow/WorkflowIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -516,8 +469,7 @@ const routes = [
                         name:'AutomationIndex',
                         path:'automations',
                         component:()=>import('../views/settings/crm/automation/AutomationIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -526,8 +478,7 @@ const routes = [
                         name:'TagIndex',
                         path:'tags',
                         component:()=>import('../views/settings/crm/tag/TagIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
@@ -536,27 +487,26 @@ const routes = [
                         name:'LeadCaptureFormIndex',
                         path:'lead-capture-forms',
                         component:()=>import('../views/settings/crm/lead-capture-forms/LeadCaptureFormIndex.vue'),
-                        beforeEnter:()=>isAuthorized(),
-                        beforeEnter:()=>checkPermission([]),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
                         },
                     },
                 ]
             },
-        ], // name - Root
+        ],
     },
     {
         name:"login",
         path:'/login',
         component:()=>import('../views/auth/LoginIndexPage.vue'),
-        beforeEnter:()=>!isAuthorized(),
+        beforeEnter:()=>!isAuthorized('/', true),
     },
     {
         name:"register",
         path:'/register',
         component:()=>import('../views/auth/RegisterIndexPage.vue'),
-        beforeEnter:()=>isAuthorized(),
+        beforeEnter:()=>!isAuthorized('/', true),
     },
     {
         name:"forbidden",

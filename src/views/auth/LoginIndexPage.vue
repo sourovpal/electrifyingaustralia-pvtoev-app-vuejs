@@ -2,15 +2,18 @@
   import {LoginAction} from '../../actions/AuthAction';
   import {reactive, onMounted} from 'vue';
   import Storage from "../../helpers/storage";
-  import {useAuthStore} from '../../stores/auth';
+  import {useAuthStore, isAuthorized} from '../../stores/auth';
   import {useAppStore} from '../../stores/app';
   import {useToast} from 'vue-toast-notification';
   import { CONFIG } from "../../config";
+  import { useRouter } from "vue-router";
+
 
   const authStore = useAuthStore();
   const appStore = useAppStore();
 
   const $toast = useToast(CONFIG.TOAST);
+  const router = useRouter();
 
   const form = reactive({
     username:'sourovpal35@gmail.com',
@@ -72,6 +75,12 @@
     }
     return false;
   }
+
+  onMounted(()=>{
+    if(isAuthorized()){
+      console.log(router)
+    }
+  });
 </script>
 
 <template>

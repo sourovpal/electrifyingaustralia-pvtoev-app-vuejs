@@ -6,7 +6,16 @@ const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
 const securityStorage = new Storage(CONFIG.VITE_AUTH_TOKEN);
 
 
-export const isAuthorized = ()=> !!securityStorage.get() && !!userStorage.get();
+export const isAuthorized = (path=null, state=false)=>{
+    
+    var auth = !!securityStorage.get() && !!userStorage.get();
+
+    if(auth === state && path){
+        window.location.replace(path);
+    }
+
+    return auth;
+} 
 
 export const checkPermission = (permissions)=>{
     return true;

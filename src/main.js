@@ -50,7 +50,7 @@ var app = createApp(App);
 app.provide('app_data', {
   appData:appData.value,
   updateAppData:updateAppData,
-})
+});
 
 app.use(VueProgressBar, VueProgressBarOptions);
 app.use(pinia);
@@ -78,10 +78,9 @@ app.use(
   
 app.mount('#app');
 
-// app.config.errorHandler = (err, instance, info) => {
-//   console.log(err, instance, info);
-// }
-
+app.config.errorHandler = (err, instance, info) => {
+  console.log(err, instance, info);
+}
 
 // ==================================================
 //+++++++++++++++++ Router Middleware ++++++++++++++
@@ -89,12 +88,12 @@ app.mount('#app');
 
 router.beforeEach(async(to, from, next) => {
   try{
+    app.config.globalProperties.$Progress.start()
     return next();
   }catch(e){
-      throw new Error(e);
+    throw new Error(e);
   }
 });
-
 
 router.afterEach((to, from)=>{
   app.config.globalProperties.$Progress.finish();

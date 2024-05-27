@@ -1,14 +1,73 @@
 <script>
 export default {
-    props:['data'],
+    props:['data', 'isRow'],
     inheritAttrs:false
 }
 </script>
 
 <template>
-    <a v-for="(item, index) in data??[]" :key="index" class="" href="" draggable="true">
+
+    
+    <div 
+    v-show="isRow" 
+    v-for="(item, index) in data??[]"  
+    :key="index"
+    class="row border border-top-0" 
+    >
+        <div class="col-4 text-head py-1">
+            <a href="">
+                <div class="fs-14px text-head text-overflow-ellipsis line-height-15px"> {{ item?.contact?.full_name }}</div>
+                <p class="mb-0 fs-12px text-soft text-overflow-ellipsis">Mr. SHANE ALEXANDER	GROSMAN · Mr. SHANE ALEXANDER GROSMAN 2147 NSW 21/02/11:00 AM Phone(IN)</p>
+            </a>
+        </div>
+        <div class="col-2 text-head fs-14px py-1 d-flex flex-column align-items-start justify-content-center"></div>
+        <div class="col-2 text-head fs-14px py-1 d-flex flex-column align-items-start justify-content-center">Sat, Feb 17th</div>
+        <div class="col-2 text-head fs-14px py-1 d-flex flex-column align-items-start justify-content-center">Sat, Feb 17th</div>
+        <div class="col-2 text-head fs-14px py-1 d-flex flex-column align-items-start justify-content-center">
+            <div class="settings-group-item owner-list-dropdown">
+                <button class="owner-dropdown-toggler" data-mdb-toggle="dropdown" aria-expanded="false">
+                    <div class="icon">
+                        <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&d=mm&r=PG" alt="">
+                    </div>
+                </button>
+                <div class="dropdown-menu dropdown-menu-end" @click="(e)=>{e.stopPropagation()}">
+                    <!---->
+                    <div>
+                        <div class="dropdown-body">
+
+                            <div class="dropdown-input">
+                                <input type="text" placeholder="Filter for team members" class="project-owner-filter form-control" />
+                            </div>
+
+                            <div class="dropdown-header">
+                                Owner
+                            </div>
+
+                            <div class="dropdown-item noselect">
+                                <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&amp;d=mm&amp;r=PG" draggable="false" alt="No Owner's avatar" class="project-owner__profile-photo" />
+                                <span class="fs-14px fw-bold">
+                                    No Owner
+                                    <div class="project-owner-email text-muted fs-12px"></div>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <a 
+        v-show="!isRow" 
+        v-for="(item, index) in data??[]" 
+        :key="index" 
+        class="" h
+        ref="" 
+        draggable="true"
+    >
         <div class="pip-item">
-            <h5 class="pip-title">{{ item?.contact?.full_name??'Example More than 100 million people' }}</h5>
+            <h5 class="pip-title">{{ item?.contact?.full_name??'Example More than 100 million people' }} {{ item.id }}</h5>
             <p class="pip-sub-title">{{ item.title??'More than 100 million people across 185 countries use ChatGPT weekly to learn' }}</p>
             <div class="pip-user d-flex justify-content-between align-items-center">
                 <div>

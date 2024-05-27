@@ -31,7 +31,7 @@
             </div>
         </div>  
         <div class="pip-body px-2">
-            <loading-state-leads :show="true" :size="6" />
+            <loading-state-leads :col-size="6" />
         </div>
     </div>
 </template>

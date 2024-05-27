@@ -68,7 +68,7 @@ export default {
                             <div class="submenu-list" ref="submenu">
                       
                               <router-link 
-                              :to="{path:sub.path, query:sub.query}" 
+                              :to="{path:sub.path, query:{...$route.query, ...sub.query}}" 
                               v-for="sub in menu.children" v-slot="{route}" 
                               :key="sub" class="submenu-link">
     

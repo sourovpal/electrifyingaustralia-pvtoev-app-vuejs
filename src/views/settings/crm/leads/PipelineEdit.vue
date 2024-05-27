@@ -8,14 +8,14 @@ export default {
         return{
         errors:{},
         stages:[
-            {id:1, name:'New', color:'rgb(0, 126, 229)', status:0,},
-            {id:2, name:'Lost', color:'rgb(66, 66, 66)', status:1,},
-            {id:3, name:'Sold', color:'rgb(41, 153, 0)', status:2,},
+            {id:0, name:'New', color:'rgb(0, 126, 229)', status:0,},
+            {id:0, name:'Lost', color:'rgb(66, 66, 66)', status:1,},
+            {id:0, name:'Sold', color:'rgb(41, 153, 0)', status:2,},
         ],
         colors:[
             {name:'No colour', code:'white'},
             {name:'Sunflower Gold', code:'rgb(255, 204, 4)'},
-            {name:'Pylon Blue', code:'rgb(0, 126, 229)'},
+            {name:'Sky Blue', code:'rgb(0, 126, 229)'},
             {name:'Ember Orange', code:'rgb(255, 87, 34)'},
             {name:'Natural Green', code:'rgb(41, 153, 0)'},
             {name:'Plasma Pink', code:'rgb(236, 64, 122)'},

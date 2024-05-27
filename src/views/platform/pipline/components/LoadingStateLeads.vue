@@ -2,7 +2,7 @@
     import {Skeletor} from 'vue-skeletor';
 
     export default {
-        props:['size', 'show'],
+        props:['colSize'],
         inheritAttrs:false,
         components:{
             Skeletor
@@ -11,7 +11,7 @@
 </script>
 
 <template>
-    <div v-show="show" class="pip-item" v-for="(item, index) in size??10" :key="index">
+    <div class="pip-item" v-for="(item, index) in colSize??10" :key="index">
         <h5 class="pip-title">
             <Skeletor style="width:75%;height:10px;" />
         </h5>

@@ -1,5 +1,5 @@
 import api from "../actions/api";
-import Storage from "../helpers/storage";
+import Storage from "../helpers/Storage";
 import { defineStore } from 'pinia';
 import { CONFIG } from "../config";
 

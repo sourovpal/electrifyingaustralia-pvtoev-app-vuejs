@@ -1,7 +1,7 @@
 <script setup>
   import {LoginAction} from '../../actions/AuthAction';
   import {reactive, onMounted} from 'vue';
-  import Storage from "../../helpers/storage";
+  import Storage from "../../helpers/Storage";
   import {useAuthStore, isAuthorized} from '../../stores/auth';
   import {useAppStore} from '../../stores/app';
   import {useToast} from 'vue-toast-notification';

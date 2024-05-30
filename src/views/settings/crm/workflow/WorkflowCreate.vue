@@ -1,6 +1,19 @@
 <script setup>
 import {onMounted} from 'vue'
 
+const leadStatus = [
+    {id: 1, name: 'beans', is_lost: 1},
+    {id: 2, name: 'beans', is_lost: 2},
+    {id: 3, name: 'beans', is_lost: 3},
+    {id: 4, name: 'beans', is_lost: 4},
+    {id: 5, name: 'beans', is_lost: 5},
+    {id: 6, name: 'beans', is_lost: 6},
+    {id: 7, name: 'beans', is_lost: 7},
+    {id: 8, name: 'beans', is_lost: 8},
+    {id: 9, name: 'beans', is_lost: 9},
+    {id: 10, name: 'beans', is_lost: 10},
+    {id: 11, name: 'beans', is_lost: 11},
+]
 </script>
 
 <template>
@@ -58,12 +71,22 @@ import {onMounted} from 'vue'
 
                     <div class="title-input-wrapper">
 		                <label for="time-input" class="fs-6 fw-bold">Relative due date after previous event</label>
-                        <select class="d-block" name="cars" id="cars">
-                            <option value="volvo">Volvo</option>
-                            <option value="saab">Saab</option>
-                            <option value="mercedes">Mercedes</option>
-                            <option value="audi">Audi</option>
-                        </select>
+                        <div class="mb-3 position-relative">
+                            <input id="time-input" class="form-control cursor-pointer" type="text" data-mdb-toggle="dropdown" readonly value="Select a duration ">
+                            <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-" style="max-height:125px;">
+                                <ul class="list-unstyled mb-0">
+                                    <li 
+                                        v-for="(item, index) in leadStatus" 
+                                        :key="index"
+                                        @click="selectleadStatus(item)"
+                                        :class="`dropdown-item text-hard fw-bold fs-14px d-flex py-1 ${status?.id == item.id?'selected':''}`">
+                                        {{ item.name }}
+                                        <svg v-if="item.is_lost" class="svg-5 ms-auto" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"></path></svg>
+                                    </li>
+                                </ul>
+                            </div>
+                            <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.lead_status?.length">{{ errors?.lead_status[0] }}</span>
+                        </div>
 		            </div>
 
                     <button class="btn btn-primary mt-5">Save</button>

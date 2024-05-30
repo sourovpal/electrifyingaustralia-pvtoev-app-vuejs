@@ -10,7 +10,7 @@
     import PipelineRowView from './components/PipelineRowView.vue';
     import {scrollbarAddClassHandler} from './functions';
     import {
-        FetchPipelineWithStagesWithLeads, 
+        FetchPipelineWithStagesWithLeads,
         FetchLeadsByPipelineStageId
     } from '../../../actions/PipelineAction';
     
@@ -34,6 +34,8 @@
                 filterByAscDesc:false, // ASC True
                 pipeline:{},
                 stages:[],
+                owners:[],
+                leadSources:[],
                 leadLastId:{},
                 isLoadings:{},
                 isLoading:false,
@@ -45,7 +47,7 @@
                     {field:'created_at', sorted:'asc', title:'Least recently created first'},
                     {field:'estimated_value', sorted:'asc', title:'Least valuable first'},
                     {field:'confidence', sorted:'asc', title:'Least stars first'},
-                ],
+                ],  
                 descending:[
                     {field:'updated_at', sorted:'desc', title:'Most recently updated first'},
                     {field:'created_at', sorted:'desc', title:'Most recently created first'},
@@ -53,10 +55,10 @@
                     {field:'confidence', sorted:'desc', title:'Most stars first'},
                 ],
             }
-        },        
+        },       
         watch:{
             "$route"(){
-                if(!this.stages.length){
+                if(!this.stages?.length){
                     this.isMounted = true;
                 }
                 this.toggleRowORColumnPipeline();
@@ -84,17 +86,19 @@
                         limit:this.limit
                     };
                     const res = await FetchPipelineWithStagesWithLeads(this.payload);
-                    const {pipeline, stages, properties} = res;
+                    const {pipeline, stages, properties, owners, sources} = res;
 
                     this.stages = [];
                     this.pipeline = {};
                     this.components = {}; 
                     this.isLoadings = {};
-
+                    
+                    this.owners = owners;
+                    this.leadSources = sources;
                     this.pipeline = pipeline;
                     this.stages = stages;
                     if(stages){
-                        this.stages.map(async({id, leads}, index)=>{
+                        this.stages?.map(async({id, leads}, index)=>{
                             try{
                                 this.isLoadings[id] = false;
                                 if(!this.components[id]){
@@ -211,7 +215,7 @@
                             </button>
                         </div>
                         <div class="mx-2">
-                            <router-link 
+                            <router-link
                                 :to="{query:{...$route.query,view:'row' }}">
                                 <button 
                                 type="button" 
@@ -317,15 +321,17 @@
                 <div class="piplien-body d-flex flex-row">
                     
                     
-                    <FilterRightSidebar 
+                    <FilterRightSidebar
                     :class="{show:filterRightSidebar}"
+                    :owners="owners"
+                    :leadSources="leadSources"
                     @toggle-filter="(e)=> filterRightSidebar = e" />
 
                     <pipeline-skeletor v-if="isMounted" />
 
                     <div 
                     class="piplien-state" 
-                    :class="{own:stage?.status==2, lost:stage?.status==1}"
+                    :class="{won:stage?.status==2, lost:stage?.status==1}"
                     v-for="(stage, index) in stages" :key="index">
                         <div class="pip-header ps-3 pe-2 py-2 d-flex flex-column">
                             <h3 class="fs-18px text-head fw-bold mb-0 fw-bold text-overflow-ellipsis">{{ stage.name }}</h3>

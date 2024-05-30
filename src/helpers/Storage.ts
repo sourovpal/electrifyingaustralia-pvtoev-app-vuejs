@@ -13,8 +13,11 @@ export default class Storage {
 
     get():any{
         try{
-            const val = window[this.storageType].getItem(this.key);
-            return JSON.parse(val);
+            const val:(string|null) = window[this.storageType].getItem(this.key);
+            if(val){
+                return JSON.parse(val);
+            }
+            return null;
         }catch(error){
             return null;
         }

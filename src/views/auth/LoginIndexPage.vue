@@ -1,7 +1,7 @@
 <script setup>
   import {LoginAction} from '../../actions/AuthAction';
   import {reactive, onMounted} from 'vue';
-  import Storage from "../../helpers/storage";
+  import Storage from "../../helpers/Storage";
   import {useAuthStore, isAuthorized} from '../../stores/auth';
   import {useAppStore} from '../../stores/app';
   import {useToast} from 'vue-toast-notification';
@@ -98,12 +98,12 @@
                         <form @submit.prevent="submitLoginForm($event)" method="post" class="signin-form">
                             <div class="form-group mb-3">
                                 <input @focus="delete data.errors?.username" v-model="form.username" type="text" class="login-form-control" placeholder="Username or Email Address">
-                                <span class="text-center fs-14px text-danger py-1 w-100 d-block" v-if="data.errors?.username?.length">{{ errors?.username[0] }}</span>
+                                <span class="text-center fs-14px text-danger py-1 w-100 d-block" v-if="data.errors?.username?.length">{{ data.errors?.username[0] }}</span>
                               </div>
                               <div class="form-group mb-3">
                                 <input @focus="delete data.errors?.password" v-model="form.password" id="password-field" type="password" class="login-form-control" placeholder="Password">
                                 <span class="fa fa-fw fa-eye field-icon toggle-password"></span>
-                                <span class="text-center fs-14px text-danger py-1 w-100 d-block" v-if="data.errors?.password?.length">{{ errors?.password[0] }}</span>
+                                <span class="text-center fs-14px text-danger py-1 w-100 d-block" v-if="data.errors?.password?.length">{{ data.errors?.password[0] }}</span>
                             </div>
                             <div class="form-group">
                               <button :disabled="data.isSubmit" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-items-center">

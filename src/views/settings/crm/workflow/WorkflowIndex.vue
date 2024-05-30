@@ -61,7 +61,7 @@ export default {
                     </vue-draggable-next>
 
                     <div class="mt-3">
-                        <button class="btn btn-primary fw-bold">Create new workflow</button>
+                        <button class="btn btn-primary fw-bold"><router-link class="text-white" to="/settings/crm/workflows/new">Create new workflow</router-link></button>
                     </div>
                 </div>
             </div>

@@ -466,6 +466,15 @@ const routes = [
                         },
                     },
                     {
+                        name:'WorkflowCreateForm',
+                        path:'workflows/new',
+                        component:()=>import('../views/settings/crm/workflow/WorkflowCreate.vue'),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
+                        meta:{
+                            title:'Create Workflow',
+                        },
+                    },
+                    {
                         name:'AutomationIndex',
                         path:'automations',
                         component:()=>import('../views/settings/crm/automation/AutomationIndex.vue'),

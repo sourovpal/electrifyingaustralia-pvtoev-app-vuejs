@@ -378,9 +378,12 @@ export default {
         this.icons = icons;
         this.isFirstLoading = true;
         this.fetchAllLeadsHandler(this.fetch);
+        const appStore = useAppStore();
+        this.leadStatus = appStore.getLeadStatuses;
         try{
-            this.leadStatus = this.$store.getters.getLeadStatuses;
-        }catch(error){}
+        }catch(error){
+            console.log(error);
+        }
         this.moment = moment;
         this.fullpath = this.$route?.fullPath;
         this.leadStore.setLeadPrevUrl(null);

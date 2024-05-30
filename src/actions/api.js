@@ -1,6 +1,6 @@
 import axios from "axios";
 import { CONFIG } from "../config";
-import Storage from "../helpers/storage";
+import Storage from "../helpers/Storage";
 
 const securityStorage = new Storage(CONFIG.VITE_AUTH_TOKEN);
 const userStorage = new Storage(CONFIG.VITE_AUTH_USER);

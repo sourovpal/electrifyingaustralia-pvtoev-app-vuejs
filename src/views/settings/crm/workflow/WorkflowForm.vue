@@ -1,19 +1,79 @@
 <script setup>
-import {onMounted} from 'vue'
+import {onMounted, ref} from 'vue'
+import axios from '../../../../actions/api';
+import { CONFIG } from '../../../../config';
+import {useToast} from 'vue-toast-notification';
+import { useRouter, useRoute } from 'vue-router';
 
 const leadStatus = [
     {id: 1, name: 'beans', is_lost: 1},
-    {id: 2, name: 'beans', is_lost: 2},
-    {id: 3, name: 'beans', is_lost: 3},
-    {id: 4, name: 'beans', is_lost: 4},
-    {id: 5, name: 'beans', is_lost: 5},
-    {id: 6, name: 'beans', is_lost: 6},
-    {id: 7, name: 'beans', is_lost: 7},
-    {id: 8, name: 'beans', is_lost: 8},
-    {id: 9, name: 'beans', is_lost: 9},
-    {id: 10, name: 'beans', is_lost: 10},
-    {id: 11, name: 'beans', is_lost: 11},
 ]
+
+const router = useRouter();
+const currentRoute = useRoute();
+const workflowId = currentRoute.params.workflow_id;
+
+const formData = ref({ title: '' }); // starting with just a title as CREATE is the default action of this form so no IDs initially
+const errorMessage = ref('');
+const isLoading = ref(false);
+
+onMounted(() => {
+    if (workflowId) getWorkflowById(workflowId);
+});
+
+const $toast = useToast(CONFIG.TOAST);
+
+// temporary
+const workflowIdExists = ref(false);
+
+const getWorkflowById = () => {
+    axios.get(`/workflows/${workflowId}`)
+        .then(res => {
+            formData.value = {
+                title: res?.data?.title,
+                id: res?.data?.id
+            };
+        })
+        .catch(e => $toast.error(e.response.data.message));
+}
+
+// Store handler method
+const handleWorkflowCreate = () => {
+    if (!formData.value.title)
+        return $toast.error('Title missing');
+
+    isLoading.value = true;
+    axios.post('/workflows/create', formData.value)
+        .then(res => {
+            $toast.success(res?.data?.message ?? 'Workflow created');
+            router.push('/settings/crm/workflows');
+        })
+        .catch(e => {
+            errorMessage.value = e.response.data.message;
+        }).finally(() => {
+            isLoading.value = false;
+        });
+}
+
+// Update handler method
+const handleWorkflowUpdate = () => {
+    if (!formData.value.title)
+        return $toast.error('Title missing');
+
+
+    isLoading.value = true;
+    axios.put(`/workflows/update/${formData.value?.id}`, formData.value)
+        .then(res => {
+            $toast.success(res?.data?.message ?? 'Workflow updated');
+            router.push('/settings/crm/workflows');
+        })
+        .catch(e => {
+            errorMessage.value = e.response.data.message;
+        }).finally(() => {
+            isLoading.value = false;
+        });
+}
+
 </script>
 
 <template>
@@ -21,7 +81,7 @@ const leadStatus = [
 		<div
 			class="content-header d-flex justify-content-start align-items-center mb-4 border-bottom pb-4"
 		>
-			<router-link to="/settings/installers">
+			<router-link to="/settings/crm/workflows">
 				<h1 class="mb-0  text-soft">Task workflows</h1>
 			</router-link>
 			<div class="mx-2">
@@ -38,38 +98,58 @@ const leadStatus = [
 					<path fill="none" d="M0 0h24v24H0V0z"></path>
 				</svg>
 			</div>
-			<h1 class="mb-0 text-base">Create workflow</h1>
+			<h1 class="mb-0 text-base">{{ !workflowId ? 'Create' : 'Update' }} workflow</h1>
 		</div>
 
 		<div class="content-body">
 		    <div class="title-input-wrapper">
-		        <label for="worflow-title-input" class="fs-6 fw-bold">Title</label>
-                <input id="worflow-title-input" type="text" class="form-control rounded" placeholder="Enter title" />
+                <div class="mb-4">
+		            <label for="worflow-title-input" class="fs-6 fw-bold">Title</label>
+                    <input @keydown.enter="() => workflowId ? handleWorkflowUpdate() : handleWorkflowCreate()" v-model="formData.title" id="worflow-title-input" type="text" class="form-control rounded" placeholder="Enter title" />
+                    <small class="text-danger" v-if="errorMessage">{{errorMessage}}</small>
+                </div>
+
+                <!-- This will be conditional -->
+                <button 
+                    :class="`btn ${isLoading ? 'animate-pulse btn-secondary' : 'btn-primary'}`" 
+                    v-if="!workflowId" @click="handleWorkflowCreate"
+                >
+                    {{ !isLoading ? 'Create' : 'Loading' }}
+                </button>
+
+                <button 
+                    :class="`btn ${isLoading ? 'animate-pulse btn-secondary' : 'btn-primary'}`" 
+                    v-else="!workflowId" @click="handleWorkflowUpdate"
+                >
+                    {{ !isLoading ? 'Update' : 'Loading' }}
+                </button>
 		    </div>
 
-		    <div class="task-crud-wrapper row gx-0 pt-2">
+		    <div class="task-crud-wrapper row gx-0 pt-2" v-if="workflowIdExists">
                 <!-- task list -->
 		        <div class="task-list-wrapper col-md-4 mt-3 --border">
 		            <p class="fw-bold fs-6 mb-0">Tasks</p>
 
 		            <ul class="task-list list-unstyled">
-		                <li class="active-task ps-4 py-2">Bean task</li>
+		                <li class="task active-task ps-4 py-2">Bean task</li>
+		                <li class="task ps-4 py-2">Bean task</li>
+		                <li class="task new-task-button ps-4 py-2 fs-6 text-soft">+ New Task</li>
 		            </ul>
 		        </div>
 
                 <!-- task form -->
 		        <div class="task-form col-md-8 p-3 border rounded mt-4">
-                    <div class="title-input-wrapper mb-4">
+                    <div class="task-title-input-wrapper mb-4">
 		                <label for="title-input" class="fs-6 fw-bold">Task title</label>
                         <input id="title-input" type="text" class="form-control rounded" placeholder="Enter title" />
 		            </div>
 
-                    <div class="title-input-wrapper mb-4">
+                    <div class="description-input-wrapper mb-4">
 		                <label for="task-input" class="fs-6 fw-bold">Task Description</label>
                         <textarea id="task-input" class="d-block w-100 pt-1" style="padding-left: 12px;" rows="3" placeholder="Enter description"></textarea>
 		            </div>
 
-                    <div class="title-input-wrapper">
+                    <div class="duration-input-wrapper">
 		                <label for="time-input" class="fs-6 fw-bold">Relative due date after previous event</label>
                         <div class="mb-3 position-relative">
                             <input id="time-input" class="form-control cursor-pointer" type="text" data-mdb-toggle="dropdown" readonly value="Select a duration ">
@@ -126,15 +206,23 @@ const leadStatus = [
 
 }
 
-.active-task {
-    border-left: 3px solid #007ee5;
-    background-color: #e5f4ff;
-    font-style: italic;
+.task {
+    &:hover {
+        background-color: #e5f4ff;
+
+        &.new-task-button {
+            background-color: #e4e7eb;
+        }
+    }
+
+    &.active-task {
+        border-left: 3px solid #007ee5;
+        background-color: #e5f4ff;
+        font-style: italic;
+
+        &::after {
+            content: '*'
+        }
+    }
 }
-
-
-.active-task::after {
-    content: '*'
-}
-
 </style>

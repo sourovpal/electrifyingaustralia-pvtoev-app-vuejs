@@ -468,10 +468,19 @@ const routes = [
                     {
                         name:'WorkflowCreateForm',
                         path:'workflows/new',
-                        component:()=>import('../views/settings/crm/workflow/WorkflowCreate.vue'),
+                        component:()=>import('../views/settings/crm/workflow/WorkflowForm.vue'),
                         beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
-                            title:'Create Workflow',
+                            title:'Workflow create form',
+                        },
+                    },
+                    {
+                        name:'lorkflowUpdateForm',
+                        path:'workflows/:workflow_id',
+                        component:()=>import('../views/settings/crm/workflow/WorkflowForm.vue'),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
+                        meta:{
+                            title:'Workflow update form',
                         },
                     },
                     {

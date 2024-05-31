@@ -1,21 +1,31 @@
 <script>
 import { VueDraggableNext } from 'vue-draggable-next';
+import axios from '../../../../actions/api';
 
 export default {
-  name:'ProfileIndex',
+  name:'WorkflowIndex',
     data() {
       return{
-        items: [
-            {"id": 0,"name":"Operations Task"},
-            {"id": 1,"name":"Post-install tasks"},
-            {"id": 2,"name":"NSW"},
-        ],
+        items: [],
       }
+    },
+    mounted() {
+        this.getWorkFlows()
     },
     components:{
         VueDraggableNext
     },
     methods:{
+        async getWorkFlows() {
+            const response = await axios.get('workflows');
+            this.items = response.data;
+        },
+        handleDeleteClick(workflowId) {
+            axios.delete(`/workflows/delete/${workflowId}`)
+                .then(res => {
+                    console.log(res);
+                })
+        }
     }
   }
   
@@ -34,9 +44,16 @@ export default {
 
             <div class="row">
                 <div class="col-lg-7 col-12">
+                    <div class="mb-4">
+                        <router-link class="text-white btn btn-primary fw-bold" to="/settings/crm/workflows/new">+ Create new workflow</router-link>
+                    </div>
 
-                    <vue-draggable-next class="lead-status-list" tag="div" :list="items" handle=".handle">
-                        <div class="section-box d-flex justify-content-start align-items-center" v-for="(item, index) in items" :key="item.id">
+                    <template v-if="!items.length">
+                        <p class="text-soft">No workflows to show</p>
+                    </template>
+
+                    <vue-draggable-next class="lead-status-list" tag="div" :list="items" handle=".handle" v-else>
+                        <div class="section-box d-flex justify-content-start align-items-start" v-for="(item, index) in items" :key="item.id">
                             <div class="card pipeline-card">
                                 <div class="card-head d-flex justify-content-between align-items-center px-3">
                                     <div class="d-flex justify-content-between align-items-center">
@@ -44,7 +61,7 @@ export default {
                                             <svg  xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="#000000"><path  d="M0 0h24v24H0z" fill="none"></path> <path  d="M20 9H4v2h16V9zM4 15h16v-2H4v2z"></path></svg>
                                         </div>
                                         <a href="" class="title">
-                                            <h5 class="mb-0">{{ item.name }}</h5>
+                                                <h5 class="mb-0"><router-link :to="`/settings/crm/workflows/${item.id}`">{{ item.title }}</router-link></h5>
                                         </a>
                                     </div>
                                     <div>
@@ -57,12 +74,14 @@ export default {
                                     veniam magnam qui blanditiis dignissimos ad fugit?
                                 </div>
                             </div>
+
+                            <div class="workflow-control d-flex flex-column justify-content-start">
+                                    <!-- temporary button -->
+                                <button class="btn btn-danger" @click="handleDeleteClick(item.id)">Delete</button>
+                            </div>
                         </div>
                     </vue-draggable-next>
 
-                    <div class="mt-3">
-                        <button class="btn btn-primary fw-bold"><router-link class="text-white" to="/settings/crm/workflows/new">Create new workflow</router-link></button>
-                    </div>
                 </div>
             </div>
 

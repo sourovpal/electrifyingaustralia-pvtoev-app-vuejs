@@ -19,6 +19,12 @@ import 'tippy.js/dist/tippy.css'
 import 'vue-toast-notification/dist/theme-bootstrap.css';
 import 'vue-skeletor/dist/vue-skeletor.css';
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { faUserSecret, faTrash, faArrowRight, faChevronRight, faPlus } from '@fortawesome/free-solid-svg-icons'
+
+
+library.add([faUserSecret, faTrash, faArrowRight, faChevronRight, faPlus])
 
 
 const VueProgressBarOptions = {
@@ -45,7 +51,7 @@ function updateAppData(key, val){
 }
 
 const pinia = createPinia();
-var app = createApp(App);
+var app = createApp(App).component('font-awesome-icon', FontAwesomeIcon);
 
 app.provide('app_data', {
   appData:appData.value,

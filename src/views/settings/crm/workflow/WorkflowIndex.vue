@@ -46,7 +46,9 @@ onMounted(() => {
             <div class="row">
                 <div class="col-lg-7 col-12">
                     <div class="mb-4">
-                        <router-link class="text-white btn btn-primary fw-bold" to="/settings/crm/workflows/new">+ Create new workflow</router-link>
+                        <router-link class="text-white btn btn-primary fw-bold" to="/settings/crm/workflows/new">
+                            <span>Create new workflow</span>
+                        </router-link>
                     </div>
 
                     <template v-if="!items.length">
@@ -71,31 +73,34 @@ onMounted(() => {
                                 </div>
                                 <div class="card-body px-3 position-relative">
                                     <ul class="list-unstyled">
-                                        <li>beans</li>
-                                        <li>beans</li>
-                                        <li>beans</li>
-                                        <li class="mt-2">
-                                            <router-link :to="`/settings/crm/workflows/${item.id}`">See more</router-link>
+                                        <li class="d-flex gap-2 align-items-center">
+                                            <div><font-awesome-icon icon="fa-solid fa-arrow-right" style="transform: scale(0.75);"/></div>
+                                            <p class="mb-0">beans</p>
+                                        </li>
+                                        <li class="d-flex gap-2 align-items-center">
+                                            <div><font-awesome-icon icon="fa-solid fa-arrow-right" style="transform: scale(0.75);"/></div>
+                                            <p class="mb-0">beans</p>
+                                        </li>
+                                        <li class="d-flex gap-2 align-items-center">
+                                            <div><font-awesome-icon icon="fa-solid fa-arrow-right" style="transform: scale(0.75);"/></div>
+                                            <p class="mb-0">beans</p>
+                                        </li>
+
+                                        <li class="d-flex gap-2 align-items-center mt-3">
+                                            <font-awesome-icon class="text-primary" icon="fa-solid fa-chevron-right" style="transform: scale(0.75);"/>
+                                            <router-link :to="`/settings/crm/workflows/${item.id}`">
+                                                <span class="mb-0">See more tasks</span>
+                                            </router-link>
                                         </li>
                                     </ul>
-
-                                    <svg 
-                                        class="position-absolute workflow-delete-btn"
+                                    <div  
+                                        @click="handleDeleteClick(item.id)"
+                                        class="position-absolute workflow-delete-btn text-danger"
                                         style="right: 1rem; bottom: 0.75rem;"
-                                        xmlns="http://www.w3.org/2000/svg" 
-                                        height="18px" 
-                                        viewBox="0 0 24 24" 
-                                        width="18px" 
-                                        fill="#000000">
-                                        <path d="M0 0h24v24H0z" fill="none"></path> 
-                                        <path  d="M20 9H4v2h16V9zM4 15h16v-2H4v2z"></path>
-                                    </svg>
+                                    >
+                                        <font-awesome-icon icon="fa-solid fa-trash" />
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="workflow-control d-flex flex-column justify-content-start">
-                                    <!-- temporary button -->
-                                <button class="btn btn-danger" @click="handleDeleteClick(item.id)">Delete</button>
                             </div>
                         </div>
                     </vue-draggable-next>
@@ -165,15 +170,14 @@ onMounted(() => {
                 margin-left:10px;
             }
             .workflow-delete-btn {
-                opacity: 0;
-                pointer-events: none;
+                opacity: 0.25;
                 transition: 150ms;
-            }
 
-            &:hover .workflow-delete-btn {
-                opacity: 1;
-                pointer-events: auto;
-                cursor: pointer;
+                &:hover {
+                    opacity: 1;
+                    pointer-events: auto;
+                    cursor: pointer;
+                }
             }
         }
     }

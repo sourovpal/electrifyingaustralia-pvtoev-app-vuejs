@@ -1,70 +1,70 @@
 <script>
-    import {RegisterAction} from '../../actions/AuthAction';
-    export default {
-      data() {
-        return {
-            company_name:'',
-            name:'',
-            email:'',
-            password:'',
-            confirm_password:'',
-            errors:{},
-            isSubmit:false,
+  import {RegisterAction} from '../../actions/AuthAction';
+  export default {
+    data() {
+      return {
+          company_name:'',
+          name:'',
+          email:'',
+          password:'',
+          confirm_password:'',
+          errors:{},
+          isSubmit:false,
+      }
+    },
+    methods: {
+      async submitLoginForm(e){
+        if(this.isSubmit){
+          return;
         }
-      },
-      methods: {
-        async submitLoginForm(e){
-          if(this.isSubmit){
-            return;
-          }
-          this.isSubmit = true;
-          e.preventDefault();
-          try{
-            
-            const res = await RegisterAction({
-                company_name:this.company_name,
-                name:this.name,
-                email:this.email,
-                password:this.password,
-                confirm_password:this.confirm_password,
-            });
+        this.isSubmit = true;
+        e.preventDefault();
+        try{
+          
+          const res = await RegisterAction({
+              company_name:this.company_name,
+              name:this.name,
+              email:this.email,
+              password:this.password,
+              confirm_password:this.confirm_password,
+          });
 
-            if(res){
+          if(res){
 
-              try{
-
-                this.$toast[res.message.type](res.message.text);
-                await setTimeout(()=>{
-                    window.location.replace('/login');
-                },3000);
-                return res;
-
-              }catch(e){
-                window.location.replace('/');
-              }
-            }
-
-          }catch(error){
-  
             try{
-              var data = error.response.data;
-              this.errors = data.errors;
-            }catch(e){}
-  
-            try{
-              var data = error.response.data;
-              this.$toast[data.message.type](data.message.text);
+
+              this.$toast[res.message.type](res.message.text);
+              await setTimeout(()=>{
+                  window.location.replace('/login');
+              },3000);
+              return res;
+
             }catch(e){
-              this.$toast.error('Oops, something went wrong');
+              window.location.replace('/');
             }
-
-          }finally{
-            this.isSubmit = false;
           }
+
+        }catch(error){
+
+          try{
+            var data = error.response.data;
+            this.errors = data.errors;
+          }catch(e){}
+
+          try{
+            var data = error.response.data;
+            this.$toast[data.message.type](data.message.text);
+          }catch(e){
+            this.$toast.error('Oops, something went wrong');
+          }
+
+        }finally{
+          this.isSubmit = false;
         }
-      },
-    }
-  </script>
+      }
+    },
+  }
+</script>
   
   <template>
       <div class="body-img" style="background-image: url(https://images.pexels.com/photos/2800845/pexels-photo-2800845.jpeg);">

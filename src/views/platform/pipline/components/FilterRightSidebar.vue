@@ -2,7 +2,7 @@
 import {propertiesIconList} from '../../../../asset/svgicon.js';
 import SlideUpDown from 'vue-slide-up-down';
 export default {
-    props:['owners', 'leadSources', 'toggleFilterSidebarHandler'],
+    props:['owners', 'leadSources', 'toggleFilter'],
     data() {
         return {
             propertiesIconList:{},
@@ -84,18 +84,8 @@ export default {
             this.formData['source'] = item?.title;
             this.searchHandler();
         },
-        manageYesOrNoHandler(action, unique_id){
-            if(action == 'yes'){
-                this.formData[unique_id] = 1;
-            }else if(action == 'no'){
-                this.formData[unique_id] = -1;
-            }else{
-                this.formData[unique_id] = "";
-            }
-            this.searchHandler();
-        },
-        searchHandler(item=null){
-            this.$emit('filter-data-in-database', this.formData);
+        searchHandler(item={}){
+            this.$emit('filter-data-in-database', {...this.formData, ...item});
         },
         resetFilterHandler(){
             setTimeout(()=>{
@@ -121,19 +111,46 @@ export default {
                 </div>
                 <h1 class="title fw-bold text-hard">Filter</h1>
             </div>
-            <div class="close" @click="toggleFilterSidebarHandler()">
+            <div class="close" @click="toggleFilter(false)">
                 <svg class="svg-5"  xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path  d="M0 0h24v24H0z" fill="none"></path> <path  d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path></svg>
             </div>
         </div>
         <div class="filter slim-scrollbar">
+                        
             <div class="filter-options">
+                <!-- Search -->
+                <div class="filter-option">
+                    <div class="option-header d-flex justify-content-between align-items-center"  :class="{active:dropdownToggleItems['any_search']}" @click="toggleDropdownHandler('any_search')">
+                        <div class="d-flex justify-content-start align-items-center">
+                            <div class="icon">
+                                <svg class="svg-5 size-22px" xmlns="http://www.w3.org/2000/svg"  viewBox="0 -960 960 960" fill="#5f6368"><path d="M80-200v-80h400v80H80Zm0-200v-80h200v80H80Zm0-200v-80h200v80H80Zm744 400L670-354q-24 17-52.5 25.5T560-320q-83 0-141.5-58.5T360-520q0-83 58.5-141.5T560-720q83 0 141.5 58.5T760-520q0 29-8.5 57.5T726-410l154 154-56 56ZM560-400q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35Z"/></svg>
+                            </div>
+                            <div class="title fw-bold text-hard">Search</div>
+                        </div>
+                        <div class="right-icon">
+                            <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path> <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path></svg>
+                        </div>
+                    </div>
+                    <slide-up-down :active="dropdownToggleItems['any_search']" :duration="300">
+                        <div class="option-body">
+                            <div class="position-relative">
+                                <input 
+                                v-model="formData['any_search']"
+                                @blur="searchHandler()"
+                                class="form-control form-control-sm fw-bold text-head" 
+                                type="text">
+                                
+                            </div>
+                        </div>
+                    </slide-up-down>
+                </div>
+                <!-- Search End -->
                 <!-- Owner -->
-
                 <div class="filter-option">
                     <div class="option-header d-flex justify-content-between align-items-center" :class="{active:dropdownToggleItems['owners']}" @click="toggleDropdownHandler('owners')">
                         <div class="d-flex justify-content-start align-items-center">
                             <div class="icon">
-                                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="26px" viewBox="0 0 24 24" width="26px" fill="#000000"><g><rect fill="none" height="24" width="24"></rect></g> <g><g><circle cx="10" cy="8" r="4"></circle> <path d="M10.35,14.01C7.62,13.91,2,15.27,2,18v2h9.54C9.07,17.24,10.31,14.11,10.35,14.01z"></path> <path d="M19.43,18.02C19.79,17.43,20,16.74,20,16c0-2.21-1.79-4-4-4s-4,1.79-4,4c0,2.21,1.79,4,4,4c0.74,0,1.43-0.22,2.02-0.57 L20.59,22L22,20.59L19.43,18.02z M16,18c-1.1,0-2-0.9-2-2c0-1.1,0.9-2,2-2s2,0.9,2,2C18,17.1,17.1,18,16,18z"></path></g></g></svg>
+                                <svg class="svg-5 size-22px" xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="26px" viewBox="0 0 24 24" width="26px" fill="#000000"><g><rect fill="none" height="24" width="24"></rect></g> <g><g><circle cx="10" cy="8" r="4"></circle> <path d="M10.35,14.01C7.62,13.91,2,15.27,2,18v2h9.54C9.07,17.24,10.31,14.11,10.35,14.01z"></path> <path d="M19.43,18.02C19.79,17.43,20,16.74,20,16c0-2.21-1.79-4-4-4s-4,1.79-4,4c0,2.21,1.79,4,4,4c0.74,0,1.43-0.22,2.02-0.57 L20.59,22L22,20.59L19.43,18.02z M16,18c-1.1,0-2-0.9-2-2c0-1.1,0.9-2,2-2s2,0.9,2,2C18,17.1,17.1,18,16,18z"></path></g></g></svg>
                             </div>
                             <div class="title fw-bold text-hard">Owners</div>
                         </div>
@@ -164,8 +181,6 @@ export default {
                     </slide-up-down>
                 </div>
                 <!-- Owner End -->
-
-
                 <!-- Source -->
                 <div class="filter-option">
                     <div class="option-header d-flex justify-content-between align-items-center"  :class="{active:dropdownToggleItems['source']}" @click="toggleDropdownHandler('source')">
@@ -185,7 +200,7 @@ export default {
                                 <input 
                                 v-model="formData['source']"
                                 ref="leadSourceRef" 
-                                class="form-control form-control-sm fw-bold text-head" type="text" name="" id="" data-mdb-toggle="dropdown">
+                                class="form-control form-control-sm fw-bold text-head" type="text" data-mdb-toggle="dropdown">
                                 <div class="dropdown-menu custom-form-select roles overflow-auto" style="max-height:7.5rem;">
                                     <ul class="list-unstyled mb-0">
                                         <li 

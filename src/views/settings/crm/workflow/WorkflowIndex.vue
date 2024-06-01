@@ -1,34 +1,35 @@
-<script>
+<script setup>
+import { ref, onMounted } from 'vue';
 import { VueDraggableNext } from 'vue-draggable-next';
 import axios from '../../../../actions/api';
+import { useToast } from 'vue-toast-notification';
+import { CONFIG } from '../../../../config';
 
-export default {
-  name:'WorkflowIndex',
-    data() {
-      return{
-        items: [],
-      }
-    },
-    mounted() {
-        this.getWorkFlows()
-    },
-    components:{
-        VueDraggableNext
-    },
-    methods:{
-        async getWorkFlows() {
-            const response = await axios.get('workflows');
-            this.items = response.data;
-        },
-        handleDeleteClick(workflowId) {
-            axios.delete(`/workflows/delete/${workflowId}`)
-                .then(res => {
-                    console.log(res);
-                })
-        }
-    }
-  }
-  
+const items = ref([]);
+const $toast = useToast(CONFIG.TOAST);
+
+async function getWorkFlows() {
+    axios.get('workflows').then(res => {
+        items.value = res.data;
+    }).catch(() => {
+        $toast.error('Something went wrong');
+    });
+}
+
+function handleDeleteClick(workflowId) {
+    axios.delete(`/workflows/delete/${workflowId}`)
+        .then((res) => {
+            $toast.success(res.data.message);
+            getWorkFlows();
+        })
+        .catch(e => {
+            $toast.error('Something went wrong');
+        });
+}
+
+onMounted(() => {
+    getWorkFlows();
+});
 </script>
 
 <template>
@@ -68,10 +69,27 @@ export default {
                                         <span class="time">Created 5 months ago</span>
                                     </div>
                                 </div>
-                                <div class="card-body d-flex justify-content-between align-items-center px-3">
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate, in iste. 
-                                    Dolorem impedit consequuntur illo expedita. Distinctio, aperiam, recusandae quas laboriosam ipsum reprehenderit. 
-                                    veniam magnam qui blanditiis dignissimos ad fugit?
+                                <div class="card-body px-3 position-relative">
+                                    <ul class="list-unstyled">
+                                        <li>beans</li>
+                                        <li>beans</li>
+                                        <li>beans</li>
+                                        <li class="mt-2">
+                                            <router-link :to="`/settings/crm/workflows/${item.id}`">See more</router-link>
+                                        </li>
+                                    </ul>
+
+                                    <svg 
+                                        class="position-absolute workflow-delete-btn"
+                                        style="right: 1rem; bottom: 0.75rem;"
+                                        xmlns="http://www.w3.org/2000/svg" 
+                                        height="18px" 
+                                        viewBox="0 0 24 24" 
+                                        width="18px" 
+                                        fill="#000000">
+                                        <path d="M0 0h24v24H0z" fill="none"></path> 
+                                        <path  d="M20 9H4v2h16V9zM4 15h16v-2H4v2z"></path>
+                                    </svg>
                                 </div>
                             </div>
 
@@ -145,6 +163,17 @@ export default {
                 border:none;
                 cursor: pointer;
                 margin-left:10px;
+            }
+            .workflow-delete-btn {
+                opacity: 0;
+                pointer-events: none;
+                transition: 150ms;
+            }
+
+            &:hover .workflow-delete-btn {
+                opacity: 1;
+                pointer-events: auto;
+                cursor: pointer;
             }
         }
     }

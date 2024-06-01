@@ -33,7 +33,7 @@ instance.interceptors.request.use((request)=>{
 instance.interceptors.response.use(function (response) {
     return response;
     }, function (error) {
-        if (error.response.status === 401){
+        if (error?.response?.status === 401){
             userStorage.remove();
             securityStorage.remove();
             window.location.replace('/login');

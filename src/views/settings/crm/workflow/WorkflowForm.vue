@@ -4,6 +4,7 @@ import axios from '../../../../actions/api';
 import { CONFIG } from '../../../../config';
 import {useToast} from 'vue-toast-notification';
 import { useRouter, useRoute } from 'vue-router';
+import TaskForm from './TaskForm.vue'
 
 const leadStatus = [
     {id: 1, name: 'beans', is_lost: 1},
@@ -24,7 +25,6 @@ onMounted(() => {
 const $toast = useToast(CONFIG.TOAST);
 
 // temporary
-const workflowIdExists = ref(false);
 
 const getWorkflowById = () => {
     axios.get(`/workflows/${workflowId}`)
@@ -125,72 +125,10 @@ const handleWorkflowUpdate = () => {
                 </button>
 		    </div>
 
-		    <div class="task-crud-wrapper row gx-0 pt-2" v-if="workflowIdExists">
-                <!-- task list -->
-		        <div class="task-list-wrapper col-md-4 mt-3 --border">
-		            <p class="fw-bold fs-6 mb-0">Tasks</p>
-
-		            <ul class="task-list list-unstyled">
-		                <li class="task active-task ps-4 py-2">Bean task</li>
-		                <li class="task ps-4 py-2">Bean task</li>
-		                <li class="task new-task-button ps-4 py-2 fs-6 text-soft">+ New Task</li>
-		            </ul>
-		        </div>
-
-                <!-- task form -->
-		        <div class="task-form col-md-8 p-3 border rounded mt-4">
-                    <div class="task-title-input-wrapper mb-4">
-		                <label for="title-input" class="fs-6 fw-bold">Task title</label>
-                        <input id="title-input" type="text" class="form-control rounded" placeholder="Enter title" />
-		            </div>
-
-                    <div class="description-input-wrapper mb-4">
-		                <label for="task-input" class="fs-6 fw-bold">Task Description</label>
-                        <textarea id="task-input" class="d-block w-100 pt-1" style="padding-left: 12px;" rows="3" placeholder="Enter description"></textarea>
-		            </div>
-
-                    <div class="duration-input-wrapper">
-		                <label for="time-input" class="fs-6 fw-bold">Relative due date after previous event</label>
-                        <div class="mb-3 position-relative">
-                            <input id="time-input" class="form-control cursor-pointer" type="text" data-mdb-toggle="dropdown" readonly value="Select a duration ">
-                            <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-" style="max-height:125px;">
-                                <ul class="list-unstyled mb-0">
-                                    <li 
-                                        v-for="(item, index) in leadStatus" 
-                                        :key="index"
-                                        @click="selectleadStatus(item)"
-                                        :class="`dropdown-item text-hard fw-bold fs-14px d-flex py-1 ${status?.id == item.id?'selected':''}`">
-                                        {{ item.name }}
-                                        <svg v-if="item.is_lost" class="svg-5 ms-auto" xmlns="http://www.w3.org/2000/svg" height="18" viewBox="0 0 24 24" width="18"><path d="M0 0h24v24H0z" fill="none"></path><path d="M20.54 5.23l-1.39-1.68C18.88 3.21 18.47 3 18 3H6c-.47 0-.88.21-1.16.55L3.46 5.23C3.17 5.57 3 6.02 3 6.5V19c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6.5c0-.48-.17-.93-.46-1.27zM12 17.5L6.5 12H10v-2h4v2h3.5L12 17.5zM5.12 5l.81-1h12l.94 1H5.12z"></path></svg>
-                                    </li>
-                                </ul>
-                            </div>
-                            <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.lead_status?.length">{{ errors?.lead_status[0] }}</span>
-                        </div>
-		            </div>
-
-                    <button class="btn btn-primary mt-5">Save</button>
-		        </div>
-
-                <!-- danger zone -->
-		        <div class="danger-zone offset-md-4 col-md-8 mt-5 mb-5">
-		            <p class="text-danger mb-0">Danger zone</p>
-
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="danger-zone-content-wrapper">
-		                    <p class="text-danger mb-0 text-danger fw-bold">Delete this workflow</p>
-		                    <small class="d-inline-block" style="width: 95%;">
-		                        Deleting workflows will not affect any existing Opportunities that have used this workflow. Once you delete this workflow, it cannot be recovered. Please be careful. 
-		                    </small>
-                        </div>
-		                <button class="btn btn-outline-danger d-flex align-items-center justify-content-between" style="white-space: nowrap;">
-                            <svg fill="#dc4c64" height="16" weight="16" data-v-7acf274e="" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path data-v-7acf274e="" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path></svg>
-		                    <span>Delete workflow</span>
-		                </button>
-                    </div>
-		        </div>
-		    </div>
-
+            <TaskForm 
+                :workflow-id="workflowId" 
+                v-if="workflowId" 
+            />
 		</div>
 	</div>
 </template>
@@ -201,28 +139,4 @@ const handleWorkflowUpdate = () => {
     width: 60%;
 }
 
-.task-list {
-    width: 90%;
-
-}
-
-.task {
-    &:hover {
-        background-color: #e5f4ff;
-
-        &.new-task-button {
-            background-color: #e4e7eb;
-        }
-    }
-
-    &.active-task {
-        border-left: 3px solid #007ee5;
-        background-color: #e5f4ff;
-        font-style: italic;
-
-        &::after {
-            content: '*'
-        }
-    }
-}
 </style>

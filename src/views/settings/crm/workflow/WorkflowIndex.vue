@@ -4,6 +4,7 @@ import { VueDraggableNext } from 'vue-draggable-next';
 import axios from '../../../../actions/api';
 import { useToast } from 'vue-toast-notification';
 import { CONFIG } from '../../../../config';
+import moment from 'moment';
 
 const items = ref([]);
 const $toast = useToast(CONFIG.TOAST);
@@ -68,7 +69,7 @@ onMounted(() => {
                                         </a>
                                     </div>
                                     <div>
-                                        <span class="time">Created 5 months ago</span>
+                                        <span class="time">{{ moment(item.created_at).format('LLL') }}</span>
                                     </div>
                                 </div>
                                 <div class="card-body px-3 position-relative">

@@ -6,10 +6,6 @@ import {useToast} from 'vue-toast-notification';
 import { useRouter, useRoute } from 'vue-router';
 import TaskForm from './TaskForm.vue'
 
-const leadStatus = [
-    {id: 1, name: 'beans', is_lost: 1},
-]
-
 const router = useRouter();
 const currentRoute = useRoute();
 const workflowId = currentRoute.params.workflow_id;

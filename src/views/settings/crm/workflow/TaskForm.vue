@@ -11,10 +11,18 @@ const $toast = useToast(CONFIG.TOAST);
 
 onMounted(() => {
     getDurations();
+    getTasks();
 });
 
-const durations = ref([]);
+const tasks = ref([]);
+const activeTaskId = ref(2);
+const getTasks = () => {
+    axios.get(`workflows/${props.workflowId}/tasks/`)
+        .then(res => tasks.value = res.data);
+}
 
+
+const durations = ref([]);
 const getDurations = () => {
     axios.get('workflows/durations')
         .then(res => {
@@ -66,6 +74,7 @@ const handleDurationClearClick = () => {
     formData.value.duration_id = null;
 }
 
+
 </script>
 
 <template>
@@ -75,8 +84,13 @@ const handleDurationClearClick = () => {
 			<p class="fw-bold fs-6 mb-0">Tasks</p>
 
 			<ul class="task-list list-unstyled">
-				<li class="task active-task ps-4 py-2">Bean task</li>
-				<li class="task ps-4 py-2">Bean task</li>
+			    <template v-if="tasks.length">
+				    <li :class="`task ${ activeTaskId.toString() === task.id.toString() ? 'active-task' : '' } ps-4 py-2`" v-for="task in tasks">
+				        {{task.title}}
+				    </li>
+			    </template>
+
+
 				<li class="task new-task-button ps-4 py-2 fs-6 text-soft">
 					+ New Task
 				</li>

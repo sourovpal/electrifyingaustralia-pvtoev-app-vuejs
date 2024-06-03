@@ -73,20 +73,12 @@ onMounted(() => {
                                     </div>
                                 </div>
                                 <div class="card-body px-3 position-relative">
-                                    <ul class="list-unstyled">
-                                        <li class="d-flex gap-2 align-items-center">
+                                    <!-- Task list -->
+                                    <ul class="list-unstyled" v-if="item?.tasks?.length">
+                                        <li class="d-flex gap-2 align-items-center" v-for="taskObj in item.tasks">
                                             <div><font-awesome-icon icon="fa-solid fa-arrow-right" style="transform: scale(0.75);"/></div>
-                                            <p class="mb-0">beans</p>
+                                            <p class="mb-0">{{taskObj.title}}</p>
                                         </li>
-                                        <li class="d-flex gap-2 align-items-center">
-                                            <div><font-awesome-icon icon="fa-solid fa-arrow-right" style="transform: scale(0.75);"/></div>
-                                            <p class="mb-0">beans</p>
-                                        </li>
-                                        <li class="d-flex gap-2 align-items-center">
-                                            <div><font-awesome-icon icon="fa-solid fa-arrow-right" style="transform: scale(0.75);"/></div>
-                                            <p class="mb-0">beans</p>
-                                        </li>
-
                                         <li class="d-flex gap-2 align-items-center mt-3">
                                             <font-awesome-icon class="text-primary" icon="fa-solid fa-chevron-right" style="transform: scale(0.75);"/>
                                             <router-link :to="`/settings/crm/workflows/${item.id}`">
@@ -94,6 +86,7 @@ onMounted(() => {
                                             </router-link>
                                         </li>
                                     </ul>
+                                    <span v-else>No tasks assigned to this workflow</span>
                                     <div  
                                         @click="handleDeleteClick(item.id)"
                                         class="position-absolute workflow-delete-btn text-danger"

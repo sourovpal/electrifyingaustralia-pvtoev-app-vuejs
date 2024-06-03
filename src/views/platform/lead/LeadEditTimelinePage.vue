@@ -48,6 +48,7 @@
         data() {
             return {
                 fullPath: null,
+                isPipelineLead: false,
                 fetch: {
                     lead_properties: 1,
                     lead_sources: 1,
@@ -72,6 +73,7 @@
                 this.findLeadByIdHandler();
             },
             "leadStore.getFindLead"(lead) {
+                this.isPipelineLead = !!(lead?.pipeline_id && lead?.pipeline_stage_id)
                 this.findLead = lead;
             },
             "leadStore.getPrevLead"(prev) {
@@ -168,6 +170,7 @@
             this.findLeadByIdHandler(this.fetch);
             this.fullpath = this.$route?.fullPath;
             this.leadStore.setLeadPrevUrl(null);
+            this.leadStatus = this.leadStore.getLeadStatus
         },
         beforeUnmount() {
             this.leadStore.setLeadPrevUrl(this.fullpath);
@@ -180,8 +183,7 @@
 
         <search-bar></search-bar>
 
-        <action-bar>
-
+        <action-bar :class="{'border-0':isPipelineLead}">
             <left-action-bar class="left-hover-action ms-3 ps-1">
                 <Skeletor v-if="isFirstLoading"
                     style="width:150px;" />
@@ -236,7 +238,8 @@
                     </svg>
                 </div>
 
-                <router-link :to="`${prevLead?`/platform/leads/${prevLead}`:''}`">
+                <router-link v-if="!isPipelineLead"
+                    :to="`${prevLead?`/platform/leads/${prevLead}`:''}`">
                     <button v-tippy='{ content:"Previous Lead", placement : "top" }'
                         class="toolbar-btn btn btn-light btn-sm btn-floating me-3"
                         :disabled="!prevLead">
@@ -251,7 +254,8 @@
                         </svg>
                     </button>
                 </router-link>
-                <router-link :to="`${nextLead?`/platform/leads/${nextLead}`:''}`">
+                <router-link v-if="!isPipelineLead"
+                    :to="`${nextLead?`/platform/leads/${nextLead}`:''}`">
                     <button v-tippy='{ content:"Next Lead", placement : "top" }'
                         class="toolbar-btn btn btn-light btn-sm btn-floating me-3"
                         :disabled="!nextLead">
@@ -281,7 +285,8 @@
                     </svg>
                 </button>
 
-                <button @click="$refs['leadQualifyModalRef'].showModalHandler(owner)"
+                <button v-if="!isPipelineLead"
+                    @click="$refs['leadQualifyModalRef'].showModalHandler(owner)"
                     class="btn btn-sm btn-primary fw-bold me-3 d-none d-xl-flex justify-content-center align-items">
                     <svg class="me-1"
                         xmlns="http://www.w3.org/2000/svg"
@@ -295,13 +300,14 @@
                     Qualify
                 </button>
 
-                <lead-qualify-modal ref="leadQualifyModalRef" />
+                <lead-qualify-modal v-if="!isPipelineLead"
+                    ref="leadQualifyModalRef" />
 
                 <!-- lead status -->
                 <Skeletor class="me-3 d-none d-xl-inline"
-                    v-if="isFirstLoading"
+                    v-if="isFirstLoading && !isPipelineLead"
                     style="width:150px;height:32px;border-radius:3px;" />
-                <div v-if="!isFirstLoading"
+                <div v-if="!isFirstLoading && !isPipelineLead"
                     v-tippy='{ content:"Change Lead Status", placement : "top" }'
                     class="dropdown me-3 d-none d-xl-inline">
                     <button style="min-width:150px;max-width:150px;"
@@ -486,8 +492,33 @@
                 <LeadReCategoriseModal ref="leadReCategoriseModalRef" />
 
             </right-action-bar>
-
         </action-bar>
+
+        <Transition>
+            <action-bar v-if="isPipelineLead"
+                class="flex-column justify-content-start align-items-start px-3">
+                <left-action-bar class="w-100">
+                    <div class="pipeline-progress-bar w-100 d-flex justify-content-between align-items">
+                        <div class="btn-group shadow-0 white-space-nowrap w-100 overflow-auto">
+                            <button v-tippy='{ content:"Newly Qualify", placement : "top" }'
+                                class="btn btn-sm btn-stage flex-grow-1 py-0 fw-bold active">1 hour</button>
+                            <button v-for="(_, index) in 12"
+                                :key="index"
+                                v-tippy='{ content:"Newly Qualify", placement : "top" }'
+                                class="btn btn-sm btn-stage flex-grow-1 py-0 fw-bold"></button>
+                        </div>
+                        <div class="btn-group ms-2 shadow-0">
+                            <button class="btn btn-sm btn-danger btn-lost py-0 fw-bold me-1">Lost</button>
+                            <button class="btn btn-sm btn-success btn-won py-0 fw-bold">Won</button>
+                        </div>
+                    </div>
+                </left-action-bar>
+                <div class="d-flex py-1 current-pipeline-stage">
+                    <span class="mb-0 fs-14px text-soft fw-bold me-1">Leads/Sales:</span>
+                    <span class="mb-0 fs-14px text-soft">Newly qualified</span>
+                </div>
+            </action-bar>
+        </Transition>
 
         <section class="h-100">
             <div class="col-area">
@@ -503,6 +534,30 @@
 
 <style scoped
     lang="scss">
+    .current-pipeline-stage {
+        line-height: 15px;
+    }
+    .pipeline-progress-bar {
+
+        .btn-group {
+            .btn-stage {
+                background-color: #e4e7eb;
+                height: 25px;
+                margin-right: 3px;
+
+                &.active {
+                    background-color: #17a691 !important;
+                    color: #ffffff;
+                }
+            }
+
+            .btn-won,
+            .btn-lost {
+                height: 25px;
+            }
+        }
+    }
+
     .left-hover-action {
         .hover-effice {
             opacity: 0;
@@ -710,6 +765,16 @@
     }
 </style>
 <style>
+    .v-enter-active,
+    .v-leave-active {
+        transition: opacity 1s linear;
+    }
+
+    .v-enter-from,
+    .v-leave-to {
+        opacity: 0;
+    }
+
     .lead-timeline-notes .ql-container.ql-snow {
         border: none !important;
         height: 10rem !important;

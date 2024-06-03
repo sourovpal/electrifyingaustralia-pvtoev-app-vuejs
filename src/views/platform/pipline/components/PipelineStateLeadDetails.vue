@@ -8,10 +8,11 @@ export default {
 <template>
 
     
-    <div 
-    v-show="isRow" 
+    <router-link 
+    v-if="isRow" 
     v-for="(item, index) in data??[]"  
     :key="index"
+    :to="`/platform/leads/${item.id}`"
     class="row border border-top-0" 
     >
         <div class="col-4 text-head py-1">
@@ -55,16 +56,15 @@ export default {
                 </div>
             </div>
         </div>
-    </div>
+    </router-link>
 
 
-    <a 
-        v-show="!isRow" 
+    <router-link 
+        v-if="!isRow" 
         v-for="(item, index) in data??[]" 
-        :key="index" 
-        class="" h
-        ref="" 
         draggable="true"
+        :key="index" 
+        :to="`/platform/leads/${item.id}`" 
     >
         <div class="pip-item">
             <h5 class="pip-title">{{ item?.contact?.full_name??'Example More than 100 million people' }} {{ item.id }}</h5>
@@ -82,7 +82,7 @@ export default {
             </div>
             <div class="pip-source text-soft">{{ item?.source?.title??'Lead source name' }}</div>
         </div>
-    </a>
+    </router-link>
     
 </template>
 

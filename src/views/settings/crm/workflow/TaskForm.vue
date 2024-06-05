@@ -4,6 +4,7 @@ import axios from '../../../../actions/api'
 
 import { CONFIG } from '../../../../config';
 import {useToast} from 'vue-toast-notification';
+import ConfirmationModal from '../../../../components/Modals/ConfirmationModal.vue';
 
 const props = defineProps(['workflowId']);
 
@@ -245,6 +246,7 @@ const handleTaskDeleteBtnClick = () => {
             </div>
 		</div>
 	</div>
+	<ConfirmationModal />
 </template>
 
 <style scoped>

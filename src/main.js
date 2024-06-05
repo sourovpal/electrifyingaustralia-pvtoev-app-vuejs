@@ -21,10 +21,10 @@ import 'vue-skeletor/dist/vue-skeletor.css';
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faUserSecret, faTrash, faArrowRight, faChevronRight, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faUserSecret, faTrash, faArrowRight, faChevronRight, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 
-library.add([faUserSecret, faTrash, faArrowRight, faChevronRight, faPlus])
+library.add([faUserSecret, faTrash, faArrowRight, faChevronRight, faPlus, faXmark])
 
 
 const VueProgressBarOptions = {

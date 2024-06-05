@@ -15,39 +15,63 @@ onMounted(() => {
 });
 
 const tasks = ref([]);
-const activeTaskId = ref(2);
-const getTasks = () => {
+const getTasks = (afterTaskGet) => {
     axios.get(`workflows/${props.workflowId}/tasks/`)
-        .then(res => tasks.value = res.data);
+        .then(res => {
+            tasks.value = res.data
+            afterTaskGet?.();
+        })
+        .catch(e => {
+            $toast.error('Something went wrong')
+            console.log(e);
+        });
 }
 
+const getTaskById = (taskId) => {
+    axios.get(`workflows/${props.workflowId}/tasks/${taskId}`)
+        .then(res => {
+            formData.value = res.data;
+        });
+}
+
+const activeTaskId = ref(null); // being set to the first task id from the mounting api call for tasks
+
+const handleTaskClick = (taskId) => {
+    activeTaskId.value = taskId;
+    getTaskById(taskId);
+}
+ 
+const handleNewTaskClick = () => {
+    activeTaskId.value = null;
+    formData.value = JSON.parse(JSON.stringify(initialFormData));
+}
 
 const durations = ref([]);
 const getDurations = () => {
     axios.get('workflows/durations')
         .then(res => {
-            if (res?.data?.length) {
-                durations.value = res.data;
-                return;
-            }
-            return $toast.error('Something went wrong');
+            if (!res?.data?.length)
+                return $toast.error('Something went wrong'); 
+             
+            durations.value = res.data;
         }).catch(e => {
-            console.log(e)
             $toast.error('Something went wrong');
+            console.log(e)
         })
 }
 
-const formData = ref({
+const initialFormData = {
     title: '',
     description: '',
     duration_id: null,
     workflow_id: props.workflowId,
-});
+}
+
+const formData = ref(JSON.parse(JSON.stringify(initialFormData)));
+const errorMessages = ref([]);
 
 const handleDurationSelect = (durationObj) => {
     formData.value.duration_id = durationObj.id;
-    console.log(formData.value.duration_id);
-
 }
 
 const selectedDurationName = computed(() => {
@@ -58,15 +82,30 @@ const selectedDurationName = computed(() => {
     return durationObj?.name ?? '';
 });
 
-const handleSaveBtnClick = () => {
-    axios.post(`workflows/${props.workflowId}/tasks/create`, formData.value)
+const handleSubmit = () => {
+    const apiEndpoint = !formData.value.id ? 
+        `workflows/${props.workflowId}/tasks/create` :
+        `workflows/${props.workflowId}/tasks/update/${activeTaskId.value}`;
+
+    axios[formData.value.id ? 'put' : 'post'](apiEndpoint, formData.value)
         .then(res => {
             if (res?.data?.message) 
                 $toast.success(res?.data?.message);
 
+            errorMessages.value = [];
+
+            getTasks(() => {
+                if (!res?.data?.task?.id) return;
+                getTaskById(res.data.task.id)
+                activeTaskId.value = res.data.task.id;
+            });
         }).catch(e => {
-            console.log(e);
-            $toast.error('Something went wrong');
+            if (!e?.response?.data?.errors) {
+                $toast.error('Something went wrong'); 
+                return console.log(e);
+            }
+
+            errorMessages.value = e.response.data.errors;
         })
 }
 
@@ -74,6 +113,23 @@ const handleDurationClearClick = () => {
     formData.value.duration_id = null;
 }
 
+const handleTaskDeleteBtnClick = () => {
+    axios.delete(`workflows/${props.workflowId}/tasks/delete/${activeTaskId.value}`, formData.value)
+        .then(res => {
+            if (res?.data?.message) 
+                $toast.success(res?.data?.message);
+            else return;
+
+            activeTaskId.value = null;
+            formData.value = JSON.parse(JSON.stringify(initialFormData));
+            errorMessages.value = [];
+            getTasks();
+        })
+        .catch(e => {
+            console.log(e)
+            $toast.error('Something went wrong');
+        });
+}
 
 </script>
 
@@ -84,25 +140,27 @@ const handleDurationClearClick = () => {
 			<p class="fw-bold fs-6 mb-0">Tasks</p>
 
 			<ul class="task-list list-unstyled">
+				<li class="task new-task-button ps-4 py-2 fs-6 text-soft cursor-pointer" @click="handleNewTaskClick">
+					+ New Task
+				</li>
 			    <template v-if="tasks.length">
-				    <li :class="`task ${ activeTaskId.toString() === task.id.toString() ? 'active-task' : '' } ps-4 py-2`" v-for="task in tasks">
+				    <li 
+				        @click="handleTaskClick(task.id)" 
+				        :class="`task cursor-pointer ${ activeTaskId?.toString() === task.id.toString() ? 'active-task' : '' } ps-4 py-2`" 
+				        v-for="task in tasks"
+				    >
 				        {{task.title}}
 				    </li>
 			    </template>
-
-
-				<li class="task new-task-button ps-4 py-2 fs-6 text-soft">
-					+ New Task
-				</li>
 			</ul>
 		</div>
 
 		<!-- task form -->
 		<div class="task-form col-md-8 p-3 border rounded mt-4">
 			<div class="task-title-input-wrapper mb-4">
-				<label for="title-input" class="fs-6 fw-bold"
-					>Task title</label
-				>
+				<label for="title-input" class="fs-6 fw-bold">
+				    Task title
+				</label>
 				<input
 					id="title-input"
 					type="text"
@@ -110,29 +168,38 @@ const handleDurationClearClick = () => {
 					class="form-control rounded"
 					placeholder="Enter title"
 				/>
+
+				<small class="text-danger" v-for="errorMessage in errorMessages['title']">
+				    {{ errorMessage }}
+				</small>
 			</div>
 
 			<div class="description-input-wrapper mb-4">
-				<label for="task-input" class="fs-6 fw-bold">
+				<label for="task-description-input" class="fs-6 fw-bold">
 				    Task Description
 				</label>
 				<textarea
-					id="task-input"
+					id="task-description-input"
 					class="d-block w-100 pt-1"
 					style="padding-left: 12px"
 					rows="3"
 				    v-model="formData.description"
 					placeholder="Enter description"
 				></textarea>
+
+                <!-- server errors for description -->
+				<small class="text-danger" v-for="errorMessage in errorMessages['description']">
+				    {{ errorMessage }}
+				</small>
 			</div>
 
 			<div class="duration-input-wrapper">
-				<label for="time-input" class="fs-6 fw-bold"
-					>Relative due date after previous event</label
+				<label for="duration-input" class="fs-6 fw-bold">
+				    Relative due date after previous event</label
 				>
 				<div class="mb-3 position-relative">
 					<input
-						id="time-input"
+						id="duration-input"
 						class="form-control cursor-pointer"
 						type="text"
 						data-mdb-toggle="dropdown"
@@ -157,13 +224,25 @@ const handleDurationClearClick = () => {
 							</li>
 						</ul>
 					</div>
-					<!-- <span class="fs-14px text-danger py-1 w-100 d-block"> -->
-					<!--     {{ errors?.lead_status[0] }} -->
-					<!-- </span> -->
+
+                    <!-- server errors for duration -->
+                    <small class="text-danger" v-for="errorMessage in errorMessages['duration_id']">
+				        {{ errorMessage }}
+				    </small>
 				</div>
 			</div>
 
-			<button class="btn btn-primary mt-5" @click="handleSaveBtnClick">Save</button>
+            <div class="d-flex align-items-center justify-content-between mt-5">
+			    <button 
+			        class="btn btn-primary"
+			        @click="handleSubmit"> 
+			        {{ formData.id ? 'Update' : 'Save'}} task
+			    </button>
+
+                <div v-if="formData.id" class="task-delete-btn text-danger" @click="handleTaskDeleteBtnClick">
+                    <font-awesome-icon icon="fa-solid fa-trash" />
+                </div>
+            </div>
 		</div>
 	</div>
 </template>
@@ -192,6 +271,20 @@ const handleDurationClearClick = () => {
         &::after {
             content: '*'
         }
+    }
+
+    &.new-task-button:hover {
+        color: rgb(56, 107, 192) !important;
+    }
+}
+
+.task-delete-btn {
+    opacity: 50%;
+    transition: 100ms;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 100%;
     }
 }
 </style>

@@ -56,7 +56,6 @@ const handleWorkflowUpdate = () => {
     if (!formData.value.title)
         return $toast.error('Title missing');
 
-
     isLoading.value = true;
     axios.put(`/workflows/update/${formData.value?.id}`, formData.value)
         .then(res => {
@@ -110,14 +109,14 @@ const handleWorkflowUpdate = () => {
                     :class="`btn ${isLoading ? 'animate-pulse btn-secondary' : 'btn-primary'}`" 
                     v-if="!workflowId" @click="handleWorkflowCreate"
                 >
-                    {{ !isLoading ? 'Create' : 'Loading' }}
+                    {{ !isLoading ? 'Create workflow' : 'Loading' }}
                 </button>
 
                 <button 
                     :class="`btn ${isLoading ? 'animate-pulse btn-secondary' : 'btn-primary'}`" 
                     v-else="!workflowId" @click="handleWorkflowUpdate"
                 >
-                    {{ !isLoading ? 'Update' : 'Loading' }}
+                    {{ !isLoading ? 'Update workflow' : 'Loading' }}
                 </button>
 		    </div>
 

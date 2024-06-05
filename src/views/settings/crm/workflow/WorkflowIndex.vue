@@ -86,7 +86,7 @@ onMounted(() => {
                                             </router-link>
                                         </li>
                                     </ul>
-                                    <span v-else>No tasks assigned to this workflow</span>
+                                    <span class="text-soft" v-else>No tasks assigned to this workflow</span>
                                     <div  
                                         @click="handleDeleteClick(item.id)"
                                         class="position-absolute workflow-delete-btn text-danger"

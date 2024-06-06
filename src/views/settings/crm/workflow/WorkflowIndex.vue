@@ -5,6 +5,11 @@ import axios from '../../../../actions/api';
 import { useToast } from 'vue-toast-notification';
 import { CONFIG } from '../../../../config';
 import moment from 'moment';
+import ConfirmationModal from '../../../../components/Modals/ConfirmationModal.vue';
+
+onMounted(() => {
+    getWorkFlows();
+});
 
 const items = ref([]);
 const $toast = useToast(CONFIG.TOAST);
@@ -17,20 +22,35 @@ async function getWorkFlows() {
     });
 }
 
-function handleDeleteClick(workflowId) {
-    axios.delete(`/workflows/delete/${workflowId}`)
+const openWorkflowDeleteConfirmationModal = ref(false);
+const workflowToDeleteId = ref(null);
+
+function handleWorkflowDeleteConfirm() {
+    axios.delete(`/workflows/delete/${workflowToDeleteId.value}`)
         .then((res) => {
             $toast.success(res.data.message);
             getWorkFlows();
         })
         .catch(e => {
             $toast.error('Something went wrong');
-        });
+            console.log(e);
+        })
+        .finally(() => {
+            openWorkflowDeleteConfirmationModal.value = false;
+            handleWorkflowDeleteCancel(); // missnamed but fits the usage here
+        })
 }
 
-onMounted(() => {
-    getWorkFlows();
-});
+const handleDeleteClick = (workflowId) => {
+    workflowToDeleteId.value = workflowId;
+    openWorkflowDeleteConfirmationModal.value = true;
+}
+
+const handleWorkflowDeleteCancel = () => {
+    openWorkflowDeleteConfirmationModal.value = false;
+    workflowToDeleteId.value = null;
+}
+
 </script>
 
 <template>
@@ -105,7 +125,16 @@ onMounted(() => {
             <br><br><br>
         </section>
     </div>
-
+    <!-- to get confirmation from the user before deleting a workflow -->
+    <ConfirmationModal
+	    v-if="openWorkflowDeleteConfirmationModal"
+	    heading="Are you sure you want to delete this workflow?"
+	    subtext="All tasks belonging to this workflow will be deleted"
+	    confirmBtnText="Discard"
+        cancelBtnText="Keep"
+	    @cancel="handleWorkflowDeleteCancel"
+        @confirm="handleWorkflowDeleteConfirm"
+	/>
   </div>
 
 </template>

@@ -16,10 +16,20 @@ onMounted(() => {
 });
 
 const tasks = ref([]);
+const taskNextPageNumber = ref(1);
+const currentPageNumber = ref(1);
+const lastPageNumber = ref(null);
+const isCurrentlyOnLastPage = computed(() => currentPageNumber.value.toString() === lastPageNumber.value.toString());
+
 const getTasks = (afterTaskGet) => {
-    axios.get(`workflows/${props.workflowId}/tasks/`)
+    axios.get(`workflows/${props.workflowId}/tasks?page=${taskNextPageNumber.value}`)
         .then(res => {
-            tasks.value = res.data
+            tasks.value = [...tasks.value, ...res?.data?.data]
+
+            currentPageNumber.value = res.data.current_page
+            taskNextPageNumber.value = res.data.current_page + 1
+            lastPageNumber.value = res.data.last_page;
+
             afterTaskGet?.();
         })
         .catch(e => {
@@ -45,6 +55,7 @@ const handleTaskClick = (taskId) => {
 const handleNewTaskClick = () => {
     activeTaskId.value = null;
     formData.value = JSON.parse(JSON.stringify(initialFormData));
+    errorMessages.value = [];
 }
 
 const durations = ref([]);
@@ -144,14 +155,14 @@ const handleTaskDeleteConfirm = () => {
         })
 }
 
-const confirmationmodalOpen = ref(false);
+const handleScroll = (e) => {
+    const objDiv = e.target;
+    const hasScrolledToBottom = objDiv.scrollTop + objDiv.clientHeight >= objDiv.scrollHeight;
+    if (!hasScrolledToBottom) return;
+    console.log(isCurrentlyOnLastPage.value)
+    if (isCurrentlyOnLastPage.value) return;
 
-const openModal = () => {
-    confirmationmodalOpen.value = true;
-}
-
-const handleCancel = () => {
-    confirmationmodalOpen.value = false;
+    getTasks();
 }
 
 </script>
@@ -159,7 +170,7 @@ const handleCancel = () => {
 <template>
 	<div class="task-crud-wrapper row gx-0 pt-2">
 		<!-- task list -->
-		<div class="task-list-wrapper col-md-4 mt-3 --border">
+		<div class="task-list-wrapper col-md-4 mt-3 overflow-scroll" style="height: 75vh;" @scroll="handleScroll">
 			<p class="fw-bold fs-6 mb-0">Tasks</p>
 
 			<ul class="task-list list-unstyled">
@@ -173,6 +184,9 @@ const handleCancel = () => {
 				        v-for="task in tasks"
 				    >
 				        {{task.title}}
+				    </li>
+                    <li class="ps-4 pt-4 fs-6 text-soft text-center" v-if="!isCurrentlyOnLastPage">
+                        <font-awesome-icon class="animate-spin" icon="fa-solid fa-spinner" />
 				    </li>
 			    </template>
 			</ul>
@@ -274,7 +288,7 @@ const handleCancel = () => {
 	    v-if="openTaskDeleteConfirmationModal"
 	    heading="Are you sure you want to delete this task?"
 	    subtext="This task will be permanently deleted"
-	    confirmBtnText="Delete"
+	    confirmBtnText="Discard"
         cancelBtnText="Keep"
 	    @cancel="handleTaskDeleteCancel"
         @confirm="handleTaskDeleteConfirm"

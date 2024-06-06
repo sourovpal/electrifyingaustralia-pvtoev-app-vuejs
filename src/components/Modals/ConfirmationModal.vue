@@ -29,14 +29,9 @@ onMounted(() => {
 	myModal.show()
 })
 
-const handleConfirmBtnClick = () => {
+const handleCallToAction = (actionType) => {
     myModal.hide();
-    emit('confirm')
-}
-
-const handleCancelBtnClick = () => {
-    myModal.hide();
-    emit('cancel')
+    emit(actionType);
 }
 
 onBeforeUnmount(() => {
@@ -59,10 +54,10 @@ onBeforeUnmount(() => {
 					<p>{{ subtext }}</p>
 
 					<div class="d-flex justify-content-center gap-4 mt-4">
-						<button class="btn btn-secondary" @click="handleCancelBtnClick">
+						<button class="btn btn-secondary" @click="handleCallToAction('cancel')">
 							{{ cancelBtnText }}
 						</button>
-						<button class="btn btn-danger" @click="handleConfirmBtnClick">
+						<button class="btn btn-danger" @click="handleCallToAction('confirm')">
 							{{ confirmBtnText }}
 						</button>
 					</div>

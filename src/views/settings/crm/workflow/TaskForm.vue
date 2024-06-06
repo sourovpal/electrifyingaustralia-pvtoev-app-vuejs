@@ -114,7 +114,17 @@ const handleDurationClearClick = () => {
     formData.value.duration_id = null;
 }
 
+const openTaskDeleteConfirmationModal = ref(false);
+
 const handleTaskDeleteBtnClick = () => {
+    openTaskDeleteConfirmationModal.value = true;
+}
+
+const handleTaskDeleteCancel = () => {
+    openTaskDeleteConfirmationModal.value = false;
+}
+
+const handleTaskDeleteConfirm = () => {
     axios.delete(`workflows/${props.workflowId}/tasks/delete/${activeTaskId.value}`, formData.value)
         .then(res => {
             if (res?.data?.message) 
@@ -129,7 +139,19 @@ const handleTaskDeleteBtnClick = () => {
         .catch(e => {
             console.log(e)
             $toast.error('Something went wrong');
-        });
+        }).finally(() => {
+            openTaskDeleteConfirmationModal.value = false;
+        })
+}
+
+const confirmationmodalOpen = ref(false);
+
+const openModal = () => {
+    confirmationmodalOpen.value = true;
+}
+
+const handleCancel = () => {
+    confirmationmodalOpen.value = false;
 }
 
 </script>
@@ -246,19 +268,25 @@ const handleTaskDeleteBtnClick = () => {
             </div>
 		</div>
 	</div>
-	<ConfirmationModal />
+
+    <!-- to get confirmation from the user before deleting a task -->
+	<ConfirmationModal 
+	    v-if="openTaskDeleteConfirmationModal"
+	    heading="Are you sure you want to delete this task?"
+	    subtext="This task will be permanently deleted"
+	    confirmBtnText="Delete"
+        cancelBtnText="Keep"
+	    @cancel="handleTaskDeleteCancel"
+        @confirm="handleTaskDeleteConfirm"
+	/>
 </template>
 
 <style scoped>
-.task-list {
-    width: 90%;
-
-}
+.task-list { width: 90%; }
 
 .task {
     &:hover {
         background-color: #e5f4ff;
-        
 
         &.new-task-button {
             background-color: #e4e7eb;

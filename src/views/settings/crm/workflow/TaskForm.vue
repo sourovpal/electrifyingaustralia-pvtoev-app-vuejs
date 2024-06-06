@@ -39,10 +39,16 @@ const getTasks = (afterTaskGet) => {
 }
 
 const getTaskById = (taskId) => {
+    isLoading.value = true;
     axios.get(`workflows/${props.workflowId}/tasks/${taskId}`)
         .then(res => {
             formData.value = res.data;
-        });
+        }).catch(e => {
+            $toast.error('Something went wrong')
+            console.log(e);
+        }).finally(() => {
+            isLoading.value = false;
+        })
 }
 
 const activeTaskId = ref(null); // being set to the first task id from the mounting api call for tasks
@@ -94,17 +100,26 @@ const selectedDurationName = computed(() => {
     return durationObj?.name ?? '';
 });
 
+const isLoading = ref(false);
 const handleSubmit = () => {
     const apiEndpoint = !formData.value.id ? 
         `workflows/${props.workflowId}/tasks/create` :
         `workflows/${props.workflowId}/tasks/update/${activeTaskId.value}`;
 
+    isLoading.value = true;
     axios[formData.value.id ? 'put' : 'post'](apiEndpoint, formData.value)
         .then(res => {
             if (res?.data?.message) 
                 $toast.success(res?.data?.message);
 
             errorMessages.value = [];
+
+            (() => {
+                tasks.value = [];
+                taskNextPageNumber.value = 1
+                currentPageNumber.value = 1;
+                lastPageNumber.value = null;
+            })();
 
             getTasks(() => {
                 if (!res?.data?.task?.id) return;
@@ -118,6 +133,9 @@ const handleSubmit = () => {
             }
 
             errorMessages.value = e.response.data.errors;
+        })
+        .finally(() => {
+            isLoading.value = false;
         })
 }
 
@@ -186,7 +204,7 @@ const handleScroll = (e) => {
 				        {{task.title}}
 				    </li>
                     <li class="ps-4 pt-4 fs-6 text-soft text-center" v-if="!isCurrentlyOnLastPage">
-                        <font-awesome-icon class="animate-spin" icon="fa-solid fa-spinner" />
+                        <font-awesome-icon class="animate-spin" icon="fa-solid fa-circle-notch" />
 				    </li>
 			    </template>
 			</ul>
@@ -194,88 +212,93 @@ const handleScroll = (e) => {
 
 		<!-- task form -->
 		<div class="task-form col-md-8 p-3 border rounded mt-4">
-			<div class="task-title-input-wrapper mb-4">
-				<label for="title-input" class="fs-6 fw-bold">
-				    Task title
-				</label>
-				<input
-					id="title-input"
-					type="text"
-				    v-model="formData.title"
-					class="form-control rounded"
-					placeholder="Enter title"
-				/>
+            <div :class="`${ isLoading ? 'loading-opacity' : '' }`">
+			    <div class="task-title-input-wrapper mb-4">
+				    <label for="title-input" class="fs-6 fw-bold">
+				        Task title
+				    </label>
+				    <input
+					    id="title-input"
+					    type="text"
+				        v-model="formData.title"
+					    class="form-control rounded"
+					    placeholder="Enter title"
+				    />
 
-				<small class="text-danger" v-for="errorMessage in errorMessages['title']">
-				    {{ errorMessage }}
-				</small>
-			</div>
+				    <small class="text-danger" v-for="errorMessage in errorMessages['title']">
+				        {{ errorMessage }}
+				    </small>
+			    </div>
 
-			<div class="description-input-wrapper mb-4">
-				<label for="task-description-input" class="fs-6 fw-bold">
-				    Task Description
-				</label>
-				<textarea
-					id="task-description-input"
-					class="d-block w-100 pt-1"
-					style="padding-left: 12px"
-					rows="3"
-				    v-model="formData.description"
-					placeholder="Enter description"
-				></textarea>
+			    <div class="description-input-wrapper mb-4">
+				    <label for="task-description-input" class="fs-6 fw-bold">
+				        Task Description
+				    </label>
+				    <textarea
+					    id="task-description-input"
+					    class="d-block w-100 pt-1"
+					    style="padding-left: 12px"
+					    rows="3"
+				        v-model="formData.description"
+					    placeholder="Enter description"
+				    ></textarea>
 
-                <!-- server errors for description -->
-				<small class="text-danger" v-for="errorMessage in errorMessages['description']">
-				    {{ errorMessage }}
-				</small>
-			</div>
+                    <!-- server errors for description -->
+				    <small class="text-danger" v-for="errorMessage in errorMessages['description']">
+				        {{ errorMessage }}
+				    </small>
+			    </div>
 
-			<div class="duration-input-wrapper">
-				<label for="duration-input" class="fs-6 fw-bold">
-				    Relative due date after previous event</label
-				>
-				<div class="mb-3 position-relative">
-					<input
+			    <div class="duration-input-wrapper">
+				    <label for="duration-input" class="fs-6 fw-bold">
+				        Relative due date after previous event</label
+				    >
+				    <div class="mb-3 position-relative">
+					    <input
 						id="duration-input"
 						class="form-control cursor-pointer"
 						type="text"
 						data-mdb-toggle="dropdown"
 						readonly
 						:value="selectedDurationName ? selectedDurationName : 'Specify duration'"
-					/>
-					<div
-						class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-"
-						style="max-height: 125px"
-					>
-						<ul class="list-unstyled mb-0">
-							<li
-								v-for="(item, index) in durations"
-								:key="index"
-								@click="handleDurationSelect(item)"
-								:class="`dropdown-item text-hard fw-bold fs-14px d-flex py-1 ${status?.id == item.id ? 'selected' : ''}`"
-							>
-								{{ item.name }}
-							</li>
-							<li class="dropdown-item text-danger fw-bold fs-14px d-flex py-1" @click="handleDurationClearClick">
-							    Clear duration
-							</li>
-						</ul>
-					</div>
+					    />
+					    <div
+						    class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-"
+						    style="max-height: 125px"
+					        >
+						    <ul class="list-unstyled mb-0">
+							    <li
+								    v-for="(item, index) in durations"
+								    :key="index"
+								    @click="handleDurationSelect(item)"
+								    :class="`dropdown-item text-hard fw-bold fs-14px d-flex py-1 ${status?.id == item.id ? 'selected' : ''}`"
+							        >
+								    {{ item.name }}
+							    </li>
+							    <li class="dropdown-item text-danger fw-bold fs-14px d-flex py-1" @click="handleDurationClearClick">
+							        Clear duration
+							    </li>
+						    </ul>
+					    </div>
 
-                    <!-- server errors for duration -->
-                    <small class="text-danger" v-for="errorMessage in errorMessages['duration_id']">
-				        {{ errorMessage }}
-				    </small>
-				</div>
-			</div>
+                        <!-- server errors for duration -->
+                        <small class="text-danger" v-for="errorMessage in errorMessages['duration_id']">
+				            {{ errorMessage }}
+				        </small>
+				    </div>
+			    </div>
+            </div>
 
             <div class="d-flex align-items-center justify-content-between mt-5">
 			    <button 
 			        class="btn btn-primary"
+                    v-if="!isLoading"
 			        @click="handleSubmit"> 
 			        {{ formData.id ? 'Update' : 'Save'}} task
 			    </button>
-
+			    <div v-else class="btn btn-primary">
+                    <font-awesome-icon class="animate-spin" icon="fa-solid fa-circle-notch" />
+			    </div>
                 <div v-if="formData.id" class="task-delete-btn text-danger" @click="handleTaskDeleteBtnClick">
                     <font-awesome-icon icon="fa-solid fa-trash" />
                 </div>

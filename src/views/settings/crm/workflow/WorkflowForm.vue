@@ -104,20 +104,27 @@ const handleWorkflowUpdate = () => {
                     <small class="text-danger" v-if="errorMessage">{{errorMessage}}</small>
                 </div>
 
-                <!-- This will be conditional -->
-                <button 
-                    :class="`btn ${isLoading ? 'animate-pulse btn-secondary' : 'btn-primary'}`" 
-                    v-if="!workflowId" @click="handleWorkflowCreate"
-                >
-                    {{ !isLoading ? 'Create workflow' : 'Loading' }}
-                </button>
+                <template v-if="!isLoading">
+                    <button 
+                        v-if="!workflowId" 
+                        class="btn btn-primary" 
+                        @click="handleWorkflowCreate"
+                    >
+                        Create workflow
+                    </button>
 
-                <button 
-                    :class="`btn ${isLoading ? 'animate-pulse btn-secondary' : 'btn-primary'}`" 
-                    v-else="!workflowId" @click="handleWorkflowUpdate"
-                >
-                    {{ !isLoading ? 'Update workflow' : 'Loading' }}
-                </button>
+                    <button 
+                        v-else 
+                        class="btn btn-primary" 
+                        @click="handleWorkflowUpdate"
+                    >
+                        Update workflow
+                    </button>
+                </template>
+
+			    <div v-else class="btn btn-primary">
+                    <font-awesome-icon class="animate-spin" icon="fa-solid fa-circle-notch" />
+			    </div>
 		    </div>
 
             <TaskForm 

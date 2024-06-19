@@ -130,7 +130,7 @@ const handleWorkflowDeleteCancel = () => {
 	    v-if="openWorkflowDeleteConfirmationModal"
 	    heading="Are you sure you want to delete this workflow?"
 	    subtext="All tasks belonging to this workflow will be deleted"
-	    confirmBtnText="Discard"
+	    confirmBtnText="Delete"
         cancelBtnText="Keep"
 	    @cancel="handleWorkflowDeleteCancel"
         @confirm="handleWorkflowDeleteConfirm"

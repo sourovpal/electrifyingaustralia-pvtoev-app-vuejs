@@ -11,6 +11,7 @@ const props = defineProps({
 	cancelBtnClass: {type: String, default: 'secondary'},
 	confirmBtnText: {type: String, default: 'Yes'},
 	cancelBtnText: {type: String, default: 'No'},
+	isLoading: {default: null},
 })
 
 const emit = defineEmits([
@@ -29,9 +30,13 @@ onMounted(() => {
 	myModal.show()
 })
 
-const handleCallToAction = (actionType) => {
+const handleConfirmBtnClick = () => {
+    emit('confirm')
+}
+
+const handleCancelBtnClick = () => {
     myModal.hide();
-    emit(actionType);
+    emit('cancel')
 }
 
 onBeforeUnmount(() => {
@@ -54,11 +59,14 @@ onBeforeUnmount(() => {
 					<p>{{ subtext }}</p>
 
 					<div class="d-flex justify-content-center gap-4 mt-4">
-						<button class="btn btn-secondary" @click="handleCallToAction('cancel')">
+						<button class="btn btn-secondary" @click="handleCancelBtnClick">
 							{{ cancelBtnText }}
 						</button>
-						<button class="btn btn-danger" @click="handleCallToAction('confirm')">
+						<button v-if="!isLoading" class="btn btn-danger" @click="handleConfirmBtnClick">
 							{{ confirmBtnText }}
+						</button>
+						<button v-if="isLoading" class="btn btn-danger">
+                            <font-awesome-icon class="animate-spin" icon="fa-solid fa-circle-notch" />
 						</button>
 					</div>
 				</div>

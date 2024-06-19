@@ -19,7 +19,7 @@ const tasks = ref([]);
 const taskNextPageNumber = ref(1);
 const currentPageNumber = ref(1);
 const lastPageNumber = ref(null);
-const isCurrentlyOnLastPage = computed(() => currentPageNumber.value.toString() === lastPageNumber.value.toString());
+const isCurrentlyOnLastPage = computed(() => currentPageNumber.value?.toString() === lastPageNumber.value?.toString());
 
 const getTasks = (afterTaskGet) => {
     axios.get(`workflows/${props.workflowId}/tasks?page=${taskNextPageNumber.value}`)
@@ -154,6 +154,7 @@ const handleTaskDeleteCancel = () => {
 }
 
 const handleTaskDeleteConfirm = () => {
+    isLoading.value = true;  
     axios.delete(`workflows/${props.workflowId}/tasks/delete/${activeTaskId.value}`, formData.value)
         .then(res => {
             if (res?.data?.message) 
@@ -170,14 +171,15 @@ const handleTaskDeleteConfirm = () => {
             $toast.error('Something went wrong');
         }).finally(() => {
             openTaskDeleteConfirmationModal.value = false;
+            isLoading.value = false;
         })
 }
 
 const handleScroll = (e) => {
     const objDiv = e.target;
     const hasScrolledToBottom = objDiv.scrollTop + objDiv.clientHeight >= objDiv.scrollHeight;
+
     if (!hasScrolledToBottom) return;
-    console.log(isCurrentlyOnLastPage.value)
     if (isCurrentlyOnLastPage.value) return;
 
     getTasks();
@@ -203,10 +205,10 @@ const handleScroll = (e) => {
 				    >
 				        {{task.title}}
 				    </li>
-                    <li class="ps-4 pt-4 fs-6 text-soft text-center" v-if="!isCurrentlyOnLastPage">
-                        <font-awesome-icon class="animate-spin" icon="fa-solid fa-circle-notch" />
-				    </li>
 			    </template>
+                <li class="ps-4 pt-4 fs-6 text-soft text-center" v-if="!isCurrentlyOnLastPage">
+                    <font-awesome-icon class="animate-spin" icon="fa-solid fa-circle-notch" />
+				</li>
 			</ul>
 		</div>
 
@@ -311,8 +313,9 @@ const handleScroll = (e) => {
 	    v-if="openTaskDeleteConfirmationModal"
 	    heading="Are you sure you want to delete this task?"
 	    subtext="This task will be permanently deleted"
-	    confirmBtnText="Discard"
+	    confirmBtnText="Delete"
         cancelBtnText="Keep"
+        :is-loading="isLoading"
 	    @cancel="handleTaskDeleteCancel"
         @confirm="handleTaskDeleteConfirm"
 	/>

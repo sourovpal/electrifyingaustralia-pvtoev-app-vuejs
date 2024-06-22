@@ -15,6 +15,7 @@
         components: {
             DropdownOwnerList
         },
+        props:['findLeadByIdHandler'],
         setup(props) {
             const leadStore = useLeadStore();
             const appStore = useAppStore();
@@ -108,6 +109,8 @@
                     }
                     const res = await ConfirmQualify(data);
                     this.isSubmitConfirmQualifyForm = false;
+                    this.hideModalHandler();
+                    this.findLeadByIdHandler();
                     try {
                         var { message } = res;
                         this.$toast[message.type](message.text);

@@ -20,6 +20,10 @@ export const useLeadStore = defineStore('lead', {
       leadContacts:[],
       primaryContact:null,
       leadStatus:[],
+      leadStages:[],
+      leadPipelineStage:{},
+      leadPipelineProperties:[],
+      leadPipelineStagePropertiesValue:{},
     }
   },
   getters:{
@@ -62,14 +66,29 @@ export const useLeadStore = defineStore('lead', {
     getPipelinesWithStage(state){
         return state.pipelines;
     },
-    getLeadPipeline(){
+    getLeadPipeline(state){
         return state.leadPipeline;
     },
-    getLeadHasPipelines(){
+    getLeadHasPipelines(state){
         return state.leadHasPipelines;
     },
+    getLeadStages(state){
+        return state.leadStages;
+    },
+    getLeadPipelineStage(stage){
+      return stage.leadPipelineStage
+    },
+    // getLeadPipelineProperties(stage){
+    //   return stage.leadPipelineProperties;
+    // },
+    // getLeadPipelinePropertiesValue(stage){
+    //   return stage.leadPipelineStagePropertiesValue;
+    // }
   },
   actions:{
+    setOwner(payload){
+      this.currentOwner = payload;
+    },
     setLeadPrevUrl(payload){
       this.leadPrevUrl = payload;
     },
@@ -85,14 +104,19 @@ export const useLeadStore = defineStore('lead', {
           lead_properties, 
           pipelines, 
           owners, 
-          lead_sources
+          lead_sources,
+          lead_stages,
+          pipeline_stage
         } = payload;
-  
         this.findLead  = lead;
         this.leadCustomProperties = lead?.custom_properties;
         this.prev_lead = prev_lead;
         this.next_lead = next_lead;
-  
+
+        if(pipeline_stage){
+          this.leadPipelineStage = pipeline_stage;
+        }
+        
         if(owners){
           this.owners = owners;
         }
@@ -106,6 +130,10 @@ export const useLeadStore = defineStore('lead', {
   
         if(lead_sources){
           this.leadSources = lead_sources;
+        }
+  
+        if(lead_stages){
+          this.leadStages = lead_stages;
         }
         
         if(lead?.contacts?.length){

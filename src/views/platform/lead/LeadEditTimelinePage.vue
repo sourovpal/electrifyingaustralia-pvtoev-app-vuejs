@@ -24,6 +24,11 @@
     import RightSidebarTimeline from './components/RightSidebarTimeline.vue';
     import { useLeadStore } from '../../../stores/lead';
     import { useAppStore } from '../../../stores/app';
+    import { ref } from 'vue';
+    import {
+        MoveLeadStatusToPipeline
+    } from '../../../actions/LeadAction';
+
 
     export default {
         components: {
@@ -43,7 +48,8 @@
         setup(props) {
             const leadStore = useLeadStore();
             const appStore = useAppStore();
-            return { leadStore, appStore };
+            const progressBar = ref([]);
+            return { leadStore, appStore, progressBar };
         },
         data() {
             return {
@@ -57,12 +63,6 @@
                     contacts: 1,
                 },
                 icons: {},
-                findLead: {},
-                prevLead: null,
-                nextLead: null,
-                owner: null,
-                owners: [],
-                leadStatus: [],
                 isLoading: false,
                 isFirstLoading: false,
                 toggleRightDetailsSidebar: false,
@@ -72,27 +72,29 @@
             "$route"() {
                 this.findLeadByIdHandler();
             },
-            "leadStore.getFindLead"(lead) {
+            "findLead"(lead) {
                 this.isPipelineLead = !!(lead?.pipeline_id && lead?.pipeline_stage_id)
-                this.findLead = lead;
-            },
-            "leadStore.getPrevLead"(prev) {
-                this.prevLead = prev;
-            },
-            "leadStore.getNextLead"(next) {
-                this.nextLead = next;
-            },
-            "leadStore.getOwners"(owners) {
-                this.owners = owners;
-            },
-            "leadStore.getCurrentOwner"(owner) {
-                this.owner = owner;
-            },
-            "leadStore.getLeadStatus"(status) {
-                this.leadStatus = status;
-            },
+            }
         },
         methods: {
+            async updateLeadStageByProgressBar(pipeline, stage){
+                try {
+                    var data = {
+                        lead:this.findLead.id,
+                        pipeline:pipeline,
+                        pipeline_stage:stage,
+                    };
+                    const res = await MoveLeadStatusToPipeline(data);
+                    this.findLeadByIdHandler();
+                }catch(error){
+                    try {
+                        var message = error.response.data.message;
+                        this.$toast[message.type](message.text);
+                    } catch (e) {
+                        this.$toast.error('Oops, something went wrong');
+                    }
+                }
+            },
             toggleRightDetailsSidebarHandler() {
                 this.toggleRightDetailsSidebar = !this.toggleRightDetailsSidebar;
             },
@@ -152,8 +154,7 @@
                         leads: [this.findLead?.id],
                     };
                     const res = await UpdateMultipelLeadOwner(data);
-                    this.owner = this.currentOwner = owner;
-                    this.findLead['owner'] = owner;
+                    this.leadStore.setOwner(owner)
                 } catch (error) {
                     try {
                         var message = error.response.data.message;
@@ -164,13 +165,35 @@
                 }
             },
         },
+        computed: {
+            findLead() {
+                return this.leadStore.getFindLead;
+            },
+            leadStages() {
+                return this.leadStore.getLeadStages;
+            },
+            leadStatus() {
+                return this.leadStore.getLeadStatus;
+            },
+            prevLead() {
+                return this.leadStore.getPrevLead;
+            },
+            nextLead() {
+                return this.leadStore.getNextLead;
+            },
+            owners() {
+                return this.leadStore.getOwners;
+            },
+            owner() {
+                return this.leadStore.getCurrentOwner;
+            },
+        },
         mounted() {
             this.icons = icons;
             this.isFirstLoading = true;
             this.findLeadByIdHandler(this.fetch);
             this.fullpath = this.$route?.fullPath;
             this.leadStore.setLeadPrevUrl(null);
-            this.leadStatus = this.leadStore.getLeadStatus
         },
         beforeUnmount() {
             this.leadStore.setLeadPrevUrl(this.fullpath);
@@ -238,7 +261,7 @@
                     </svg>
                 </div>
 
-                <router-link v-if="!isPipelineLead"
+                <router-link v-if="!isPipelineLead && !isFirstLoading"
                     :to="`${prevLead?`/platform/leads/${prevLead}`:''}`">
                     <button v-tippy='{ content:"Previous Lead", placement : "top" }'
                         class="toolbar-btn btn btn-light btn-sm btn-floating me-3"
@@ -254,7 +277,7 @@
                         </svg>
                     </button>
                 </router-link>
-                <router-link v-if="!isPipelineLead"
+                <router-link v-if="!isPipelineLead && !isFirstLoading"
                     :to="`${nextLead?`/platform/leads/${nextLead}`:''}`">
                     <button v-tippy='{ content:"Next Lead", placement : "top" }'
                         class="toolbar-btn btn btn-light btn-sm btn-floating me-3"
@@ -285,7 +308,7 @@
                     </svg>
                 </button>
 
-                <button v-if="!isPipelineLead"
+                <button v-if="!isPipelineLead && !isFirstLoading"
                     @click="$refs['leadQualifyModalRef'].showModalHandler(owner)"
                     class="btn btn-sm btn-primary fw-bold me-3 d-none d-xl-flex justify-content-center align-items">
                     <svg class="me-1"
@@ -301,12 +324,15 @@
                 </button>
 
                 <lead-qualify-modal v-if="!isPipelineLead"
-                    ref="leadQualifyModalRef" />
+                ref="leadQualifyModalRef"
+                :findLeadByIdHandler="()=>findLeadByIdHandler()"
+                />
 
                 <!-- lead status -->
                 <Skeletor class="me-3 d-none d-xl-inline"
                     v-if="isFirstLoading && !isPipelineLead"
                     style="width:150px;height:32px;border-radius:3px;" />
+
                 <div v-if="!isFirstLoading && !isPipelineLead"
                     v-tippy='{ content:"Change Lead Status", placement : "top" }'
                     class="dropdown me-3 d-none d-xl-inline">
@@ -365,7 +391,6 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-end"
                         @click="(e)=>{e.stopPropagation()}">
-                        <!---->
                         <div>
                             <div class="dropdown-body">
 
@@ -489,7 +514,10 @@
                     </div>
                 </div>
 
-                <LeadReCategoriseModal ref="leadReCategoriseModalRef" />
+                <LeadReCategoriseModal 
+                ref="leadReCategoriseModalRef" 
+                :findLeadByIdHandler="()=>findLeadByIdHandler()"
+                :is-pipeline-lead="isPipelineLead" />
 
             </right-action-bar>
         </action-bar>
@@ -500,12 +528,22 @@
                 <left-action-bar class="w-100">
                     <div class="pipeline-progress-bar w-100 d-flex justify-content-between align-items">
                         <div class="btn-group shadow-0 white-space-nowrap w-100 overflow-auto">
-                            <button v-tippy='{ content:"Newly Qualify", placement : "top" }'
-                                class="btn btn-sm btn-stage flex-grow-1 py-0 fw-bold active">1 hour</button>
-                            <button v-for="(_, index) in 12"
+                            <button v-for="(stage, index) in leadStages"
                                 :key="index"
-                                v-tippy='{ content:"Newly Qualify", placement : "top" }'
-                                class="btn btn-sm btn-stage flex-grow-1 py-0 fw-bold"></button>
+                                ref="progressBar"
+                                @click="updateLeadStageByProgressBar(stage.pipeline_id, stage.id)"
+                                v-tippy='{ content:stage?.name, placement : "top" }'
+                                class="btn btn-sm btn-stage flex-grow-1 py-0 fw-bold"
+                                :class="{
+                                    'complete':((stage?.lead_stage && findLead?.pipeline_stage_id != stage?.id) && findLead?.is_lost != 0),
+                                    'active':((findLead?.pipeline_stage_id == stage?.id) && findLead?.is_lost != 0),
+                                    'lost':(findLead?.is_lost == 0),
+                                    'normal-stage':(stage?.status == 0),
+                                    'lost-stage':(stage?.status == 1),
+                                    'won-stage':(stage?.status == 2),
+                                }">
+                                {{ stage?.lead_stage?.complete }}
+                            </button>
                         </div>
                         <div class="btn-group ms-2 shadow-0">
                             <button class="btn btn-sm btn-danger btn-lost py-0 fw-bold me-1">Lost</button>
@@ -514,8 +552,8 @@
                     </div>
                 </left-action-bar>
                 <div class="d-flex py-1 current-pipeline-stage">
-                    <span class="mb-0 fs-14px text-soft fw-bold me-1">Leads/Sales:</span>
-                    <span class="mb-0 fs-14px text-soft">Newly qualified</span>
+                    <span class="mb-0 fs-16px text-soft fw-bold me-1">{{ findLead?.pipeline?.title }}:</span>
+                    <span class="mb-0 fs-16px text-soft">{{ findLead?.pipeline_stage?.name }}</span>
                 </div>
             </action-bar>
         </Transition>
@@ -523,9 +561,11 @@
         <section class="h-100">
             <div class="col-area">
                 <timeline-history />
-                <right-sidebar-timeline :isFirstLoading="isFirstLoading"
-                    :findLeadByIdHandler="findLeadByIdHandler"
-                    :toggleRightDetailsSidebar="toggleRightDetailsSidebar" />
+                <right-sidebar-timeline 
+                :isFirstLoading="isFirstLoading"
+                :findLeadByIdHandler="findLeadByIdHandler"
+                :toggleRightDetailsSidebar="toggleRightDetailsSidebar"
+                />
             </div>
         </section>
 
@@ -537,6 +577,7 @@
     .current-pipeline-stage {
         line-height: 15px;
     }
+
     .pipeline-progress-bar {
 
         .btn-group {
@@ -544,9 +585,21 @@
                 background-color: #e4e7eb;
                 height: 25px;
                 margin-right: 3px;
+                min-width: 8rem;
+                max-width: 8rem;
+                &.complete {
+                    background-color: #8eedc7;
+                    color: #091e43;
+                }
 
                 &.active {
-                    background-color: #17a691 !important;
+                    background-color:#27ab83;
+                    color: #ffffff;
+                }
+
+                &.lost,
+                &.lost-stage.active{
+                    background-color: #d1485f !important;
                     color: #ffffff;
                 }
             }

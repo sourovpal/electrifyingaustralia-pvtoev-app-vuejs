@@ -14,6 +14,7 @@
             const appStore = useAppStore();
             return { leadStore, appStore };
         },
+        props:['isPipelineLead', 'findLeadByIdHandler'],
         data() {
             return {
                 modalInstance: null,
@@ -108,6 +109,7 @@
                     };
                     const res = await MoveLeadStatusToPipeline(data);
                     this.isSubmitConfirmMoveForm = false;
+                    this.findLeadByIdHandler();
                     try {
                         var { message } = res;
                         this.$toast[message.type](message.text);
@@ -181,7 +183,7 @@
                     </p>
                     <div class="mb-4 position-relative">
                         <label class="form-label-title"
-                            for="">Move to another lead status</label>
+                            for="">Move {{ isPipelineLead?'back to lead status':'to another lead status' }}</label>
                         <input @click="delete errors?.status"
                             class="form-control cursor-pointer select-none"
                             :value="selectedStatus?.name??'Select lead status'"
@@ -205,7 +207,7 @@
 
                     <div class="mb-2 position-relative">
                         <label class="form-label-title"
-                            for="">Move from lead to pipeline stage</label>
+                            for="">Move from {{ isPipelineLead?'another pipeline stage':'lead to pipeline stage' }}</label>
                         <input @click="delete errors?.pipeline"
                             class="form-control cursor-pointer select-none"
                             :value="selectedPipeline?.title??'Select pipeline'"

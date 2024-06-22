@@ -20,7 +20,6 @@
         },
         data() {
             return {
-                leadProperties: [],
                 formData: {},
                 proptected: null,
                 moment: null,
@@ -28,9 +27,6 @@
             }
         },
         watch: {
-            "leadStore.getLeadProperties"(payload) {
-                this.leadProperties = payload;
-            },
             "leadStore.getLeadCustomProperties"(payload) {
                 this.formData = {};
                 this.formData = payload ?? {};
@@ -98,9 +94,14 @@
                 return "–";
             }
         },
+        computed: {
+            leadProperties(){
+                
+                return this.leadStore.getLeadProperties;
+            },
+        },
         mounted() {
             this.formData = {};
-            this.leadProperties = this.leadStore.getLeadProperties;
             this.formData = this.leadStore.getLeadCustomProperties ?? {};
         },
         created() {

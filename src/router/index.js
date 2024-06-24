@@ -41,7 +41,7 @@ const routes = [
                     {
                         name:"tasks",
                         path:'tasks',
-                        component:()=>import('../views/platform/lead/LeadIndexPage.vue'),
+                        component:()=>import('../views/platform/tasks/TaskIndexPage.vue'),
                         beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',

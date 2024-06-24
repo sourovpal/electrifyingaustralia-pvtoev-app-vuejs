@@ -17,6 +17,7 @@ import DropdownOwnerList from './components/DropdownOwnerList.vue';
 import ColumnSorted from './components/ColumnSorted.vue';
 import UploadSpreadsheetModal from './components/UploadSpreadsheetModal.vue';
 import moment from 'moment';
+import {onMounted} from 'vue';
 import {
     FetchLeads, 
     UpdateLeadPropertieHeaders,
@@ -397,7 +398,7 @@ export default {
     <action-bar>
 
         <left-action-bar>
-            <div class=" d-flex justify-content-center align-item-start" style="margin-left: 8px;">
+            <div class=" d-flex justify-content-center align-item-start" style="margin-left: 8px; border: 2px dotted red;">
                 <label class="custom-form-checkbox btn btn-floating btn-light" @click="selectedAllRowsHandler">
                     <svg v-if="!isSelectedAllRows && !isSelectedAllRowsReset" class="unchecked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
                     <svg v-else-if="isSelectedAllRows && !isSelectedAllRowsReset" class="checked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>

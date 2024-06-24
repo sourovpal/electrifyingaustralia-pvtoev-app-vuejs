@@ -27,8 +27,7 @@
             }
         },
         watch: {
-            "leadStore.getLeadCustomProperties"(payload) {
-                this.formData = {};
+            "customPropertiesValue"(payload) {
                 this.formData = payload ?? {};
                 this.editProperties = {};
             },
@@ -95,14 +94,15 @@
             }
         },
         computed: {
-            leadProperties(){
-                
-                return this.leadStore.getLeadProperties;
+            leadProperties() {
+                return [
+                    ...this.leadStore.getLeadProperties ?? [],
+                    ...this.leadStore.getCurrentLead?.pipeline?.properties ?? []
+                ];
             },
-        },
-        mounted() {
-            this.formData = {};
-            this.formData = this.leadStore.getLeadCustomProperties ?? {};
+            customPropertiesValue() {
+                return this.leadStore.getLeadCustomProperties ?? {};
+            }
         },
         created() {
             this.moment = moment;

@@ -29,8 +29,7 @@
             "leadStatus"(status) {
                 try {
                     if (status[0]) {
-                        this.status = status[0];
-                        this.currentStatus = status[0];
+                        this.status = this.currentStatus = status[0];
                     }
                 } catch (error) { }
             },

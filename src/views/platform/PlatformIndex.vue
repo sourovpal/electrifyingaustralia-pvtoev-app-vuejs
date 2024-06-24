@@ -23,48 +23,24 @@
     data() {
       return {
         title,
-        lead_statuses: [],
-        pipelines: [],
         menus: [],
       }
     },
     watch: {
-      "appStore.getLeadStatuses"(newVal) {
-        this.lead_statuses = newVal;
+      "appStore.getLeadStatuses"(){
+        this.makeMenus();
       },
-      "appStore.getPipelines"(newVal) {
-        this.pipelines = newVal;
-      }
+      "appStore.getPipelines"(){
+        this.makeMenus();
+      },
     },
-    methods: {
-      async makeMenus(leadStatuses = [], pipelinesList = []) {
-        const lead_statuses = leadStatuses.map((item) => {
-          return {
-            label: item.name,
-            path: '/platform/leads',
-            query: { status: btoa(item.name) },
-            icon: item.is_lost == 1 ? lostIcon : null,
-          };
-        });
-        const pipelines = pipelinesList.map((item) => {
-          return {
-            label: item.title,
-            path: '/platform/deals',
-            query: { pipeline: btoa(item.title) },
-            icon: '',
-          };
-        });
-        this.menus = await menus({ lead_statuses, pipelines });
+    methods:{
+      async makeMenus() {
+        this.menus = await menus();
       }
-    },
-    created() {
-      this.$watch(() => [this.lead_statuses, this.pipelines], function () {
-        this.makeMenus(this.lead_statuses, this.pipelines);
-      });
     },
     mounted() {
-      this.lead_statuses = this.appStore.getLeadStatuses;
-      this.pipelines = this.appStore.getPipelines;
+      this.makeMenus();
     },
   }
 </script>

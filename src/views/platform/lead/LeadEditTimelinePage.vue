@@ -72,21 +72,21 @@
             "$route"() {
                 this.findLeadByIdHandler();
             },
-            "findLead"(lead) {
+            "currentLead"(lead) {
                 this.isPipelineLead = !!(lead?.pipeline_id && lead?.pipeline_stage_id)
             }
         },
         methods: {
-            async updateLeadStageByProgressBar(pipeline, stage){
+            async updateLeadStageByProgressBar(pipeline, stage) {
                 try {
                     var data = {
-                        lead:this.findLead.id,
-                        pipeline:pipeline,
-                        pipeline_stage:stage,
+                        lead: this.currentLead.id,
+                        pipeline: pipeline,
+                        pipeline_stage: stage,
                     };
                     const res = await MoveLeadStatusToPipeline(data);
                     this.findLeadByIdHandler();
-                }catch(error){
+                } catch (error) {
                     try {
                         var message = error.response.data.message;
                         this.$toast[message.type](message.text);
@@ -128,15 +128,15 @@
             },
             async updateLeadStatusHandler(status) {
                 try {
-                    if (this.findLead?.status && this.findLead?.status?.id == status?.id) {
+                    if (this.currentLead?.status && this.currentLead?.status?.id == status?.id) {
                         return;
                     }
                     var data = {
-                        leads: [this.findLead.id],
+                        leads: [this.currentLead.id],
                         status: status.id,
                     };
                     const res = await UpdateMultipelLeadStatus(data);
-                    this.findLead['status'] = { ...status };
+                    this.currentLead['status'] = { ...status };
 
                 } catch (error) {
                     try {
@@ -151,7 +151,7 @@
                 try {
                     var data = {
                         owner: owner?.id,
-                        leads: [this.findLead?.id],
+                        leads: [this.currentLead?.id],
                     };
                     const res = await UpdateMultipelLeadOwner(data);
                     this.leadStore.setOwner(owner)
@@ -166,8 +166,8 @@
             },
         },
         computed: {
-            findLead() {
-                return this.leadStore.getFindLead;
+            currentLead() {
+                return this.leadStore.getCurrentLead;
             },
             leadStages() {
                 return this.leadStore.getLeadStages;
@@ -213,7 +213,7 @@
                 <span @click="$refs['editLeadModalRef'].showModalHandler()"
                     v-if="!isFirstLoading"
                     class="text-head mb-0 fs-16px fw-bold lead-title-text">
-                    {{ findLead?.lead_title??findLead?.contact?.full_name }}
+                    {{ currentLead?.lead_title??currentLead?.contact?.full_name }}
                 </span>
                 <button @click="$refs['editLeadModalRef'].showModalHandler()"
                     class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-2 d-none d-md-inline"
@@ -324,9 +324,8 @@
                 </button>
 
                 <lead-qualify-modal v-if="!isPipelineLead"
-                ref="leadQualifyModalRef"
-                :findLeadByIdHandler="()=>findLeadByIdHandler()"
-                />
+                    ref="leadQualifyModalRef"
+                    :findLeadByIdHandler="()=>findLeadByIdHandler()" />
 
                 <!-- lead status -->
                 <Skeletor class="me-3 d-none d-xl-inline"
@@ -342,7 +341,7 @@
                         data-mdb-toggle="dropdown"
                         aria-expanded="false">
                         <span class="fw-bold text-fs tbl-dropdown-title text-overflow-ellipsis text-head"
-                            style="white-space: nowrap;">{{ findLead?.status?.name??'Lead Status' }}</span>
+                            style="white-space: nowrap;">{{ currentLead?.status?.name??'Lead Status' }}</span>
                         <div class="dropdown--icon">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                 width="24"
@@ -360,7 +359,7 @@
                             v-for="(status, index) in leadStatus"
                             :key="index"
                             @click="updateLeadStatusHandler(status)"
-                            :class="`${status.name == findLead?.status?.name?'selected':''}`"
+                            :class="`${status.name == currentLead?.status?.name?'selected':''}`"
                             class="dropdown-item d-flex justify-content-between align-items-center cursor-pointer py-1">
                             <span class="text-overflow-ellipsis text-head">{{ status.name }}</span>
                             <svg v-if="status.is_lost"
@@ -514,10 +513,9 @@
                     </div>
                 </div>
 
-                <LeadReCategoriseModal 
-                ref="leadReCategoriseModalRef" 
-                :findLeadByIdHandler="()=>findLeadByIdHandler()"
-                :is-pipeline-lead="isPipelineLead" />
+                <LeadReCategoriseModal ref="leadReCategoriseModalRef"
+                    :findLeadByIdHandler="()=>findLeadByIdHandler()"
+                    :is-pipeline-lead="isPipelineLead" />
 
             </right-action-bar>
         </action-bar>
@@ -535,9 +533,9 @@
                                 v-tippy='{ content:stage?.name, placement : "top" }'
                                 class="btn btn-sm btn-stage flex-grow-1 py-0 fw-bold"
                                 :class="{
-                                    'complete':((stage?.lead_stage && findLead?.pipeline_stage_id != stage?.id) && findLead?.is_lost != 0),
-                                    'active':((findLead?.pipeline_stage_id == stage?.id) && findLead?.is_lost != 0),
-                                    'lost':(findLead?.is_lost == 0),
+                                    'complete':((stage?.lead_stage && currentLead?.pipeline_stage_id != stage?.id) && currentLead?.is_lost != 0),
+                                    'active':((currentLead?.pipeline_stage_id == stage?.id) && currentLead?.is_lost != 0),
+                                    'lost':(currentLead?.is_lost == 0),
                                     'normal-stage':(stage?.status == 0),
                                     'lost-stage':(stage?.status == 1),
                                     'won-stage':(stage?.status == 2),
@@ -552,8 +550,8 @@
                     </div>
                 </left-action-bar>
                 <div class="d-flex py-1 current-pipeline-stage">
-                    <span class="mb-0 fs-16px text-soft fw-bold me-1">{{ findLead?.pipeline?.title }}:</span>
-                    <span class="mb-0 fs-16px text-soft">{{ findLead?.pipeline_stage?.name }}</span>
+                    <span class="mb-0 fs-16px text-soft fw-bold me-1">{{ currentLead?.pipeline?.title }}:</span>
+                    <span class="mb-0 fs-16px text-soft">{{ currentLead?.pipeline_stage?.name }}</span>
                 </div>
             </action-bar>
         </Transition>
@@ -561,11 +559,9 @@
         <section class="h-100">
             <div class="col-area">
                 <timeline-history />
-                <right-sidebar-timeline 
-                :isFirstLoading="isFirstLoading"
-                :findLeadByIdHandler="findLeadByIdHandler"
-                :toggleRightDetailsSidebar="toggleRightDetailsSidebar"
-                />
+                <right-sidebar-timeline :isFirstLoading="isFirstLoading"
+                    :findLeadByIdHandler="findLeadByIdHandler"
+                    :toggleRightDetailsSidebar="toggleRightDetailsSidebar" />
             </div>
         </section>
 
@@ -586,19 +582,27 @@
                 height: 25px;
                 margin-right: 3px;
                 min-width: 8rem;
-                max-width: 8rem;
-                &.complete {
+
+                &.normal-stage {
+                    background-color: #e4e7eb;
+                }
+
+                &.lost-stage {
+                    background-color: #ff8ea1;
+                }
+
+                &.complete:not(.lost-stage) {
                     background-color: #8eedc7;
                     color: #091e43;
                 }
 
-                &.active {
-                    background-color:#27ab83;
+                &.active:not(.lost-stage) {
+                    background-color: #27ab83;
                     color: #ffffff;
                 }
 
                 &.lost,
-                &.lost-stage.active{
+                &.lost-stage.active {
                     background-color: #d1485f !important;
                     color: #ffffff;
                 }

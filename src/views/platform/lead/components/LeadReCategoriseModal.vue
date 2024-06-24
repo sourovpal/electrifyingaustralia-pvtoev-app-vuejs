@@ -14,7 +14,7 @@
             const appStore = useAppStore();
             return { leadStore, appStore };
         },
-        props:['isPipelineLead', 'findLeadByIdHandler'],
+        props: ['isPipelineLead', 'findLeadByIdHandler'],
         data() {
             return {
                 modalInstance: null,
@@ -29,8 +29,6 @@
                 commant: null,
                 isSubmitConfirmMoveForm: null,
             }
-        },
-        watch: {
         },
         methods: {
             showModalHandler() {
@@ -207,7 +205,8 @@
 
                     <div class="mb-2 position-relative">
                         <label class="form-label-title"
-                            for="">Move from {{ isPipelineLead?'another pipeline stage':'lead to pipeline stage' }}</label>
+                            for="">Move from {{ isPipelineLead?'another pipeline stage':'lead to pipeline stage'
+                            }}</label>
                         <input @click="delete errors?.pipeline"
                             class="form-control cursor-pointer select-none"
                             :value="selectedPipeline?.title??'Select pipeline'"

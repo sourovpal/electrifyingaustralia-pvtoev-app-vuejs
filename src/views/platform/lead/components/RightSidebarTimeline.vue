@@ -35,27 +35,15 @@
         data() {
             return {
                 icons: {},
-                contacts: [],
-                contact: null,
                 lead: null,
                 address: null,
                 confidence: 0,
-                leadProperties: [],
                 images: [],
                 progress: 0,
             }
         },
         watch: {
-            "leadStore.getLeadProperties"(payload) {
-                this.leadProperties = payload;
-            },
-            "leadStore.getLeadContacts"(payload) {
-                this.contacts = payload;
-            },
-            "leadStore.getPrimaryContact"(payload) {
-                this.contact = payload;
-            },
-            "leadStore.getFindLead"(lead) {
+            "currentLead"(lead) {
                 this.lead = lead;
                 this.confidence = lead?.confidence;
                 var temp = '';
@@ -85,6 +73,22 @@
                 }
                 if (temp != '') {
                     this.address = temp;
+                }
+            },
+        },
+        computed: {
+            currentLead(){
+                return this.leadStore.getCurrentLead;
+            },
+            contacts(){
+                return this.leadStore.getLeadContacts;
+            },
+            contact:{
+                get(){
+                    return this.leadStore.getPrimaryContact;
+                },
+                set(val){
+                    this.leadStore.setPrimaryContact(val);
                 }
             },
         },
@@ -123,6 +127,7 @@
                     const res = await DeleteLeadContact(contact.id);
                     var { message } = res;
                     this.$toast[message.type](message.text);
+                    this.findLeadByIdHandler();
                 } catch (error) {
                     try {
                         var message = error.response.data.message;

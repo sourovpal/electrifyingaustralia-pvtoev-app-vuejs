@@ -23,7 +23,6 @@
                 modalInstance: null,
                 errors: {},
                 id: null,
-                contacts: [],
                 contact: null,
                 title: null,
                 first_name: null,
@@ -54,14 +53,18 @@
             "phone_number"(val) {
                 this.searchLeadContactHandler(val, ['phone_number', 'another_phones']);
             },
-            "$store.state.lead.leadContacts"(payload) {
-                this.contacts = payload;
-            },
+        },
+        computed:{
+            contacts:{
+                get(){
+                    return this.leadStore.getLeadContacts;
+                },
+                set(){}
+            }
         },
         methods: {
             showModalHandler(contact = null) {
                 this.errors = {};
-                this.contacts = this.leadStore.getLeadContacts;
                 this.searchContacts = [];
                 if (contact) {
                     this.isCreateNewContact = false;

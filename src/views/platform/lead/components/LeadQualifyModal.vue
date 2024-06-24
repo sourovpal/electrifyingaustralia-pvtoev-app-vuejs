@@ -15,7 +15,7 @@
         components: {
             DropdownOwnerList
         },
-        props:['findLeadByIdHandler'],
+        props: ['findLeadByIdHandler'],
         setup(props) {
             const leadStore = useLeadStore();
             const appStore = useAppStore();

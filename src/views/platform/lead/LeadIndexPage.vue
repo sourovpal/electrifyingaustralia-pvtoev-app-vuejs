@@ -67,7 +67,6 @@
                 isSelectedAllRows: false,
                 isSelectedAllRowsReset: false,
                 fetchLeads: [],
-                leadStatus: [],
                 leadSources: [],
                 owners: [],
                 disabledHeaderColumns: [],
@@ -94,9 +93,6 @@
             "$route"(to) {
                 this.fullpath = to?.fullPath;
                 this.fetchAllLeadsHandler({ page: 1 });
-            },
-            "appStore.getLeadStatuses"(status) {
-                this.leadStatus = status;
             },
         },
         methods: {
@@ -377,11 +373,14 @@
             this.icons = icons;
             this.isFirstLoading = true;
             this.fetchAllLeadsHandler(this.fetch);
-            const appStore = useAppStore();
-            this.leadStatus = appStore.getLeadStatuses;
             this.moment = moment;
             this.fullpath = this.$route?.fullPath;
             this.leadStore.setLeadPrevUrl(null);
+        },
+        computed: {
+            leadStatus(){
+                return this.appStore.getLeadStatuses;
+            }
         },
         beforeUnmount() {
             this.leadStore.setLeadPrevUrl(this.fullpath);

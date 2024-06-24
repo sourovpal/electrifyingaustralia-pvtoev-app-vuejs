@@ -1,15 +1,24 @@
 <script setup>
 import {reactive} from 'vue';
+import { storeToRefs } from 'pinia';
 import {useToast} from 'vue-toast-notification';
 import ProfileDropdown from './ProfileDropdown.vue';
 import NotificationsDropdown from './NotificationsDropdown.vue';
 import {LogoutAction} from '../actions/AuthAction';
 import Storage from "../helpers/Storage";
 import { CONFIG } from "../config";
-
+import { useAppStore } from '../stores/app';
+import { useLeadStore } from '../stores/lead';
 const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
 const appStorage = new Storage(CONFIG.VITE_AUTH_APP);
 const securityStorage = new Storage(CONFIG.VITE_AUTH_TOKEN);
+
+const leadStore = useLeadStore();
+const appStore = useAppStore();
+
+const {getLeadPrevUrl} = storeToRefs(leadStore);
+
+
 
 const $toast = useToast(CONFIG.TOAST);
 
@@ -23,15 +32,6 @@ const data = reactive({
     platform_url:'/platform'
 });
 
-// watch: {
-//     "$store.state.lead.leadPrevUrl"(leadPrevUrl){
-//         if(leadPrevUrl){
-//             this.platform_url = leadPrevUrl;
-//         }else{
-//             this.platform_url = '/platform';
-//         }
-//     }
-// },
 
 async function logoutHandler(){
     try{
@@ -74,7 +74,7 @@ async function logoutHandler(){
             </div>
             
             <div class="nav-item">
-                <router-link v-tippy='{ content:"Platform", placement : "right" }' :to="data.platform_url" class="navbar-brand nav-link">
+                <router-link v-tippy='{ content:"Platform", placement : "right" }' :to="getLeadPrevUrl??data.platform_url" class="navbar-brand nav-link">
                     <img style="width:22px;height:22px;object-fit: cover;" :src="data.platformLogo" alt="">
                 </router-link>
             </div>

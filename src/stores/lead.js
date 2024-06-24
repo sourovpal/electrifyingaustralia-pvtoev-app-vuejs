@@ -5,7 +5,7 @@ export const useLeadStore = defineStore('lead', {
   state: () => {
     return {
       leadPrevUrl:null,
-      findLead:{},
+      currentLead:{},
       prev_lead:null,
       next_lead:null,
       leadProperties:[],
@@ -30,8 +30,8 @@ export const useLeadStore = defineStore('lead', {
     getLeadPrevUrl(state){
       return state.leadPrevUrl;
     },
-    getFindLead(state){
-      return state.findLead;
+    getCurrentLead(state){
+      return state.currentLead;
     },
     getNextLead(state){
       return state.next_lead;
@@ -92,6 +92,9 @@ export const useLeadStore = defineStore('lead', {
     setLeadPrevUrl(payload){
       this.leadPrevUrl = payload;
     },
+    setPrimaryContact(payload){
+      this.primaryContact = payload;
+    },
     setLeadEditTimelineData(payload) {
       try{
         const appStore = useAppStore();
@@ -108,7 +111,7 @@ export const useLeadStore = defineStore('lead', {
           lead_stages,
           pipeline_stage
         } = payload;
-        this.findLead  = lead;
+        this.currentLead  = lead;
         this.leadCustomProperties = lead?.custom_properties;
         this.prev_lead = prev_lead;
         this.next_lead = next_lead;

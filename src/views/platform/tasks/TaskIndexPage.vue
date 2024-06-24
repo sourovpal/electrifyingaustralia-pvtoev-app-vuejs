@@ -46,6 +46,12 @@ const handleUserSelected = (data) => {
     console.log(data);
 }
 
+// also temporary, duh
+const leadStatus = [
+    {name: 'fahim'},
+    {name: 'emroz'},
+]
+
 </script>
 
 <template>
@@ -77,7 +83,6 @@ const handleUserSelected = (data) => {
             </div>
         </action-bar>
 
-        <!-- <div class="tasks-list w-50 mx-auto mt-5 rounded" style="border: 2px dotted maroon;"> -->
         <div class="tasks-list w-50 mx-auto mt-5 rounded">
 
             <div class="overdue-tasks-wrapper">
@@ -103,13 +108,31 @@ const handleUserSelected = (data) => {
                             <div class="task-actions d-flex align-items-center">
                                 <button 
                                     class="border-0 bg-transparent" 
-                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top"
+                                    type="button" 
+                                    data-mdb-toggle="dropdown" 
+                                    aria-expanded="false"
                                 >
 				                    <font-awesome-icon
 				                        class="text-secondary"
 				                        icon="fas fa-stopwatch"
 				                    />
                                 </button>
+                                <div 
+                                    v-if="true" 
+                                    v-tippy='{ content:"Change Lead Status", placement : "top" }'
+                                    class="dropdown ms-2 d-none d-xl-block">
+                                    <div class="dropdown-menu dropdown-menu-end shadow-md custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <span
+                                            style="width:170px;"
+                                            v-for="(status, index) in leadStatus" 
+                                            :key="index" 
+                                            @click="updateLeadStatusHandler(selectedRows, status)"
+                                            class="dropdown-item d-flex justify-content-between align-items-center cursor-pointer py-1">
+                                            <span class="text-overflow-ellipsis text-head">{{ status?.name }}</span>
+                                            <span class="text-overflow-ellipsis text-secondary text-head">{{ 'beans wjkx' }}</span>
+                                        </span>
+                                    </div>
+                                </div>
                                 <div v-if="true" class="settings-group-item owner-list-dropdown relative d-none d-xl-block">
                                     <button 
                                         class="user-dropdown-toggler bg-transparent border-0" 
@@ -136,6 +159,9 @@ const handleUserSelected = (data) => {
                             </div>
                         </div>
                     </div>
+                    <!-- Temporary -->
+                    <!-- This will only be shown to the user if no more pages exist -->
+                    <p class="text-center text-secondary mt-5">No more tasks to show</p>
                 </div>
             </div>
 

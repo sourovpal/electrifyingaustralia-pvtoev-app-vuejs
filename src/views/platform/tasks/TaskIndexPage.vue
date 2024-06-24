@@ -100,7 +100,7 @@ const handleUserSelected = (data) => {
                                 <!-- <input checked data-bs-toggle="tooltip" data-bs-placement="top" title="beans bitch!" type="checkbox" /> -->
                             </div>
 
-                            <div class="task-actions d-flex">
+                            <div class="task-actions d-flex align-items-center">
                                 <button 
                                     class="border-0 bg-transparent" 
                                     data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top"
@@ -110,15 +110,28 @@ const handleUserSelected = (data) => {
 				                        icon="fas fa-stopwatch"
 				                    />
                                 </button>
-                                <div class="temp-filter d-flex align-items-center gap-2" style="margin-left: 20px;">
-				                    <font-awesome-icon
-				                        class="text-secondary"
-				                        icon="fas fa-bars"
-				                    />
-				                    <font-awesome-icon
-				                        class="text-secondary"
-				                        icon="fas fa-caret-down"
-				                    />
+                                <div v-if="true" class="settings-group-item owner-list-dropdown relative d-none d-xl-block">
+                                    <button 
+                                        class="user-dropdown-toggler bg-transparent border-0" 
+                                        data-mdb-toggle="dropdown" 
+                                        aria-expanded="false" 
+                                        v-tippy='{ content:"Change Owner", placement : "bottom" }'
+                                    >
+                                        <div class="temp-filter d-flex align-items-center gap-2" style="margin-left: 20px;">
+				                            <font-awesome-icon
+				                                class="text-secondary"
+				                                icon="fas fa-bars"
+				                            />
+				                            <font-awesome-icon
+				                                class="text-secondary"
+				                                icon="fas fa-caret-down"
+				                            />
+                                        </div>
+                                    </button>
+                                    <DropdownUsersList
+                                        :users="users"
+                                        @user-selected="handleUserSelected"
+                                    />
                                 </div>
                             </div>
                         </div>

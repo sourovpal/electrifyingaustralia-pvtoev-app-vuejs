@@ -110,6 +110,15 @@ const routes = [
                     title:'Home Page',
                 },
                 children: [
+                    {
+                        name:'LibraryProjects',
+                        path:'projects',
+                        component:()=>import('../views/library/LibraryProjectsList.vue'),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
+                        meta:{
+                            title:'Projects',
+                        },
+                    }
                 ]
             },
             { 

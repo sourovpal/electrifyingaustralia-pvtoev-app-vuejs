@@ -12,6 +12,7 @@
 
     import { Skeletor } from 'vue-skeletor';
     import DropdownOwnerList from './components/DropdownOwnerList.vue';
+    import DropdownSubscriberList from './components/DropdownSubscriberList.vue';
     import { icons } from '../../../asset/svgicon.js';
     import {
         FetchLeads,
@@ -32,13 +33,14 @@
 
     export default {
         components: {
+            Skeletor,
             SearchBar,
             ActionBar,
             LeftActionBar,
             RightActionBar,
             CustomScrollbar,
-            Skeletor,
             DropdownOwnerList,
+            DropdownSubscriberList,
             LeadQualifyModal,
             LeadReCategoriseModal,
             EditLeadModal,
@@ -69,9 +71,6 @@
             }
         },
         watch: {
-            "$route"() {
-                this.findLeadByIdHandler();
-            },
             "currentLead"(lead) {
                 this.isPipelineLead = !!(lead?.pipeline_id && lead?.pipeline_stage_id)
             }
@@ -103,6 +102,8 @@
                     this.isLoading = true;
 
                     var leadId = this.$route.params?.id ?? '';
+                    
+                    payload = {...payload, ...this.fetch};
 
                     if (!payload['lead_id']) {
                         payload['lead_id'] = leadId;
@@ -191,7 +192,7 @@
         mounted() {
             this.icons = icons;
             this.isFirstLoading = true;
-            this.findLeadByIdHandler(this.fetch);
+            this.findLeadByIdHandler();
             this.fullpath = this.$route?.fullPath;
             this.leadStore.setLeadPrevUrl(null);
         },
@@ -262,6 +263,7 @@
                 </div>
 
                 <router-link v-if="!isPipelineLead && !isFirstLoading"
+                    @click="findLeadByIdHandler({lead_id:prevLead})"
                     :to="`${prevLead?`/platform/leads/${prevLead}`:''}`">
                     <button v-tippy='{ content:"Previous Lead", placement : "top" }'
                         class="toolbar-btn btn btn-light btn-sm btn-floating me-3"
@@ -277,7 +279,9 @@
                         </svg>
                     </button>
                 </router-link>
+
                 <router-link v-if="!isPipelineLead && !isFirstLoading"
+                    @click="findLeadByIdHandler({lead_id:nextLead})"
                     :to="`${nextLead?`/platform/leads/${nextLead}`:''}`">
                     <button v-tippy='{ content:"Next Lead", placement : "top" }'
                         class="toolbar-btn btn btn-light btn-sm btn-floating me-3"
@@ -382,62 +386,18 @@
                 <div class="settings-group-item owner-list-dropdown me-3  d-none d-lg-inline">
                     <button class="owner-dropdown-toggler"
                         data-mdb-toggle="dropdown"
+                        v-tippy='{ content:"Select Subscribers", placement : "top" }'
                         aria-expanded="false">
                         <div class="icon">
-                            <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&d=mm&r=PG"
+                            <img v-if="owner?.id"
+                                :src="owner?.profile_avatar"
+                                alt="">
+                            <img v-else
+                                :src="icons?.avatar"
                                 alt="">
                         </div>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-end"
-                        @click="(e)=>{e.stopPropagation()}">
-                        <div>
-                            <div class="dropdown-body">
-
-                                <div class="dropdown-input">
-                                    <input type="text"
-                                        placeholder="Filter for team members"
-                                        class="project-owner-filter form-control" />
-                                </div>
-
-                                <div class="dropdown-header">
-                                    Owner
-                                </div>
-
-                                <div class="dropdown-item noselect">
-                                    <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&amp;d=mm&amp;r=PG"
-                                        draggable="false"
-                                        alt="No Owner's avatar"
-                                        class="project-owner__profile-photo" />
-                                    <span class="fs-14px fw-bold">
-                                        No Owner
-                                        <div class="project-owner-email text-muted fs-12px"></div>
-                                    </span>
-                                </div>
-
-                                <CustomScrollbar class="project-owner-team-members"
-                                    style="height:20rem;">
-                                    <div class="dropdown-header">
-                                        Change owner
-                                    </div>
-
-                                    <div v-for="(item, index) in 10"
-                                        :key="index"
-                                        class="dropdown-item">
-                                        <img src="https://www.gravatar.com/avatar/96d6c58a2851261d2f86c302b4dfdfcd?s=64&amp;d=mm&amp;r=PG"
-                                            draggable="false"
-                                            alt="Susmita Chowdhury's avatar"
-                                            class="project-owner__profile-photo" />
-                                        <span class="username fs-14px text-overflow-ellipsis">
-                                            Susmita Chowdhury
-                                            <div class="team-member-email text-muted fs-12px text-overflow-ellipsis">
-                                                admin@electrifyingaustralia.com.au
-                                            </div>
-                                        </span>
-                                    </div>
-                                </CustomScrollbar>
-                            </div>
-                        </div>
-                    </div>
+                    <DropdownSubscriberList :owner="owner" :owners="owners" />
                 </div>
 
                 <div class="settings-group-item owner-list-dropdown me-3 position-relative  d-none d-lg-inline">
@@ -446,7 +406,7 @@
                         aria-expanded="false"
                         v-tippy='{ content:"Change Owner", placement : "top" }'>
                         <div class="icon">
-                            <img v-if="owner"
+                            <img v-if="owner?.id"
                                 :src="owner?.profile_avatar"
                                 alt="">
                             <img v-else

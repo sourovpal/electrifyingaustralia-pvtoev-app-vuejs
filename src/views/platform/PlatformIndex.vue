@@ -27,20 +27,13 @@
       }
     },
     watch: {
-      "appStore.getLeadStatuses"(){
-        this.makeMenus();
-      },
-      "appStore.getPipelines"(){
-        this.makeMenus();
-      },
+      "getStatusAndPipeline"(){},
     },
-    methods:{
-      async makeMenus() {
+    computed: {
+      async getStatusAndPipeline(){
         this.menus = await menus();
-      }
-    },
-    mounted() {
-      this.makeMenus();
+        return {status:this.appStore.getLeadStatuses, pipelines:this.appStore.getPipelines};
+      },
     },
   }
 </script>

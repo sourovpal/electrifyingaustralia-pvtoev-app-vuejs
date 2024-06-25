@@ -24,6 +24,7 @@ export const useLeadStore = defineStore('lead', {
       leadPipelineStage:{},
       leadPipelineProperties:[],
       leadPipelineStagePropertiesValue:{},
+      leadSubscribers:[],
     }
   },
   getters:{
@@ -78,6 +79,9 @@ export const useLeadStore = defineStore('lead', {
     getLeadPipelineStage(stage){
       return stage.leadPipelineStage
     },
+    getLeadSubscribers(stage){
+      return stage.leadSubscribers;
+    }
     // getLeadPipelineProperties(stage){
     //   return stage.leadPipelineProperties;
     // },
@@ -95,11 +99,14 @@ export const useLeadStore = defineStore('lead', {
     setPrimaryContact(payload){
       this.primaryContact = payload;
     },
+    setLeadSubscribers(payload){
+      return this.leadSubscribers = payload;
+    },
     setLeadEditTimelineData(payload) {
       try{
         const appStore = useAppStore();
         this.leadStatus = appStore.getLeadStatuses;
-  
+        
         const {
           lead, 
           next_lead, 
@@ -109,36 +116,24 @@ export const useLeadStore = defineStore('lead', {
           owners, 
           lead_sources,
           lead_stages,
-          pipeline_stage
+          pipeline_stage,
         } = payload;
+
+        console.log(owners)
+
         this.currentLead  = lead;
         this.leadCustomProperties = lead?.custom_properties;
         this.prev_lead = prev_lead;
         this.next_lead = next_lead;
+        this.leadSubscribers = lead?.lead_subscribers??[];
+        this.leadPipelineStage = pipeline_stage??{};
+        this.owners = owners??[];
+        this.pipelines = pipelines??[];
+        this.leadProperties = lead_properties??[];
+        this.leadSources = lead_sources??[];
+        this.leadStages = lead_stages??[];
+        this.currentOwner = lead?.owner??{};
 
-        if(pipeline_stage){
-          this.leadPipelineStage = pipeline_stage;
-        }
-        
-        if(owners){
-          this.owners = owners;
-        }
-        if(pipelines){
-          this.pipelines = pipelines;
-        }
-  
-        if(lead_properties){
-          this.leadProperties = lead_properties;
-        }
-  
-        if(lead_sources){
-          this.leadSources = lead_sources;
-        }
-  
-        if(lead_stages){
-          this.leadStages = lead_stages;
-        }
-        
         if(lead?.contacts?.length){
             this.leadContacts = lead?.contacts;
             if(lead?.contact){
@@ -146,10 +141,11 @@ export const useLeadStore = defineStore('lead', {
             }else{
                 this.primaryContact = lead?.contacts[0];
             }
+        }else{
+          this.leadContacts = [];
+          this.primaryContact = {};
         }
-        if(lead?.owner){
-            this.currentOwner = lead?.owner;
-        }
+
       }catch(error){
         console.log(error);
       }

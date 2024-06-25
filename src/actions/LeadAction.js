@@ -226,6 +226,24 @@ const LeadPropertieUpdate = (payload)=>{
     });
 }
 
+const UpdateSubscribers = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.post(`/leads/update/subscribers`, payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
+
+
+
 export {
     FetchLeads,
     UpdateLeadPropertieHeaders,
@@ -242,4 +260,5 @@ export {
     SearchLeadContact,
     DeleteLeadContact,
     LeadPropertieUpdate,
+    UpdateSubscribers,
 }

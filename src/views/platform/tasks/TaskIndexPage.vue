@@ -30,12 +30,22 @@ async function getWorkFlows() {
     });
 }
 
+const handleWorkflowClick = () => 
+    workflows.value.forEach(workflow => workflow.tasks.forEach(task => task.is_complete = true));
+
 const handleTaskClick = (workflowId, taskId) => {
     const workflow = workflows.value.find(workflow => workflow.id === workflowId);
     if (!workflow) return;
     const task = workflow.tasks.find(task => task.id === taskId);
     task.is_complete = !task.is_complete;
 }
+
+const getWorkflowCompleteStatus = (workflowId) => {
+    const workflow = workflows.value.find(workflow => workflow.id === workflowId);
+    const allTasksComplete = workflow.tasks.every(task => task.is_complete);
+    return allTasksComplete;
+}
+
 
 
 const users = ref([]);
@@ -109,12 +119,12 @@ const leadStatus = [
                                     data-bs-toggle="tooltip" 
                                     data-bs-placement="top" 
                                     title="beans" 
-                                    @click="handleTaskClick(null, null)" 
+                                    @click="handleWorkflowClick" 
                                     type="checkbox" 
                                     class="custom-form-checkbox"
                                 >
                                     <svg
-                                        v-if="true"
+                                        v-if="!getWorkflowCompleteStatus(workflow.id)"
                                         class="unchecked"
                                         xmlns="http://www.w3.org/2000/svg"
                                         fill="currentColor"
@@ -122,6 +132,16 @@ const leadStatus = [
                                         viewBox="0 -960 960 960" 
                                         width="24">
                                         <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
+                                    <svg
+                                        v-else
+                                        class="checked"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24">
+                                            <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
+                                    </svg>
                                 </label>
                                 <p class="fw-bold mb-0">{{ workflow.title }}</p>
                                 <small class="status border fw-bold rounded px-2 py-1">Status</small>

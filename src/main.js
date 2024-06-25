@@ -32,7 +32,8 @@ import {
     faCircleNotch,
     faBars,
     faStopwatch,
-    faCaretDown
+    faCaretDown,
+    faSignal
 } from '@fortawesome/free-solid-svg-icons'
 
 const iconsToUse = [
@@ -46,7 +47,8 @@ const iconsToUse = [
     faCircleNotch,
     faBars,
     faStopwatch,
-    faCaretDown
+    faCaretDown,
+    faSignal
 ]
 
 library.add(iconsToUse)

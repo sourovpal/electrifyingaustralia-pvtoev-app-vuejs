@@ -163,7 +163,26 @@ const fetchLeads = ref([]);
                             <svg v-else class="checked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="24" height="24" viewBox="0 0 24 24"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
                         </label>
                     </div>
-                    <div class="tbl-td" style="width:79rem;flex-grow: 1;">Some name</div>
+                    <div class="tbl-td cursor-pointer d-block d-flex gap-2" style="width:29rem;flex-grow: 1;">
+                        <div>
+                            <p class="fs-6 mb-0">Some name <span class="text-secondary">New south wales</span> </p>
+                            <small class="mb-0 text-secondary">Lorem ipsum dolor sit amet, qui minim labore adipisicing...</small>
+                        </div>
+                    </div>
+                    <div class="tbl-td d-block" style="width: 10rem; flex-grow: 1;">
+                        <p class="fw-6 mb-0">$95,000.00</p>
+                        <small class="text-secondary">99kW Jinko</small>
+                    </div>
+                    <div class="tbl-td gap-4" style="width: 40rem; flex-grow: 1;">
+                        <div class="text-success d-flex flex-column align-items-center">
+				            <font-awesome-icon icon="fas fa-signature" />
+                            <small>Signed</small>
+                        </div>
+                        <div class="text-secondary d-flex flex-column align-items-center">
+				            <font-awesome-icon icon="fas fa-thumbs-up" />
+                            <small>Approved</small>
+                        </div>
+                    </div>
                     <div class="tbl-td" style="width:10rem;flex-grow: 1;">
                         25/06/2024
                     </div>

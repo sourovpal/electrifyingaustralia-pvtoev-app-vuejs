@@ -33,7 +33,9 @@ import {
     faBars,
     faStopwatch,
     faCaretDown,
-    faSignal
+    faSignal,
+    faSignature,
+    faThumbsUp
 } from '@fortawesome/free-solid-svg-icons'
 
 const iconsToUse = [
@@ -48,7 +50,9 @@ const iconsToUse = [
     faBars,
     faStopwatch,
     faCaretDown,
-    faSignal
+    faSignal,
+    faSignature,
+    faThumbsUp,
 ]
 
 library.add(iconsToUse)

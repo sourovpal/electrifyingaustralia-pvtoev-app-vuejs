@@ -35,7 +35,14 @@ import {
     faCaretDown,
     faSignal,
     faSignature,
-    faThumbsUp
+    faThumbsUp,
+    faPen,
+    faCopy,
+    faCheck,
+    faCircleCheck,
+    faPuzzlePiece,
+    faCircleUser,
+    faEllipsisVertical
 } from '@fortawesome/free-solid-svg-icons'
 
 const iconsToUse = [
@@ -53,6 +60,13 @@ const iconsToUse = [
     faSignal,
     faSignature,
     faThumbsUp,
+    faPen,
+    faCopy,
+    faCheck,
+    faCircleCheck,
+    faPuzzlePiece,
+    faCircleUser,
+    faEllipsisVertical
 ]
 
 library.add(iconsToUse)

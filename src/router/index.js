@@ -118,6 +118,15 @@ const routes = [
                         meta:{
                             title:'Projects',
                         },
+                    },
+                    {
+                        name:'LibraryProposals',
+                        path:'proposals',
+                        component:()=>import('../views/library/LibraryProposalList.vue'),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
+                        meta:{
+                            title:'Projects',
+                        },
                     }
                 ]
             },

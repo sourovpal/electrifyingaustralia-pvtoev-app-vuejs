@@ -7,9 +7,6 @@ import RightActionBar from '../../components/ActionBar/RightActionBar.vue';
 import Datatable from '../../components/Datatable/Datatable.vue';
 import DatatableHeader from '../../components/Datatable/DatatableHeader.vue';
 import DatatableBody from '../../components/Datatable/DatatableBody.vue';
-import TabbedDisplay from './components/TabbedDisplay.vue';
-import TempComponent1 from './components/TempComponent1.vue';
-import TempComponent2 from './components/TempComponent2.vue';
 
 const selectedRows = ref([]);
 const filterQueryData = ref({});
@@ -138,7 +135,7 @@ const fetchLeads = ref([]);
             </right-action-bar>
 
         </action-bar>
-        <Datatable v-if="false">
+        <Datatable>
 
             <!-- Datatable header -->
             <datatable-header class="">
@@ -200,13 +197,6 @@ const fetchLeads = ref([]);
             </datatable-body>
 
         </Datatable>
-        <TabbedDisplay
-            :tabs="[
-                {label: 'beans 1', component: 'TempComponent1'},
-                {label: 'beans 2', component: 'TempComponent2'},
-            ]"
-            :components="{TempComponent1, TempComponent2}"
-        />
     </section>
 </template>
 

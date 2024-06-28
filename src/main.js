@@ -42,7 +42,10 @@ import {
     faCircleCheck,
     faPuzzlePiece,
     faCircleUser,
-    faEllipsisVertical
+    faEllipsisVertical,
+    faUpRightFromSquare,
+    faShareNodes,
+    faClipboardList,
 } from '@fortawesome/free-solid-svg-icons'
 
 const iconsToUse = [
@@ -66,7 +69,10 @@ const iconsToUse = [
     faCircleCheck,
     faPuzzlePiece,
     faCircleUser,
-    faEllipsisVertical
+    faEllipsisVertical,
+    faUpRightFromSquare,
+    faShareNodes,
+    faClipboardList,
 ]
 
 library.add(iconsToUse)

@@ -3,9 +3,6 @@ import SearchBar from '../../components/SearchBar.vue'
 import ActionBar from '../../components/ActionBar/ActionBar.vue'
 import LeftActionBar from '../../components/ActionBar/LeftActionBar.vue'
 import RightActionBar from '../../components/ActionBar/RightActionBar.vue'
-import TabbedDisplay from './components/TabbedDisplay.vue'
-import TempComponent1 from './components/TempComponent1.vue'
-import TempComponent2 from './components/TempComponent2.vue'
 
 
 </script>
@@ -73,13 +70,27 @@ import TempComponent2 from './components/TempComponent2.vue'
 				<div><font-awesome-icon icon="fas fa-ellipsis-vertical"/></div>
 			</right-action-bar>
 		</action-bar>
-		<TabbedDisplay
-			:tabs="[
-				{label: 'beans 1', component: 'TempComponent1'},
-				{label: 'beans 2', component: 'TempComponent2'},
-			]"
-			:components="{TempComponent1, TempComponent2}"
-		/>
+	    <section class="content row border w-75">
+	        <div class="first-row col-md-8">
+	            system prod
+	        </div>
+
+	        <div class="first-row col-md-4 d-flex align-items-center gap-2">
+	            <button class="btn btn-large btn-primary" style="flex-grow: 2;">
+	                <font-awesome-icon icon="fas fa-up-right-from-square" />
+	                <span class="fw-bold ms-2">PROPOSAL</span>
+	            </button>
+
+	            <button class="btn btn-secondary" style="flex-grow: 1;">
+	                <font-awesome-icon class="text-secondary" icon="fas fa-share-nodes" />
+	                <span class="fw-bold text-black ms-2">SHARE</span>
+	            </button>
+
+	            <button class="btn btn-secondary" style="flex-grow: 1;">
+	                <font-awesome-icon class="text-secondary" icon="fas fa-clipboard-list" />
+	            </button>
+	        </div>
+	    </section>
 	</section>
 </template>
 

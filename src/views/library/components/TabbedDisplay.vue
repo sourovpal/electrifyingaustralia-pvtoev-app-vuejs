@@ -2,7 +2,7 @@
     <div class="tab-display">
         <div class="tab-navigation d-flex gap-3">
             <button
-                :class="`mb-0 bg-transparent border-0 fs-6 text-secondary fw-bold ${activeTab === tab.component ? 'text-info' : ''}`" 
+                :class="`mb-0 bg-transparent border-0 fs-14px text-secondary fw-bold ${activeTab === tab.component ? 'text-info' : ''}`" 
                 @click="handleTabClick(tab)"
                 v-for="(tab, i) in tabs"
             >
@@ -39,32 +39,8 @@ const handleTabClick = ({component}) => {
 </script>
 
 <style lang="scss" scoped>
-.tab-display {
-    // temporary
-    width: 30rem;
-}
-
 .fade-in-out {
     opacity: 0;
 }
-
-.left-fade-out {
-    opacity: 0;
-    transform: translateX(-50%);
-}
-.right-fade-out {
-    opacity: 0;
-    transform: translateX(50%);
-}
-
-.left-fade-in {
-    opacity: 0;
-    transform: translateX(-50%);
-}
-.right-fade-out {
-    opacity: 0;
-    transform: translateX(50%);
-}
-
 </style>
 

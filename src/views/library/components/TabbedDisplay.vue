@@ -24,7 +24,7 @@ import {ref} from 'vue';
 
 const props = defineProps(['tabs', 'components']);
 
-const activeTab = ref('TempComponent1');
+const activeTab = ref(props.tabs[0].component);
 const componentClass = ref('');
 const transitionDuration = ref(250);
 const handleTabClick = ({component}) => {

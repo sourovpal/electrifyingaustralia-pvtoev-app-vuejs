@@ -26,7 +26,7 @@ const props = defineProps(['tabs', 'components']);
 
 const activeTab = ref(props.tabs[0].component);
 const componentClass = ref('');
-const transitionDuration = ref(250);
+const transitionDuration = ref(150);
 const handleTabClick = ({component}) => {
     componentClass.value = 'fade-in-out';
 

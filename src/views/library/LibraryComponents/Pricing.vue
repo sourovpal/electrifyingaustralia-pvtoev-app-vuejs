@@ -9,7 +9,8 @@
             <small class="fw-bold col-md-2 text-end">Total</small>
         </div>
 
-        <div class="table-row row px-4 py-2">
+        <!-- table rows -->
+        <div class="row px-4 py-2">
             <small class="fw-bold col-md-5">Lorem ipsum dolor sit amet, qui </small>
             <small class="fw-bold col-md-1 text-end"></small>
             <small class="fw-bold col-md-2 text-end"></small>

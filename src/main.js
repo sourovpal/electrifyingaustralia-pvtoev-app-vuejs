@@ -46,6 +46,7 @@ import {
     faUpRightFromSquare,
     faShareNodes,
     faClipboardList,
+    faCircleQuestion,
 } from '@fortawesome/free-solid-svg-icons'
 
 const iconsToUse = [
@@ -73,6 +74,7 @@ const iconsToUse = [
     faUpRightFromSquare,
     faShareNodes,
     faClipboardList,
+    faCircleQuestion,
 ]
 
 library.add(iconsToUse)

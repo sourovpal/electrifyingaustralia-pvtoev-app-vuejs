@@ -10,7 +10,7 @@
             </button>
         </div>
         <div 
-            :class="`component-display shadow-sm rounded ${fade ? 'fade-in-out' : ''} ${componentClass}`" 
+            :class="`component-display rounded ${fade ? 'fade-in-out' : ''} ${componentClass}`" 
             :style="`transition: ${transitionDuration}ms;`"
         >
             <component :is="components[activeTab]" />

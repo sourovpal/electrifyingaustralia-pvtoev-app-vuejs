@@ -3,6 +3,10 @@ import TabbedDisplay from './components/TabbedDisplay.vue'
 import Pricing from './LibraryComponents/Pricing.vue'
 import Financing from './LibraryComponents/Financing.vue'
 import Rebates from './LibraryComponents/Rebates.vue'
+
+import Inverters from './LibraryComponents/Inverters.vue'
+import EVChargers from './LibraryComponents/EVChargers.vue'
+import HeatPumps from './LibraryComponents/HeatPumps.vue'
 </script>
 
 <template>
@@ -52,7 +56,7 @@ import Rebates from './LibraryComponents/Rebates.vue'
 		</div>
 		<div class="mt-3 w-100">
 			<TabbedDisplay
-				class="w-100"
+				component-class="w-100 mt-3 card shadow"
 				:tabs="[
 					{label: 'Pricing', component: 'Pricing'},
 					{label: 'Financing', component: 'Financing'},
@@ -63,6 +67,17 @@ import Rebates from './LibraryComponents/Rebates.vue'
 					Pricing,
 					Rebates,
 				}"
+			/>
+
+			<TabbedDisplay
+				class="w-100 mt-5"
+				component-class="w-100 mt-2 card shadow"
+				:tabs="[
+					{label: 'Inverters', component: 'Inverters'},
+					{label: 'EVChargers', component: 'EVChargers'},
+					{label: 'HeatPumps', component: 'HeatPumps'},
+				]"
+				:components="{ Inverters, EVChargers, HeatPumps }"
 			/>
 		</div>
 	</div>

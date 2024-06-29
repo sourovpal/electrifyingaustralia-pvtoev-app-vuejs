@@ -9,8 +9,7 @@
 
     import { useLeadStore } from '../../../../stores/lead';
     import { useAppStore } from '../../../../stores/app';
-
-
+    
     export default {
         components: {
             DropdownOwnerList
@@ -40,9 +39,9 @@
         methods: {
             showModalHandler(owner = null) {
                 this.errors = {};
-                this.owners = this.leadStore.getOwners;
-                this.pipelines = this.leadStore.getPipelinesWithStage;
-                this.currentOwner = this.owner = owner || this.leadStore.getCurrentOwner;
+                this.owners = this.appStore.getUsers;
+                this.pipelines = this.appStore.getPipelines;
+                this.currentOwner = this.owner = owner || this.leadStore.getLeadOwner;
                 try {
                     if (this.pipelines.length > 0) {
                         this.selectPipelineHandler(this.pipelines[0]?.id);

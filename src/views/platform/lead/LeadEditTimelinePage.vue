@@ -75,6 +75,29 @@
                 this.isPipelineLead = !!(lead?.pipeline_id && lead?.pipeline_stage_id)
             }
         },
+        computed: {
+            currentLead() {
+                return this.leadStore.getCurrentLead;
+            },
+            leadStages() {
+                return this.leadStore.getLeadStages;
+            },
+            leadStatus() {
+                return this.appStore.getLeadStatuses;
+            },
+            prevLead() {
+                return this.leadStore.getPrevLead;
+            },
+            nextLead() {
+                return this.leadStore.getNextLead;
+            },
+            owners() {
+                return this.appStore.getUsers;
+            },
+            owner() {
+                return this.leadStore.getLeadOwner;
+            },
+        },
         methods: {
             async updateLeadStageByProgressBar(pipeline, stage) {
                 try {
@@ -155,7 +178,7 @@
                         leads: [this.currentLead?.id],
                     };
                     const res = await UpdateMultipelLeadOwner(data);
-                    this.leadStore.setOwner(owner)
+                    this.leadStore.setLeadOwner(owner)
                 } catch (error) {
                     try {
                         var message = error.response.data.message;
@@ -164,29 +187,6 @@
                         this.$toast.error('Oops, something went wrong');
                     }
                 }
-            },
-        },
-        computed: {
-            currentLead() {
-                return this.leadStore.getCurrentLead;
-            },
-            leadStages() {
-                return this.leadStore.getLeadStages;
-            },
-            leadStatus() {
-                return this.leadStore.getLeadStatus;
-            },
-            prevLead() {
-                return this.leadStore.getPrevLead;
-            },
-            nextLead() {
-                return this.leadStore.getNextLead;
-            },
-            owners() {
-                return this.leadStore.getOwners;
-            },
-            owner() {
-                return this.leadStore.getCurrentOwner;
             },
         },
         mounted() {
@@ -214,7 +214,7 @@
                 <span @click="$refs['editLeadModalRef'].showModalHandler()"
                     v-if="!isFirstLoading"
                     class="text-head mb-0 fs-16px fw-bold lead-title-text">
-                    {{ currentLead?.lead_title??currentLead?.contact?.full_name }}
+                    {{ currentLead?.lead_title??currentLead?.primary_contact?.full_name }}
                 </span>
                 <button @click="$refs['editLeadModalRef'].showModalHandler()"
                     class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-2 d-none d-md-inline"
@@ -489,7 +489,7 @@
                             <button v-for="(stage, index) in leadStages"
                                 :key="index"
                                 ref="progressBar"
-                                @click="updateLeadStageByProgressBar(stage.pipeline_id, stage.id)"
+                                @click="updateLeadStageByProgressBar(currentLead?.pipeline_id, stage?.id)"
                                 v-tippy='{ content:stage?.name, placement : "top" }'
                                 class="btn btn-sm btn-stage flex-grow-1 py-0 fw-bold"
                                 :class="{

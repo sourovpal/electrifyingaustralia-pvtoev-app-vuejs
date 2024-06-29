@@ -59,7 +59,6 @@
                     headers: 1,
                     lead_properties: 1,
                     lead_sources: 1,
-                    owners: 1,
                 },
                 limit: 50,
                 toggleFilterSidebar: false,
@@ -68,7 +67,6 @@
                 isSelectedAllRowsReset: false,
                 fetchLeads: [],
                 leadSources: [],
-                owners: [],
                 disabledHeaderColumns: [],
                 leadProperties: [],
                 isFirstLoading: false,
@@ -190,9 +188,6 @@
                         if (payload['headers']) {
                             this.disabledHeaderColumns = res?.headers;
                         }
-                        if (payload['owners']) {
-                            this.owners = res?.owners;
-                        }
                         if (payload['lead_sources']) {
                             this.leadSources = res?.lead_sources;
                         }
@@ -201,7 +196,6 @@
                         throw new Error(error.message);
                     }
                 } catch (error) {
-                    console.log(error);
                     try {
                         var message = error.response.data.message;
                         this.$toast[message.type](message.text);
@@ -378,8 +372,11 @@
             this.leadStore.setLeadPrevUrl(null);
         },
         computed: {
-            leadStatus(){
+            leadStatus() {
                 return this.appStore.getLeadStatuses;
+            },
+            owners(){
+                return this.appStore.getUsers;
             }
         },
         beforeUnmount() {
@@ -882,7 +879,7 @@
                         style="width:20rem;flex-grow: 1;"
                         class="tbl-td full-width">
                         <router-link class="text-overflow-ellipsis"
-                            :to="`/platform/leads/${lead.id}`"> {{ lead.lead_title??lead.contact?.full_name }}
+                            :to="`/platform/leads/${lead.id}`"> {{ lead.lead_title??lead?.primary_contact?.full_name }}
                         </router-link>
                     </div>
 
@@ -947,7 +944,7 @@
                         class="tbl-td">
                         <div class="d-flex justify-content-between align-items-center w-100">
                             <div>
-                                <button v-show="lead.contact?.phone_number"
+                                <button v-show="lead?.primary_contact?.phone_number"
                                     @click="copyPhoneNumberHandler(lead)"
                                     class="copy-phone-number">
                                     <svg class="svg-5"
@@ -962,8 +959,8 @@
                                         </path>
                                     </svg>
                                 </button>
-                                <a v-show="lead.contact?.phone_number"
-                                    :href="`tel:${lead.contact?.phone_number}`"
+                                <a v-show="lead?.primary_contact?.phone_number"
+                                    :href="`tel:${lead?.primary_contact?.phone_number}`"
                                     target="_blank"
                                     title="Call phone number"
                                     class="call-btn">
@@ -982,7 +979,7 @@
                                 </a>
                             </div>
                             <div>
-                                {{ lead.contact?.phone_number }}
+                                {{ lead.primary_contact?.phone_number }}
                             </div>
                         </div>
                     </div>
@@ -991,7 +988,7 @@
                         style="width:15rem;flex-grow: 1;"
                         class="tbl-td">
                         <a class="text-overflow-ellipsis"
-                            href="">{{ lead.contact?.email }}</a>
+                            href="">{{ lead.primary_contact?.email }}</a>
                     </div>
 
                     <div v-show="!disabledHeaderColumns.includes('address_line_one')"
@@ -1032,9 +1029,9 @@
                         class="tbl-td"
                         style="width:12rem;flex-grow: 1;">
                         <span
-                            :class="fetchCustomProperties(lead?.custom_properties, propertie)?.length > 30?'hover-scroll':''"
+                            :class="fetchCustomProperties(lead?.properties_values, propertie)?.length > 30?'hover-scroll':''"
                             class="text-overflow-ellipsis w-100">
-                            {{ fetchCustomProperties(lead?.custom_properties, propertie)}}
+                            {{ fetchCustomProperties(lead?.properties_values, propertie)}}
                         </span>
                     </div>
 

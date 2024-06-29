@@ -566,7 +566,7 @@
                 <div class="mb-1">
                     <div class="fs-12px text-soft mb-0">Value</div>
                     <div class="d-flex">
-                        <div class="fs-14px fw-bold text-head mb-0">{{ lead?.estimated_value??'$0.00' }}</div>
+                        <div class="fs-14px fw-bold text-head mb-0">${{ lead?.estimated_value??'$0.00' }}</div>
                     </div>
                 </div>
                 <div class="mb-1">

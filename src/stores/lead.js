@@ -1,152 +1,162 @@
 import { defineStore } from 'pinia';
-import {useAppStore} from "../stores/app";
+import { useAppStore } from "../stores/app";
 
 export const useLeadStore = defineStore('lead', {
   state: () => {
     return {
-      leadPrevUrl:null,
-      currentLead:{},
-      prev_lead:null,
-      next_lead:null,
-      leadProperties:[],
-      leadCustomProperties:[],
-      leadSources:[],
-      owners:[],
-      currentOwner:null,
-      pipelines:[],
-      leadPipeline:[],
-      leadHasPipeline:[],
-      primaryContact:null,
-      leadContacts:[],
-      primaryContact:null,
-      leadStatus:[],
-      leadStages:[],
-      leadPipelineStage:{},
-      leadPipelineProperties:[],
-      leadPipelineStagePropertiesValue:{},
-      leadSubscribers:[],
+      leadPrevUrl: null,
+      currentLead: {},
+      prev_lead: null,
+      next_lead: null,
+      leadProperties: [],
+      leadPropertiesValues:{},
+      leadSources: [],
+      leadOwner: null,
+      pipelines: [],
+      leadPipeline: [],
+      leadHasPipeline: [],
+      primaryContact: null,
+      leadContacts: [],
+      primaryContact: null,
+      leadStages: [],
+      leadPipelineProperties: [],
+      leadSubscribers: [],
     }
   },
-  getters:{
-    getLeadPrevUrl(state){
+  getters: {
+    getLeadPrevUrl(state) {
       return state.leadPrevUrl;
     },
-    getCurrentLead(state){
+    getCurrentLead(state) {
       return state.currentLead;
     },
-    getNextLead(state){
-      return state.next_lead;
-    },
-    getPrevLead(state){
+    getPrevLead(state) {
       return state.prev_lead;
     },
-    getLeadStatus(state){
-      return state.leadStatus;
+    getNextLead(state) {
+      return state.next_lead;
     },
-    getLeadProperties(state){
+    getLeadProperties(state) {
       return state.leadProperties;
     },
-    getLeadCustomProperties(state){
-      return state.leadCustomProperties;
+    getLeadPropertiesValues(state) {
+      return state.leadPropertiesValues;
     },
-    getLeadSources(state){
+    getLeadSources(state) {
       return state.leadSources;
     },
-    getOwners(state){
-      return state.owners;
+    getLeadOwner(state) {
+      return state.leadOwner;
     },
-    getLeadContacts(state){
+    getLeadContacts(state) {
       return state.leadContacts;
     },
-    getPrimaryContact(state){
+    getPrimaryContact(state) {
       return state.primaryContact;
     },
-    getCurrentOwner(state){
-      return state.currentOwner;
+    getCurrentOwner(state) {
+      return state.leadOwner;
     },
-    getPipelinesWithStage(state){
-        return state.pipelines;
+    getPipelinesWithStage(state) {
+      return state.pipelines;
     },
-    getLeadPipeline(state){
-        return state.leadPipeline;
+    getLeadPipeline(state) {
+      return state.leadPipeline;
     },
-    getLeadHasPipelines(state){
-        return state.leadHasPipelines;
+    getLeadHasPipelines(state) {
+      return state.leadHasPipelines;
     },
-    getLeadStages(state){
-        return state.leadStages;
+    getLeadStages(state) {
+      return state.leadStages;
     },
-    getLeadPipelineStage(stage){
+    getLeadPipelineStage(stage) {
       return stage.leadPipelineStage
     },
-    getLeadSubscribers(stage){
+    getLeadSubscribers(stage) {
       return stage.leadSubscribers;
     }
-    // getLeadPipelineProperties(stage){
-    //   return stage.leadPipelineProperties;
-    // },
-    // getLeadPipelinePropertiesValue(stage){
-    //   return stage.leadPipelineStagePropertiesValue;
-    // }
   },
-  actions:{
-    setOwner(payload){
-      this.currentOwner = payload;
-    },
-    setLeadPrevUrl(payload){
+  actions: {
+    setLeadPrevUrl(payload) {
       this.leadPrevUrl = payload;
     },
-    setPrimaryContact(payload){
+    setCurrentLead(payload) {
+      this.currentLead = payload;
+    },
+    setNextLead(payload) {
+      this.next_lead = payload;
+    },
+    setPrevLead(payload) {
+      this.prev_lead = payload;
+    },
+    setLeadProperties(payload) {
+      this.leadProperties = payload;
+    },
+    setLeadPropertiesValues(payload) {
+      this.leadPropertiesValues = payload;
+    },
+    setLeadSources(payload) {
+      this.leadSources = payload;
+    },
+    setOwners(payload) {
+      this.owners = payload;
+    },
+    setLeadOwner(payload) {
+      this.leadOwner = payload;
+    },
+    setLeadContacts(payload) {
+      this.leadContacts = payload;
+    },
+    setPrimaryContact(payload) {
       this.primaryContact = payload;
     },
-    setLeadSubscribers(payload){
-      return this.leadSubscribers = payload;
+    setPipelinesWithStage(payload) {
+      this.pipelines = payload;
+    },
+    setLeadHasPipelines(payload) {
+      this.leadHasPipelines = payload;
+    },
+    setLeadStages(payload) {
+      this.leadStages = payload;
+    },
+    setLeadSubscribers(payload) {
+      this.leadSubscribers = payload;
     },
     setLeadEditTimelineData(payload) {
-      try{
-        const appStore = useAppStore();
-        this.leadStatus = appStore.getLeadStatuses;
-        
+      
+      try {
         const {
-          lead, 
-          next_lead, 
-          prev_lead, 
-          lead_properties, 
-          pipelines, 
-          owners, 
+          lead,
+          next_lead,
+          prev_lead,
+          lead_properties,
           lead_sources,
           lead_stages,
-          pipeline_stage,
         } = payload;
 
-        console.log(owners)
+        this.setCurrentLead(lead);
+        this.setLeadPropertiesValues(lead?.properties_values??{});
+        this.setPrevLead(prev_lead);
+        this.setNextLead(next_lead);
+        this.setLeadSubscribers(lead?.lead_subscribers ?? []);
+        this.setLeadProperties(lead_properties ?? []);
+        this.setLeadSources(lead_sources ?? []);
+        this.setLeadOwner(lead?.owner ?? {});
+        this.setLeadStages(lead_stages);
 
-        this.currentLead  = lead;
-        this.leadCustomProperties = lead?.custom_properties;
-        this.prev_lead = prev_lead;
-        this.next_lead = next_lead;
-        this.leadSubscribers = lead?.lead_subscribers??[];
-        this.leadPipelineStage = pipeline_stage??{};
-        this.owners = owners??[];
-        this.pipelines = pipelines??[];
-        this.leadProperties = lead_properties??[];
-        this.leadSources = lead_sources??[];
-        this.leadStages = lead_stages??[];
-        this.currentOwner = lead?.owner??{};
-
-        if(lead?.contacts?.length){
-            this.leadContacts = lead?.contacts;
-            if(lead?.contact){
-                this.primaryContact = lead.contact;
-            }else{
-                this.primaryContact = lead?.contacts[0];
-            }
-        }else{
+        if (lead?.contacts?.length) {
+          this.setLeadContacts(lead?.contacts??[]);
+          if (lead?.primary_contact) {
+            this.setPrimaryContact(lead.primary_contact??{})
+          } else {
+            this.setPrimaryContact(lead?.contacts[0]??{})
+          }
+        } else {
           this.leadContacts = [];
           this.primaryContact = {};
         }
 
-      }catch(error){
+      } catch (error) {
         console.log(error);
       }
     },

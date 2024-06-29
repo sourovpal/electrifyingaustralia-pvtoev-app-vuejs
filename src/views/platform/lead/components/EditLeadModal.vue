@@ -1,211 +1,49 @@
 <script>
-    import { Modal } from "mdb-ui-kit";
 
+    import { Modal } from "mdb-ui-kit";
     import {
         ConfirmQualify,
         MoveLeadStatusToPipeline
     } from '../../../../actions/LeadAction';
+    import { useLeadStore } from '../../../../stores/lead';
+    import { useAppStore } from '../../../../stores/app';
 
     export default {
-        components: {
+        setup(props) {
+            const leadStore = useLeadStore();
+            const appStore = useAppStore();
+            return { leadStore, appStore };
         },
         data() {
             return {
                 errors: {},
                 toggleTabs: 1,
-                findLead: {},
-                leadProperties: [],
-                leadSources: [],
                 modalInstance: null,
-                lead_source: null,
-                source_title: null,
-                currentLead: null,
-                leadCustomProperties: {},
                 formData: {},
                 isSubmitConfirmMoveForm: null,
             }
         },
         watch: {
-            "source_title"(s) {
-                if (!this.lead_source) { return; }
-                if (s == '') {
-                    this.formDataHandler('', 'lead_source', true)
-                } else {
-                    if ((this.currentLead?.source?.title == s)) {
-                        this.formDataHandler('', 'lead_source', true)
-                    } else {
-                        this.formDataHandler(s, 'lead_source', true)
-                    }
-                }
-            }
+        },
+        computed: {
+            currentLead(){
+                return this.leadStore.getCurrentLead;
+            },
+            leadProperties(){
+                return this.leadStore.getLeadProperties;
+            },
+            leadSources(){
+                return this.leadStore.getLeadSources;
+            },
         },
         methods: {
             showModalHandler() {
                 this.errors = {};
-
-                this.findLead = this.$store.getters.getFindLead;
-                this.leadProperties = this.$store.getters.getLeadProperties;
-                this.leadSources = this.$store.getters.getLeadSources;
-
-                var leadCustomProperties = this.$store.getters.getLeadCustomProperties;
-
-                leadCustomProperties?.map((item) => {
-                    this.leadCustomProperties[item.unique_id] = item.value;
-                });
-
-                if (this.findLead?.source) {
-                    this.source_title = this.findLead?.source.title;
-                }
-
-
                 this.modalInstance.show();
             },
             hideModalHandler() {
                 this.modalInstance.hide();
             },
-            estimatedValueHandler(event, field) {
-                var value = event.target.value.trim();
-                var tempValue = value;
-                if (value == null || value == "") {
-                    this.formDataHandler(event, field);
-                } else {
-                    var pattern = /[a-zA-Z!@#%^&*()_+{}\[\]:;<>,?\/\\~-]/;
-                    if (tempValue.match(pattern)) {
-                        event.target.value = '';
-                        return;
-                    } else {
-                        if (!tempValue.match(/[$]/)) {
-                            tempValue = "$" + tempValue;
-                        }
-                        if (!tempValue.match(/\.\d*0+$/)) {
-                            tempValue = tempValue + ".00";
-                        }
-                        event.target.value = tempValue;
-                        this.formDataHandler(event, field);
-                    }
-                }
-            },
-            filterLeadSource() {
-                return this.leadSources.filter((item) => {
-                    if (this.source_title) {
-                        if ((item.title).toLowerCase().search(this.source_title.toLowerCase()) > -1) {
-                            return item;
-                        }
-                    } else {
-                        return item;
-                    }
-                });
-            },
-            selectLeadSource(source) {
-                this.lead_source = source;
-                this.source_title = source.title;
-            },
-            yesOrNoHandler(value, field) {
-                if ((value == this.formData[field]) || true) {
-                    console.log(this.formData[field])
-                    this.formDataHandler('', field, true);
-                    return;
-                }
-
-                if (value == '1') {
-                    this.formDataHandler('1', field, true);
-                } else if (value == '0') {
-                    this.formDataHandler('0', field, true);
-                } else {
-
-                }
-            },
-            singleChoiceHandler(item, field) {
-                if (item) {
-                    this.formDataHandler(item.value, field, true);
-                } else {
-                    this.formDataHandler('', field, true);
-                }
-            },
-            multipleChoiceHandler(item, field) {
-                if (!item) {
-                    delete this.leadCustomProperties[field];
-                    this.formDataHandler('', field, true);
-                    return;
-                }
-                var value = item?.value?.trim();
-                if (value == '' || value == null) {
-                    return;
-                }
-                var tempValue = '';
-                if (!this.formData[field] && this.leadCustomProperties[field]) {
-                    this.formData[field] = this.leadCustomProperties[field];
-                }
-                if (this.formData[field]) {
-                    tempValue = this.formData[field];
-                }
-                if (item) {
-
-                    if (!(tempValue.search(item?.value) > -1)) {
-                        if (tempValue == '' || tempValue == null) {
-                            tempValue = value;
-                        } else {
-                            tempValue = tempValue + ", " + value;
-                        }
-                        this.formDataHandler(tempValue?.trim().trimLeft(',').trimRight(','), field, true);
-                    }
-
-                } else {
-                    this.formDataHandler('', field);
-                }
-            },
-            formDataHandler(event, field, isCustom = false) {
-                var value = event;
-                if (event.target) {
-                    value = event.target.value.trim();
-                }
-                if (isCustom) {
-                    try {
-                        if (this.leadCustomProperties[field]) {
-                            if (this.leadCustomProperties[field] == value) {
-                                delete this.formData[field];
-                            } else {
-                                this.formData[field] = value;
-                            }
-                        } else {
-                            if (this.formData[field]) {
-                                if (value == "" || value == null) {
-                                    delete this.formData[field];
-                                } else {
-                                    this.formData[field] = value;
-                                }
-                            } else {
-                                if (value != "" || value != null) {
-                                    this.formData[field] = value;
-                                }
-                            }
-                        }
-                    } catch (error) { }
-                } else {
-                    try {
-                        if (this.currentLead[field]) {
-                            if (this.currentLead[field] == value) {
-                                delete this.formData[field];
-                            } else {
-                                this.formData[field] = value;
-                            }
-                        } else {
-                            if (this.formData[field]) {
-                                if (value == "" || value == null) {
-                                    delete this.formData[field];
-                                } else {
-                                    this.formData[field] = value;
-                                }
-                            } else {
-                                if (value != "" || value != null) {
-                                    this.formData[field] = value;
-                                }
-                            }
-                        }
-                    } catch (error) { }
-                }
-                console.log(this.formData)
-            }
         },
         mounted() {
             this.modalInstance = new Modal(this.$refs.leadQualifyModalRef);
@@ -301,7 +139,7 @@
                                     <div class="dropdown-menu fade custom-form-select overflow-auto"
                                         style="max-height:125px;">
                                         <ul class="list-unstyled mb-0">
-                                            <li v-for="(item, index) in filterLeadSource()"
+                                            <li v-for="(item, index) in []"
                                                 :key="index"
                                                 @click="selectLeadSource(item)"
                                                 :class="`dropdown-item text-hard fw-bold fs-14px py-1 ${lead_source?.id == item.id?'selected':''}`">
@@ -423,7 +261,7 @@
                         </div>
 
                         <div class="mb-3 position-relative"
-                            v-for="(propertie, index) in leadProperties"
+                            v-for="(propertie, index) in []"
                             :key="index">
 
                             <label class="form-label-title"
@@ -432,7 +270,7 @@
                             <!-- type text and input tag -->
                             <input
                                 v-if="propertie?.data_type_id == 'free_text' || propertie?.data_type_id == 'read_only'"
-                                @input="formDataHandler($event, propertie?.unique_id, true)"
+                                @input="($event, propertie?.unique_id, true)"
                                 class="form-control"
                                 type="text"
                                 :value="leadCustomProperties[propertie?.unique_id]">

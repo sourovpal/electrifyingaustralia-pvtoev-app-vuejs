@@ -101,7 +101,7 @@
                 ];
             },
             customPropertiesValue() {
-                return this.leadStore.getLeadCustomProperties ?? {};
+                return this.leadStore.getLeadPropertiesValues ?? {};
             }
         },
         created() {

@@ -2,8 +2,15 @@
     import { Modal } from "mdb-ui-kit";
     import { CreateNewLead } from '../../../../actions/LeadAction';
     import DropdownOwnerList from './DropdownOwnerList.vue';
+    import Storage from "../../../../helpers/Storage";
+    import { CONFIG } from '../../../../config';
+
     export default {
         props: ['leadSources', 'leadStatus', 'owners', 'fetchAllLeadsHandler'],
+        setup(props) {
+            const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
+            return { userStorage };
+        },
         data() {
             return {
                 modalInstance: null,
@@ -35,7 +42,7 @@
             },
             "owners"(owners) {
                 try {
-                    const { email } = this.$cookies.get(import.meta.env.VITE_AUTH_USER);
+                    const { email } = this.userStorage.get();
                     this.owner = owners.find((item) => item.email == email);
                     this.currentOwner = this.owner;
                 } catch (error) { }

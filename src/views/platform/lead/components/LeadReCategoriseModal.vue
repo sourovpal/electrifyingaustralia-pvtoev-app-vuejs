@@ -32,8 +32,8 @@
         },
         methods: {
             showModalHandler() {
-                this.leadStatus = this.leadStore.getLeadStatus;
-                this.pipelines = this.leadStore.getPipelinesWithStage;
+                this.leadStatus = this.appStore.getLeadStatuses;
+                this.pipelines = this.appStore.getPipelines;
                 this.errors = {};
                 this.selectedStatus = null;
                 this.selectedPipeline = null;

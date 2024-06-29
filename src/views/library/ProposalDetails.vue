@@ -6,7 +6,7 @@ import Rebates from './LibraryComponents/Rebates.vue'
 </script>
 
 <template>
-	<div class="col-md-8 px-4">
+	<div class="proposal-details col-md-8 px-4">
 		<small class="text-info fw-bold">System production</small>
 		<div class="card mt-3">
 			<div class="tabs">
@@ -50,7 +50,7 @@ import Rebates from './LibraryComponents/Rebates.vue'
 				culpa et culpa duis.
 			</p>
 		</div>
-		<div class="card mt-3 w-100">
+		<div class="mt-3 w-100">
 			<TabbedDisplay
 				class="w-100"
 				:tabs="[
@@ -68,4 +68,9 @@ import Rebates from './LibraryComponents/Rebates.vue'
 	</div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.proposal-details {
+    height: 87vh;
+    overflow-y: scroll;
+}
+</style>

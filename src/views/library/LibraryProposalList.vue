@@ -7,14 +7,12 @@ import ProposalDetails from './ProposalDetails.vue'
 </script>
 
 <template>
-	<section class="content lead-list">
-		<SearchBar placeholderText="Search for a project" />
+	<section class="content lead-list --content-y-100vh">
+		<SearchBar placeholder-text="Search for a project" />
         <LibraryProposalActionBar />
 
-	    <section class="content row w-75 mt-3">
+	    <section class="row w-75 mt-3">
 	        <ProposalDetails />
-
-            <!-- Proposal details  -->
 	        <ProjectStatus />
 	    </section>
 	</section>

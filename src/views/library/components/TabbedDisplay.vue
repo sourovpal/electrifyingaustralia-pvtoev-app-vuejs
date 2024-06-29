@@ -10,8 +10,7 @@
             </button>
         </div>
         <div 
-            :class="componentClass" 
-            class="component-display shadow-sm rounded" 
+            :class="`component-display shadow-sm rounded ${fade ? 'fade-in-out' : ''} ${componentClass}`" 
             :style="`transition: ${transitionDuration}ms;`"
         >
             <component :is="components[activeTab]" />
@@ -22,17 +21,17 @@
 <script setup>
 import {ref} from 'vue';
 
-const props = defineProps(['tabs', 'components']);
+const props = defineProps(['tabs', 'components', 'component-class']);
 
 const activeTab = ref(props.tabs[0].component);
-const componentClass = ref('');
+const fade = ref(false);
 const transitionDuration = ref(150);
 const handleTabClick = ({component}) => {
-    componentClass.value = 'fade-in-out';
+    fade.value = true;
 
     setTimeout(() => {
         activeTab.value = component;
-        componentClass.value = '';
+        fade.value = false;
     }, transitionDuration.value)
 }
 

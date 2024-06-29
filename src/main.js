@@ -47,6 +47,8 @@ import {
     faShareNodes,
     faClipboardList,
     faCircleQuestion,
+    faLock,
+    faGem,
 } from '@fortawesome/free-solid-svg-icons'
 
 const iconsToUse = [
@@ -75,6 +77,8 @@ const iconsToUse = [
     faShareNodes,
     faClipboardList,
     faCircleQuestion,
+    faLock,
+    faGem,
 ]
 
 library.add(iconsToUse)

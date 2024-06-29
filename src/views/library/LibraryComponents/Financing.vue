@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="row align-items-center mt-4">
+		<div class="row mt-4">
 			<p class="text-end fs-14px col-md-4 text-secondary">
 				Total amount
 			</p>
@@ -21,7 +21,7 @@
 			</div>
 		</div>
 
-		<div class="row align-items-center">
+		<div class="row">
 			<p class="text-end fs-14px col-md-4 text-secondary">Deposit</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
@@ -40,7 +40,7 @@
 			</div>
 		</div>
 
-		<div class="row align-items-center">
+		<div class="row">
 			<p class="text-end fs-14px col-md-4 text-secondary">
 				Financed Amount
 			</p>
@@ -54,7 +54,7 @@
 			</div>
 		</div>
 		<hr />
-		<div class="row align-items-center mb-3">
+		<div class="row mb-3">
 			<p class="text-end fs-14px col-md-4 text-secondary mb-0">
 				Financed provider
 			</p>
@@ -85,7 +85,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="row align-items-center">
+		<div class="row">
 			<p class="text-end fs-14px col-md-4 text-secondary mb-0">Term</p>
 			<div class="col-md-8">
 				<div class="dropdown">
@@ -118,7 +118,7 @@
 			</div>
 		</div>
 		<hr>
-		<div class="row align-items-center mb-3">
+		<div class="row mb-3">
 			<p class="text-end fs-14px col-md-4 text-secondary mb-0">Rate</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
@@ -128,7 +128,7 @@
 			</div>
 		</div>
 
-		<div class="row align-items-center mb-3">
+		<div class="row mb-3">
 			<p class="text-end fs-14px col-md-4 text-secondary mb-0">Other fees</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
@@ -137,7 +137,7 @@
 			</div>
 		</div>
 
-		<div class="row align-items-center mb-3">
+		<div class="row mb-3">
 			<p class="text-end fs-14px col-md-4 text-secondary mb-0">Est. monthly repayments</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
@@ -146,7 +146,7 @@
 			</div>
 		</div>
 
-        <div class="row align-items-center">
+        <div class="row">
 			<p class="text-end fs-14px col-md-4 text-secondary mb-0">Include in proposal?</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">

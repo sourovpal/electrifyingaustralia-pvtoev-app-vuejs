@@ -7,6 +7,16 @@ import Rebates from './LibraryComponents/Rebates.vue'
 import Inverters from './LibraryComponents/Inverters.vue'
 import EVChargers from './LibraryComponents/EVChargers.vue'
 import HeatPumps from './LibraryComponents/HeatPumps.vue'
+
+import LoadProfile from './LibraryComponents/LoadProfile.vue';
+import BatteryStorage from './LibraryComponents/BatteryStorage.vue';
+import IntervalAnalysis from './LibraryComponents/IntervalAnalysis.vue';
+import ExportLimit from './LibraryComponents/ExportLimit.vue';
+
+import CurrentBills from './LibraryComponents/CurrentBills.vue';
+import FinancialOutcomes from './LibraryComponents/FinancialOutcomes.vue';
+
+import Mounting from './LibraryComponents/Mounting.vue';
 </script>
 
 <template>
@@ -71,7 +81,7 @@ import HeatPumps from './LibraryComponents/HeatPumps.vue'
 
 			<TabbedDisplay
 				class="w-100 mt-5"
-				component-class="w-100 mt-2 card shadow"
+				component-class="w-100 mt-2 card shadow pb-3"
 				:tabs="[
 					{label: 'Inverters', component: 'Inverters'},
 					{label: 'EVChargers', component: 'EVChargers'},
@@ -79,6 +89,38 @@ import HeatPumps from './LibraryComponents/HeatPumps.vue'
 				]"
 				:components="{ Inverters, EVChargers, HeatPumps }"
 			/>
+
+			<TabbedDisplay
+				class="w-100 mt-5"
+				component-class="w-100 mt-2 card shadow pb-4"
+				:tabs="[
+					{label: 'Load profile', component: 'LoadProfile'},
+					{label: 'Battery storage', component: 'BatteryStorage', icon: 'fa-lock'},
+					{label: 'Interval analysis', component: 'IntervalAnalysis', icon: 'fa-lock'},
+					{label: 'Export limit', component: 'ExportLimit' },
+				]"
+				:components="{ LoadProfile, BatteryStorage, IntervalAnalysis, ExportLimit }"
+			/>
+
+			<TabbedDisplay
+				class="w-100 mt-5"
+				component-class="w-100 mt-2 card shadow pb-4"
+				:tabs="[
+					{label: 'Current bills', component: 'CurrentBills'},
+					{label: 'Financial Outcomes', component: 'FinancialOutcomes'},
+				]"
+				:components="{ CurrentBills, FinancialOutcomes }"
+			/>
+
+			<TabbedDisplay
+				class="w-100 mt-5"
+				component-class="w-100 mt-2 card shadow pb-4"
+				:tabs="[
+					{label: 'Mounting', component: 'Mounting'},
+				]"
+				:components="{ Mounting }"
+			/>
+			<p style="margin-top: 50rem;">DELETE THIS TAG</p>
 		</div>
 	</div>
 </template>

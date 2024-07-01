@@ -1,4 +1,7 @@
 <script setup>
+import Chart from 'chart.js/auto';
+import {onMounted, ref} from 'vue';
+
 import TabbedDisplay from './components/TabbedDisplay.vue'
 import Pricing from './LibraryComponents/Pricing.vue'
 import Financing from './LibraryComponents/Financing.vue'
@@ -19,6 +22,39 @@ import FinancialOutcomes from './LibraryComponents/FinancialOutcomes.vue';
 import Mounting from './LibraryComponents/Mounting.vue';
 
 import CustomSettings from './LibraryComponents/CustomSettings.vue';
+import Notes from './LibraryComponents/Notes.vue';
+import Wholesaler from './LibraryComponents/Wholesaler.vue';
+
+const data = [
+    { year: 2010, count: 10 },
+    { year: 2011, count: 20 },
+    { year: 2012, count: 15 },
+    { year: 2013, count: 25 },
+    { year: 2014, count: 22 },
+    { year: 2015, count: 30 },
+    { year: 2016, count: 28 },
+];
+
+const barChart = ref(null);
+onMounted(() => {
+    const myChart = new Chart(
+        barChart.value,
+        {
+            type: 'bar',
+            data: {
+                labels: data.map(row => row.year),
+                datasets: [
+                    {
+                        label: 'Acquisitions by year',
+                        data: data.map(row => row.count)
+                    }
+                ]
+            }
+        }
+    )
+
+});
+
 </script>
 
 <template>
@@ -50,21 +86,7 @@ import CustomSettings from './LibraryComponents/CustomSettings.vue';
 				</div>
 			</div>
 			<!-- Pretend graph -->
-			<p class="mt-2">
-				Lorem ipsum dolor sit amet, officia excepteur ex fugiat
-				reprehenderit enim labore culpa sint ad nisi Lorem pariatur
-				mollit ex esse exercitation amet. Nisi anim cupidatat
-				excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem
-				est aliquip amet voluptate voluptate dolor minim nulla est
-				proident. Nostrud officia pariatur ut officia. Sit irure
-				elit esse ea nulla sunt ex occaecat reprehenderit commodo
-				officia dolor Lorem duis laboris cupidatat officia
-				voluptate. Culpa proident adipisicing id nulla nisi laboris
-				ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit
-				commodo ex non excepteur duis sunt velit enim. Voluptate
-				laboris sint cupidatat ullamco ut ea consectetur et est
-				culpa et culpa duis.
-			</p>
+			<canvas id="bar-chart" ref="barChart"></canvas>
 		</div>
 		<div class="mt-3 w-100">
 			<TabbedDisplay
@@ -124,13 +146,13 @@ import CustomSettings from './LibraryComponents/CustomSettings.vue';
 			/>
             <TabbedDisplay
 			    class="w-100 mt-5"
-			    component-class="w-100 mt-2 card shadow pb-4"
+			    component-class="w-100 mt-2 card shadow"
 			    :tabs="[
 				    {label: 'Custom settings', component: 'CustomSettings'},
-				    {label: 'Notes', component: 'CurrentBills'},
-				    {label: 'Wholesaler', component: 'CurrentBills'},
+				    {label: 'Notes', component: 'Notes'},
+				    {label: 'Wholesaler', component: 'Wholesaler'},
 			    ]"
-			    :components="{ CustomSettings }"
+			    :components="{ CustomSettings, Notes, Wholesaler }"
 			/>
 			<p style="margin-top: 50rem;">DELETE THIS TAG</p>
 		</div>

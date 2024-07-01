@@ -17,6 +17,8 @@ import CurrentBills from './LibraryComponents/CurrentBills.vue';
 import FinancialOutcomes from './LibraryComponents/FinancialOutcomes.vue';
 
 import Mounting from './LibraryComponents/Mounting.vue';
+
+import CustomSettings from './LibraryComponents/CustomSettings.vue';
 </script>
 
 <template>
@@ -119,6 +121,16 @@ import Mounting from './LibraryComponents/Mounting.vue';
 					{label: 'Mounting', component: 'Mounting'},
 				]"
 				:components="{ Mounting }"
+			/>
+            <TabbedDisplay
+			    class="w-100 mt-5"
+			    component-class="w-100 mt-2 card shadow pb-4"
+			    :tabs="[
+				    {label: 'Custom settings', component: 'CustomSettings'},
+				    {label: 'Notes', component: 'CurrentBills'},
+				    {label: 'Wholesaler', component: 'CurrentBills'},
+			    ]"
+			    :components="{ CustomSettings }"
 			/>
 			<p style="margin-top: 50rem;">DELETE THIS TAG</p>
 		</div>

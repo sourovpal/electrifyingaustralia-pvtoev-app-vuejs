@@ -49,6 +49,7 @@ import {
     faCircleQuestion,
     faLock,
     faGem,
+    faCalendar,
 } from '@fortawesome/free-solid-svg-icons'
 
 const iconsToUse = [
@@ -79,6 +80,7 @@ const iconsToUse = [
     faCircleQuestion,
     faLock,
     faGem,
+    faCalendar,
 ]
 
 library.add(iconsToUse)

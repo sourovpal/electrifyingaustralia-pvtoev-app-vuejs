@@ -13,7 +13,12 @@
             </div>
             <small class="text-info mb-0 fw-bold">View all</small>
         </div>
-        <div>
+        <div class="border mb-5" style="height: calc(88vh + 5px); overflow-y: scroll">
+            <LibraryMenuItem />
+            <LibraryMenuItem />
+            <LibraryMenuItem />
+            <LibraryMenuItem />
+            <LibraryMenuItem />
             <LibraryMenuItem />
         </div>
     </section>
@@ -36,15 +41,14 @@ import LibraryMenuItem from './LibraryMenuItem.vue';
     border-right:1px solid #dddddd;
     position: relative;
     z-index: 99;
-    @media (min-width: 767px){
-        min-width:13rem;
-    }
-    @media (min-width: 1200px){
-        min-width:16rem;
-    }
+
+    @media (min-width: 767px){ min-width:13rem; }
+    @media (min-width: 1200px){ min-width:16rem; }
+
     .submenu-header{
         padding: 1.5rem;
         padding-bottom: 0.25rem;
+
         h1{
             color: #1f2933;
             font-size: 1.5rem;

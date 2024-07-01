@@ -1,6 +1,6 @@
 <template>
-    <div :class="`${'active-border'} library-menu-item px-4 border-bottom d-flex flex-column justify-content-between position-relative`">
-        <p class="mb-0">1 Scallop Street , Huskisson</p>
+    <div :class="`${Math.random() > 0.5 ? 'active-border' : ''} library-menu-item px-4 border-bottom d-flex flex-column justify-content-between position-relative overflow-hidden`">
+        <p class="mb-0 overflow-hidden fs-16px project-name">1 Scallop Street , Huskisson Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.</p>
         <small class="text-secondary mb-0 d-block">75.68kW TW</small>
         <small class="text-secondary fs-12px">
             Created at Jul 1, 2024
@@ -54,6 +54,19 @@ $item-control-wrapper-width: 2.15rem;
         &.archive-btn:hover { background-color: #dc4c64; }
     }
 }
+
+.project-name  {
+    text-overflow: ellipsis;
+    white-space: nowrap; // comment this for 2 lines
+    text-overflow: ellipsis;
+    overflow: hidden;
+    // Uncomment these for 2 lines
+    // display: -webkit-box;
+    // -webkit-line-clamp: 2;
+    // -webkit-box-orient: vertical;
+    // line-height: 1.15rem;
+}
+
 
 .library-menu-item:hover .item-control-wrapper {
     right: 0;

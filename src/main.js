@@ -52,6 +52,8 @@ import {
     faCalendar,
     faBoxArchive,
     faMagnifyingGlass,
+    faClockRotateLeft,
+    faDownload,
 } from '@fortawesome/free-solid-svg-icons'
 
 const iconsToUse = [
@@ -84,7 +86,9 @@ const iconsToUse = [
     faGem,
     faCalendar,
     faBoxArchive,
-    faMagnifyingGlass
+    faMagnifyingGlass,
+    faClockRotateLeft,
+    faDownload,
 ]
 
 library.add(iconsToUse)

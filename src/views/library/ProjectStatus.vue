@@ -6,7 +6,7 @@
 	            <span class="fw-bold ms-2">PROPOSAL</span>
 	        </button>
 
-	        <button class="btn btn-secondary" style="flex-grow: 1;">
+	        <button class="btn btn-secondary" style="flex-grow: 1;" @click="handleShareBtnClick">
 	            <font-awesome-icon class="text-secondary" icon="fas fa-share-nodes" />
 	            <span class="fw-bold text-black ms-2">SHARE</span>
 	        </button>
@@ -121,10 +121,18 @@
             </div>
         </div>
 	</div>
+    <ShareModal v-if="shareModalOpen" />
 </template>
 
 <script setup>
+import ShareModal from './ShareModal.vue';
+import {ref} from 'vue';
 
+const shareModalOpen = ref(false)
+
+const handleShareBtnClick = () => {
+    shareModalOpen.value = true;
+}
 </script>
 
 <style lang="scss" scoped>

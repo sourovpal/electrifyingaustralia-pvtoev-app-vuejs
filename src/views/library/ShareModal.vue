@@ -1,0 +1,159 @@
+<script setup>
+import {onBeforeUnmount, onMounted, ref} from 'vue'
+import {Modal} from 'mdb-ui-kit'
+
+const confirmationModal = ref(null)
+let myModal = null
+
+onMounted(() => {
+	myModal = new Modal(confirmationModal.value, {
+		keyboard: false,
+		backdrop: 'static',
+	})
+	myModal.show()
+})
+
+const handleConfirmBtnClick = () => {
+    emit('confirm')
+}
+
+const handleCancelBtnClick = () => {
+    myModal.hide();
+    emit('cancel')
+}
+
+onBeforeUnmount(() => {
+    myModal.hide();
+});
+
+</script>
+
+<template>
+	<div class="modal fade" tabindex="-1" ref="confirmationModal">
+		<div class="modal-dialog modal-xl modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-body p-0 row g-0" id="modal-body">
+				    <div class="sidebar h-100 py-4 col-md-3" style="background-color: #f5f7fa;">
+				        <div class="tabs border-bottom mb-5">
+				            <ul class="list-unstyled">
+				                <li class="py-3 active-tab ps-4 text-info fw-bold">Send e-Signature request</li>
+				                <li class="py-3 text-black fw-bold ps-4 border-start">Send proposal</li>
+				            </ul>
+				        </div>
+
+				        <div class="share-history-wrapper px-4">
+                            <div class="heading d-flex align-items-center gap-2 pb-4">
+				                <font-awesome-icon
+				                    class="text-secondary"
+				                    icon="fas fa-clock-rotate-left"
+				                />
+				                <p class="mb-0 fw-bold">Share history</p>
+                            </div>
+                            <div class="link-input-wrapper mb-4">
+                                <label for="web-proposal-input" class="d-flex align-items-center gap-2">
+                                    <p class="mb-0 fw-bold text-black">Web proposal</p>
+                                    <font-awesome-icon
+				                        class="text-secondary"
+				                        icon="fas fa-circle-question"
+				                    />
+                                </label>
+
+                                <div class="link-input position-relative">
+                                    <input id="web-proposal-input"  type="text" class="border rounded" />
+                                    <div class="input-control d-flex align-items-center --gap-3 position-absolute">
+                                        <button class="btn btn-light btn-floating">
+	                                        <font-awesome-icon
+	                                            icon="fas fa-up-right-from-square" 
+						                        class="text-secondary cursor-pointer"
+	                                        />
+                                        </button>
+
+                                        <button class="btn btn-light btn-floating">
+	                                        <font-awesome-icon
+	                                            class="text-secondary cursor-pointer"
+	                                            icon="fas fa-copy"
+	                                        />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="link-input-wrapper mb-4">
+                                <label for="comparison-page-input" class="d-flex align-items-center gap-2">
+                                    <p class="mb-0 fw-bold text-black">Comparison page</p>
+                                </label>
+
+                                <div class="link-input position-relative">
+                                    <input id="comparison-page-input" type="text" class="border rounded" />
+                                    <div class="input-control d-flex align-items-center --gap-3 position-absolute">
+                                        <button class="btn btn-light btn-floating">
+	                                        <font-awesome-icon
+	                                            icon="fas fa-up-right-from-square" 
+						                        class="text-secondary cursor-pointer"
+	                                        />
+                                        </button>
+
+                                        <button class="btn btn-light btn-floating">
+	                                        <font-awesome-icon
+	                                            class="text-secondary cursor-pointer"
+	                                            icon="fas fa-copy"
+	                                        />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="pdf-download-wrapper">
+                                <div class="d-flex align-items-center gap-2">
+                                    <p class="mb-0 fw-bold text-black">Download</p>
+                                    <font-awesome-icon
+				                        class="text-secondary"
+				                        icon="fas fa-circle-question"
+				                    />
+                                </div>
+                                <button class="btn btn-outline-primary text-center rounded w-100">
+                                    <span class="text-primary fw-bold me-3">Download</span> 
+                                    <font-awesome-icon
+				                        class="text-primary"
+				                        icon="fas fa-download"
+				                    />
+                                </button>
+                            </div>
+				        </div>
+
+				    </div>
+
+				    <div class="content border col-md-9">
+				        content lol
+				    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<style lang="scss" scoped>
+
+.active-tab {
+    background-color: #e5f4ff;
+    border-left: 3px solid #007ee5;
+}
+
+.link-input {
+    input {
+        font-size: 0.825rem;
+        padding: 0;
+        background-color: #ffffff;
+        border: none;
+        padding: .75rem 5rem .75rem .75rem;
+    } 
+}
+
+.input-control {
+    z-index: 99;
+    right: 0;
+    top: 0;
+    height: 100%;
+}
+
+</style>

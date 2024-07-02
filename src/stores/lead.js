@@ -21,6 +21,7 @@ export const useLeadStore = defineStore('lead', {
       leadStages: [],
       leadPipelineProperties: [],
       leadSubscribers: [],
+      isPipelineLead:false,
     }
   },
   getters: {
@@ -74,6 +75,9 @@ export const useLeadStore = defineStore('lead', {
     },
     getLeadSubscribers(stage) {
       return stage.leadSubscribers;
+    },
+    getIsPipelineLead(stage){
+      return stage.isPipelineLead;
     }
   },
   actions: {
@@ -122,8 +126,10 @@ export const useLeadStore = defineStore('lead', {
     setLeadSubscribers(payload) {
       this.leadSubscribers = payload;
     },
+    setIsPipelineLead(payload){
+      return this.isPipelineLead = payload;
+    },
     setLeadEditTimelineData(payload) {
-      
       try {
         const {
           lead,
@@ -135,6 +141,7 @@ export const useLeadStore = defineStore('lead', {
         } = payload;
 
         this.setCurrentLead(lead);
+        this.setIsPipelineLead(!!(lead?.pipeline_id && lead?.pipeline_stage_id));
         this.setLeadPropertiesValues(lead?.properties_values??{});
         this.setPrevLead(prev_lead);
         this.setNextLead(next_lead);

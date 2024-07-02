@@ -1,5 +1,6 @@
-<script>
-
+<script setup>
+    import { ref, computed, onMounted, defineExpose, watch } from "vue";
+    import RightSidebarProperties from './RightSidebarProperties.vue';
     import { Modal } from "mdb-ui-kit";
     import {
         ConfirmQualify,
@@ -7,57 +8,64 @@
     } from '../../../../actions/LeadAction';
     import { useLeadStore } from '../../../../stores/lead';
     import { useAppStore } from '../../../../stores/app';
+    import MultipleSelectVue from "./forms/MultipleSelect.vue";
+    // Assign Veriable
+    const leadStore = useLeadStore();
+    const appStore = useAppStore();
+    const tabShowAll = ref('show-all');
+    const tabLeadProperties = ref('lead-properties');
+    const tabPipelineProperties = ref('pipeline-properties');
+    const errors = ref({});
+    const toggleTabName = ref('show-all');
+    const showAll = ref('show-all');
+    const modalInstance = ref(null);
+    const isSubmitEditLead = ref(null);
+    const leadEditModalRef = ref(null);
 
-    export default {
-        setup(props) {
-            const leadStore = useLeadStore();
-            const appStore = useAppStore();
-            return { leadStore, appStore };
-        },
-        data() {
-            return {
-                errors: {},
-                toggleTabs: 1,
-                modalInstance: null,
-                formData: {},
-                isSubmitConfirmMoveForm: null,
-            }
-        },
-        watch: {
-        },
-        computed: {
-            currentLead(){
-                return this.leadStore.getCurrentLead;
-            },
-            leadProperties(){
-                return this.leadStore.getLeadProperties;
-            },
-            leadSources(){
-                return this.leadStore.getLeadSources;
-            },
-        },
-        methods: {
-            showModalHandler() {
-                this.errors = {};
-                this.modalInstance.show();
-            },
-            hideModalHandler() {
-                this.modalInstance.hide();
-            },
-        },
-        mounted() {
-            this.modalInstance = new Modal(this.$refs.leadQualifyModalRef);
-        },
+    const leadFormData = ref({});
+    const customFormData = ref({});
+    // Computed
+    const currentLead = computed(() => leadStore.getCurrentLead);
+    const leadProperties = computed(() => leadStore.getLeadProperties);
+    const leadSources = computed(() => leadStore.getLeadSources);
+    const isPipelineLead = computed(() => leadStore.getIsPipelineLead);
+
+    // On Mounted
+    onMounted(() => {
+        modalInstance.value = new Modal(leadEditModalRef.value);
+    });
+
+    watch(leadFormData.value, (n, o) => {
+        console.log(n)
+    });
+
+    // functions
+    function showModalHandler() {
+        errors.value = {};
+        modalInstance.value.show();
+        console.log(leadFormData.value)
     }
+
+    function hideModalHandler() {
+        modalInstance.value.hide();
+    }
+    function customLabelMake({ label, value }) {
+        return `${label}`
+    }
+    function tags(n) {
+        console.log('new', n);
+    }
+    defineExpose({ showModalHandler, hideModalHandler });
+    const selected = ref('');
 </script>
 
 <template>
 
     <div class="modal fade add-new-lead-modal"
-        id="leadQualifyModalRef"
-        ref="leadQualifyModalRef"
+        id="leadEditModalRef"
+        ref="leadEditModalRef"
         aria-hidden="true"
-        aria-labelledby="leadQualifyModalRef"
+        aria-labelledby="leadEditModalRef"
         tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content mb-5">
@@ -91,23 +99,27 @@
                     <ul class="nav nav-tabs nav-justified mb-3 d-none d-lg-flex"
                         id="ex1"
                         role="tablist">
+
                         <li class="nav-item nav-link text-capitalize cursor-pointer fs-14px fw-bold text-hard"
-                            :class="toggleTabs==1?'active':''"
-                            @click="toggleTabs=1">Show All</li>
+                            :class="{active:(toggleTabName==tabShowAll)}"
+                            @click="toggleTabName=tabShowAll">Show All</li>
                         <li class="nav-item nav-link text-capitalize cursor-pointer fs-14px fw-bold text-hard"
-                            :class="toggleTabs==2?'active':''"
-                            @click="toggleTabs=2">Lead Properties</li>
+                            :class="{active:(toggleTabName==tabLeadProperties)}"
+                            @click="toggleTabName=tabLeadProperties">Lead Properties</li>
                         <li class="nav-item nav-link text-capitalize cursor-pointer fs-14px fw-bold text-hard"
-                            :class="toggleTabs==3?'active':''"
-                            @click="toggleTabs=3">Custom Properties</li>
+                            v-if="isPipelineLead"
+                            :class="{active:(toggleTabName==tabPipelineProperties)}"
+                            @click="toggleTabName=tabPipelineProperties">Pipeline Properties</li>
                     </ul>
-                    <div v-show="toggleTabs != 3">
+
+                    <div v-show="(toggleTabName == tabShowAll)">
                         <div class="mb-3 position-relative">
+
                             <label class="form-label-title"
                                 for="">Lead title</label>
                             <input @click="delete errors?.status"
-                                @input="formDataHandler($event, 'lead_title')"
-                                :value="currentLead?.lead_title??formData['lead_title']"
+                                v-model="leadFormData['lead_title']"
+                                @blur="showModalHandler()"
                                 class="form-control"
                                 type="text">
                             <span class="fs-14px text-danger py-1 w-100 d-block"
@@ -118,8 +130,6 @@
                             <label class="form-label-title"
                                 for="">Estimated value</label>
                             <input @click="delete errors?.status"
-                                :value="currentLead?.estimated_value??formData['estimated_value']"
-                                @blur="estimatedValueHandler($event, 'estimated_value')"
                                 class="form-control"
                                 type="text">
                             <span class="fs-14px text-danger py-1 w-100 d-block"
@@ -127,12 +137,11 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-lg-9">
+                            <div class="col-lg-6">
                                 <div class="mb-3 position-relative">
                                     <label class="form-label-title"
                                         for="">Lead source</label>
                                     <input @click="delete errors?.status"
-                                        v-model="source_title"
                                         class="form-control"
                                         type="text"
                                         data-mdb-toggle="dropdown">
@@ -151,12 +160,12 @@
                                         v-if="errors?.status?.length">{{ errors?.status[0] }}</span>
                                 </div>
                             </div>
-                            <div class="col-lg-3">
+                            <div class="col-lg-6">
                                 <div class="mb-3 position-relative">
                                     <label class="form-label-title"
                                         for="">Source ID</label>
                                     <input @click="delete errors?.status"
-                                        :value="currentLead?.lead_source_id??formData['lead_source_id']"
+                                        :value="currentLead?.lead_source_id??leadFormData['lead_source_id']"
                                         @input="formDataHandler($event, 'lead_source_id')"
                                         class="form-control"
                                         type="text">
@@ -172,7 +181,7 @@
                                     <label class="form-label-title"
                                         for="">Address one</label>
                                     <input @click="delete errors?.status"
-                                        :value="currentLead?.address_line_one??formData['address_line_one']"
+                                        :value="currentLead?.address_line_one??leadFormData['address_line_one']"
                                         @input="formDataHandler($event, 'address_line_one')"
                                         class="form-control"
                                         type="text">
@@ -185,7 +194,7 @@
                                     <label class="form-label-title"
                                         for="">City</label>
                                     <input @click="delete errors?.status"
-                                        :value="currentLead?.city??formData['city']"
+                                        :value="currentLead?.city??leadFormData['city']"
                                         @input="formDataHandler($event, 'city')"
                                         class="form-control"
                                         type="text">
@@ -201,7 +210,7 @@
                                     <label class="form-label-title"
                                         for="">Address two</label>
                                     <input @click="delete errors?.status"
-                                        :value="currentLead?.address_line_two??formData['address_line_two']"
+                                        :value="currentLead?.address_line_two??leadFormData['address_line_two']"
                                         @input="formDataHandler($event, 'address_line_two')"
                                         class="form-control"
                                         type="text">
@@ -214,7 +223,7 @@
                                     <label class="form-label-title"
                                         for="">State</label>
                                     <input @click="delete errors?.status"
-                                        :value="currentLead?.state??formData['state']"
+                                        :value="currentLead?.state??leadFormData['state']"
                                         @input="formDataHandler($event, 'state')"
                                         class="form-control"
                                         type="text">
@@ -230,7 +239,7 @@
                                     <label class="form-label-title"
                                         for="">Postcode</label>
                                     <input @click="delete errors?.status"
-                                        :value="currentLead?.post_code??formData['post_code']"
+                                        :value="currentLead?.post_code??leadFormData['post_code']"
                                         @input="formDataHandler($event, 'post_code')"
                                         class="form-control"
                                         type="text">
@@ -243,7 +252,7 @@
                                     <label class="form-label-title"
                                         for="">Country</label>
                                     <input @click="delete errors?.status"
-                                        :value="currentLead?.country??formData['country']"
+                                        :value="currentLead?.country??leadFormData['country']"
                                         @input="formDataHandler($event, 'country')"
                                         class="form-control"
                                         type="text">
@@ -254,111 +263,92 @@
                         </div>
                     </div><!-- Lead Properties -->
 
-                    <div v-show="toggleTabs != 2">
+                    <div v-show="(toggleTabName == tabShowAll || toggleTabName == tabLeadProperties)">
                         <div class="py-3"
-                            v-if="toggleTabs==1">
-                            <h6 class="fs-16px fw-bold text-soft">Custom properties</h6>
+                            v-if="(toggleTabName==tabShowAll)">
+                            <h6 class="fs-16px fw-bold text-hard">Custom properties</h6>
                         </div>
 
-                        <div class="mb-3 position-relative"
-                            v-for="(propertie, index) in []"
+                        <div class="mb-2 lead-propertie-input"
+                            v-for="(field, index) in leadProperties"
                             :key="index">
 
                             <label class="form-label-title"
-                                for="">{{ propertie.label }}</label>
+                                :for="field?.unique_id">{{ field?.label }}</label>
 
-                            <!-- type text and input tag -->
-                            <input
-                                v-if="propertie?.data_type_id == 'free_text' || propertie?.data_type_id == 'read_only'"
-                                @input="($event, propertie?.unique_id, true)"
-                                class="form-control"
-                                type="text"
-                                :value="leadCustomProperties[propertie?.unique_id]">
-
-                            <!-- type number and input tag -->
-                            <input v-if="propertie?.data_type_id == 'real_number'"
-                                @input="formDataHandler($event, propertie?.unique_id, true)"
-                                class="form-control"
-                                type="number"
-                                min="0"
-                                :value="leadCustomProperties[propertie?.unique_id]">
-
-                            <!-- type text and textarea tag -->
-                            <textarea v-if="propertie?.data_type_id == 'multiline_free_text'"
-                                @input="formDataHandler($event, propertie?.unique_id, true)"
-                                class="form-control"
-                                type="text"
-                                rows="4"
-                                :value="leadCustomProperties[propertie?.unique_id]"></textarea>
-
-                            <!-- type data and input tag -->
-                            <input v-if="propertie?.data_type_id == 'date'"
-                                @input="formDataHandler($event, propertie?.unique_id, true)"
-                                class="form-control"
-                                type="date"
-                                :value="leadCustomProperties[propertie?.unique_id]">
-
-                            <!-- type data and input tag -->
-                            <input v-if="propertie?.data_type_id == 'date_and_time'"
-                                @input="formDataHandler($event, propertie?.unique_id, true)"
-                                class="form-control"
-                                type="datetime-local"
-                                :value="leadCustomProperties[propertie?.unique_id]">
-
-                            <!-- type checkbox and input tag -->
-                            <div v-if="propertie?.data_type_id == 'yes_or_no'"
-                                class="btn-group">
-                                <button @click="yesOrNoHandler('1', propertie?.unique_id)"
-                                    class="btn btn-sm"
-                                    :class="`${(formData[propertie?.unique_id]??leadCustomProperties[propertie?.unique_id]) == '1'?'btn-primary':'btn-warning'}`">Yes</button>
-                                <button @click="yesOrNoHandler('0', propertie?.unique_id)"
-                                    class="btn btn-sm"
-                                    :class="`${(formData[propertie?.unique_id]??leadCustomProperties[propertie?.unique_id]) == '0'?'btn-primary':'btn-warning'}`">No</button>
+                            <div v-if="field?.data_type_id === 'free_text' || field?.data_type_id === 'read_only'">
+                                <input class="form-control"
+                                    type="text"
+                                    :name="field?.unique_id"
+                                    v-model="customFormData[field.unique_id]" />
                             </div>
 
-                            <!-- Single Chose and select tag  -->
-                            <input v-if="propertie?.data_type_id == 'single_choice'"
-                                class="form-control cursor-pointer"
-                                type="text"
-                                data-mdb-toggle="dropdown"
-                                readonly
-                                :value="formData[propertie?.unique_id]??leadCustomProperties[propertie?.unique_id]??`Select ${propertie.label}`">
-                            <div class="dropdown-menu fade custom-form-select overflow-auto"
-                                style="max-height:125px;">
-                                <ul class="list-unstyled mb-0">
-                                    <li class="dropdown-item text-hard fw-bold fs-14px py-1"
-                                        @click="formData[propertie?.unique_id] && singleChoiceHandler(null, propertie?.unique_id)">
-                                        <i>Select {{ propertie.label }}</i></li>
-                                    <li v-for="(item, index) in  propertie?.attributes?.values??[]"
-                                        :key="index"
-                                        @click="singleChoiceHandler(item, propertie?.unique_id)"
-                                        :class="`dropdown-item text-hard fw-bold fs-14px py-1 ${(formData[propertie?.unique_id] == item?.value)?'active':''}`">
-                                        {{ item.label }}
-                                    </li>
-                                </ul>
+                            <div v-else-if="field?.data_type_id === 'real_number'">
+                                <input class="form-control"
+                                    type="number"
+                                    :name="field?.unique_id"
+                                    v-model="customFormData[field.unique_id]" />
                             </div>
 
-                            <!-- Single Chose and select tag  -->
-                            <input v-if="propertie?.data_type_id == 'multiple_choice'"
-                                class="form-control cursor-pointer"
-                                type="text"
-                                data-mdb-toggle="dropdown"
-                                readonly
-                                :value="formData[propertie?.unique_id]??leadCustomProperties[propertie?.unique_id]??`Select ${propertie.label}`">
-                            <div class="dropdown-menu fade custom-form-select overflow-auto"
-                                style="max-height:125px;">
-                                <ul class="list-unstyled mb-0">
-                                    <li class="dropdown-item text-hard fw-bold fs-14px py-1"
-                                        @click="formData[propertie?.unique_id] && multipleChoiceHandler(null, propertie?.unique_id)">
-                                        <i>Select {{ propertie.label }}</i></li>
-                                    <li v-for="(item, index) in  propertie?.attributes?.values??[]"
-                                        :key="index"
-                                        @click="multipleChoiceHandler(item, propertie?.unique_id)"
-                                        :class="`dropdown-item text-hard fw-bold fs-14px py-1 ${formData[propertie?.unique_id]?.split(', ')?.includes(item?.value)?'active':''} ${leadCustomProperties[propertie?.unique_id]?.split(', ')?.includes(item?.value)?'active':''}`">
-                                        {{ item.label }}
-                                    </li>
-                                </ul>
+                            <div v-else-if="field?.data_type_id === 'date'">
+                                <input class="form-control"
+                                    type="date"
+                                    :name="field?.unique_id"
+                                    v-model="customFormData[field.unique_id]" />
                             </div>
+
+                            <div v-else-if="field?.data_type_id === 'date_and_time'">
+                                <input class="form-control"
+                                    type="datetime-local"
+                                    :name="field?.unique_id"
+                                    v-model="customFormData[field.unique_id]" />
+                            </div>
+
+                            <div v-else-if="field?.data_type_id === 'multiline_free_text'">
+                                <textarea class="form-control"
+                                    :name="field?.unique_id"
+                                    rows="1"
+                                    v-model="customFormData[field.unique_id]"></textarea>
+                            </div>
+
+
+
+                            <div v-else-if="field?.data_type_id === 'yes_or_no'"
+                                class="tri-state-toggle">
+                                <button @click="manageYesOrNoHandler('yes', field.unique_id)"
+                                    :class="{'active':customFormData[field.unique_id]==1}"
+                                    class="tri-state-toggle-button text-head fw-bold fs-12px">
+                                    Yes
+                                </button>
+                                <button @click="manageYesOrNoHandler('', field.unique_id)"
+                                    :class="{'active':customFormData[field.unique_id] != -1 && customFormData[field.unique_id]!= 1}"
+                                    class="tri-state-toggle-button fs-16px text-head fw-bold">
+                                    &times;
+                                </button>
+                                <button @click="manageYesOrNoHandler('no', field.unique_id)"
+                                    :class="{'active':customFormData[field.unique_id] == -1}"
+                                    class="tri-state-toggle-button text-head fw-bold fs-12px">
+                                    No
+                                </button>
+                            </div>
+                                    
+                            <MultipleSelectVue v-else-if="field?.data_type_id === 'multiple_choice'"
+                            :name="field?.unique_id"
+                            :options="field?.options??[]"
+                            :value="leadFormData[field?.unique_id]"
+                            v-model="leadFormData[field.unique_id]"
+                            :usebg="true" />
+                            
+                            
+                            
+                            <!-- 
+                            <SingleSelect v-else-if="field?.data_type_id === 'single_choice'"
+                                :name="field?.unique_id"
+                                :options="field?.options??[]"
+                                :value="leadFormData[field?.unique_id]"
+                                v-model="leadFormData[field.unique_id]"
+                                :usebg="true" /> -->
+
 
                         </div>
                     </div>
@@ -367,11 +357,11 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <button @click="hideModalHandler()"
                             class="btn btn-sm btn-danger">Close</button>
-                        <button :disabled="isSubmitConfirmMoveForm"
+                        <button :disabled="isSubmitEditLead"
                             @click="confirmMoveLeadHandler()"
                             type="submit"
                             class="btn btn-primary btn-sm px-3 d-flex justify-content-center align-items-center">
-                            <div v-if="isSubmitConfirmMoveForm">
+                            <div v-if="isSubmitEditLead">
                                 <svg class="spinner"
                                     viewBox="0 0 50 50"
                                     style="width:20px;height:20px;margin-left:0px;">
@@ -385,7 +375,7 @@
                                 </svg>
                                 <span>Submitting...</span>
                             </div>
-                            <span v-if="!isSubmitConfirmMoveForm">Confirm Move</span>
+                            <span v-if="!isSubmitEditLead">Save Change</span>
                         </button>
                     </div>
                 </div>

@@ -56,7 +56,6 @@
         data() {
             return {
                 fullPath: null,
-                isPipelineLead: false,
                 fetch: {
                     lead_properties: 1,
                     lead_sources: 1,
@@ -70,12 +69,10 @@
                 toggleRightDetailsSidebar: false,
             }
         },
-        watch: {
-            "currentLead"(lead) {
-                this.isPipelineLead = !!(lead?.pipeline_id && lead?.pipeline_stage_id)
-            }
-        },
         computed: {
+            isPipelineLead(){
+                return this.leadStore.getIsPipelineLead;
+            },
             currentLead() {
                 return this.leadStore.getCurrentLead;
             },

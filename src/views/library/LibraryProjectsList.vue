@@ -7,10 +7,16 @@ import RightActionBar from '../../components/ActionBar/RightActionBar.vue';
 import Datatable from '../../components/Datatable/Datatable.vue';
 import DatatableHeader from '../../components/Datatable/DatatableHeader.vue';
 import DatatableBody from '../../components/Datatable/DatatableBody.vue';
+import DatatableNoDataMessage from '../../components/Datatable/DatatableNoDataMessage.vue';
+import { useRouter } from 'vue-router';
+const router = useRouter();
 
 const selectedRows = ref([]);
 const filterQueryData = ref({});
-const fetchLeads = ref([]);
+
+const handleRowClick = () => {
+    router.push('/library/proposals');
+}
 
 </script>
 
@@ -156,7 +162,7 @@ const fetchLeads = ref([]);
             <!-- Datatable body -->
             <datatable-body>
                 <!-- loop this -->
-                <div class="tbl-tr full-width">
+                <div class="tbl-tr full-width" @click="handleRowClick">
                     <div style="width:4rem;margin-left: -7px;flex-grow: 1;" class="tbl-td full-width">
                         <label @click="singleRowSelectedHandler(lead.id)" class="custom-form-checkbox btn btn-floating btn-light">
                             <svg v-if="true" class="unchecked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
@@ -193,7 +199,8 @@ const fetchLeads = ref([]);
                 </div>
 
                 <DataTableSkeletor v-if="isFirstLoading" />
-                <DataNotFound v-if="!isFirstLoading && !fetchLeads.length" />
+                <!-- temp condition -->
+                <DatatableNoDataMessage v-if="false"  />
             </datatable-body>
 
         </Datatable>

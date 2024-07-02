@@ -1,13 +1,14 @@
 <script setup>
 import MobileHeader from '../../components/MobileHeader.vue';
-import LibraryMenu from './LibraryMenu.vue'
+import Menu from '../../components/Menu/Menu.vue';
+import {title, menus} from './menu';
  
 </script>
 
 <template>
     <MobileHeader/>
     <section class="d-flex flex-row">
-        <LibraryMenu />
+        <Menu :menus="menus" :title="title" />
         <router-view></router-view>
     </section>
 </template>

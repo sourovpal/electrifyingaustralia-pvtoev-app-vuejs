@@ -125,7 +125,7 @@
 </template>
 
 <script setup>
-import ShareModal from './ShareModal.vue';
+import ShareModal from './ShareModal/ShareModal.vue';
 import {ref} from 'vue';
 
 const shareModalOpen = ref(false)

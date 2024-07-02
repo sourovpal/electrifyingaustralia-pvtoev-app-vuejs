@@ -71,7 +71,7 @@ const content = ref('Lorem ipsum dolor sit amet, officia excepteur ex fugiat rep
                     contentType="html" 
                 />
             </div>
-            <div class="compose-control w-100 border d-flex align-items-center justify-content-between">
+            <div class="compose-control w-100 d-flex align-items-center justify-content-between">
                 <button class="btn btn-light">Reset</button>
                 <button class="btn btn-primary d-flex align-items-center gap-2">
                     <span>Send</span>
@@ -90,10 +90,24 @@ const content = ref('Lorem ipsum dolor sit amet, officia excepteur ex fugiat rep
 	</div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .recipient {
     background: #ffffff;
     padding: 0.25rem 0.55rem;
     border-radius: 2rem;
 }
+
+.ql-container {
+    border: none !important;
+}
+
+.ql-toolbar {
+    border: none !important;
+}
+
+.ql-editor {
+    height: 30rem !important;
+    border: none !important;
+}
+
 </style>

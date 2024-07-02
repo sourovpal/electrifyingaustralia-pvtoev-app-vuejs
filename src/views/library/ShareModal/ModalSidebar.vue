@@ -1,5 +1,5 @@
 <template>
-    <div class="sidebar h-100 py-4 col-md-3" style="background-color: #f5f7fa;">
+    <div class="sidebar py-4 col-md-3" style="background-color: #f5f7fa;">
 		<div class="tabs border-bottom mb-5">
 			<ul class="list-unstyled">
 				<li class="py-3 active-tab ps-4 text-info fw-bold">Send e-Signature request</li>

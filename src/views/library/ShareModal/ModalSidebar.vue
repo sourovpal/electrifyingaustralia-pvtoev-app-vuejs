@@ -83,23 +83,26 @@ const webProposalValue = ref('https://app.getpylon.com/proposals/JUf91oOcWd');
                     <p class="mb-0 fw-bold text-black">Comparison page</p>
                 </label>
 
-                <div class="link-input position-relative">
-                    <input v-model="comparisonInputValue" id="comparison-page-input" type="text" class="border rounded" />
-                    <div class="input-control d-flex align-items-center --gap-3 position-absolute">
-                        <button class="btn btn-light btn-floating">
-	                        <font-awesome-icon
-	                        icon="fas fa-up-right-from-square" 
-						    class="text-secondary cursor-pointer"
-	                        />
-                        </button>
-
-                        <button class="btn btn-light btn-floating">
-	                        <font-awesome-icon
-	                        class="text-secondary cursor-pointer"
-	                        icon="fas fa-copy"
-	                        />
-                        </button>
-                    </div>
+          <!--       <div class="link-input position-relative"> -->
+          <!--           <input v-model="comparisonInputValue" id="comparison-page-input" type="text" class="border rounded" /> -->
+          <!--           <div class="input-control d-flex align-items-center --gap-3 position-absolute"> -->
+          <!--               <button class="btn btn-light btn-floating"> -->
+	         <!--                <font-awesome-icon -->
+	         <!--                icon="fas fa-up-right-from-square"  -->
+						    <!-- class="text-secondary cursor-pointer" -->
+	         <!--                /> -->
+          <!--               </button> -->
+										<!---->
+          <!--               <button class="btn btn-light btn-floating"> -->
+	         <!--                <font-awesome-icon -->
+	         <!--                class="text-secondary cursor-pointer" -->
+	         <!--                icon="fas fa-copy" -->
+	         <!--                /> -->
+          <!--               </button> -->
+          <!--           </div> -->
+          <!--       </div> -->
+                <div class="bg-white border rounded" style="padding: 0.75rem;">
+                    <p class="text-secondary lh-sm fs-12px mb-0 fst-italic"> Please mark 2 or more designs as comparable to view the comparison page</p>
                 </div>
             </div>
 

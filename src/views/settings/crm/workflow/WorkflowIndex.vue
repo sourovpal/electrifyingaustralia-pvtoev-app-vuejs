@@ -1,4 +1,4 @@
-<script setup>workflowindex
+<script setup>
 import { ref, onMounted } from 'vue';
 import { VueDraggableNext } from 'vue-draggable-next';
 import axios from '../../../../actions/api';

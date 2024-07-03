@@ -257,12 +257,12 @@ const handleScroll = (e) => {
 				    >
 				    <div class="mb-3 position-relative">
 					    <input
-						id="duration-input"
-						class="form-control cursor-pointer"
-						type="text"
-						data-mdb-toggle="dropdown"
-						readonly
-						:value="selectedDurationName ? selectedDurationName : 'Specify duration'"
+						    id="duration-input"
+						    class="form-control cursor-pointer"
+						    type="text"
+						    data-mdb-toggle="dropdown"
+						    readonly
+						    :value="selectedDurationName ? selectedDurationName : 'Specify duration'"
 					    />
 					    <div
 						    class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-"

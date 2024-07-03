@@ -4,39 +4,40 @@ import {Modal} from 'mdb-ui-kit'
 import ModalSidebar from './ModalSidebar.vue';
 import ModalBody from './ModalBody.vue';
 
-const confirmationModal = ref(null)
+const emit = defineEmits(['close']);
+const shareModal = ref(null)
 let myModal = null
 
 onMounted(() => {
-	myModal = new Modal(confirmationModal.value, {
+	myModal = new Modal(shareModal.value, {
 		keyboard: false,
 		backdrop: 'static',
 	})
 	myModal.show()
 })
 
-const handleConfirmBtnClick = () => {
-    emit('confirm')
-}
-
-const handleCancelBtnClick = () => {
-    myModal.hide();
-    emit('cancel')
-}
-
 onBeforeUnmount(() => {
     myModal.hide();
 });
 
+const activeTab = ref('');
+const handleModalClose = () => {
+    myModal.hide() 
+    emit('close');
+};
+const handleTabClick = (tabName) => {
+    activeTab.value = tabName;
+}
+
 </script>
 
 <template>
-	<div class="modal fade" tabindex="-1" ref="confirmationModal">
+	<div class="modal fade" tabindex="-1" ref="shareModal">
 		<div class="modal-dialog modal-xl modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-body p-0 row g-0" id="modal-body">
-				    <ModalSidebar />
-				    <ModalBody />
+				    <ModalSidebar @tab-click="handleTabClick" />
+				    <ModalBody @close="handleModalClose" :activeTab="activeTab" />
 				</div>
 			</div>
 		</div>
@@ -45,10 +46,6 @@ onBeforeUnmount(() => {
 
 <style lang="scss">
 
-.active-tab {
-    background-color: #e5f4ff;
-    border-left: 3px solid #007ee5;
-}
 
 .link-input {
     input {

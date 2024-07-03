@@ -1,9 +1,43 @@
+<script setup>
+import {onMounted, ref} from 'vue'
+const tabs = [
+    {name: 'esignature-input', label: 'Send e-Signature request' },
+    {name: 'send-proposal', label: 'Send proposal' },
+]
+
+const emit = defineEmits('tab-click')
+
+const activeTab = ref('');
+const handleTabClick = (tab) => {
+    emit('tab-click', tab) ;
+    activeTab.value = tab;
+
+};
+
+const setDefaultTab = () => {
+    emit('tab-click', tabs[0].name);
+    activeTab.value = tabs[0].name;
+}
+
+onMounted(() => {
+    setDefaultTab();
+});
+
+const comparisonInputValue = ref('https://app.getpylon.com/proposals/JUf91oOcWd');
+const webProposalValue = ref('https://app.getpylon.com/proposals/JUf91oOcWd');
+
+</script>
+
+
 <template>
     <div class="sidebar py-4 col-md-3" style="background-color: #f5f7fa;">
 		<div class="tabs border-bottom mb-5">
 			<ul class="list-unstyled">
-				<li class="py-3 active-tab ps-4 text-info fw-bold">Send e-Signature request</li>
-				<li class="py-3 text-black fw-bold ps-4 border-start">Send proposal</li>
+				<li 
+				    v-for="tab in tabs" 
+				    :class="`py-3 tab cursor-pointer ${ activeTab === tab.name ? 'active-tab' : '' } text-black fw-bold ps-4`" 
+				    @click="handleTabClick(tab.name)"
+				>{{tab.label}}</li>
 			</ul>
 		</div>
 
@@ -25,7 +59,7 @@
                 </label>
 
                 <div class="link-input position-relative">
-                    <input id="web-proposal-input"  type="text" class="border rounded" />
+                    <input v-model="webProposalValue" id="web-proposal-input"  type="text" class="border rounded" />
                     <div class="input-control d-flex align-items-center --gap-3 position-absolute">
                         <button class="btn btn-light btn-floating">
 	                        <font-awesome-icon
@@ -50,7 +84,7 @@
                 </label>
 
                 <div class="link-input position-relative">
-                    <input id="comparison-page-input" type="text" class="border rounded" />
+                    <input v-model="comparisonInputValue" id="comparison-page-input" type="text" class="border rounded" />
                     <div class="input-control d-flex align-items-center --gap-3 position-absolute">
                         <button class="btn btn-light btn-floating">
 	                        <font-awesome-icon
@@ -90,10 +124,13 @@
 	</div>
 </template>
 
-<script setup>
-
-</script>
-
 <style lang="scss" scoped>
+.tab {
+    border-left: 3px solid #f5f7fa;
 
+    &.active-tab {
+        background-color: #e5f4ff;
+        border-left: 3px solid #007ee5;
+    }
+}
 </style>

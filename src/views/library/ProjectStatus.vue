@@ -121,7 +121,7 @@
             </div>
         </div>
 	</div>
-    <ShareModal v-if="shareModalOpen" />
+    <ShareModal @close="handleModalClose" v-if="shareModalOpen" />
 </template>
 
 <script setup>
@@ -133,6 +133,11 @@ const shareModalOpen = ref(false)
 const handleShareBtnClick = () => {
     shareModalOpen.value = true;
 }
+
+const handleModalClose = () => {
+    shareModalOpen.value = false;
+}
+
 </script>
 
 <style lang="scss" scoped>

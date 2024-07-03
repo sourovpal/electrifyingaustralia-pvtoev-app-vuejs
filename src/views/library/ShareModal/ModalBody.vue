@@ -25,10 +25,14 @@ const handleCloseClick = () => {
         <button
             @click="handleCloseClick"
             type="button"
-            class="btn-close position-absolute"
-            style="right: 0.5rem; top: 0.5rem;"
+            class="position-absolute btn btn-light p-0"
+            style="right: 0.75rem; top: 0.75rem;"
             data-bs-dismiss="modal"
             aria-label="Close">
+			<font-awesome-icon
+				class="text-secondary fs-18px"
+				icon="fas fa-xmark"
+			/>
         </button>
 
         <!-- <component :is="componentToShow" /> -->

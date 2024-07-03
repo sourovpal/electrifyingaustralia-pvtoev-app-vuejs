@@ -33,7 +33,7 @@ const handleTabClick = (tabName) => {
 
 <template>
 	<div class="modal fade" tabindex="-1" ref="shareModal">
-		<div class="modal-dialog modal-xl modal-dialog-centered">
+		<div class="modal-dialog modal-xl modal-dialog-centered custom-radius" style="">
 			<div class="modal-content">
 				<div class="modal-body p-0 row g-0" id="modal-body">
 				    <ModalSidebar @tab-click="handleTabClick" />
@@ -45,7 +45,10 @@ const handleTabClick = (tabName) => {
 </template>
 
 <style lang="scss">
-
+.custom-radius {
+    border-radius: 1rem;
+    overflow: hidden;
+}
 
 .link-input {
     input {

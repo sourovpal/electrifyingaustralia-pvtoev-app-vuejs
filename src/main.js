@@ -22,7 +22,6 @@ import 'vue-skeletor/dist/vue-skeletor.css';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
-    faUserSecret,
     faTrash,
     faArrowRight,
     faChevronRight,
@@ -56,10 +55,10 @@ import {
     faDownload,
     faPaperPlane,
     faFileLines,
+    faUser,
 } from '@fortawesome/free-solid-svg-icons'
 
 const iconsToUse = [
-    faUserSecret,
     faTrash,
     faArrowRight,
     faChevronRight,
@@ -93,6 +92,7 @@ const iconsToUse = [
     faDownload,
     faPaperPlane,
     faFileLines,
+    faUser,
 ]
 
 library.add(iconsToUse)

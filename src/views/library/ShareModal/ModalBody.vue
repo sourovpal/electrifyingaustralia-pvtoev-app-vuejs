@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 
 import ESignatureInput from './ESignatureInput.vue'
 import SendProposalInput from './SendProposalInput.vue'
+import ShareHistory from './ShareHistory.vue'
 
 const props = defineProps(['activeTab']);
 const emit = defineEmits(['close']);
@@ -30,7 +31,8 @@ const handleCloseClick = () => {
             aria-label="Close">
         </button>
 
-        <component :is="componentToShow" />
+        <!-- <component :is="componentToShow" /> -->
+        <ShareHistory />
 	</div>
 </template>
 

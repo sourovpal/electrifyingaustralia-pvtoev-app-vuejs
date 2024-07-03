@@ -104,6 +104,7 @@ const routes = [
             { 
                 name:"LibraryIndex",
                 path: '/library',
+                redirect: '/library/active',
                 component:()=>import('../views/library/LibraryIndex.vue'),
                 beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                 meta:{

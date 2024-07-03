@@ -1,146 +1,243 @@
 <template>
-  <div class="custom-select dropdown position-relative" @click="toggleDropdown">
-    <div class="form-control form-control-tags-input px-2">
-      <label v-for="(option, index) in selectedOptions" :key="index" class="tag-lable">
-        {{ option }} <span @click.stop="removeOption(option)" class="close-tag">&times;</span>
-      </label>
-    </div>
-
-    <div class="dropdown-menu fade custom-form-select overflow-auto slim-scrollbar-" v-show="isOpen" :class="{show:isOpen}" @click="(e)=>e.stopPropagation()">
-        <div
-          v-for="(option, index) in options"
-          :key="index"
-          @click="toggleOption(option?.value??option )"
-          :class="{ 'selected': isSelected(option?.value??option ) }"
-          class="dropdown-item text-hard fw-bold fs-14px d-flex py-1"
-        >
-        {{ option?.value??option  }}
+  <div class="custom-select position-relative" ref="customMultipleSelectRef">
+    <div
+      class="dropdown form-control px-0"
+      @click="toggleOptionList"
+      tabindex="0"
+      :class="{ open: isOpen, 'form-control-sm': multiple }"
+    >
+      <div class="selected-options px-2">
+        <ul v-if="multiple" class="option-list d-flex flex-wrap">
+          <li
+            class="option-item"
+            v-for="(option, index) in selectedOptions"
+            :key="index"
+          >
+            {{ option }}
+            <span class="remove-btn" @click="removeItem(option)">&times;</span>
+          </li>
+          <li class="option-search">
+            <input
+              type="text"
+              placeholder=""
+              v-model="searchOption"
+              @focus="isOpen = true"
+              @blur="isOpen = false"
+            />
+          </li>
+        </ul>
       </div>
+      <Transition>
+        <div v-if="isOpen" class="assign-options position-absolute pb-5">
+          <ul class="item-list">
+            <li v-if="!multiple" class="search-item px-2 py-0">
+              <input
+                type="text"
+                placeholder="Search..."
+                v-model="searchOption"
+              />
+            </li>
+            <li
+              class="item px-3 py-1"
+              v-for="(item, index) in unselectedOptionsList"
+              :key="index"
+              @click="selectItem(item.value)"
+            >
+              {{ item.value }}
+            </li>
+            <li class="item px-3 py-1" v-if="!unselectedOptionsList?.length">
+              Empty list item.
+            </li>
+          </ul>
+        </div>
+      </Transition>
+
+      <span
+        class="selected-option"
+        v-if="!multiple && selectedOptions.length"
+        @click="toggleOptionList"
+        >{{ selectedOptions?.join(",") }}</span
+      >
+      <span v-if="!multiple" class="selected-option">{{ placeholder }}</span>
     </div>
   </div>
 </template>
 
 <script>
+import { onClickOutside } from "@vueuse/core";
 export default {
   props: {
+    placeholder: {
+      type: String,
+      default: "",
+    },
     options: {
       type: Array,
-      required: true
+      required: true,
     },
-    value: {
-      type: Array,
-      default: () => []
+    multiple: {
+      type: Boolean,
+      default: false,
     },
-    name: {
-      type: String,
-      default:'select',
-    },
+    modelValue: {},
   },
   data() {
     return {
       isOpen: false,
-      selectedOptions: this.value
+      selectedOptions: [],
+      searchOption: null,
     };
   },
-  methods: {
-    toggleDropdown() {
-      this.isOpen = !this.isOpen;
-    },
-    toggleOption(option) {
-      const index = this.selectedOptions.indexOf(option);
-      if (index !== -1) {
-        this.selectedOptions.splice(index, 1);
-      } else {
-        this.selectedOptions.push(option);
-      }
-      this.$emit('update:modelValue', this.selectedOptions);
-      this.$emit('change', this.name,  this.selectedOptions);
-    },
-    isSelected(option) {
-      return this.selectedOptions.includes(option);
-    },
-    removeOption(option) {
-      const index = this.selectedOptions.indexOf(option);
-      if (index !== -1) {
-        this.selectedOptions.splice(index, 1);
-        this.$emit('update:modelValue', this.selectedOptions);
-        this.$emit('change', this.name,  this.selectedOptions);
-      }
-    }
-  },
   watch: {
-    value(newValue) {
-      this.selectedOptions = newValue;
+    modelValue() {
+      if (this.modelValue && Array.isArray(this.modelValue)) {
+        this.selectedOptions = this.modelValue;
+      } else if (this.modelValue && !Array.isArray(this.modelValue)) {
+        this.selectedOptions = [this.modelValue];
+      }
     },
-  }
+  },
+  computed: {
+    unselectedOptionsList() {
+      return this.options.filter((item) => {
+        if (
+          (!this.selectedOptions.includes(item.value) && !this.searchOption) ||
+          (!this.selectedOptions.includes(item.value) &&
+            item.value.toLowerCase().search(this.searchOption.toLowerCase()) >
+              -1)
+        ) {
+          return item;
+        }
+      });
+    },
+  },
+  mounted() {
+    if (this.modelValue && Array.isArray(this.modelValue)) {
+      this.selectedOptions = this.modelValue;
+    } else if (this.modelValue && !Array.isArray(this.modelValue)) {
+      this.selectedOptions = [this.modelValue];
+    }
+    onClickOutside(this.$refs["customMultipleSelectRef"], (event) => {
+      this.isOpen = false;
+    });
+  },
+  methods: {
+    toggleOptionList(event) {
+      if (!this.multiple && event.target === event.currentTarget) {
+        this.isOpen = !this.isOpen;
+      }
+    },
+    selectItem(item) {
+      if (this.multiple) {
+        this.selectedOptions.push(item);
+        this.$emit("update:modelValue", this.selectedOptions);
+        this.$emit("change", this.selectedOptions);
+      } else {
+        this.selectedOptions = [];
+        this.selectedOptions.push(item);
+        this.isOpen = false;
+        this.$emit("update:modelValue", item);
+        this.$emit("change", item);
+      }
+      this.searchOption = "";
+    },
+    removeItem(item) {
+      if (this.selectedOptions.includes(item)) {
+        var index = this.selectedOptions.indexOf(item);
+        this.selectedOptions.splice(index, 1);
+      }
+    },
+  },
 };
 </script>
 
-<style scoped>
-.dropdown-menu{
-  max-height:155px;
-  overflow-y: auto;
-  user-select: none;
+<style lang="scss" scoped>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
 }
-.form-control-tags-input{
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+
+.form-control {
   min-height: 35.77px;
-  display: flex;
-  flex-wrap: wrap;
-  padding-top: 0px !important;
-  padding-bottom: 0px !important;
-  cursor: pointer;
-  &:hover{
-    border-color: #3b71ca;
-    box-shadow: inset 0 0 0 1px #3b71ca;
+  box-shadow: none !important;
+  cursor: text;
+  &.open {
+    border-bottom: none !important;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
   }
-  .tag-lable{
-    font-size: 14px;
-    font-weight: 600;
-    border: 1px solid #d3d3d3;
-    padding: 2px 8px;
+  .selected-option {
+    padding: 0px 0px 0px 12px;
+  }
+}
+.option-list {
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+  margin-top: -5px;
+  .option-item {
+    margin-top: 5px;
+    line-height: 12px;
+    padding: 6px 0px 6px 8px;
+    background: #dddddd;
     border-radius: 2px;
-    background: #eaedf1;
-    line-height: 21.77px;
-    margin: 3px 6px 3px 0px;
-    user-select: none;
-    .close-tag{
-      font-size: 20px;
-      font-weight: bold;
-      position: relative;
-      top: 2px;
-      margin-left: 5px;
+    font-size: 14px;
+    margin-right: 5px;
+    .remove-btn {
+      padding: 6px 8px 6px 4px;
+      font-size: 16px;
       cursor: pointer;
-      padding: 0px 2px;
-      transition: all 0.2s ease-in-out;
-      line-height: 10px;
-      &:hover{
-        color:rgb(255, 34, 68);
-      }
+    }
+  }
+  .option-search {
+    flex-grow: 1;
+    margin-top: 5px;
+    input {
+      border: none;
+      outline: none;
+      box-shadow: none;
+      width: 100%;
+      height: 100%;
+      font-size: 14px;
+      padding: 3.5px 0px;
     }
   }
 }
-.search-tags-list{
-  background: #ffffff;
-  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+.assign-options {
+  left: -1px;
+  right: -1px;
+  overflow: hidden;
+  top: 35px;
+  z-index: 9999;
+}
+.item-list {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
-  position: absolute;
-  left: 0;
-  right: 0;
-  ul{
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    li{
-      padding: 6px 12px;
-      font-size: 14px;
-      font-weight: 600;
-      margin-top:5px;
-      user-select: none;
-      &:hover{
-        background-color: rgb(0 38 113 / 6%);
-        cursor: pointer;
-      }
+  border: 1px solid #bdbdbd;
+  background: #ffffff;
+  margin: 0px;
+  padding: 0px;
+  list-style: none;
+  max-height: 175px;
+  overflow: auto;
+  .item {
+    cursor: pointer;
+    &:hover {
+      background: #dddddd;
+    }
+  }
+  .search-item {
+    border-bottom: 1px solid #bdbdbd;
+    input {
+      width: 100%;
+      border: none;
+      outline: none;
+      padding: 6px 6px;
     }
   }
 }

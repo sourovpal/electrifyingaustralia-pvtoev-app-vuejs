@@ -22,6 +22,7 @@ export const useLeadStore = defineStore('lead', {
       leadPipelineProperties: [],
       leadSubscribers: [],
       isPipelineLead:false,
+      pipelineProperties:[],
     }
   },
   getters: {
@@ -39,6 +40,9 @@ export const useLeadStore = defineStore('lead', {
     },
     getLeadProperties(state) {
       return state.leadProperties;
+    },
+    getPipelineProperties(state) {
+      return state.pipelineProperties;
     },
     getLeadPropertiesValues(state) {
       return state.leadPropertiesValues;
@@ -96,6 +100,9 @@ export const useLeadStore = defineStore('lead', {
     setLeadProperties(payload) {
       this.leadProperties = payload;
     },
+    setPipelineProperties(payload) {
+      this.pipelineProperties = payload;
+    },
     setLeadPropertiesValues(payload) {
       this.leadPropertiesValues = payload;
     },
@@ -138,6 +145,7 @@ export const useLeadStore = defineStore('lead', {
           lead_properties,
           lead_sources,
           lead_stages,
+          pipeline_properties
         } = payload;
 
         this.setCurrentLead(lead);
@@ -147,6 +155,7 @@ export const useLeadStore = defineStore('lead', {
         this.setNextLead(next_lead);
         this.setLeadSubscribers(lead?.lead_subscribers ?? []);
         this.setLeadProperties(lead_properties ?? []);
+        this.setPipelineProperties(pipeline_properties);
         this.setLeadSources(lead_sources ?? []);
         this.setLeadOwner(lead?.owner ?? {});
         this.setLeadStages(lead_stages);

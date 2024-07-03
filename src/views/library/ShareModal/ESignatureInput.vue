@@ -7,7 +7,7 @@
 			icon="fas fa-circle-question"
 			/>
         </div>
-        <div class="message-composer mt-3 p-2" style="background-color: #f5f7faviw">
+        <div class="message-composer mt-3 p-2" style="background-color: #f5f7fa">
             <div class="recipients border-bottom d-flex align-items-baseline gap-2">
                 <small>To</small>
                 <ul class="list-unstyled d-flex mb-1">

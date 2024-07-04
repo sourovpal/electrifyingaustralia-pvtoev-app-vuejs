@@ -179,12 +179,4 @@ const webProposalValue = ref('https://app.getpylon.com/proposals/JUf91oOcWd')
 	}
 }
 
-// .share-history-link {
-// 	border-left: 3px solid #f5f7fa;
-//
-//     .active {
-// 	    background-color: #e5f4ff;
-// 	    border-left: 3px solid #f5f7fa;
-//     }
-// }
 </style>

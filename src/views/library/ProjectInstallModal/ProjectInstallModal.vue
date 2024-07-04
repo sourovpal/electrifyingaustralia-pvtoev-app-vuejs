@@ -39,7 +39,7 @@ const handleTabClick = (tabName) => {
                         <p class="mb-0 lead text-black fw-bold fs-18px">Select a design to install</p>
                     </div>
 
-                    <div class="project-list-wrapper mt-3">
+                    <div class="project-list-wrapper mt-3 mb-5 content content-y-100vh" style="height: 40rem !important;">
                         <ul class="list-unstyled">
                             <li>
                                 <div class="project shadow d-flex">
@@ -72,6 +72,9 @@ const handleTabClick = (tabName) => {
                             </li>
                         </ul>
                     </div>
+                    <div class="content-footer d-flex justify-content-end">
+                        <button class="btn btn-primary fw-bold rounded shadow">Create Job Sheet</button>
+                    </div>
 				</div>
 			</div>
 		</div>
@@ -92,6 +95,10 @@ const handleTabClick = (tabName) => {
 
     &-info {
         background: #e5f4ff;
+    }
+
+    &-list-wrapper li {
+        margin-bottom: 1rem;
     }
 }
 

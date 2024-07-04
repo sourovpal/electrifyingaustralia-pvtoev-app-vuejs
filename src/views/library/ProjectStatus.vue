@@ -1,3 +1,32 @@
+<script setup>
+import ShareModal from './ShareModal/ShareModal.vue';
+import ProjectInstallModal from './ProjectInstallModal/ProjectInstallModal.vue';
+import {ref} from 'vue';
+
+const shareModalOpen = ref(false)
+
+const handleShareBtnClick = () => {
+    shareModalOpen.value = true;
+}
+
+const handleShareModalClose = () => {
+    shareModalOpen.value = false;
+}
+
+
+
+const projectInstallModalOpen = ref(false)
+
+const handleInstallerBtnClick = () => {
+    projectInstallModalOpen.value = !projectInstallModalOpen.value;
+}
+
+const handleProjectInstallModalClose = () => {
+    projectInstallModalOpen.value = false;
+}
+
+</script>
+
 <template>
     <div class="col-md-4">
 	    <div class="d-flex align-items-center gap-2">
@@ -11,7 +40,7 @@
 	            <span class="fw-bold text-black ms-2">SHARE</span>
 	        </button>
 
-	        <button class="btn btn-secondary" style="flex-grow: 1;">
+	        <button class="btn btn-secondary" style="flex-grow: 1;" @click="handleInstallerBtnClick">
 	            <font-awesome-icon class="text-secondary" icon="fas fa-clipboard-list" />
 	        </button>
         </div>
@@ -121,24 +150,16 @@
             </div>
         </div>
 	</div>
-    <ShareModal @close="handleModalClose" v-if="shareModalOpen" />
+    <ShareModal
+        @close="handleShareModalClose"
+        v-if="shareModalOpen"
+    />
+
+    <ProjectInstallModal
+        @close="handleProjectInstallModalClose"
+        v-if="projectInstallModalOpen"
+    />
 </template>
-
-<script setup>
-import ShareModal from './ShareModal/ShareModal.vue';
-import {ref} from 'vue';
-
-const shareModalOpen = ref(false)
-
-const handleShareBtnClick = () => {
-    shareModalOpen.value = true;
-}
-
-const handleModalClose = () => {
-    shareModalOpen.value = false;
-}
-
-</script>
 
 <style lang="scss" scoped>
 

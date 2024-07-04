@@ -56,6 +56,7 @@ import {
     faPaperPlane,
     faFileLines,
     faUser,
+    faCheckCircle
 } from '@fortawesome/free-solid-svg-icons'
 
 const iconsToUse = [
@@ -93,6 +94,7 @@ const iconsToUse = [
     faPaperPlane,
     faFileLines,
     faUser,
+    faCheckCircle
 ]
 
 library.add(iconsToUse)

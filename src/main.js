@@ -2,6 +2,7 @@ import { createApp, ref, provide } from 'vue';
 import App from './App.vue';
 import router from './router';
 import * as mdb from 'mdb-ui-kit';
+import LoadingButton from "./components/LoadingButton.vue";
 
 import VueProgressBar from "@aacassandra/vue3-progressbar";
 
@@ -46,6 +47,7 @@ function updateAppData(key, val){
 
 const pinia = createPinia();
 var app = createApp(App);
+app.component('LoadingButton', LoadingButton);
 
 app.provide('app_data', {
   appData:appData.value,

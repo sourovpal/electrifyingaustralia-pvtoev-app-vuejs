@@ -226,7 +226,7 @@
                         </path>
                     </svg>
                 </button>
-                <EditLeadModal ref="editLeadModalRef" />
+                <EditLeadModal ref="editLeadModalRef" @findLeadByIdHandler="findLeadByIdHandler"  />
                 <button class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-3 d-none d-md-inline">
                     <svg class="svg-5"
                         xmlns="http://www.w3.org/2000/svg"

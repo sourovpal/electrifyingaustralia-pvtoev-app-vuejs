@@ -1,5 +1,12 @@
 <script setup>
-import { ref, computed, onMounted, defineExpose, watch, reactive } from "vue";
+import {
+  ref,
+  computed,
+  onMounted,
+  defineExpose,
+  watch,
+  shallowReactive,
+} from "vue";
 import { Modal } from "mdb-ui-kit";
 import { LeadUpdate } from "../../../../actions/LeadAction";
 import { useLeadStore } from "../../../../stores/lead";
@@ -7,6 +14,9 @@ import { useAppStore } from "../../../../stores/app";
 import LeadCustomProperties from "./sections/LeadCustomProperties.vue";
 import { useToast } from "vue-toast-notification";
 import { CONFIG } from "../../../../config";
+import MultipleSelectVue from "../../../../components/forms/MultipleSelect.vue";
+// Define
+const emits = defineEmits(["findLeadByIdHandler"]);
 // Assign Veriable
 const leadStore = useLeadStore();
 const appStore = useAppStore();
@@ -15,11 +25,11 @@ const tabLeadProperties = ref("lead-properties");
 const tabPipelineProperties = ref("pipeline-properties");
 const toggleTabName = ref("show-all");
 const modalInstance = ref(null);
-const isSubmitEditLead = ref(null);
+const isSubmitEditLead = ref(false);
 const leadEditModalRef = ref(null);
 const errors = ref({});
 
-const leadFormData = ref({});
+const leadFormData = shallowReactive({});
 const customFormData = ref({});
 // Computed
 const currentLead = computed(() => leadStore.getCurrentLead);
@@ -39,15 +49,16 @@ watch(leadPropertiesValues, (n) => {
 });
 
 watch(currentLead, (n) => {
-  leadFormData.value = {
-    lead_title: n.lead_title,
-    estimated_value: n.estimated_value,
-    address_line_one: n.address_line_one,
-    address_line_two: n.address_line_two,
-    city: n.city,
-    post_code: n.post_code,
-    country: n.country,
-  };
+  leadFormData.lead_title = n.lead_title;
+  leadFormData.estimated_value = n.estimated_value;
+  leadFormData.lead_source = n.source?.title;
+  leadFormData.lead_source_id = n.lead_source_id;
+  leadFormData.address_line_one = n.address_line_one;
+  leadFormData.address_line_two = n.address_line_two;
+  leadFormData.state = n.state;
+  leadFormData.city = n.city;
+  leadFormData.post_code = n.post_code;
+  leadFormData.country = n.country;
 });
 
 // functions
@@ -63,16 +74,20 @@ function hideModalHandler() {
 async function submitLeadFormHandler() {
   try {
     $toast.clear();
+    isSubmitEditLead.value = true;
     errors.value = {};
     var data = {
-      ...leadFormData.value,
+      ...leadFormData,
       properties_values: { ...customFormData.value },
       lead_id: currentLead.value.id,
     };
     const res = await LeadUpdate(data);
-    const {message} = res;
+    const { message } = res;
     $toast[message.type](message.text);
+    emits("findLeadByIdHandler");
+    isSubmitEditLead.value = false;
   } catch (error) {
+    isSubmitEditLead.value = false;
     try {
       errors.value = error.response.data.errors;
     } catch (error) {}
@@ -196,34 +211,16 @@ defineExpose({ showModalHandler, hideModalHandler });
               <div class="col-lg-6">
                 <div class="mb-3 position-relative">
                   <label class="form-label-title" for="">Lead source</label>
-                  <input
-                    @click="delete errors?.status"
-                    class="form-control"
-                    type="text"
-                    data-mdb-toggle="dropdown"
+                  <MultipleSelectVue
+                    :options="leadSources"
+                    v-model="leadFormData['lead_source']"
+                    :input="true"
                   />
-                  <div
-                    class="dropdown-menu fade custom-form-select overflow-auto"
-                    style="max-height: 125px"
-                  >
-                    <ul class="list-unstyled mb-0">
-                      <li
-                        v-for="(item, index) in []"
-                        :key="index"
-                        @click="selectLeadSource(item)"
-                        :class="`dropdown-item text-hard fw-bold fs-14px py-1 ${
-                          lead_source?.id == item.id ? 'selected' : ''
-                        }`"
-                      >
-                        {{ item.title }}
-                      </li>
-                    </ul>
-                  </div>
                   <span
                     class="fs-14px text-danger py-1 w-100 d-block"
-                    v-if="errors?.status?.length"
+                    v-if="errors?.lead_source?.length"
                   >
-                    {{ errors?.status[0] }}
+                    {{ errors?.lead_source[0] }}
                   </span>
                 </div>
               </div>
@@ -371,36 +368,17 @@ defineExpose({ showModalHandler, hideModalHandler });
               :customFormData="customFormData"
             />
           </div>
+          <br>
           <div class="d-flex justify-content-between align-items-center">
-            <button @click="hideModalHandler()" class="btn btn-sm btn-danger">
+            <button @click="hideModalHandler()" class="btn btn-danger">
               Close
             </button>
-            <button
+            <LoadingButton
+              @submit="submitLeadFormHandler"
               :disabled="isSubmitEditLead"
-              @click="submitLeadFormHandler"
-              type="submit"
-              class="btn btn-primary btn-sm px-3 d-flex justify-content-center align-items-center"
-            >
-              <div v-if="isSubmitEditLead">
-                <svg
-                  class="spinner"
-                  viewBox="0 0 50 50"
-                  style="width: 20px; height: 20px; margin-left: 0px"
-                >
-                  <circle
-                    style="stroke: #ffffff"
-                    class="path"
-                    cx="25"
-                    cy="25"
-                    r="20"
-                    fill="none"
-                    stroke-width="5"
-                  ></circle>
-                </svg>
-                <span>Submitting...</span>
-              </div>
-              <span v-if="!isSubmitEditLead">Save Change</span>
-            </button>
+              :is-loading="isSubmitEditLead"
+              title="Save Change"
+            />
           </div>
         </div>
       </div>

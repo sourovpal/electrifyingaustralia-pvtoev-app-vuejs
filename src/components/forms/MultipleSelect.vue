@@ -30,7 +30,7 @@
       <Transition>
         <div v-if="isOpen" class="assign-options position-absolute pb-5">
           <ul class="item-list">
-            <li v-if="!multiple" class="search-item px-2 py-0">
+            <li v-if="!multiple && !input" class="search-item px-2 py-0">
               <input
                 type="text"
                 placeholder="Search..."
@@ -41,11 +41,15 @@
               class="item px-3 py-1"
               v-for="(item, index) in unselectedOptionsList"
               :key="index"
-              @click="selectItem(item.value)"
+              @click="selectItem(item.value ?? item)"
             >
-              {{ item.value }}
+              {{ item.value ?? item }}
             </li>
-            <li class="item px-3 py-1" v-if="!unselectedOptionsList?.length">
+            <li
+              @click="isOpen = false"
+              class="item px-3 py-1"
+              v-if="!unselectedOptionsList?.length"
+            >
               Empty list item.
             </li>
           </ul>
@@ -54,11 +58,26 @@
 
       <span
         class="selected-option"
-        v-if="!multiple && selectedOptions.length"
+        v-if="!multiple && !input && selectedOptions.length"
         @click="toggleOptionList"
         >{{ selectedOptions?.join(",") }}</span
       >
-      <span v-if="!multiple" class="selected-option">{{ placeholder }}</span>
+
+      <span class="selected-option custom-input" v-if="input && !multiple">
+        <input
+          ref="customInutRef"
+          type="text"
+          :placeholder="placeholder"
+          v-model="selectedOptions"
+          @focus="isOpen = true"
+        />
+      </span>
+
+      <span
+        v-if="!multiple && !input && !selectedOptions.length"
+        class="selected-option"
+        >{{ placeholder }}</span
+      >
     </div>
   </div>
 </template>
@@ -80,31 +99,66 @@ export default {
       default: false,
     },
     modelValue: {},
+    input: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
       isOpen: false,
       selectedOptions: [],
       searchOption: null,
+      customInput: "",
+      notSearch: false,
     };
   },
   watch: {
-    modelValue() {
+    setModelValue() {},
+    selectedOptions(options) {
+      var tempOptions = "";
+      if (this.multiple && !this.input) {
+        this.$emit("update:modelValue", this.selectedOptions);
+        this.$emit("change", this.selectedOptions);
+      } else {
+        if (Array.isArray(options)) {
+          tempOptions = options.join(",");
+        } else {
+          tempOptions = options;
+        }
+
+        this.$emit("update:modelValue", tempOptions);
+        this.$emit("change", tempOptions);
+
+        if (this.input) {
+          this.searchOption = tempOptions;
+        }
+      }
+    },
+  },
+  computed: {
+    setModelValue() {
+      if (!this.modelValue || typeof this.modelValue === "undefined") {
+        this.selectedOptions = [];
+        return this.modelValue;
+      }
       if (this.modelValue && Array.isArray(this.modelValue)) {
         this.selectedOptions = this.modelValue;
       } else if (this.modelValue && !Array.isArray(this.modelValue)) {
         this.selectedOptions = [this.modelValue];
       }
+      return this.modelValue;
     },
-  },
-  computed: {
     unselectedOptionsList() {
       return this.options.filter((item) => {
         if (
-          (!this.selectedOptions.includes(item.value) && !this.searchOption) ||
-          (!this.selectedOptions.includes(item.value) &&
-            item.value.toLowerCase().search(this.searchOption.toLowerCase()) >
-              -1)
+          (!this.selectedOptions.includes(item?.value ?? item) &&
+            !this.searchOption) ||
+          ((!this.selectedOptions.includes(item?.value ?? item) ||
+            this.input) &&
+            (item?.value || item)
+              ?.toLowerCase()
+              .search(this.searchOption?.toLowerCase()) > -1)
         ) {
           return item;
         }
@@ -112,11 +166,6 @@ export default {
     },
   },
   mounted() {
-    if (this.modelValue && Array.isArray(this.modelValue)) {
-      this.selectedOptions = this.modelValue;
-    } else if (this.modelValue && !Array.isArray(this.modelValue)) {
-      this.selectedOptions = [this.modelValue];
-    }
     onClickOutside(this.$refs["customMultipleSelectRef"], (event) => {
       this.isOpen = false;
     });
@@ -129,15 +178,11 @@ export default {
     },
     selectItem(item) {
       if (this.multiple) {
-        this.selectedOptions.push(item);
-        this.$emit("update:modelValue", this.selectedOptions);
-        this.$emit("change", this.selectedOptions);
+        this.selectedOptions = this.selectedOptions.concat([item]);
       } else {
         this.selectedOptions = [];
-        this.selectedOptions.push(item);
+        this.selectedOptions = this.selectedOptions.concat([item]);
         this.isOpen = false;
-        this.$emit("update:modelValue", item);
-        this.$emit("change", item);
       }
       this.searchOption = "";
     },
@@ -166,13 +211,30 @@ export default {
   min-height: 35.77px;
   box-shadow: none !important;
   cursor: text;
+  border-color: #bdbdbd !important;
   &.open {
     border-bottom: none !important;
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
   }
   .selected-option {
-    padding: 0px 0px 0px 12px;
+    padding: 0px 12px 0px 12px;
+    box-sizing: border-box;
+    &.custom-input {
+      padding: 0px !important;
+      input {
+        width: 100%;
+        outline: none;
+        box-shadow: none;
+        border: none;
+        padding: 0px 12px;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.6;
+        color: #4f4f4f;
+        background-color: #fff;
+      }
+    }
   }
 }
 .option-list {
@@ -223,8 +285,9 @@ export default {
   margin: 0px;
   padding: 0px;
   list-style: none;
-  max-height: 175px;
+  max-height: 165px;
   overflow: auto;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;
   .item {
     cursor: pointer;
     &:hover {

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 
 import ESignatureInput from './ESignatureInput.vue'
 import SendProposalInput from './SendProposalInput.vue'
@@ -11,6 +11,7 @@ const emit = defineEmits(['close']);
 const componentToShow = computed(() => {
     if (props.activeTab === 'send-proposal') return SendProposalInput;
     if (props.activeTab === 'esignature-input') return ESignatureInput;
+    if (props.activeTab === 'share-history') return ShareHistory;
     return '';
 });
 
@@ -35,8 +36,7 @@ const handleCloseClick = () => {
 			/>
         </button>
 
-        <!-- <component :is="componentToShow" /> -->
-        <ShareHistory />
+        <component :is="componentToShow" />
 	</div>
 </template>
 

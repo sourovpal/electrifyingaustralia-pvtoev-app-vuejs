@@ -70,7 +70,7 @@
 					        />
 					    </div>
 					    <div class="d-flex flex-column">
-			                <p class="mb-0">25 Jun 12:45pm <span class="text-muted">(8 days ago)</span></p>
+			                <p class="mb-0 fs-14px">25 Jun 12:45pm <span class="text-muted">(8 days ago)</span></p>
 			                <small class="text-info fs-12px">Customer initiated Signed</small>
 					    </div>
 				    </div>
@@ -99,7 +99,7 @@
 						    </svg>
 					    </div>
 					    <div class="d-flex flex-column">
-			                <p class="mb-0">25 Jun 12:45pm <span class="text-muted">(8 days ago)</span></p>
+			                <p class="mb-0 fs-14px">25 Jun 12:45pm <span class="text-muted">(8 days ago)</span></p>
 			                <small class="fs-12px">Email delivered Signature pending</small>
 					    </div>
 				    </div>
@@ -128,11 +128,50 @@
 						    </svg>
 					    </div>
 					    <div class="d-flex flex-column">
-			                <p class="mb-0">25 Jun 12:45pm <span class="text-muted">(8 days ago)</span></p>
+			                <p class="mb-0 fs-14px">25 Jun 12:45pm <span class="text-muted">(8 days ago)</span></p>
 			                <small class="fs-12px">Email delivered Signature pending</small>
 					    </div>
 				    </div>
 			    </div>
+			</div>
+			<div class="sent-message col-md-8">
+                <div class="border rounded mt-3" style="width: 98%;">
+			        <div class="row border-bottom g-0 py-2 px-3">
+			            <div class="label col-md-3">
+			                <small>Requested by:</small>
+			            </div>
+
+			            <div class="value col-md-9">
+			                <small> Jevan Wirjamihardja (jevan@electrifyingaustralia.com.au) </small>
+			            </div>
+			        </div>
+
+			        <div class="row border-bottom g-0 py-2 px-3">
+			            <div class="label col-md-3">
+			                <small>To: </small>
+			            </div>
+
+			            <div class="value col-md-9">
+			                <small> Barry Moss (Barry@estalis.com.au) </small>
+			            </div>
+			        </div>
+
+			        <div class="row border-bottom g-0 py-2 px-3">
+			            <div class="label col-md-3">
+			                <small>Subject: </small>
+			            </div>
+
+			            <div class="value col-md-9">
+			                <small>Your solar proposal</small>
+			            </div>
+			        </div>
+                    <div class="p-3">
+                        <small>Hi, Barry</small> <br><br>
+                        <small class="g-0">
+                            Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. 
+                        </small>
+                    </div>
+                </div>
 			</div>
 		</div>
 	</div>
@@ -147,5 +186,10 @@
         border: 1px solid #3ebd93;
         background-color: #ffffff;
     }
+}
+
+.history:hover {
+    cursor: pointer; 
+    background-color: #f5f7fa; 
 }
 </style>

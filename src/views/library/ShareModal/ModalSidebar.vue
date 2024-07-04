@@ -25,6 +25,7 @@ onMounted(() => {
 // emittnig an event out of the tabs
 const handleShareBtnClick = () => {
     emit('tab-click', 'share-history');
+    activeTab.value = 'share-history';
 }
 
 
@@ -50,12 +51,15 @@ const webProposalValue = ref('https://app.getpylon.com/proposals/JUf91oOcWd')
 		</div>
 
 		<div class="share-history-wrapper d-flex flex-column">
-			<div @click="handleShareBtnClick" class="heading d-flex --share-history-link px-4 py-3 align-items-center gap-2" style="margin-bottom: 15rem;">
+			<div 
+			    @click="handleShareBtnClick" 
+			    :class="`heading d-flex tab ${ activeTab === 'share-history' ? 'active-tab' : '' } px-4 py-3 align-items-center gap-2`"
+			    style="margin-bottom: 15rem;"
+			>
 				<font-awesome-icon
-					class="text-secondary"
 					icon="fas fa-clock-rotate-left"
 				/>
-				<p class="mb-0 fw-bold cursor-pointer">Share history</p>
+				<p class="mb-0 fw-bold cursor-pointer text-black">Share history</p>
 			</div>
 			<div class="px-4">
 				<div class="link-input-wrapper mb-4">
@@ -175,8 +179,12 @@ const webProposalValue = ref('https://app.getpylon.com/proposals/JUf91oOcWd')
 	}
 }
 
-.share-history-link {
-	background-color: #e5f4ff;
-	border-left: 3px solid #f5f7fa;
-}
+// .share-history-link {
+// 	border-left: 3px solid #f5f7fa;
+//
+//     .active {
+// 	    background-color: #e5f4ff;
+// 	    border-left: 3px solid #f5f7fa;
+//     }
+// }
 </style>

@@ -33,7 +33,7 @@ const handleTabClick = (tabName) => {
 
 <template>
 	<div class="modal fade" tabindex="-1" ref="shareModal">
-		<div class="modal-dialog modal-xl modal-dialog-centered custom-radius" style="">
+		<div class="modal-dialog modal-xl modal-dialog-centered custom-radius share-modal-dialog">
 			<div class="modal-content">
 				<div class="modal-body p-0 row g-0" id="modal-body">
 				    <ModalSidebar @tab-click="handleTabClick" />
@@ -58,6 +58,11 @@ const handleTabClick = (tabName) => {
         border: none;
         padding: .75rem 5rem .75rem .75rem;
     } 
+}
+
+.share-modal-dialog {
+    border-radius: 0.75rem;
+    overflow: hidden !important;
 }
 
 .input-control {

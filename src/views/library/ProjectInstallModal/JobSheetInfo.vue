@@ -1,15 +1,16 @@
 <template>
     <div class="row g-0">
         
-        <div class="border col-md-8 " style="padding: 1.65rem 0 1.65rem 1.65rem;">
-            <div class="section-heading d-flex align-items-baseline justify-content-between pe-5">
-                <p class="mb-0 lead fw-bold fs-20px">Job sheet info</p>
+        <div class="border col-md-8 ">
+            <div class="section-heading d-flex align-items-baseline justify-content-between pe-4">
+                <p class="mb-0 lead fw-bold fs-20px" style="padding: 1.65rem 1.65rem 1rem 1.65rem">Job sheet info</p>
                 <span class="mb-0 fw-bold text-primary fs-14px">Reset</span>
             </div>
 
-            <div class="table overflow-x-hidden pe-5">
+            <span class="d-block fw-bold fs-14px" style="padding: 0 1.65rem 0.65rem 1.65rem;">Bill of Materials</span>
+            <div class="table overflow-x-hidden">
                 <!-- table header -->
-                <div class="row table-header py-1 border-bottom">
+                <div class="row table-header py-1 border-bottom px-4">
                     <small class="fw-bold col-md-5">Item</small>
                     <small class="fw-bold col-md-1 text-end">Quantity</small>
                     <small class="fw-bold col-md-2 text-end">Unit</small>
@@ -18,12 +19,12 @@
                 </div>
 
                 <!-- table rows -->
-                <div class="row border-bottom py-3">
-                    <small class="fw-bold col-md-5">Lorem ipsum dolor sit amet, qui </small>
-                    <small class="fw-bold col-md-1 text-end">09</small>
-                    <small class="fw-bold col-md-2 text-end">09</small>
-                    <small class="fw-bold col-md-2 text-end">09</small>
-                    <small class="fw-bold col-md-2 text-end">$32,452.50</small>
+                <div class="row border-bottom px-4 py-3">
+                    <small class="fw-bold col-md-5">Feet</small>
+                    <small class="fw-bold col-md-1 text-end">22</small>
+                    <small class="fw-bold col-md-2 text-end">Panel</small>
+                    <small class="fw-bold col-md-2 text-end">2</small>
+                    <small class="fw-bold col-md-2 text-end text-muted">44</small>
                 </div>
             </div>
         </div>

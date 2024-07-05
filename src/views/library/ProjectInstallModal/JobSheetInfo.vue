@@ -49,7 +49,7 @@ import { VueDraggableNext } from 'vue-draggable-next';
         <div class="col-md-4 p-4 position-relative additional-details-wrapper" style="background-color: #f5f7fa;">
             <p class="lead fw-bold fs-20px">Additional details</p>
 
-            <div class="input-form-wrapper pb-4">
+            <div class="input-form-wrapper">
                 <div class="img-input mb-4">
                     <p class="text-muted fs-13px mb-2">Images & PDFs</p>
                     <div class="upload-box">
@@ -87,6 +87,49 @@ import { VueDraggableNext } from 'vue-draggable-next';
                 <div class="stories-input mb-3">
                     <p class="text-muted fs-13px mb-2">Number of stories</p>
                     <input class="form-control" type="number" />
+                </div>
+
+                <div class="solicited-input mb-3">
+                    <p class="text-muted fs-13px mb-2">Building classification</p>
+
+                    <div class="btn-group shadow-none me-3 w-100 rounded border" style="padding: 0.125rem;">
+                        <button class="btn btn-secondary text-muted">Residential</button>
+                        <button class="btn btn-secondary text-muted">Commerical</button>
+                    </div>
+                </div>
+
+                <div class="stories-input mb-3">
+                    <p class="text-muted fs-13px mb-2">Monitoring</p>
+                    <input class="form-control" type="text" />
+                </div>
+
+                <div class="stories-input mb-3">
+                    <p class="text-muted fs-13px mb-2">Racking</p>
+                    <input class="form-control" type="text" />
+                </div>
+                <div class="stories-input mb-3">
+                    <p class="text-muted fs-13px mb-2">Power Phases</p>
+                    <input class="form-control" type="text" />
+                </div>
+                <div class="stories-input mb-3">
+                    <p class="text-muted fs-13px mb-2">NMI</p>
+                    <input class="form-control" type="text" />
+                </div>
+                <div class="stories-input mb-3">
+                    <p class="text-muted fs-13px mb-2">DNSP Pre-approval Number</p>
+                    <input class="form-control" type="text" />
+                </div>
+                <div class="stories-input mb-3">
+                    <p class="text-muted fs-13px mb-2">Meter number</p>
+                    <input class="form-control" type="text" />
+                </div>
+                <div class="stories-input mb-3">
+                    <p class="text-muted fs-13px mb-2">Energy Retailer</p>
+                    <input class="form-control" type="text" />
+                </div>
+                <div class="stories-input mb-3">
+                    <p class="text-muted fs-13px mb-2">Energy Distributor</p>
+                    <input class="form-control" type="text" />
                 </div>
 
             </div>
@@ -154,8 +197,8 @@ import { VueDraggableNext } from 'vue-draggable-next';
 }
 
 .input-form-wrapper {
-    height: 90%;
-    border: 2px dotted red;
+    height: 50rem;
     overflow: scroll;
+    padding-bottom: 14rem;
 }
 </style>

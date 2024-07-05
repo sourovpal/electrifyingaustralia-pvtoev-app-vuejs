@@ -1,7 +1,6 @@
 <script setup>
 import {onBeforeUnmount, onMounted, ref} from 'vue'
 import {Modal} from 'mdb-ui-kit'
-import ProjectList from './ProjectList.vue';
 import JobSheetInfo from './JobSheetInfo.vue'
 
 const emit = defineEmits(['close']);

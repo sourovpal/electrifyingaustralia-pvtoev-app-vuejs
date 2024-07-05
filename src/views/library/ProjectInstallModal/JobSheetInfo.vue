@@ -6,14 +6,14 @@ import { VueDraggableNext } from 'vue-draggable-next';
 <template>
     <div class="row g-0">
         
-        <div class="border col-md-8 ">
+        <div class="border col-md-8">
             <div class="section-heading d-flex align-items-baseline justify-content-between pe-4">
                 <p class="mb-0 lead fw-bold fs-20px" style="padding: 1.65rem 1.65rem 1rem 1.65rem">Job sheet info</p>
                 <span class="mb-0 fw-bold text-primary fs-14px">Reset</span>
             </div>
 
             <span class="d-block fw-bold fs-14px" style="padding: 0 1.65rem 0.65rem 1.65rem;">Bill of Materials</span>
-            <div class="overflow-x-hidden">
+            <div>
                 <!-- table header -->
                 <div class="row table-header py-1 border-bottom px-4">
                     <small class="fw-bold col-md-4">Item</small>
@@ -23,25 +23,27 @@ import { VueDraggableNext } from 'vue-draggable-next';
                     <small class="fw-bold col-md-2 text-end">Total</small>
                 </div>
 
-                <!-- table rows -->
-                <vue-draggable-next handle=".handle">
-                    <div class="row material-row border-bottom position-relative px-3 py-2" v-for="i in 10">
-                        <div class="handle cursor-move position-absolute">
-				            <font-awesome-icon
-				                class="text-secondary"
+                <div class="materials-table">
+                    <!-- table rows -->
+                    <vue-draggable-next handle=".handle">
+                        <div class="row material-row border-bottom position-relative px-4 py-2" v-for="i in 50">
+                            <div class="handle cursor-move position-absolute">
+				                <font-awesome-icon
+				                class="text-secondary fs-14px"
 				                icon="fas fa-grip-vertical"
-				            />
+				                />
+                            </div>
+                            <!-- table starts from here -->
+                            <small class="fw-bold col-md-4">
+                                <input type="text" class="item-input" :value="i" />
+                            </small>
+                            <small class="fw-bold col-md-2 text-end text-secondary">22</small>
+                            <p class="col-md-2 mb-0 text-end">Panel</p>
+                            <p class="col-md-2 mb-0 text-end">2</p>
+                            <small class="fw-bold col-md-2 text-end text-secondary">44</small>
                         </div>
-                        <!-- table starts from here -->
-                        <small class="fw-bold col-md-4">
-                            <input type="text" class="item-input" :value="i" />
-                        </small>
-                        <small class="fw-bold col-md-2 text-end text-secondary">22</small>
-                        <p class="col-md-2 mb-0 text-end">Panel</p>
-                        <p class="col-md-2 mb-0 text-end">2</p>
-                        <small class="fw-bold col-md-2 text-end text-secondary">44</small>
-                    </div>
-                </vue-draggable-next>
+                    </vue-draggable-next>
+                </div>
             </div>
         </div>
 
@@ -179,12 +181,13 @@ import { VueDraggableNext } from 'vue-draggable-next';
 }
 
 .material-row {
+    // border: 1px solid red;
     .handle {
         cursor: move;
-        left: 0;
+        left: 5px;
+        bottom: 50%;
+        transform: translateY(50%);
         width: 5px;
-        display: grid;
-        place-items: center;
         opacity: 0;
     }
 
@@ -200,5 +203,11 @@ import { VueDraggableNext } from 'vue-draggable-next';
     height: 50rem;
     overflow: scroll;
     padding-bottom: 14rem;
+}
+
+.materials-table {
+    height: 45rem;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 </style>

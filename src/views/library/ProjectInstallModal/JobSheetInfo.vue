@@ -1,5 +1,10 @@
 <script setup>
 import { VueDraggableNext } from 'vue-draggable-next';
+const emit = defineEmits(['close']);
+
+const handleCloseClick = () => {
+    emit('close');
+}
 
 </script>
 
@@ -49,6 +54,19 @@ import { VueDraggableNext } from 'vue-draggable-next';
 
         <!-- second column -->
         <div class="col-md-4 p-4 position-relative additional-details-wrapper" style="background-color: #f5f7fa;">
+            <button
+                @click="handleCloseClick"
+                type="button"
+                class="position-absolute btn btn-light p-0"
+                style="right: 0.75rem; top: 0.75rem;"
+                data-bs-dismiss="modal"
+                aria-label="Close">
+			    <font-awesome-icon
+				class="text-secondary fs-18px"
+				icon="fas fa-xmark"
+			    />
+            </button>
+
             <p class="lead fw-bold fs-20px">Additional details</p>
 
             <div class="input-form-wrapper">

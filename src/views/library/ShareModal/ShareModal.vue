@@ -34,7 +34,7 @@ const handleTabClick = (tabName) => {
 <template>
 	<div class="modal fade" tabindex="-1" ref="shareModal">
 		<div class="modal-dialog modal-xl modal-dialog-centered custom-radius share-modal-dialog">
-			<div class="modal-content">
+			<div class="modal-content custom-radius">
 				<div class="modal-body p-0 row g-0" id="modal-body">
 				    <ModalSidebar @tab-click="handleTabClick" />
 				    <ModalBody @close="handleModalClose" :activeTab="activeTab" />
@@ -46,7 +46,7 @@ const handleTabClick = (tabName) => {
 
 <style lang="scss">
 .custom-radius {
-    border-radius: 1rem;
+    border-radius: 1rem !important;
     overflow: hidden;
 }
 

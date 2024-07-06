@@ -32,11 +32,14 @@ onMounted(() => {
 		</div>
 
 		<ul
-			class="dropdown-menu py-2 border"
+			class="dropdown-menu py-2 border content content-y-100vh"
 			aria-labelledby="design-list-dropdown"
 		>
 			<vue-draggable-next>
-				<li v-for="item in 10" class="border-bottom">
+				<li
+					v-for="item in 20"
+					class="border-bottom"
+				>
 					<div
 						class="design-item-wrapper position-relative d-flex align-items-center justify-content-between pe-3 py-2"
 					>
@@ -75,34 +78,49 @@ onMounted(() => {
 									class="hover-icons d-flex gap-3 pe-3"
 								>
 									<font-awesome-icon
-									    class="fs-17px text-danger fs-17px"
-									    icon="fas fa-trash"
-                                        v-tippy='{ content:"Delete", placement : "top" }'
+										class="fs-17px text-danger fs-17px"
+										icon="fas fa-trash"
+										v-tippy="{
+											content: 'Delete',
+											placement: 'top',
+										}"
 									/>
 
 									<font-awesome-icon
 										class="fs-17px text-secondary"
 										icon="fas fa-copy"
-                                        v-tippy='{ content:"Duplicate design", placement : "top" }'
+										v-tippy="{
+											content: 'Duplicate design',
+											placement: 'top',
+										}"
 									/>
 								</div>
 
 								<font-awesome-icon
 									class="fs-17px text-secondary"
-                                    v-tippy='{ content:"Mark as recommended design", placement : "top" }'
+									v-tippy="{
+										content: 'Mark as recommended design',
+										placement: 'top',
+									}"
 									icon="fas fa-thumbs-up"
 								/>
 
 								<font-awesome-icon
 									class="fs-17px text-success"
 									style="transform: scaleX(-1)"
-                                    v-tippy='{ content:"Remove design from comparison page", placement : "top" }'
+									v-tippy="{
+										content: 'Remove design from comparison page',
+										placement: 'top',
+									}"
 									icon="fas fa-arrow-right-arrow-left"
 								/>
 
 								<font-awesome-icon
 									class="fs-17px text-secondary"
-                                    v-tippy='{ content:"Mark as primary design ", placement : "top" }'
+									v-tippy="{
+										content: 'Mark as primary design ',
+										placement: 'top',
+									}"
 									icon="fas fa-circle-check"
 								/>
 							</div>
@@ -144,6 +162,16 @@ onMounted(() => {
 					</div>
 				</li>
 			</vue-draggable-next>
+			<li>
+			    <div class="d-flex design-item-wrapper align-items-baseline gap-2 px-2 py-4">
+				    <font-awesome-icon
+				        class="text-muted"
+				        icon="fas fa-plus"
+				    />
+
+				    <p class="mb-0 fw-bold fs-16px"> Start a new design <span class="text-secondary">(3/5)</span></p>
+			    </div>
+			</li>
 		</ul>
 	</div>
 </template>
@@ -154,10 +182,22 @@ onMounted(() => {
 }
 .dropdown-menu {
 	width: 36rem;
+	overflow: hidden;
+    inset: auto !important;
+    left: auto !important;
+    right: 0 !important;
+    transform: none !important;
+
+	&.content.content-y-100vh { 
+	    height: 20rem !important; 
+	    max-height: 50vh !important; 
+	}
 }
 
 .design-item-wrapper {
 	padding-left: 2rem;
+	border-left: 2px solid #ffffff;
+
 	.hover-icons {
 		opacity: 0;
 		border-right: 1px solid #adadad;
@@ -170,14 +210,15 @@ onMounted(() => {
 		cursor: grab;
 	}
 
+	&.active { border-left: 3px solid #0275d8; }
+
 	&:hover {
 		background-color: #f5f7fa;
+	    border-left: 2px solid #f5f7fa;
 		cursor: pointer;
 
-		.hover-icons,
-		.handle {
-			opacity: 1;
-		}
+	    &.active { border-left: 3px solid #0275d8; }
+		.hover-icons, .handle { opacity: 1; }
 	}
 }
 </style>

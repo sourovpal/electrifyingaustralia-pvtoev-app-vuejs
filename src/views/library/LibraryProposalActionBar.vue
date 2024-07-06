@@ -2,6 +2,7 @@
 import ActionBar from '../../components/ActionBar/ActionBar.vue'
 import LeftActionBar from '../../components/ActionBar/LeftActionBar.vue'
 import RightActionBar from '../../components/ActionBar/RightActionBar.vue'
+import LibraryDesignDropdownList from './LibraryDesignDropdownList.vue'
 
 </script>
 
@@ -38,16 +39,8 @@ import RightActionBar from '../../components/ActionBar/RightActionBar.vue'
 				    icon="fas fa-check"
 				/>
 				<button class="btn btn-transparent text-info btn-link rounded-lg --shadow-none fw-bold">Link to CRM</button>
-				<div class="d-flex new-design-btn cursor-pointer align-items-center p-2 gap-5 rounded">
-				    <small>7.2kW·<span class="text-secondary">$5340</span></small>
-				    <div class="d-flex gap-2">
-				        <font-awesome-icon class="text-success" icon="fas fa-circle-check"/>
-				        <font-awesome-icon
-				            class="text-secondary"
-				            icon="fas fa-caret-down"
-				        />
-				    </div>
-				</div>
+                <LibraryDesignDropdownList />
+
                 <div class="d-flex cursor-pointer align-items-center gap-2 p-2 rounded">
 				    <font-awesome-icon icon="fas fa-puzzle-piece"/>
 				    <font-awesome-icon

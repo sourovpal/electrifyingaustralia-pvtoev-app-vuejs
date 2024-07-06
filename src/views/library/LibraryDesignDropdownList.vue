@@ -1,13 +1,6 @@
 <script setup>
 import {VueDraggableNext} from 'vue-draggable-next'
-// import { Tooltip } from 'bootstrap';
-import {onMounted} from 'vue'
 
-onMounted(() => {
-	// [].slice
-	//     .call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-	//     .map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl));
-})
 </script>
 
 <template>

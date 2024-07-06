@@ -8,10 +8,10 @@
     import DatatableHeader from '../../../components/Datatable/DatatableHeader.vue';
     import DatatableBody from '../../../components/Datatable/DatatableBody.vue';
     import HeaderPropertiesDropdown from './components/HeaderPropertiesDropdown.vue';
-    import FilterRightSidebar from './components/FilterRightSidebar.vue';
+    // import FilterRightSidebar from './components/FilterRightSidebar.vue';
     import DataTableSkeletor from './components/DataTableSkeletor.vue';
     import DataNotFound from './components/DataNotFound.vue';
-    import AddNewLeadModal from './components/AddNewLeadModal.vue';
+    import AddNewLeadModal from './components/forms/AddNewLeadModal.vue';
     import DeleteMultipleLeadWarningModal from './components/DeleteMultipleLeadWarningModal.vue';
     import DropdownOwnerList from './components/DropdownOwnerList.vue';
     import ColumnSorted from './components/ColumnSorted.vue';
@@ -40,7 +40,7 @@
             AddNewLeadModal,
             DataTableSkeletor,
             DropdownOwnerList,
-            FilterRightSidebar,
+            // FilterRightSidebar,
             UploadSpreadsheetModal,
             HeaderPropertiesDropdown,
             DeleteMultipleLeadWarningModal,
@@ -731,14 +731,14 @@
         </action-bar>
         <Datatable>
 
-            <FilterRightSidebar :class="{show:toggleFilterSidebar}"
+            <!-- <FilterRightSidebar :class="{show:toggleFilterSidebar}"
                 :toggleFilterSidebarHandler="toggleFilterSidebarHandler"
                 @toggle-filter="(e)=> resetFilterSidebar(e)"
                 @filter-data-in-database="(filter)=> filterDataInDatabase(filter)"
                 :lead-properties="leadProperties"
                 :lead-sources="leadSources"
                 :owners="owners"
-                ref="filterRightSidebarRef" />
+                ref="filterRightSidebarRef" /> -->
 
             <datatable-header class=""
                 v-if="isFirstLoading || fetchLeads.length">

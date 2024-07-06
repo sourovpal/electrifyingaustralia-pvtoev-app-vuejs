@@ -242,16 +242,18 @@ const UpdateSubscribers = (payload) => {
 }
 
 const LeadUpdate = (payload) => {
-    try {
-        return api.post(`/leads/update`, payload)
-        .then((res) => {
-            return res.data;
-        }).catch((error) => {
-            return error;
-        });
-    } catch (error) {
-        return error;
-    }
+    return new Promise((resolve, reject) => {
+        try {
+            return api.post(`/leads/update`, payload)
+            .then((res) => {
+                return resolve(res.data);
+            }).catch((error) => {
+                return reject(error);
+            });
+        } catch (error) {
+            return reject(error);
+        }
+    });
 }
 
 

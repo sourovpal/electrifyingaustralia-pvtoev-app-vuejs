@@ -45,7 +45,7 @@ effect(() => {
 
 <template>
   <button
-    :disabled="disabled"
+    :disabled="(disabled || isLoadingBtn)"
     v-bind="attrs"
     :type="type"
     :class="size"

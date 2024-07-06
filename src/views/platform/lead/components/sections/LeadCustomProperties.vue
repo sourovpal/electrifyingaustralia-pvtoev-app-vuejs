@@ -1,6 +1,6 @@
 <script setup>
 import MultipleSelectVue from "../../../../../components/forms/MultipleSelect.vue";
-const props = defineProps(['leadProperties', 'customFormData']);
+const props = defineProps(["leadProperties", "customFormData"]);
 </script>
 
 <template>
@@ -100,14 +100,17 @@ const props = defineProps(['leadProperties', 'customFormData']);
       :multiple="true"
       :options="field?.options ?? []"
       v-model="customFormData[field.unique_id]"
+      lable="value"
+      :return-fields="['value']"
     />
-
     <MultipleSelectVue
       v-else-if="field?.data_type_id === 'single_choice'"
       :name="field?.unique_id"
       :multiple="false"
       :options="field?.options ?? []"
       v-model="customFormData[field.unique_id]"
+      :return-fields="['value']"
     />
+    {{ customFormData[field.unique_id] }}
   </div>
 </template>

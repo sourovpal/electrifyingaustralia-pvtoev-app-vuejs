@@ -124,7 +124,7 @@ const handleProjectInstallModalClose = () => {
                         </div>
                     </div>
                 </div>
-                <div>
+                <div class="pb-2">
                     <div class="section-heading mb-1">
                         <small class="fw-bold fs-12px">QUOTE</small>
                     </div>

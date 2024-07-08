@@ -6,6 +6,7 @@ import TabbedDisplay from './components/TabbedDisplay.vue'
 import Pricing from './LibraryComponents/Pricing.vue'
 import Financing from './LibraryComponents/Financing.vue'
 import Rebates from './LibraryComponents/Rebates.vue'
+import CertificateSettings from './LibraryComponents/CertificateSettings.vue'
 
 import Inverters from './LibraryComponents/Inverters.vue'
 import EVChargers from './LibraryComponents/EVChargers.vue'
@@ -95,11 +96,13 @@ onMounted(() => {
 					{label: 'Pricing', component: 'Pricing'},
 					{label: 'Financing', component: 'Financing'},
 					{label: 'Rebates', component: 'Rebates'},
+					{label: 'Settings', component: 'CertificateSettings', icon: 'fa-gear'},
 				]"
 				:components="{
 					Financing,
 					Pricing,
 					Rebates,
+                    CertificateSettings
 				}"
 			/>
 

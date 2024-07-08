@@ -25,7 +25,7 @@ import {VueDraggableNext} from 'vue-draggable-next'
 		</div>
 
 		<ul
-			class="dropdown-menu py-2 border content content-y-100vh"
+			class="dropdown-menu design-list-dropdown py-2 border content content-y-100vh"
 			aria-labelledby="design-list-dropdown"
 		>
 			<vue-draggable-next>
@@ -173,7 +173,8 @@ import {VueDraggableNext} from 'vue-draggable-next'
 .dropdown-toggle::after {
 	display: none;
 }
-.dropdown-menu {
+
+.dropdown-menu.design-list-dropdown {
 	width: 36rem;
 	overflow: hidden;
     inset: auto !important;

@@ -1,4 +1,4 @@
-<script setup>
+<script setupcon>
 import Chart from 'chart.js/auto';
 import {onMounted, ref} from 'vue';
 
@@ -96,7 +96,7 @@ onMounted(() => {
 					{label: 'Pricing', component: 'Pricing'},
 					{label: 'Financing', component: 'Financing'},
 					{label: 'Rebates', component: 'Rebates'},
-					{label: 'Settings', component: 'CertificateSettings', icon: 'fa-gear'},
+					{label: 'Settings', component: 'CertificateSettings', icon: { name: 'fa-gear', toRight: true  }, toRight: true},
 				]"
 				:components="{
 					Financing,
@@ -122,8 +122,8 @@ onMounted(() => {
 				component-class="w-100 mt-2 card shadow pb-4"
 				:tabs="[
 					{label: 'Load profile', component: 'LoadProfile'},
-					{label: 'Battery storage', component: 'BatteryStorage', icon: 'fa-lock'},
-					{label: 'Interval analysis', component: 'IntervalAnalysis', icon: 'fa-lock'},
+					{label: 'Battery storage', component: 'BatteryStorage', icon: { name: 'fa-lock' }, },
+					{label: 'Interval analysis', component: 'IntervalAnalysis', icon: { name: 'fa-lock' }},
 					{label: 'Export limit', component: 'ExportLimit' },
 				]"
 				:components="{ LoadProfile, BatteryStorage, IntervalAnalysis, ExportLimit }"

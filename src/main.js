@@ -63,6 +63,7 @@ import {
     faArrowRightArrowLeft,
     faTablet,
     faGear,
+    faArrowRotateRight,
 } from '@fortawesome/free-solid-svg-icons'
 
 const iconsToUse = [
@@ -107,6 +108,7 @@ const iconsToUse = [
     faArrowRightArrowLeft,
     faTablet,
     faGear,
+    faArrowRotateRight,
 ]
 
 library.add(iconsToUse)

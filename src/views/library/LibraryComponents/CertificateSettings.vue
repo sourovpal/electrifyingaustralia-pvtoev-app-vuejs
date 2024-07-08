@@ -78,108 +78,56 @@ import CustomCheckbox from '../../../components/forms/CustomCheckbox.vue'
 
 		<div class="row mb-3">
 			<p class="text-end fs-14px col-md-4 text-secondary mb-0">
-				Financed provider
+				Deposit amount
 			</p>
+			<div class="col-md-8 d-flex align-items-center justify-content-between" style="padding-right: 2.5rem;">
+                <div>
+                    <div class="btn-group me-3 mb-2">
+                        <button class="btn btn-light btn-sm">No deposit</button>
+                        <button class="btn btn-primary btn-sm px-2">Percentage</button>
+                        <button class="btn btn-light btn-sm px-2">Fixed amount</button>
+                    </div>
+
+                    <div class="d-flex gap-3 align-items-center">
+					    <p class="fs-14px mb-0">10%</p>
+					    <font-awesome-icon
+					        class="text-secondary fs-14px"
+					        icon="fas fa-pen"
+					    />
+				    </div>
+					<small class="fs-12px">This percentage of total price</small>
+                </div>
+
+                <div class="reset d-flex align-items-center gap-2">
+					<font-awesome-icon
+					    class="text-secondary fs-14px"
+					    icon="fas fa-arrow-rotate-right"
+					/>
+					<p class="mb-0 fs-14px">Reset</p>
+                </div>
+			</div>
+		</div>
+
+		<div class="row mb-3">
+			<p class="text-end fs-14px col-md-4 text-secondary mb-0">Customer is GST registered</p>
 			<div class="col-md-8">
-				<div class="dropdown">
-					<button
-						class="btn btn-secondary dropdown-toggle"
-						type="button"
-						id="dropdownMenuButton"
-						data-toggle="dropdown"
-						aria-haspopup="true"
-						aria-expanded="false"
-					>
-						Select a financier
-					</button>
-					<div
-						class="dropdown-menu"
-						aria-labelledby="dropdownMenuButton"
-					>
-						<a class="dropdown-item" href="#">Action</a>
-						<a class="dropdown-item" href="#"
-							>Another action</a
-						>
-						<a class="dropdown-item" href="#"
-							>Something else here</a
-						>
-					</div>
-				</div>
+			    <CustomCheckbox />
 			</div>
 		</div>
 
 		<div class="row">
-			<p class="text-end fs-14px col-md-4 text-secondary mb-0">Term</p>
+			<p class="text-end fs-14px col-md-4 text-secondary mb-0">Component line items</p>
 			<div class="col-md-8">
-				<div class="dropdown">
-					<button
-						class="btn btn-secondary dropdown-toggle"
-						type="button"
-						id="dropdownMenuButton"
-						data-toggle="dropdown"
-						aria-haspopup="true"
-						aria-expanded="false"
-					>
-						Select a term
-					</button>
-					<div
-						class="dropdown-menu"
-						aria-labelledby="dropdownMenuButton"
-					>
-						<a class="dropdown-item" href="#">Action</a>
-						<a class="dropdown-item" href="#"
-							>Another action</a
-						>
-						<a class="dropdown-item" href="#"
-							>Something else here</a
-						>
-					</div>
-				</div>
-				<small class="text-muted fs-12px"
-					>How long will the loan take to pay off?</small
-				>
+			    <CustomCheckbox :active="true" />
 			</div>
 		</div>
-
 		<hr>
-
 		<div class="row mb-3">
-			<p class="text-end fs-14px col-md-4 text-secondary mb-0">Rate</p>
+			<p class="text-end fs-14px col-md-4 text-secondary mb-0">Tax rate</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">-</p>
+					<p class="fs-14px mb-0 text-black">GST 10.00%</p>
 				</div>
-				<p class="mb-0 fs-12px">Interest rate per annum</p>
-			</div>
-		</div>
-
-		<div class="row mb-3">
-			<p class="text-end fs-14px col-md-4 text-secondary mb-0">Other fees</p>
-			<div class="col-md-8">
-				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">-</p>
-				</div>
-			</div>
-		</div>
-
-		<div class="row mb-3">
-			<p class="text-end fs-14px col-md-4 text-secondary mb-0">Est. monthly repayments</p>
-			<div class="col-md-8">
-				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">-</p>
-				</div>
-			</div>
-		</div>
-
-        <div class="row">
-			<p class="text-end fs-14px col-md-4 text-secondary mb-0">Include in proposal?</p>
-			<div class="col-md-8">
-				<div class="d-flex gap-3 align-items-center">
-                    <svg class="unchecked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
-				</div>
-                
-
-				<small class="text-muted fs-12px">Pylon is not a financial adviser. <span>Read more</span></small>
 			</div>
 		</div>
 	</div>

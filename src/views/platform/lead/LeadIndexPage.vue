@@ -7,15 +7,15 @@
     import Datatable from '../../../components/Datatable/Datatable.vue';
     import DatatableHeader from '../../../components/Datatable/DatatableHeader.vue';
     import DatatableBody from '../../../components/Datatable/DatatableBody.vue';
-    import HeaderPropertiesDropdown from './components/HeaderPropertiesDropdown.vue';
+    import HeaderPropertiesDropdown from './components/dropdowns/HeaderPropertiesDropdown.vue';
     // import FilterRightSidebar from './components/FilterRightSidebar.vue';
     import DataTableSkeletor from './components/DataTableSkeletor.vue';
     import DataNotFound from './components/DataNotFound.vue';
-    import AddNewLeadModal from './components/forms/AddNewLeadModal.vue';
-    import DeleteMultipleLeadWarningModal from './components/DeleteMultipleLeadWarningModal.vue';
-    import DropdownOwnerList from './components/DropdownOwnerList.vue';
+    import AddNewLeadModal from './components/modals/AddNewLeadModal.vue';
+    import DeleteMultipleLeadWarningModal from './components/modals/DeleteMultipleLeadWarningModal.vue';
+    import DropdownOwnerList from './components/dropdowns/DropdownOwnerList.vue';
     import ColumnSorted from './components/ColumnSorted.vue';
-    import UploadSpreadsheetModal from './components/UploadSpreadsheetModal.vue';
+    import UploadSpreadsheetModal from './components/modals/UploadSpreadsheetModal.vue';
     import moment from 'moment';
     import {
         FetchLeads,

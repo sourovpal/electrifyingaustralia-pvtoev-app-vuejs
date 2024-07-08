@@ -58,7 +58,6 @@ export default {
     },
     modelValue: {},
     selected: {
-      type: Object,
       default: null,
     },
     label: {

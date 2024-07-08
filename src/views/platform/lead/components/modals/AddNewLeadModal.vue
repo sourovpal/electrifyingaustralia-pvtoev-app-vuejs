@@ -1,18 +1,16 @@
 <script>
 import { Modal } from "mdb-ui-kit";
 import { CreateNewLead } from "../../../../../actions/LeadAction";
-import DropdownOwnerList from "../DropdownOwnerList.vue";
+import DropdownOwnerList from "../dropdowns/DropdownOwnerList.vue";
 import Storage from "../../../../../helpers/Storage";
 import { useAppStore } from "../../../../../stores/app";
 import { CONFIG } from "../../../../../config";
-import SelectLeadSource from "./fields/SelectLeadSource.vue";
-import SelectLeadStatus from "./fields/SelectLeadStatus.vue";
+import SelectObjectId from "./fields/SelectObjectId.vue";
 
 export default {
   components: {
     DropdownOwnerList,
-    SelectLeadSource,
-    SelectLeadStatus,
+    SelectObjectId,
   },
   props: ["leadSources", "leadStatus", "fetchAllLeadsHandler"],
   setup(props) {
@@ -121,7 +119,7 @@ export default {
           lead_title: this.lead_title,
           lead_source: this.lead_source,
           lead_status: this.lead_status,
-          owner: this.owner?.id,
+          lead_owner: this.owner?.id,
           tags: this.tags,
         };
         const res = await CreateNewLead(data);
@@ -263,7 +261,7 @@ export default {
                   >Lead source
                   <span class="text-soft fs-12px ms-1">(Optional)</span>
                 </label>
-                <SelectLeadSource
+                <select-object-id
                   v-model="lead_source"
                   :options="leadSources"
                   @click="delete errors?.lead_source"
@@ -329,7 +327,7 @@ export default {
                   >Lead status
                   <span class="text-soft fs-12px ms-1">(Optional)</span>
                 </label>
-                <SelectLeadStatus
+                <select-object-id
                   :options="leadStatus"
                   returnValue="id"
                   label="name"
@@ -422,10 +420,9 @@ export default {
               </div>
               <div>
                 <loading-button
-                  title="Save Change"
                   :is-loading="isSubmitCreateLeadForm"
                   @submit="createNewLeadHandler"
-                />
+                >Save Change</loading-button>
               </div>
             </div>
           </div>

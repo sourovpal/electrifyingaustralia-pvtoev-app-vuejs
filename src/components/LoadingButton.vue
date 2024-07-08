@@ -70,7 +70,9 @@ effect(() => {
       </svg>
       <span>{{ submittingTitle }}</span>
     </div>
-    <span v-else>{{ title }}</span>
+    <slot v-else>
+      <span>{{ title }}</span>
+    </slot>
   </button>
 </template>
 

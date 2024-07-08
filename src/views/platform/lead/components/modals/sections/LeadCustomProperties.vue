@@ -1,5 +1,5 @@
 <script setup>
-import MultipleSelectVue from "../../../../../components/forms/MultipleSelect.vue";
+import MultipleSelectVue from "../fields/MultipleSelect.vue";
 const props = defineProps(["leadProperties", "customFormData"]);
 </script>
 
@@ -111,6 +111,5 @@ const props = defineProps(["leadProperties", "customFormData"]);
       v-model="customFormData[field.unique_id]"
       :return-fields="['value']"
     />
-    {{ customFormData[field.unique_id] }}
   </div>
 </template>

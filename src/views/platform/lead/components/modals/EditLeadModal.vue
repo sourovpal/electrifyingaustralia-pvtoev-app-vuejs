@@ -8,13 +8,13 @@ import {
   shallowReactive,
 } from "vue";
 import { Modal } from "mdb-ui-kit";
-import { LeadUpdate } from "../../../../actions/LeadAction";
-import { useLeadStore } from "../../../../stores/lead";
-import { useAppStore } from "../../../../stores/app";
+import { LeadUpdate } from "../../../../../actions/LeadAction";
+import { useLeadStore } from "../../../../../stores/lead";
+import { useAppStore } from "../../../../../stores/app";
 import LeadCustomProperties from "./sections/LeadCustomProperties.vue";
 import { useToast } from "vue-toast-notification";
-import { CONFIG } from "../../../../config";
-import MultipleSelectVue from "../../../../components/forms/MultipleSelect.vue";
+import { CONFIG } from "../../../../../config";
+import MultipleSelectVue from "./fields/MultipleSelect.vue";
 // Define
 const emits = defineEmits(["findLeadByIdHandler"]);
 // Assign Veriable

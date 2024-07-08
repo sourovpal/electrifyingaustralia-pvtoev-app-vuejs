@@ -2,7 +2,7 @@
     import { icons } from '../../../../../asset/svgicon';
     import api from '../../../../../actions/api';
     import SlideUpDown from 'vue-slide-up-down';
-    import ImagePreviewModal from '../ImagePreviewModal.vue';
+    import ImagePreviewModal from '../modals/ImagePreviewModal.vue';
     import ShowAllFilesModal from './ShowAllFilesModal.vue';
 
     export default {

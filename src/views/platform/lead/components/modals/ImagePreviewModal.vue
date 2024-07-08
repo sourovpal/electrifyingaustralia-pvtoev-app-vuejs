@@ -1,6 +1,6 @@
 <script>
     import { Modal } from "mdb-ui-kit";
-    import { icons } from '../../../../asset/svgicon';
+    import { icons } from '../../../../../asset/svgicon';
 
     export default {
         components: {

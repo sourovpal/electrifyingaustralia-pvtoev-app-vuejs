@@ -3,9 +3,9 @@
     import { QuillEditor } from '@vueup/vue-quill'
     import '@vueup/vue-quill/dist/vue-quill.snow.css';
     import '@vueup/vue-quill/dist/vue-quill.bubble.css';
-    import ContactEditModal from './ContactEditModal.vue';
+    import ContactEditModal from '../../../../../ContactEditModal.vue';
     import StarRating from 'vue-star-rating';
-    import RightSidebarProperties from './RightSidebarProperties.vue';
+    import RightSidebarProperties from './CustomProperties/RightSidebarProperties.vue';
     import { Skeletor } from 'vue-skeletor';
     import {
         UpdateLeadConfidence,

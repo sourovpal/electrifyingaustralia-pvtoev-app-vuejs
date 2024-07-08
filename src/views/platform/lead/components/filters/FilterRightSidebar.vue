@@ -1,5 +1,5 @@
 <script>
-    import { propertiesIconList } from '../../../../asset/svgicon.js';
+    import { propertiesIconList } from '../../../../../asset/svgicon.js';
     import SlideUpDown from 'vue-slide-up-down';
     import MultipleSelectVue from './forms/MultipleSelect.vue';
     import SingleSelect from './forms/SingleSelect.vue';

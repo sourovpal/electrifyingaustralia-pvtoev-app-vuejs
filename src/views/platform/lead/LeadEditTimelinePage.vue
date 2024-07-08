@@ -4,15 +4,15 @@
     import ActionBar from '../../../components/ActionBar/ActionBar.vue';
     import LeftActionBar from '../../../components/ActionBar/LeftActionBar.vue';
     import RightActionBar from '../../../components/ActionBar/RightActionBar.vue';
-    import LeadQualifyModal from './components/LeadQualifyModal.vue';
-    import LeadReCategoriseModal from './components/LeadReCategoriseModal.vue';
-    import EditLeadModal from './components/EditLeadModal.vue';
+    import LeadQualifyModal from './components/modals/LeadQualifyModal.vue';
+    import LeadReCategoriseModal from './components/modals/LeadReCategoriseModal.vue';
+    import EditLeadModal from './components/modals/EditLeadModal.vue';
 
     import CustomScrollbar from 'custom-vue-scrollbar';
 
     import { Skeletor } from 'vue-skeletor';
-    import DropdownOwnerList from './components/DropdownOwnerList.vue';
-    import DropdownSubscriberList from './components/DropdownSubscriberList.vue';
+    import DropdownOwnerList from './components/dropdowns/DropdownOwnerList.vue';
+    import DropdownSubscriberList from './components/dropdowns/DropdownSubscriberList.vue';
     import { icons } from '../../../asset/svgicon.js';
     import {
         FetchLeads,

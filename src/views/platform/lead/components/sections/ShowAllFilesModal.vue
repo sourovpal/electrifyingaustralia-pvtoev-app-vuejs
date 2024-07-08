@@ -1,6 +1,6 @@
 <script>
     import { Modal } from "mdb-ui-kit";
-    import ImagePreviewModal from '../ImagePreviewModal.vue';
+    import ImagePreviewModal from '../modals/ImagePreviewModal.vue';
     export default {
         components: {
             ImagePreviewModal

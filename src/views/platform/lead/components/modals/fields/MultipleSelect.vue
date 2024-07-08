@@ -4,10 +4,10 @@
       class="dropdown form-control px-0"
       @click="toggleOptionList"
       tabindex="0"
-      :class="{ open: isOpen, 'form-control-sm': multiple }"
+      :class="{ open: isOpen, 'custor-pointer single-option': !multiple, small: small }"
     >
-      <div class="selected-options px-2">
-        <ul v-if="multiple" class="option-list d-flex flex-wrap">
+      <div v-if="multiple" class="selected-options px-2">
+        <ul class="option-list d-flex flex-wrap">
           <li
             class="option-item"
             v-for="(option, index) in selectedOptions"
@@ -27,8 +27,9 @@
           </li>
         </ul>
       </div>
+
       <Transition>
-        <div v-if="isOpen" class="assign-options position-absolute pb-5">
+        <div v-if="isOpen" class="assign-options position-absolute">
           <ul class="item-list">
             <li v-if="!multiple && !input" class="search-item px-2 py-0">
               <input
@@ -98,8 +99,13 @@ export default {
       type: Boolean,
       default: false,
     },
-    modelValue: {},
+    modelValue: {
+    },
     input: {
+      type: Boolean,
+      default: false,
+    },
+    small: {
       type: Boolean,
       default: false,
     },
@@ -244,12 +250,15 @@ export default {
   margin-top: -5px;
   .option-item {
     margin-top: 5px;
-    line-height: 12px;
-    padding: 6px 0px 6px 8px;
+    line-height: 8px;
+    padding: 1px 0px 2px 8px;
     background: #dddddd;
     border-radius: 2px;
     font-size: 14px;
     margin-right: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     .remove-btn {
       padding: 6px 8px 6px 4px;
       font-size: 16px;
@@ -273,9 +282,8 @@ export default {
 .assign-options {
   left: -1px;
   right: -1px;
-  overflow: hidden;
-  top: 35px;
   z-index: 9999;
+  top: 100%;
 }
 .item-list {
   border-bottom-left-radius: 5px;
@@ -301,6 +309,31 @@ export default {
       border: none;
       outline: none;
       padding: 6px 6px;
+    }
+  }
+}
+.custor-pointer {
+  cursor: pointer;
+}
+.form-control.small {
+  padding: 4px 0px;
+  min-height: 28.74px;
+  &.single-option{
+    line-height: 18px;
+  }
+  .option-list {
+    .option-item {
+      line-height: 3px !important;
+    }
+    .option-search {
+      height: 22.74px !important;
+      margin-top: 0px !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      input{
+        margin-top: 5px;
+      }
     }
   }
 }

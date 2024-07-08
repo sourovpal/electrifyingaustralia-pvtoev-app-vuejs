@@ -38,7 +38,7 @@ const data = [
 
 const barChart = ref(null);
 onMounted(() => {
-    const myChart = new Chart(
+    new Chart(
         barChart.value,
         {
             type: 'bar',

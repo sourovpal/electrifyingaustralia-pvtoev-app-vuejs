@@ -1,12 +1,12 @@
 <template>
 	<div class="overflow-x-hidden position-relative">
-		<div class="row align-items-baseline py-3 px-4">
+		<div class="row align-items-center py-3 px-4">
 			<p class="text-end fs-14px col-md-4 mb-0 text-secondary">
 				Simulate load profile
 			</p>
 			<div class="col-md-8">
 				<!-- placeholder -->
-				<input type="checkbox" role="switch" id="ms1" />
+				<CustomCheckbox />
 			</div>
 		</div>
 		<div class="row align-items-baseline py-3 px-4">
@@ -30,7 +30,10 @@
 	</div>
 </template>
 
-<script setup></script>
+<script setup>
+import CustomCheckbox from '../../../components/forms/CustomCheckbox.vue'
+
+</script>
 
 <style lang="scss" scoped>
 input:where([type='checkbox'][role='switch']) {

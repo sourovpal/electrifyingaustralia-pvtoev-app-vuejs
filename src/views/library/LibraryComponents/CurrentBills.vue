@@ -1,3 +1,11 @@
+<script setup>
+import { ref } from 'vue';
+import SaveableInput from '../components/SaveableInput.vue';
+
+const totalAmount = ref('$27,990');
+
+</script>
+
 <template>
 	<div>
 		<div class="row mt-4">
@@ -5,13 +13,7 @@
 				Total amount
 			</p>
 			<div class="col-md-8">
-				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">$27,990.00</p>
-					<font-awesome-icon
-						class="text-secondary fs-14px"
-						icon="fas fa-pen"
-					/>
-				</div>
+			    <SaveableInput v-model="totalAmount" />
 				<p class="fs-12px">
 				    This is used to calculate the customer's energy usage and provides the baseline for the <span class="text-info">financial outcomes</span> charts. 
 				</p>
@@ -83,7 +85,5 @@
 		</div>
 	</div>
 </template>
-
-<script setup></script>
 
 <style lang="scss" scoped></style>

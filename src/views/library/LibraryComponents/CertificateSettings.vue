@@ -1,6 +1,11 @@
 <script setup>
-import CustomCheckbox from '../../../components/forms/CustomCheckbox.vue'
+import {ref} from 'vue';
+import CustomCheckbox from '../../../components/forms/CustomCheckbox.vue';
+import SaveableInput from '../components/SaveableInput.vue';
 
+// temporary
+const stcPrice = ref('$27,990.00');
+const depositAmount = ref('10%');
 </script>
 
 <template>
@@ -30,10 +35,10 @@ import CustomCheckbox from '../../../components/forms/CustomCheckbox.vue'
 						class="dropdown-menu border"
 						aria-labelledby="dropdownMenuButton"
 					>
-						<a class="dropdown-item" href="#">Automatic</a>
-						<a class="dropdown-item" href="#">Force STCs for this design</a>
-						<a class="dropdown-item" href="#" >Force LGCs for this design</a>
-						<a class="dropdown-item" href="#" >No certificates</a>
+						<a class="dropdown-item">Automatic</a>
+						<a class="dropdown-item">Force STCs for this design</a>
+						<a class="dropdown-item">Force LGCs for this design</a>
+						<a class="dropdown-item">No certificates</a>
 					</div>
 				</div>
 			</div>
@@ -48,20 +53,10 @@ import CustomCheckbox from '../../../components/forms/CustomCheckbox.vue'
 		</div>
 
         <div class="row">
-			<p class="text-end fs-14px col-md-4 text-secondary">
-				STC price
-			</p>
+			<p class="text-end fs-14px col-md-4 text-secondary"> STC price </p>
 			<div class="col-md-8">
-				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">$27,990.00</p>
-					<font-awesome-icon
-					    class="text-secondary fs-14px"
-					    icon="fas fa-pen"
-					/>
-				</div>
-				<p class="fs-12px text-secondary">
-				    Excluding GST
-				</p>
+			    <SaveableInput v-model="stcPrice" />
+			    <p class="fs-12px text-secondary">Excluding GST</p>
 			</div>
 		</div>
 
@@ -88,13 +83,14 @@ import CustomCheckbox from '../../../components/forms/CustomCheckbox.vue'
                         <button class="btn btn-light btn-sm px-2">Fixed amount</button>
                     </div>
 
-                    <div class="d-flex gap-3 align-items-center">
-					    <p class="fs-14px mb-0">10%</p>
-					    <font-awesome-icon
-					        class="text-secondary fs-14px"
-					        icon="fas fa-pen"
-					    />
-				    </div>
+        <!--             <div class="d-flex gap-3 align-items-center"> -->
+					   <!--  <p class="fs-14px mb-0">10%</p> -->
+					   <!--  <font-awesome-icon -->
+					   <!--      class="text-secondary fs-14px" -->
+					   <!--      icon="fas fa-pen" -->
+					   <!--  /> -->
+				    <!-- </div> -->
+				    <SaveableInput v-model="depositAmount" />
 					<small class="fs-12px">This percentage of total price</small>
                 </div>
 

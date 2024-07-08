@@ -13,13 +13,9 @@
 			<p class="text-end fs-14px col-md-4 mb-0 text-secondary">
 				Simple self consumption
 			</p>
-			<div class="col-md-8 d-flex align-items-center gap-2">
-				<small>50%</small>
-				<font-awesome-icon
-					icon="fas fa-pen"
-					class="text-secondary"
-				/>
-			</div>
+            <div class="col-md-8">
+			    <SaveableInput v-model="selfConsumption" />
+            </div>
 		</div>
 		<div class="help-icon position-absolute">
 			<font-awesome-icon
@@ -31,7 +27,11 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import CustomCheckbox from '../../../components/forms/CustomCheckbox.vue'
+import SaveableInput from '../components/SaveableInput.vue';
+
+const selfConsumption = ref('40%');
 
 </script>
 

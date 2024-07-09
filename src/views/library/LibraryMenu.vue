@@ -1,7 +1,8 @@
 <template>
     <section class="library-menu">
         <div class="submenu-header">
-            <h1>beans</h1>
+            <h1 v-if="!isLoading">beans</h1>
+            <Skeletor v-else />
         </div>
         <div class="menu-control d-flex align-items-center justify-content-between border-bottom pb-3 px-4">
             <div>
@@ -25,7 +26,21 @@
 </template>
 
 <script setup>
+import { onMounted, ref } from 'vue';
 import LibraryMenuItem from './LibraryMenuItem.vue';
+import { Skeletor } from 'vue-skeletor';
+
+onMounted(() => {
+    simulateApiCall();
+});
+const isLoading = ref(false);
+
+const simulateApiCall = () => {
+    isLoading.value = true;
+    setTimeout(() => {
+        isLoading.value = false;
+    }, 1500);
+}
 
 </script>
 

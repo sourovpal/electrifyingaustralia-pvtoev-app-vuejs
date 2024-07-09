@@ -1,5 +1,5 @@
 <script>
-import './asset/global.scss';
+import './assets/global.scss';
 
 export default {
   components:{

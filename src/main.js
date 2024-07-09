@@ -1,10 +1,8 @@
-import { createApp, ref, provide } from 'vue';
+import { createApp, ref } from 'vue';
 import App from './App.vue';
 import router from './router';
 import * as mdb from 'mdb-ui-kit';
 import LoadingButton from "./components/LoadingButton.vue";
-
-import VueProgressBar from "@aacassandra/vue3-progressbar";
 
 import { plugin as VueTippy } from 'vue-tippy';
 
@@ -13,6 +11,9 @@ import ToastPlugin from 'vue-toast-notification';
 import VueLazyLoad from 'vue3-lazyload';
 
 import { createPinia } from 'pinia';
+import { FontAwesomeIcon } from './plugins/font-awesome';
+import { ProgressBar, ProgressBarOptions } from './plugins/progress-bar';
+import {CONFIG} from './config';
 
 import 'mdb-ui-kit/css/mdb.min.css';
 import 'custom-vue-scrollbar/dist/style.css';
@@ -20,64 +21,39 @@ import 'tippy.js/dist/tippy.css'
 import 'vue-toast-notification/dist/theme-bootstrap.css';
 import 'vue-skeletor/dist/vue-skeletor.css';
 
-
-
-const VueProgressBarOptions = {
-  color: "rgb(67 138 255)",
-  failedColor: "rgb(67 138 255)",
-  thickness: "3px",
-  transition: {
-    speed: "0.2s",
-    opacity: "0.6s",
-    termination: 300,
-  },
-  autoRevert: true,
-  location: "top",
-  inverse: false,
-  autoFinish:false,
-};
-
 var appData = ref({});
-
-function updateAppData(key, val){
-  try{
+function updateAppData(key, val) {
+  try {
     appData.value = appData.value[key] = val;
-  }catch(error){}
+  } catch (error) { }
 }
 
 const pinia = createPinia();
 var app = createApp(App);
 app.component('LoadingButton', LoadingButton);
+app.component('font-awesome-icon', FontAwesomeIcon);
 
 app.provide('app_data', {
-  appData:appData.value,
-  updateAppData:updateAppData,
+  appData: appData.value,
+  updateAppData: updateAppData,
 });
 
-app.use(VueProgressBar, VueProgressBarOptions);
+app.use(ProgressBar, ProgressBarOptions);
 app.use(pinia);
 app.use(router);
 
 app.use(ToastPlugin, {
   position: 'bottom',
-  duration:5000,
+  duration: 5000,
 });
 
 app.use(VueLazyLoad, {});
 
 app.use(
   VueTippy,
-  {
-    directive: 'tippy',
-    component: 'tippy',
-    componentSingleton: 'tippy-singleton',
-    defaultProps: {
-      placement: 'auto-end',
-      allowHTML: true,
-    }, 
-  }
+  CONFIG.TIPPYOPTIONS
 );
-  
+
 app.mount('#app');
 
 // app.config.errorHandler = (err, instance, info) => {
@@ -88,15 +64,15 @@ app.mount('#app');
 //+++++++++++++++++ Router Middleware ++++++++++++++
 // ==================================================
 
-router.beforeEach(async(to, from, next) => {
-  try{
+router.beforeEach(async (to, from, next) => {
+  try {
     app.config.globalProperties.$Progress.start()
     return next();
-  }catch(e){
+  } catch (e) {
     throw new Error(e);
   }
 });
 
-router.afterEach((to, from)=>{
+router.afterEach((to, from) => {
   app.config.globalProperties.$Progress.finish();
 });

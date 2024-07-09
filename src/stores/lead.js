@@ -23,6 +23,7 @@ export const useLeadStore = defineStore('lead', {
       leadSubscribers: [],
       isPipelineLead:false,
       pipelineProperties:[],
+      leadFiles:[],
     }
   },
   getters: {
@@ -82,6 +83,9 @@ export const useLeadStore = defineStore('lead', {
     },
     getIsPipelineLead(stage){
       return stage.isPipelineLead;
+    },
+    getLeadFiles(stage){
+      return stage.leadFiles;
     }
   },
   actions: {
@@ -136,6 +140,9 @@ export const useLeadStore = defineStore('lead', {
     setIsPipelineLead(payload){
       return this.isPipelineLead = payload;
     },
+    setLeadFiles(payload){
+      this.leadFiles = payload;
+    },
     setLeadEditTimelineData(payload) {
       try {
         const {
@@ -145,7 +152,7 @@ export const useLeadStore = defineStore('lead', {
           lead_properties,
           lead_sources,
           lead_stages,
-          pipeline_properties
+          pipeline_properties,
         } = payload;
 
         this.setCurrentLead(lead);
@@ -159,7 +166,7 @@ export const useLeadStore = defineStore('lead', {
         this.setLeadSources(lead_sources ?? []);
         this.setLeadOwner(lead?.owner ?? {});
         this.setLeadStages(lead_stages);
-
+        this.setLeadFiles(lead?.lead_files);
         if (lead?.contacts?.length) {
           this.setLeadContacts(lead?.contacts??[]);
           if (lead?.primary_contact) {

@@ -1,6 +1,5 @@
 <script>
     import { Modal } from "mdb-ui-kit";
-    import { icons } from '../../../../../asset/svgicon';
 
     export default {
         components: {
@@ -9,7 +8,6 @@
         data() {
             return {
                 modalInstance: null,
-                icons: {},
                 preview_img: null,
                 preview_status: false,
                 prev_img: null,
@@ -58,7 +56,6 @@
         },
         mounted() {
             this.modalInstance = new Modal(this.$refs.imagePreviewModalRef);
-            this.icons = icons;
         },
     }
 </script>

@@ -1,14 +1,12 @@
 <script>
 import { Modal } from "mdb-ui-kit";
 import DropdownOwnerList from "../dropdowns/DropdownOwnerList.vue";
-import { icons } from "../../../../../asset/svgicon";
-
 import { ConfirmQualify } from "../../../../../actions/LeadAction";
 
 import { useLeadStore } from "../../../../../stores/lead";
 import { useAppStore } from "../../../../../stores/app";
 import SelectObjectId from './fields/SelectObjectId.vue';
-
+import { AvatarIcon } from "../../../../../assets/icons";
 export default {
   components: {
     DropdownOwnerList,
@@ -18,11 +16,10 @@ export default {
   setup(props) {
     const leadStore = useLeadStore();
     const appStore = useAppStore();
-    return { leadStore, appStore };
+    return { leadStore, appStore, AvatarIcon };
   },
   data() {
     return {
-      icons: {},
       modalInstance: null,
       errors: {},
       owners: [],
@@ -134,7 +131,6 @@ export default {
   },
   mounted() {
     this.modalInstance = new Modal(this.$refs.leadQualifyModalRef);
-    this.icons = icons;
   },
 };
 </script>
@@ -299,7 +295,7 @@ export default {
                     :src="currentOwner?.profile_avatar"
                     alt=""
                   />
-                  <img v-else class="avatar" :src="icons?.avatar" alt="" />
+                  <img v-else class="avatar" :src="AvatarIcon" alt="" />
                 </div>
                 <div class="owner-name fs-16px fw--bold text-hard">
                   {{ currentOwner?.name ?? "No Owner" }}

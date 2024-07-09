@@ -1,5 +1,5 @@
 <script>
-import {propertiesIconList} from '../../../../asset/svgicon.js';
+// import {propertiesIconList} from '../../../../asset/svgicon.js';
 import SlideUpDown from 'vue-slide-up-down';
 export default {
     props:['owners', 'leadSources', 'toggleFilter'],
@@ -94,9 +94,6 @@ export default {
                 this.dropdownToggleItems = {};
             }, 1000);
         }
-    },
-    mounted(){
-        this.propertiesIconList = propertiesIconList;
     },
 }
 

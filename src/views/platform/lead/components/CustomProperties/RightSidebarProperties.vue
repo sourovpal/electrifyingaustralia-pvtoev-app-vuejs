@@ -7,14 +7,14 @@ import { useLeadStore } from "../../../../../stores/lead";
 import { useAppStore } from "../../../../../stores/app";
 import { computed, ref, watchEffect } from "vue";
 import { useRoute } from "vue-router";
+import YesOrNoInput from "./YesOrNoInput.vue";
 const route = useRoute();
 const leadStore = useLeadStore();
 const customFormData = ref({});
 const leadProperties = computed(() => {
-  return [
-    ...(leadStore.getLeadProperties ?? []),
-    ...(leadStore.getCurrentLead?.pipeline?.properties ?? []),
-  ];
+  return []
+    .concat(leadStore.getLeadProperties ?? [])
+    .concat(leadStore.getPipelineProperties ?? []);
 });
 
 watchEffect(() => {
@@ -26,8 +26,7 @@ async function onChangeHandler(value, uniqueId) {
   if (Object.keys(customFormData.value).includes(uniqueId)) {
     var data = {
       propertie: {
-        key: uniqueId,
-        value: value,
+        [uniqueId]:value,
       },
       lead_id: leadId,
     };
@@ -85,39 +84,6 @@ async function onChangeHandler(value, uniqueId) {
         @change="(value) => onChangeHandler(value, propertie.unique_id)"
       />
 
-      <!-- 
-
-      <div
-        v-else-if="field?.data_type_id === 'yes_or_no'"
-        class="tri-state-toggle"
-      >
-        <button
-          @click="manageYesOrNoHandler('yes', field.unique_id)"
-          :class="{ active: formData[field.unique_id] == 1 }"
-          class="tri-state-toggle-button text-head fw-bold fs-12px"
-        >
-          Yes
-        </button>
-        <button
-          @click="manageYesOrNoHandler('', field.unique_id)"
-          :class="{
-            active:
-              formData[field.unique_id] != -1 && formData[field.unique_id] != 1,
-          }"
-          class="tri-state-toggle-button fs-16px text-head fw-bold"
-        >
-          &times;
-        </button>
-        <button
-          @click="manageYesOrNoHandler('no', field.unique_id)"
-          :class="{ active: formData[field.unique_id] == -1 }"
-          class="tri-state-toggle-button text-head fw-bold fs-12px"
-        >
-          No
-        </button>
-      </div>
-      -->
-
       <multiple-choose-input
         v-else-if="propertie?.data_type_id === 'multiple_choice'"
         :multiple="true"
@@ -136,23 +102,17 @@ async function onChangeHandler(value, uniqueId) {
         v-model="customFormData[propertie.unique_id]"
         @change="(value) => onChangeHandler(value, propertie.unique_id)"
       />
+
+      <yes-or-no-input
+        v-else-if="propertie?.data_type_id === 'yes_or_no'"
+        :label="propertie.label"
+        :small="true"
+        v-model="customFormData[propertie.unique_id]"
+        @change="(value) => onChangeHandler(value, propertie.unique_id)"
+      />
     </div>
   </div>
 </template>
 
 <style lang="scss">
-.multiple-choose {
-  .select-option-area {
-    .dropdown,
-    .dropdown input {
-      background: #f5f7fa;
-    }
-    &:hover {
-      .dropdown,
-      .dropdown input {
-        background: #ffffff;
-      }
-    }
-  }
-}
 </style>

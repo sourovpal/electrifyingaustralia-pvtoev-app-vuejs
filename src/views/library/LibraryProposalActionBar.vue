@@ -52,13 +52,30 @@ const owners = ref([
 				<button class="btn btn-transparent text-info btn-link rounded-lg --shadow-none fw-bold">Link to CRM</button>
                 <LibraryDesignDropdownList />
 
-                <div class="d-flex cursor-pointer align-items-center gap-2 p-2 rounded">
-				    <font-awesome-icon icon="fas fa-puzzle-piece"/>
-				    <font-awesome-icon
-				        class="text-secondary"
-				        icon="fas fa-caret-down"
-				    />
-				</div>
+                <div class="dropdown">
+                    <div class="d-flex cursor-pointer align-items-center gap-2 p-2 rounded"
+                        data-mdb-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+				        <font-awesome-icon icon="fas fa-puzzle-piece"/>
+				        <font-awesome-icon
+				            class="text-secondary"
+				            icon="fas fa-caret-down"
+				        />
+				    </div>
+
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li>
+                            <a href="#" class="dropdown-item d-inline-flex align-items-center gap-2">
+				                <img class="m8-img" src="https://static.getpylon.com/images/partner/servicem8_logo_square.png" alt=""/>
+                                <div class="d-flex flex-column justify-content-center">
+				                    <p class="mb-0">ServiceM8</p>
+				                    <small>Connect to M8 account</small>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+			    </div>
 
                 <div class="dropdown">
                     <div class="d-flex cursor-pointer align-items-center gap-2 p-2 rounded"
@@ -131,8 +148,11 @@ const owners = ref([
     display: grid;
     place-items: center;
     padding: 0;
-
     border-radius: 2rem !important;
 }
 
+.m8-img {
+    width: 2rem;
+    height: 2rem;
+}
 </style>

@@ -64,6 +64,7 @@ import {
     faTablet,
     faGear,
     faArrowRotateRight,
+    faDroplet,
 } from '@fortawesome/free-solid-svg-icons'
 
 const iconsToUse = [
@@ -109,6 +110,7 @@ const iconsToUse = [
     faTablet,
     faGear,
     faArrowRotateRight,
+    faDroplet,
 ]
 
 library.add(iconsToUse)

@@ -2,6 +2,9 @@
     import {icons} from '../../../../asset/svgicon.js';
     export default {
         props:['owners', 'owner', 'selectOwnerHandler'],
+        mounted() {
+            console.log('beans');
+        },
         data() {
             return {
                 icons:{},

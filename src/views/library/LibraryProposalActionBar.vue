@@ -1,8 +1,19 @@
 <script setup>
+import {ref} from 'vue'
 import ActionBar from '../../components/ActionBar/ActionBar.vue'
 import LeftActionBar from '../../components/ActionBar/LeftActionBar.vue'
 import RightActionBar from '../../components/ActionBar/RightActionBar.vue'
 import LibraryDesignDropdownList from './LibraryDesignDropdownList.vue'
+import DropdownOwnerList from '../platform/lead/components/DropdownOwnerList.vue';
+
+const owners = ref([
+	{ id: 3, name: 'beans', display_name: null, email: 'fahim@gmail.com', profile_avatar: 'https://ui-avatars.com/api/?background=48D1CC&color=fff&name=beans&bold=true&id=83', is_owner: 1, user_role: null, },
+	{ id: 4, name: 'beans', display_name: null, email: 'fahim@gmail.com', profile_avatar: 'https://ui-avatars.com/api/?background=48D1CC&color=fff&name=beans&bold=true&id=83', is_owner: 1, user_role: null, },
+	{ id: 5, name: 'beans', display_name: null, email: 'fahim@gmail.com', profile_avatar: 'https://ui-avatars.com/api/?background=48D1CC&color=fff&name=beans&bold=true&id=83', is_owner: 1, user_role: null, },
+	{ id: 6, name: 'beans', display_name: null, email: 'fahim@gmail.com', profile_avatar: 'https://ui-avatars.com/api/?background=48D1CC&color=fff&name=beans&bold=true&id=83', is_owner: 1, user_role: null, },
+	{ id: 7, name: 'beans', display_name: null, email: 'fahim@gmail.com', profile_avatar: 'https://ui-avatars.com/api/?background=48D1CC&color=fff&name=beans&bold=true&id=83', is_owner: 1, user_role: null, },
+	{ id: 8, name: 'beans', display_name: null, email: 'fahim@gmail.com', profile_avatar: 'https://ui-avatars.com/api/?background=48D1CC&color=fff&name=beans&bold=true&id=83', is_owner: 1, user_role: null, },
+])
 
 </script>
 
@@ -48,19 +59,80 @@ import LibraryDesignDropdownList from './LibraryDesignDropdownList.vue'
 				        icon="fas fa-caret-down"
 				    />
 				</div>
-                <div class="d-flex cursor-pointer align-items-center gap-2 p-2 rounded">
-				    <font-awesome-icon icon="fas fa-circle-user"/>
-				    <font-awesome-icon
-				        class="text-secondary"
-				        icon="fas fa-caret-down"
-				    />
-				</div>
 
-				<div><font-awesome-icon icon="fas fa-ellipsis-vertical"/></div>
+                <div class="dropdown">
+                    <div class="d-flex cursor-pointer align-items-center gap-2 p-2 rounded"
+                        data-mdb-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+				        <font-awesome-icon icon="fas fa-circle-user"/>
+				        <font-awesome-icon
+				            class="text-secondary"
+				            icon="fas fa-caret-down"
+				        />
+				    </div>
+                    <DropdownOwnerList :owners="owners" />
+                </div>
+
+				<div class="dropdown">
+				    <button
+                        class="cursor-pointer btn btn-light proposal-menu-dropdown"
+                        data-mdb-toggle="dropdown"
+                        aria-expanded="false"
+				    >
+                        <font-awesome-icon icon="fas fa-ellipsis-vertical"/>
+                    </button>
+
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <li><a class="dropdown-item fs-14px" href="#">Select template $ edit pages</a></li>
+                        <li><a class="dropdown-item fs-14px" href="#">Show sent e-signature requests</a></li>
+
+                        <hr>
+
+                        <li><a class="dropdown-item fs-14px" href="#">Sync with Solar Analytics</a></li>
+                        <li><a class="dropdown-item fs-14px" href="#">Sync with ServiceM8</a></li>
+                        <li><a class="dropdown-item fs-14px" href="#">Installer job sheet</a></li>
+                        <li><a class="dropdown-item fs-14px" href="#">User manual</a></li>
+                        <li><a class="dropdown-item fs-14px" href="#">CER statements</a></li>
+                        <li><a class="dropdown-item fs-14px" href="#">Digital Handover</a></li>
+
+                        <hr>
+
+                        <li>
+                            <a class="dropdown-item fs-14px d-inline-flex align-items-center gap-2 " href="#">
+                                <font-awesome-icon icon="fas fa-check" />
+                                <span>Mark as sold</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item fs-14px d-inline-flex align-items-center gap-2 " href="#">
+                                <font-awesome-icon icon="fas fa-archive" />
+                                <span>Archive project</span>
+                            </a>
+                        </li>
+
+                        <li>
+                            <a class="dropdown-item fs-14px text-danger d-inline-flex align-items-center gap-2 " href="#">
+                                <font-awesome-icon icon="fas fa-trash" />
+                                <span>Delete project</span>
+                            </a>
+                        </li>
+                    </ul>
+			    </div>
 			</right-action-bar>
 		</action-bar>
 </template>
 
 <style lang="scss" scoped>
+.proposal-menu-dropdown {
+    width: 2rem;
+    height: 2rem;
+    display: grid;
+    place-items: center;
+    padding: 0;
+
+    border-radius: 2rem !important;
+}
 
 </style>

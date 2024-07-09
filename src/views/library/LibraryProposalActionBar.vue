@@ -1,10 +1,11 @@
 <script setup>
-import {ref} from 'vue'
+import {ref, onMounted} from 'vue'
 import ActionBar from '../../components/ActionBar/ActionBar.vue'
 import LeftActionBar from '../../components/ActionBar/LeftActionBar.vue'
 import RightActionBar from '../../components/ActionBar/RightActionBar.vue'
 import LibraryDesignDropdownList from './LibraryDesignDropdownList.vue'
 import DropdownOwnerList from '../platform/lead/components/DropdownOwnerList.vue';
+import { Skeletor } from 'vue-skeletor';
 
 const owners = ref([
 	{ id: 3, name: 'beans', display_name: null, email: 'fahim@gmail.com', profile_avatar: 'https://ui-avatars.com/api/?background=48D1CC&color=fff&name=beans&bold=true&id=83', is_owner: 1, user_role: null, },
@@ -15,36 +16,61 @@ const owners = ref([
 	{ id: 8, name: 'beans', display_name: null, email: 'fahim@gmail.com', profile_avatar: 'https://ui-avatars.com/api/?background=48D1CC&color=fff&name=beans&bold=true&id=83', is_owner: 1, user_role: null, },
 ])
 
+
+onMounted(() => {
+    simulateApiCall();
+});
+const isLoading = ref(false);
+
+const simulateApiCall = () => {
+    isLoading.value = true;
+    setTimeout(() => {
+        isLoading.value = false;
+    }, 1500);
+}
+
 </script>
 
 <template>
     <action-bar class="mx-3">
-			<left-action-bar>
+		<left-action-bar>
+			<div v-if="isLoading" style="width: 25rem;">
+			    <Skeletor />
+			    <Skeletor width="65%" />
+			</div>
+			<div v-else>
+				<p class="mb-0">
+					185 Military Road , Dover Heights
+					<span class="text-secondary">New South Wales</span>
+					<div class="d-inline-flex ms-2 gap-2">
+                        <font-awesome-icon
+						    class="text-secondary"
+						    icon="fas fa-pen"
+						/>
+						<font-awesome-icon
+						    class="text-secondary"
+						    icon="fas fa-copy"
+						/>
+                    </div>
+				</p>
 				<div>
-					<p class="mb-0">
-						185 Military Road , Dover Heights
-						<span class="text-secondary">New South Wales</span>
-					    <div class="d-inline-flex ms-2 gap-2">
-                            <font-awesome-icon
-						        class="text-secondary"
-						        icon="fas fa-pen"
-						    />
-						    <font-awesome-icon
-						        class="text-secondary"
-						        icon="fas fa-copy"
-						    />
-                        </div>
-					</p>
-					<div>
-						<small class="text-secondary">
-							Dov Frazer · 0402450222 · dovman@gmail.com ·
-							###-0000-0414
-						</small>
-					</div>
+					<small class="text-secondary">
+						Dov Frazer · 0402450222 · dovman@gmail.com ·
+						###-0000-0414
+					</small>
 				</div>
-			</left-action-bar>
+			</div>
+		</left-action-bar>
 
-			<right-action-bar class="gap-2">
+		<right-action-bar>
+			<div v-if="isLoading" class="d-flex gap-2" style="width: 25rem;">
+			    <Skeletor width="4.5rem"    height="2.4375rem" style="border-radius: 5px;" />
+			    <Skeletor width="10.25rem"  height="2.4375rem" style="border-radius: 5px;" />
+			    <Skeletor width="4.25rem"   height="2.4375rem" style="border-radius: 5px;" />
+                <Skeletor width="2.4375rem" height="2.4375rem" style="border-radius: 50%;" />
+			</div>
+
+            <div v-else class="d-flex align-items-center gap-2">
 				<font-awesome-icon
 				    class="text-success"
 				    icon="fas fa-check"
@@ -137,8 +163,9 @@ const owners = ref([
                         </li>
                     </ul>
 			    </div>
-			</right-action-bar>
-		</action-bar>
+            </div>
+		</right-action-bar>
+	</action-bar>
 </template>
 
 <style lang="scss" scoped>

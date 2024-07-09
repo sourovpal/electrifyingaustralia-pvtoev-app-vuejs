@@ -1,7 +1,8 @@
 <script setup>
 import ShareModal from './ShareModal/ShareModal.vue';
 import ProjectInstallModal from './ProjectInstallModal/ProjectInstallModal.vue';
-import {ref} from 'vue';
+import {ref, onMounted} from 'vue';
+import { Skeletor } from 'vue-skeletor';
 
 const shareModalOpen = ref(false)
 
@@ -25,22 +26,37 @@ const handleProjectInstallModalClose = () => {
     projectInstallModalOpen.value = false;
 }
 
+onMounted(() => {
+    simulateApiCall();
+});
+const isLoading = ref(false);
+
+const simulateApiCall = () => {
+    isLoading.value = true;
+    setTimeout(() => {
+        isLoading.value = false;
+    }, 1500);
+}
+
 </script>
 
 <template>
     <div class="col-md-4">
 	    <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-large btn-primary" style="flex-grow: 2;">
+            <Skeletor v-if="isLoading" width="10.25rem" height="2.4375rem"/>
+            <button v-else class="btn btn-large btn-primary" style="flex-grow: 2;">
 	            <font-awesome-icon icon="fas fa-up-right-from-square" />
 	            <span class="fw-bold ms-2">PROPOSAL</span>
 	        </button>
 
-	        <button class="btn btn-secondary" style="flex-grow: 1;" @click="handleShareBtnClick">
+            <Skeletor v-if="isLoading" width="7.6875rem" height="2.4375rem" />
+	        <button v-else class="btn btn-secondary" style="flex-grow: 1;" @click="handleShareBtnClick">
 	            <font-awesome-icon class="text-secondary" icon="fas fa-share-nodes" />
 	            <span class="fw-bold text-black ms-2">SHARE</span>
 	        </button>
 
-	        <button class="btn btn-secondary" style="flex-grow: 1;" @click="handleInstallerBtnClick">
+            <Skeletor v-if="isLoading" width="4.5rem" height="2.4375rem" />
+	        <button v-else class="btn btn-secondary" style="flex-grow: 1;" @click="handleInstallerBtnClick">
 	            <font-awesome-icon class="text-secondary" icon="fas fa-clipboard-list" />
 	        </button>
         </div>

@@ -26,32 +26,43 @@
 			cupidatat.
 		</p>
 
-		<Skeletor
-			class="mb-2"
-			width="50%"
-			v-if="isLoading"
-		/>
-		<template v-else>
-			<small class="text-secondary mb-0 d-block">75.68kW TW</small>
-			<small class="text-secondary fs-12px">
-				Created at Jul 1, 2024
-			</small>
-			<div class="position-absolute item-control-wrapper">
-				<div class="item-control sold-btn">
-					<font-awesome-icon
-						class="text-secondary"
-						icon="fas fa-check"
-					/>
-				</div>
 
-				<div class="item-control archive-btn">
-					<font-awesome-icon
-						class="text-secondary"
-						icon="fas fa-box-archive"
-					/>
-				</div>
-			</div>
-		</template>
+		<Skeletor
+		    class="mb-2"
+		    v-if="isLoading"
+            height="0.65rem"
+            style="border-radius: 2rem;"
+		    width="50%"
+		/>
+		<small v-else class="text-secondary mb-0 d-block">75.68kW TW</small>
+
+        <Skeletor 
+            height="0.65rem" 
+            class="mb-2"
+            v-if="isLoading" 
+            style="border-radius: 2rem;" 
+        />
+        <template v-else>
+		    <small class="text-secondary fs-12px">
+			    Created at Jul 1, 2024
+		    </small>
+		    <div class="position-absolute item-control-wrapper">
+			    <div class="item-control sold-btn">
+				    <font-awesome-icon
+				    class="text-secondary"
+				    icon="fas fa-check"
+				    />
+			    </div>
+
+			    <div class="item-control archive-btn">
+				    <font-awesome-icon
+				    class="text-secondary"
+				    icon="fas fa-box-archive"
+				    />
+			    </div>
+		    </div>
+        </template>
+
 	</div>
 </template>
 

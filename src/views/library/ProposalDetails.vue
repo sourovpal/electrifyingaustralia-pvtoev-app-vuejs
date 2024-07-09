@@ -1,6 +1,7 @@
 <script setup>
 import Chart from 'chart.js/auto';
 import {onMounted, ref} from 'vue';
+import { Skeletor } from 'vue-skeletor';
 
 import TabbedDisplay from './components/TabbedDisplay.vue'
 import Pricing from './LibraryComponents/Pricing.vue'
@@ -56,11 +57,30 @@ onMounted(() => {
 
 });
 
+
+onMounted(() => {
+    simulateApiCall();
+});
+const isLoading = ref(false);
+
+const simulateApiCall = () => {
+    isLoading.value = true;
+    setTimeout(() => {
+        isLoading.value = false;
+    }, 1500);
+}
+
 </script>
 
 <template>
 	<div class="proposal-details col-md-8 px-4">
-		<small class="text-info fw-bold">System production</small>
+		<Skeletor
+		    v-if="isLoading"
+		    height="15px"
+		    width="10rem"
+		    style="border-radius: 1rem;"
+		/>
+		<small v-else class="text-info fw-bold">System production</small>
 		<div class="card mt-3">
 			<div class="tabs">
 				<button

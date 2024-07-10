@@ -41,7 +41,7 @@ const simulateApiCall = () => {
 </script>
 
 <template>
-    <div class="col-md-4">
+    <div class="col-md-4 project-status">
 	    <div class="d-none d-md-flex align-items-center gap-2">
             <Skeletor v-if="isLoading" width="10.25rem" height="2.4375rem"/>
             <button v-else class="btn btn-large btn-primary" style="flex-grow: 2;">
@@ -204,6 +204,34 @@ const simulateApiCall = () => {
     right: 0;
     left: 0;
     background: rgba(0, 0, 0, 0.6);
+}
+
+.project-status { 
+    position: fixed; 
+    top: 3.45rem;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 0;
+    height: 100vh;
+
+    overflow: {
+        x: hidden;
+        y: auto;
+    }
+}
+
+
+@media only screen and (min-width: 768px) {
+    .project-status {
+        position: static; 
+        height: auto;
+
+        overflow: {
+            x: visible;
+            y: visible;
+        }
+    }
 }
 
 </style>

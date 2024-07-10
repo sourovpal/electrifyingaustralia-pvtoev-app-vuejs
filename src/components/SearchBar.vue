@@ -74,6 +74,7 @@ export default{
         }
     }
     @media (min-width: 992px){
+        margin-left: 4rem;
         .search-bar-width{
             width:30rem;
         }

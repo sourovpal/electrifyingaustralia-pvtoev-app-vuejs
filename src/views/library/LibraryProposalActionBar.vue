@@ -41,7 +41,7 @@ const simulateApiCall = () => {
 			<div v-else>
 				<p class="mb-0">
 					185 Military Road , Dover Heights
-					<span class="text-secondary">New South Wales</span>
+					<span class="text-secondary d-none d-lg-inline">New South Wales</span>
 					<div class="d-inline-flex ms-2 gap-2">
                         <font-awesome-icon
 						    class="text-secondary"
@@ -54,7 +54,7 @@ const simulateApiCall = () => {
                     </div>
 				</p>
 				<div>
-					<small class="text-secondary">
+					<small class="text-secondary fs-12px">
 						Dov Frazer · 0402450222 · dovman@gmail.com ·
 						###-0000-0414
 					</small>
@@ -72,7 +72,7 @@ const simulateApiCall = () => {
 
             <div v-else class="d-flex align-items-center gap-2">
 				<font-awesome-icon
-				    class="text-success"
+				    class="text-success d-none d-lg-inline"
 				    icon="fas fa-check"
 				/>
 				<button class="btn btn-transparent text-info btn-link rounded-lg --shadow-none fw-bold">Link to CRM</button>
@@ -184,10 +184,9 @@ const simulateApiCall = () => {
 }
 
 .library-proposal-action-bar {
-    margin-left: 5rem !important;
+    margin-left: 4rem !important;
 
-    @media only screen and (min-width: 1200px) {
-        margin-left: 1rem !important;
-    }
+    @media only screen and (min-width: 992px) { margin-left: 5rem !important; }
+    @media only screen and (min-width: 1200px) { margin-left: 1rem !important; }
 }
 </style>

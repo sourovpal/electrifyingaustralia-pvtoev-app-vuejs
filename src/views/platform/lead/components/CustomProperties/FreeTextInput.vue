@@ -48,7 +48,7 @@ const getCurrentValue = computed(() => {
   ) {
     return currentValue.value;
   } else {
-    return "–";
+    return "—";
   }
 });
 

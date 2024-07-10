@@ -52,9 +52,9 @@ const getCurrentValue = computed(() => {
     }else{
         return moment(currentValue.value).format("MM/DD/YYYY hh:mm A")
     }
-    return "–";
+    return "—";
   } else {
-    return "–";
+    return "—";
   }
 });
 

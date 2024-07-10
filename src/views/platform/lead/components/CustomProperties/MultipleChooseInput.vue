@@ -118,7 +118,7 @@ onClickOutside(multipleChooseRef, (e) => {
             (!selectedOptions?.length && !multiple)
           "
         >
-          –
+          —
         </li>
         <li class="single-choose-option text-head" v-if="!multiple">
           {{ selectedOptions?.join(",") }}
@@ -192,7 +192,7 @@ onClickOutside(multipleChooseRef, (e) => {
   }
   .option-item-empty {
     padding: 0px 0px 1px 10px;
-    font-size: 14px;
+    font-size: .775rem;
     margin-top: 4px;
   }
   .single-choose-option {

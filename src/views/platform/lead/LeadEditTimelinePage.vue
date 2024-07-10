@@ -43,7 +43,7 @@ export default {
     const progressBar = ref([]);
     return { leadStore, appStore, progressBar, AvatarIcon };
   },
- mixins:[LeadEditTimelineMixins],
+  mixins: [LeadEditTimelineMixins],
 };
 </script>
 
@@ -63,6 +63,7 @@ export default {
             currentLead?.lead_title ?? currentLead?.primary_contact?.full_name
           }}
         </span>
+        <!-- Edit Lead Modal Toggle Btn -->
         <button
           @click="$refs['editLeadModalRef'].showModalHandler()"
           class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-2 d-none d-md-inline"

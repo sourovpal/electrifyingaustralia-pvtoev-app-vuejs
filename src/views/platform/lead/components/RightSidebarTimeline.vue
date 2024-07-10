@@ -596,7 +596,7 @@ export default {
           <div class="fs-12px text-soft mb-0">Address</div>
           <div class="d-flex">
             <div class="fs-14px fw-bold text-head mb-0">
-              {{ address ?? " - " }}
+              {{ address ?? " — " }}
             </div>
             <a
               target="_blank"
@@ -631,7 +631,7 @@ export default {
           <div class="fs-12px text-soft mb-0">Source</div>
           <div class="d-flex">
             <div class="fs-14px fw-bold text-head mb-0">
-              {{ lead?.source?.title ?? " - " }}
+              {{ lead?.source?.title ?? " — " }}
             </div>
           </div>
         </div>

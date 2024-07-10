@@ -167,12 +167,12 @@ export default {
             try {
                 if (leadProperties) {
                     var current = leadProperties[propertie.unique_id];
-                    if (current) {
+                    if (current && current?.length) {
                         if (propertie.data_type_id == "yes_or_no") {
-                            if (current == "1" || current == 1) {
-                                return "Yes";
-                            } else {
-                                return "No";
+                            if(current.toLowerCase() == 'yes'){
+                                return 'Yes';
+                            }else if(current.toLowerCase() == 'no'){
+                                return 'No';
                             }
                         }
                         if (propertie.data_type_id == "date" && current) {
@@ -180,14 +180,14 @@ export default {
                         }
                         if (propertie.data_type_id == "date_and_time" && current) {
                             return this.moment(current).format("DD/MM/YYYY hh:mm a");
-                        } else if (typeof current == "object") {
+                        } else if (Array.isArray(current)) {
                             return current?.join(", ");
                         } else {
                             return current;
                         }
                     }
                 }
-                return null;
+                return '—';
             } catch (error) { }
         },
         toggleHeaderProperties(key) {

@@ -12,7 +12,7 @@ import ProposalDetails from './ProposalDetails.vue'
         <LibraryProposalActionBar />
 
 	    <section class="row w-75 mt-3">
-	        <ProposalDetails />
+	        <ProposalDetails class="d-none d-md-block" />
 	        <ProjectStatus />
 	    </section>
 	</section>

@@ -64,6 +64,7 @@ export default{
 .search-bar{
     border-bottom: 1px solid rgba(182, 182, 182, 0.4);
     display: flex;
+    margin-left: 3rem;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -78,6 +79,7 @@ export default{
         }
     }
     @media (min-width: 1200px){
+        margin-left: 0;
         .search-bar-width{
             width:40rem;
         }

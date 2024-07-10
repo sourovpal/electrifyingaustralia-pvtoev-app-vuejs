@@ -13,7 +13,7 @@ const route = useRoute();
     <MobileHeader/>
     <section class="d-flex flex-row">
         <Menu :menus="menus" :title="title" v-if="route.name !== 'LibraryProposals'" />
-        <LibraryMenu v-else/>
+        <LibraryMenu class="d-none d-xl-block" v-else/>
         <router-view></router-view>
     </section>
 </template>

@@ -41,6 +41,13 @@ const simulateApiCall = () => {
 </script>
 
 <template>
+    <!-- temporarily using an icon that has already been imported -->
+    <button class="bg-primary btn p-0 text-white rounded-circle message-btn">
+		<font-awesome-icon
+			class="fs-18px"
+			icon="fas fa-pen"
+		/>
+    </button>
     <div class="col-md-4 project-status">
 	    <div class="d-none d-md-flex align-items-center gap-2">
             <Skeletor v-if="isLoading" width="10.25rem" height="2.4375rem"/>
@@ -60,13 +67,13 @@ const simulateApiCall = () => {
 	            <font-awesome-icon class="text-secondary" icon="fas fa-clipboard-list" />
 	        </button>
         </div>
-       <div class="proposal-info-display mt-2 rounded border">
+        <div class="proposal-info-display mt-2 rounded border">
             <div class="editor-display position-relative">
                 <img 
                 class="w-100" style="height: 14rem;" alt="Solar panel image"
                 src="https://previews.123rf.com/images/aquir/aquir1311/aquir131100316/23569861-sample-grunge-red-round-stamp.jpg" 
             />
-                <div class="editor-display-menu d-none d-md-block text-white position-absolute py-3 px-3 d-flex justify-content-between align-items-center">
+                <div class="editor-display-menu d-none d-md-flex text-white position-absolute py-3 px-3 d-flex justify-content-between align-items-center">
                     <div class="d-flex gap-2 align-items-center">
                         <font-awesome-icon icon="fas fa-pen" />
 					    <span>Edit design</span>
@@ -78,30 +85,30 @@ const simulateApiCall = () => {
                 </div>
             </div>
             <div class="project-stats-wrapper px-3 pt-1">
-                <p class="lead fw-bold fs-24px mb-5">Beans</p>
+                <p class="lead fw-bold d-md-none fs-24px mb-5">Beans</p>
                 <div class="mb-4">
                     <div class="section-heading d-none d-md-block">
                         <small class="fw-bold fs-12px">PROJECT STATS</small> </div>
 
                     <div class="info-cell-wrapper justify-content-between row">
                         <div class="info-cell mb-4 mb-md-0 col-md-6">
-                            <small class="fs-16px fs-md-12px text-md-secondary">System Size (DC)</small>
-                            <p class="mb-0 fs-13px fs-md-16px text-secondary">12.4 kW</p>
+                            <small>System Size (DC)</small>
+                            <p>12.4 kW</p>
                         </div>
 
                         <div class="info-cell mb-4 mb-md-0 col-md-6">
-                            <small class="fs-16px fs-md-12px text-md-secondary">Annual production (DC)</small>
-                            <p class="mb-0 fs-13px fs-md-16px text-secondary">17,800 kWh</p>
+                            <small>Annual production (DC)</small>
+                            <p>17,800 kWh</p>
                         </div>
 
                         <div class="info-cell mb-4 mb-md-0 col-md-6">
-                            <small class="fs-16px fs-md-12px text-md-secondary">Self consumption</small>
-                            <p class="mb-0 fs-13px fs-md-16px text-secondary">80%</p>
+                            <small>Self consumption</small>
+                            <p>80%</p>
                         </div>
 
                         <div class="info-cell mb-md-4 mb-md-0 col-md-6">
-                            <small class="fs-16px fs-md-12px text-md-secondary">Annual bill</small>
-                            <p class="mb-0 fs-13px fs-md-16px text-secondary">$3,555.99</p>
+                            <small>Annual bill</small>
+                            <p>$3,555.99</p>
                         </div>
                     </div>
                 </div>
@@ -118,23 +125,23 @@ const simulateApiCall = () => {
 
                     <div class="info-cell-wrapper justify-content-between row">
                         <div class="info-cell mb-4 mb-md-0 col-md-6">
-                            <small class="fs-16px fs-md-12px text-md-secondary">Discounted payback</small>
-                            <p class="mb-0 fs-13px fs-md-16px text-secondary">7.41 years</p>
+                            <small>Discounted payback</small>
+                            <p>7.41 years</p>
                         </div>
 
                         <div class="info-cell mb-4 mb-md-0 col-md-6">
-                            <small class="fs-16px fs-md-12px text-md-secondary">ROI</small>
-                            <p class="mb-0 fs-13px fs-md-16px text-secondary">291.1%</p>
+                            <small>ROI</small>
+                            <p>291.1%</p>
                         </div>
 
                         <div class="info-cell mb-4 mb-md-0 col-md-6">
-                            <small class="fs-16px fs-md-12px text-md-secondary">Net present value</small>
-                            <p class="mb-0 fs-13px fs-md-16px text-secondary">$81,469.63</p>
+                            <small>Net present value</small>
+                            <p>$81,469.63</p>
                         </div>
 
                         <div class="info-cell mb-4 mb-md-0 col-md-6">
-                            <small class="fs-16px fs-md-12px text-md-secondary">IRR</small>
-                            <p class="mb-0 fs-13px fs-md-16px text-secondary">15.19%</p>
+                            <small>IRR</small>
+                            <p>15.19%</p>
                         </div>
                     </div>
                 </div>
@@ -164,23 +171,23 @@ const simulateApiCall = () => {
 
                 <div class="info-cell-wrapper justify-content-between row d-md-none">
                     <div class="info-cell mb-4 mb-md-0 col-md-6">
-                        <small class="fs-16px fs-md-12px text-md-secondary">Subtotal incl GST.</small>
-                        <p class="mb-0 fs-13px fs-md-16px text-secondary">$32,452.50</p>
+                        <small>Subtotal incl GST.</small>
+                        <p>$32,452.50</p>
                     </div>
 
                     <div class="info-cell mb-4 mb-md-0 col-md-6">
-                        <small class="fs-16px fs-md-12px text-md-secondary">Incl GST.</small>
-                        <p class="mb-0 fs-13px fs-md-16px text-secondary">$2950.23</p>
+                        <small>Incl GST.</small>
+                        <p>$2950.23</p>
                     </div>
 
                     <div class="info-cell mb-4 mb-md-0 col-md-6">
-                        <small class="fs-16px fs-md-12px text-md-secondary">STCs x 119</small>
-                        <p class="mb-0 fs-13px fs-md-16px text-secondary">-$4462.50</p>
+                        <small>STCs x 119</small>
+                        <p>-$4462.50</p>
                     </div>
 
                     <div class="info-cell mb-4 mb-md-0 col-md-6">
-                        <small class="fs-16px fs-md-12px text-md-secondary">Total</small>
-                        <p class="mb-0 fs-13px fs-md-16px text-secondary">$27,990.00</p>
+                        <small>Total</small>
+                        <p>$27,990.00</p>
                     </div>
                 </div>
             </div>
@@ -206,13 +213,28 @@ const simulateApiCall = () => {
     background: rgba(0, 0, 0, 0.6);
 }
 
+.message-btn {
+    $message-btn-dimension: 3.5rem;
+    position: fixed;
+    z-index: 99;
+    width: $message-btn-dimension;
+    height: $message-btn-dimension;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    transition: 150ms;
+
+    &:hover {
+        transform: scale(1.1125);
+        cursor: pointer;
+    }
+}
+
 .project-status { 
     position: fixed; 
     top: 3.45rem;
     right: 0;
     bottom: 0;
     left: 0;
-    padding: 0;
     height: 100vh;
 
     overflow: {
@@ -221,6 +243,28 @@ const simulateApiCall = () => {
     }
 }
 
+.info-cell-wrapper .info-cell {
+    small { font-size: 1rem; }
+
+    p { 
+        font-size: .8125rem; 
+        color: #1f2933;
+        opacity: .54;
+    }
+
+    @media only screen and (min-width: 768px) {
+        small { font-size: .8125rem; }
+
+        p {
+            opacity: 1;
+            font-size: 1rem;
+        }
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .project-status { padding: 0; }
+}
 
 @media only screen and (min-width: 768px) {
     .project-status {

@@ -9,9 +9,9 @@ import ProposalDetails from './ProposalDetails.vue'
 <template>
 	<section class="content lead-list --content-y-100vh">
 		<SearchBar placeholder-text="Search for a project" />
-        <LibraryProposalActionBar class="d-none d-md-block" />
+        <LibraryProposalActionBar class="d-none d-md-flex" />
 
-	    <section class="row mx-auto mx-md-0 w-100 w-md-75 mt-3">
+        <section class="row proposal-content-wrapper mx-auto mx-md-0 mt-3">
 	        <ProposalDetails class="d-none d-md-block" />
 	        <ProjectStatus />
 	    </section>
@@ -21,10 +21,16 @@ import ProposalDetails from './ProposalDetails.vue'
 <style lang="scss">
 .new-design-btn {
     background: #f9f9f9;
-    transition: 200ms;
+    transition: 150ms;
 
-    &:hover {
-        background: #f1f1f1;
+    &:hover { background: #f1f1f1; }
+}
+
+.proposal-content-wrapper {
+    width: 100%;
+
+    @media only screen and (min-width: 768px) {
+        width: 75%;
     }
 }
 

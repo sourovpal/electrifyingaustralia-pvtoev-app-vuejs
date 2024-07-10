@@ -42,7 +42,7 @@ const simulateApiCall = () => {
 
 <template>
     <div class="col-md-4">
-	    <div class="d-flex align-items-center gap-2">
+	    <div class="d-none d-md-flex align-items-center gap-2">
             <Skeletor v-if="isLoading" width="10.25rem" height="2.4375rem"/>
             <button v-else class="btn btn-large btn-primary" style="flex-grow: 2;">
 	            <font-awesome-icon icon="fas fa-up-right-from-square" />
@@ -66,12 +66,10 @@ const simulateApiCall = () => {
                 class="w-100" style="height: 14rem;" alt="Solar panel image"
                 src="https://previews.123rf.com/images/aquir/aquir1311/aquir131100316/23569861-sample-grunge-red-round-stamp.jpg" 
             />
-                <div class="editor-display-menu text-white position-absolute py-3 px-3 d-flex justify-content-between align-items-center">
+                <div class="editor-display-menu d-none d-md-block text-white position-absolute py-3 px-3 d-flex justify-content-between align-items-center">
                     <div class="d-flex gap-2 align-items-center">
-                        <font-awesome-icon
-						icon="fas fa-pen"
-						/>
-					<span>Edit design</span>
+                        <font-awesome-icon icon="fas fa-pen" />
+					    <span>Edit design</span>
                     </div>
 
 				    <div>
@@ -80,36 +78,36 @@ const simulateApiCall = () => {
                 </div>
             </div>
             <div class="project-stats-wrapper px-3 pt-1">
+                <p class="lead fw-bold fs-24px mb-5">Beans</p>
                 <div class="mb-4">
-                    <div class="section-heading">
-                        <small class="fw-bold fs-12px">PROJECT STATS</small>
-                    </div>
+                    <div class="section-heading d-none d-md-block">
+                        <small class="fw-bold fs-12px">PROJECT STATS</small> </div>
 
                     <div class="info-cell-wrapper justify-content-between row">
-                        <div class="info-cell col-md-6">
-                            <small class="fs-12px text-secondary">System Size (DC)</small>
-                            <p class="mb-0">12.4 kW</p>
+                        <div class="info-cell mb-4 mb-md-0 col-md-6">
+                            <small class="fs-16px fs-md-12px text-md-secondary">System Size (DC)</small>
+                            <p class="mb-0 fs-13px fs-md-16px text-secondary">12.4 kW</p>
                         </div>
 
-                        <div class="info-cell col-md-6">
-                            <small class="fs-12px text-secondary">Annual production (DC)</small>
-                            <p class="mb-0">17,800 kWh</p>
+                        <div class="info-cell mb-4 mb-md-0 col-md-6">
+                            <small class="fs-16px fs-md-12px text-md-secondary">Annual production (DC)</small>
+                            <p class="mb-0 fs-13px fs-md-16px text-secondary">17,800 kWh</p>
                         </div>
 
-                        <div class="info-cell col-md-6">
-                            <small class="fs-12px text-secondary">Self consumption</small>
-                            <p class="mb-0">80%</p>
+                        <div class="info-cell mb-4 mb-md-0 col-md-6">
+                            <small class="fs-16px fs-md-12px text-md-secondary">Self consumption</small>
+                            <p class="mb-0 fs-13px fs-md-16px text-secondary">80%</p>
                         </div>
 
-                        <div class="info-cell col-md-6">
-                            <small class="fs-12px text-secondary">Annual bill</small>
-                            <p class="mb-0">$3,555.99</p>
+                        <div class="info-cell mb-md-4 mb-md-0 col-md-6">
+                            <small class="fs-16px fs-md-12px text-md-secondary">Annual bill</small>
+                            <p class="mb-0 fs-13px fs-md-16px text-secondary">$3,555.99</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="mb-4">
-                    <div class="section-heading d-flex align-items-center gap-2">
+                    <div class="section-heading d-none d-md-flex align-items-center gap-2">
                         <small class="fw-bold fs-12px">FINANCIAL FIGURES</small>
 
                         <font-awesome-icon
@@ -119,28 +117,28 @@ const simulateApiCall = () => {
                     </div>
 
                     <div class="info-cell-wrapper justify-content-between row">
-                        <div class="info-cell col-md-6">
-                            <small class="fs-12px text-secondary">Discounted payback</small>
-                            <p class="mb-0">7.41 years</p>
+                        <div class="info-cell mb-4 mb-md-0 col-md-6">
+                            <small class="fs-16px fs-md-12px text-md-secondary">Discounted payback</small>
+                            <p class="mb-0 fs-13px fs-md-16px text-secondary">7.41 years</p>
                         </div>
 
-                        <div class="info-cell col-md-6">
-                            <small class="fs-12px text-secondary">ROI</small>
-                            <p class="mb-0">291.1%</p>
+                        <div class="info-cell mb-4 mb-md-0 col-md-6">
+                            <small class="fs-16px fs-md-12px text-md-secondary">ROI</small>
+                            <p class="mb-0 fs-13px fs-md-16px text-secondary">291.1%</p>
                         </div>
 
-                        <div class="info-cell col-md-6">
-                            <small class="fs-12px text-secondary">Net present value</small>
-                            <p class="mb-0">$81,469.63</p>
+                        <div class="info-cell mb-4 mb-md-0 col-md-6">
+                            <small class="fs-16px fs-md-12px text-md-secondary">Net present value</small>
+                            <p class="mb-0 fs-13px fs-md-16px text-secondary">$81,469.63</p>
                         </div>
 
-                        <div class="info-cell col-md-6">
-                            <small class="fs-12px text-secondary">IRR</small>
-                            <p class="mb-0">15.19%</p>
+                        <div class="info-cell mb-4 mb-md-0 col-md-6">
+                            <small class="fs-16px fs-md-12px text-md-secondary">IRR</small>
+                            <p class="mb-0 fs-13px fs-md-16px text-secondary">15.19%</p>
                         </div>
                     </div>
                 </div>
-                <div class="pb-2">
+                <div class="pb-2 d-none d-md-block">
                     <div class="section-heading mb-1">
                         <small class="fw-bold fs-12px">QUOTE</small>
                     </div>
@@ -161,6 +159,28 @@ const simulateApiCall = () => {
                     <div class="row mt-3">
                         <p class="col-md-6 text-dark fw-bold fs-5 mb-0">Total</p>
                         <p class="col-md-6 text-dark fw-bold fs-5 mb-0 text-end">$27,990.00</p>
+                    </div>
+                </div>
+
+                <div class="info-cell-wrapper justify-content-between row d-md-none">
+                    <div class="info-cell mb-4 mb-md-0 col-md-6">
+                        <small class="fs-16px fs-md-12px text-md-secondary">Subtotal incl GST.</small>
+                        <p class="mb-0 fs-13px fs-md-16px text-secondary">$32,452.50</p>
+                    </div>
+
+                    <div class="info-cell mb-4 mb-md-0 col-md-6">
+                        <small class="fs-16px fs-md-12px text-md-secondary">Incl GST.</small>
+                        <p class="mb-0 fs-13px fs-md-16px text-secondary">$2950.23</p>
+                    </div>
+
+                    <div class="info-cell mb-4 mb-md-0 col-md-6">
+                        <small class="fs-16px fs-md-12px text-md-secondary">STCs x 119</small>
+                        <p class="mb-0 fs-13px fs-md-16px text-secondary">-$4462.50</p>
+                    </div>
+
+                    <div class="info-cell mb-4 mb-md-0 col-md-6">
+                        <small class="fs-16px fs-md-12px text-md-secondary">Total</small>
+                        <p class="mb-0 fs-13px fs-md-16px text-secondary">$27,990.00</p>
                     </div>
                 </div>
             </div>

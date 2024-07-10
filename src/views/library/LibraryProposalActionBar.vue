@@ -32,7 +32,7 @@ const simulateApiCall = () => {
 </script>
 
 <template>
-    <action-bar class="me-3 library-proposal-action-bar">
+    <action-bar class="ml-3 library-proposal-action-bar">
 		<left-action-bar>
 			<div v-if="isLoading" style="width: 25rem;">
 			    <Skeletor />
@@ -184,10 +184,10 @@ const simulateApiCall = () => {
 }
 
 .library-proposal-action-bar {
-    margin-left: 4rem !important;
+    margin-left: 5rem !important;
 
     @media only screen and (min-width: 1200px) {
-        margin-left: 0 !important;
+        margin-left: 1rem !important;
     }
 }
 </style>

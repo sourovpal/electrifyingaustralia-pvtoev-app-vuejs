@@ -9,9 +9,9 @@ import ProposalDetails from './ProposalDetails.vue'
 <template>
 	<section class="content lead-list --content-y-100vh">
 		<SearchBar placeholder-text="Search for a project" />
-        <LibraryProposalActionBar />
+        <LibraryProposalActionBar class="d-none d-md-block" />
 
-	    <section class="row w-75 mt-3">
+	    <section class="row mx-auto mx-md-0 w-100 w-md-75 mt-3">
 	        <ProposalDetails class="d-none d-md-block" />
 	        <ProjectStatus />
 	    </section>

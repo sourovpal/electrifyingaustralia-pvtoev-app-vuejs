@@ -55,7 +55,7 @@ const simulateApiCall = () => {
 				/>
 				<button
 					v-else
-					class="btn btn-sm btn-lg-large btn-primary"
+					class="btn btn-sm btn-lg-large btn-primary py-xl-2"
 					style="flex-grow: 2"
 				>
 					<font-awesome-icon
@@ -72,7 +72,7 @@ const simulateApiCall = () => {
 				/>
 				<button
 					v-else
-					class="btn btn-sm btn-lg-large btn-secondary"
+					class="btn btn-sm btn-lg-large btn-secondary py-xl-2"
 					style="flex-grow: 1"
 					@click="handleShareBtnClick"
 				>
@@ -90,7 +90,7 @@ const simulateApiCall = () => {
 				/>
 				<button
 					v-else
-					class="btn btn-secondary btn-sm btn-lg-large"
+					class="btn btn-secondary btn-sm btn-lg-large py-xl-2"
 					style="flex-grow: 1"
 					@click="handleInstallerBtnClick"
 				>

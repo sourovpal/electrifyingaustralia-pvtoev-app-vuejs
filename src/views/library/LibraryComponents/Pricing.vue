@@ -2,11 +2,11 @@
     <div class="table overflow-x-hidden">
         <!-- table header -->
         <div class="row px-4 py-2 table-header border-bottom">
-            <small class="fw-bold col-md-5">Description</small>
-            <small class="fw-bold col-md-1 text-end">Units</small>
-            <small class="fw-bold col-md-2 text-end">Quantity</small>
-            <small class="fw-bold col-md-2 text-end">Unit price</small>
-            <small class="fw-bold col-md-2 text-end">Total</small>
+            <small class="fw-bold col-5 col-md-4 ">Description</small>
+            <small class="fw-bold col-1 col-md-2 text-end">Units</small>
+            <small class="fw-bold col-2 col-md-2 text-end">Quantity</small>
+            <small class="fw-bold col-2 col-md-2 text-end">Unit price</small>
+            <small class="fw-bold col-2 col-md-2 text-end">Total</small>
         </div>
 
         <!-- table rows -->

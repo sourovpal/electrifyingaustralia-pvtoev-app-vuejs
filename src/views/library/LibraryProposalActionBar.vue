@@ -72,7 +72,7 @@ const simulateApiCall = () => {
 
             <div v-else class="d-flex align-items-center gap-2">
 				<font-awesome-icon
-				    class="text-success d-none d-lg-inline"
+				    class="text-success d-none d-xl-inline"
 				    icon="fas fa-check"
 				/>
 				<button class="btn btn-transparent text-info btn-link rounded-lg --shadow-none fw-bold">Link to CRM</button>
@@ -103,7 +103,7 @@ const simulateApiCall = () => {
                     </ul>
 			    </div>
 
-                <div class="dropdown d-none d-lg-none">
+                <div class="dropdown d-none d-lg-block">
                     <div class="d-flex cursor-pointer align-items-center gap-2 p-2 rounded"
                         data-mdb-toggle="dropdown"
                         aria-expanded="false"
@@ -117,7 +117,7 @@ const simulateApiCall = () => {
                     <DropdownOwnerList :owners="owners" />
                 </div>
 
-				<div class="dropdown d-none d-lg-none">
+				<div class="dropdown d-none d-lg-block">
 				    <button
                         class="cursor-pointer btn btn-light proposal-menu-dropdown"
                         data-mdb-toggle="dropdown"

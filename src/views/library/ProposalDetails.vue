@@ -73,7 +73,7 @@ const simulateApiCall = () => {
 </script>
 
 <template>
-	<div class="proposal-details col-md-8 px-lg-4">
+	<div class="proposal-details col-md-8 --px-lg-4">
 		<Skeletor
 		    v-if="isLoading"
 		    height="15px"

@@ -42,4 +42,18 @@ import ProposalDetails from './ProposalDetails.vue'
     }
 }
 
+@media only screen and (min-width: 992px) {
+    .proposal-content-wrapper {
+        width: calc(100% - 4rem);
+        margin-left: 4.35rem !important;
+    }
+}
+
+@media only screen and (min-width: 1200px) {
+    .proposal-content-wrapper {
+        width: 73%;
+        margin-left: 0 !important;
+    }
+}
+
 </style>

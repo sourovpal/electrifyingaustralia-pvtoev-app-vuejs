@@ -55,10 +55,11 @@ const simulateApiCall = () => {
 				/>
 				<button
 					v-else
-					class="btn btn-large btn-primary"
+					class="btn btn-sm btn-lg-large btn-primary"
 					style="flex-grow: 2"
 				>
 					<font-awesome-icon
+					    class="d-none d-lg-inline"
 						icon="fas fa-up-right-from-square"
 					/>
 					<span class="fw-bold ms-2">PROPOSAL</span>
@@ -71,7 +72,7 @@ const simulateApiCall = () => {
 				/>
 				<button
 					v-else
-					class="btn btn-secondary"
+					class="btn btn-sm btn-lg-large btn-secondary"
 					style="flex-grow: 1"
 					@click="handleShareBtnClick"
 				>
@@ -79,7 +80,7 @@ const simulateApiCall = () => {
 						class="text-secondary"
 						icon="fas fa-share-nodes"
 					/>
-					<span class="fw-bold text-black ms-2">SHARE</span>
+					<span class="fw-bold text-black ms-2 d-none d-lg-inline">SHARE</span>
 				</button>
 
 				<Skeletor
@@ -89,7 +90,7 @@ const simulateApiCall = () => {
 				/>
 				<button
 					v-else
-					class="btn btn-secondary"
+					class="btn btn-secondary btn-sm btn-lg-large"
 					style="flex-grow: 1"
 					@click="handleInstallerBtnClick"
 				>
@@ -345,7 +346,6 @@ const simulateApiCall = () => {
 
 @media only screen and (min-width: 768px) {
 	.project-status {
-	    width: 22.5rem;
 		position: static;
 		height: auto;
 
@@ -355,4 +355,13 @@ const simulateApiCall = () => {
 		}
 	}
 }
+
+
+@media only screen and (min-width: 992px) {
+	.project-status {
+	    // width: 1rem;
+	}
+}
+
 </style>
+

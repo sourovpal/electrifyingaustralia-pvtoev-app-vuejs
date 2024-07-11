@@ -20,6 +20,7 @@ import 'custom-vue-scrollbar/dist/style.css';
 import 'tippy.js/dist/tippy.css'
 import 'vue-toast-notification/dist/theme-bootstrap.css';
 import 'vue-skeletor/dist/vue-skeletor.css';
+import CustomCheckbox from './components/CustomCheckbox.vue';
 
 var appData = ref({});
 function updateAppData(key, val) {
@@ -31,6 +32,7 @@ function updateAppData(key, val) {
 const pinia = createPinia();
 var app = createApp(App);
 app.component('LoadingButton', LoadingButton);
+app.component('custom-checkbox', CustomCheckbox);
 app.component('font-awesome-icon', FontAwesomeIcon);
 
 app.provide('app_data', {

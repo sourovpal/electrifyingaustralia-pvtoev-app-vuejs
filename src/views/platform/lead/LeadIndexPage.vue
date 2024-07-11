@@ -7,7 +7,7 @@ import Datatable from "../../../components/Datatable/Datatable.vue";
 import DatatableHeader from "../../../components/Datatable/DatatableHeader.vue";
 import DatatableBody from "../../../components/Datatable/DatatableBody.vue";
 import HeaderPropertiesDropdown from "./components/dropdowns/HeaderPropertiesDropdown.vue";
-// import FilterRightSidebar from './components/FilterRightSidebar.vue';
+import FilterRightSidebar from "./components/filters/FilterRightSidebar.vue";
 import DataTableSkeletor from "./components/DataTableSkeletor.vue";
 import DataNotFound from "./components/DataNotFound.vue";
 import AddNewLeadModal from "./components/modals/AddNewLeadModal.vue";
@@ -33,7 +33,7 @@ export default {
     AddNewLeadModal,
     DataTableSkeletor,
     DropdownOwnerList,
-    // FilterRightSidebar,
+    FilterRightSidebar,
     UploadSpreadsheetModal,
     HeaderPropertiesDropdown,
     DeleteMultipleLeadWarningModal,
@@ -56,56 +56,11 @@ export default {
           class="d-flex justify-content-center align-item-start"
           style="margin-left: 8px"
         >
-          <label
-            class="custom-form-checkbox btn btn-floating btn-light"
+          <custom-checkbox
             @click="selectedAllRowsHandler"
-          >
-            <svg
-              v-if="!isSelectedAllRows && !isSelectedAllRowsReset"
-              class="unchecked"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              height="24"
-              viewBox="0 -960 960 960"
-              width="24"
-            >
-              <path
-                d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"
-              />
-            </svg>
-            <svg
-              v-else-if="isSelectedAllRows && !isSelectedAllRowsReset"
-              class="checked"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-              ></path>
-            </svg>
-            <svg
-              v-if="isSelectedAllRowsReset"
-              fill="currentColor"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <defs>
-                <path id="a" d="M0 0h24v24H0z"></path>
-              </defs>
-              <clipPath id="b">
-                <use xlink:href="#a" overflow="visible"></use>
-              </clipPath>
-              <path
-                d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z"
-                clip-path="url(#b)"
-              ></path>
-            </svg>
-          </label>
+            :checked="isSelectedAllRows"
+            :reset="isSelectedAllRowsReset"
+          />
         </div>
         <button
           class="btn btn-light btn-floating ms-2"
@@ -125,7 +80,6 @@ export default {
             <path d="M0 0h24v24H0z" fill="none"></path>
           </svg>
         </button>
-
         <button
           @click="$refs['DeleteMultipleLeadModalRef'].showModalHandler()"
           class="btn btn-danger btn-sm me-3 ms-3 d-flex justify-content-between align-items-center white-space-nowrap"
@@ -255,7 +209,7 @@ export default {
             {{ Object.keys(filterQueryData).length }} active filter
           </button>
           <button
-            @click="resetFilterSidebar(false)"
+            @click="toggleFilterSidebar = 'close'"
             class="btn btn-success btn-sm px-2 active"
           >
             <svg
@@ -289,7 +243,7 @@ export default {
           v-else
           class="toolbar-btn btn btn-light btn-floating me-3 d-none d-xl-block"
           v-tippy="{ content: 'Filter Leads', placement: 'top' }"
-          @click="toggleFilterSidebar = !toggleFilterSidebar"
+          @click="toggleFilterSidebar = 'show'"
         >
           <svg
             class="svg-5"
@@ -481,14 +435,15 @@ export default {
       </right-action-bar>
     </action-bar>
     <Datatable>
-      <!-- <FilterRightSidebar :class="{show:toggleFilterSidebar}"
-                :toggleFilterSidebarHandler="toggleFilterSidebarHandler"
-                @toggle-filter="(e)=> resetFilterSidebar(e)"
-                @filter-data-in-database="(filter)=> filterDataInDatabase(filter)"
-                :lead-properties="leadProperties"
-                :lead-sources="leadSources"
-                :owners="owners"
-                ref="filterRightSidebarRef" /> -->
+      <FilterRightSidebar
+        :class="{ show: toggleFilterSidebar == 'show' }"
+        @filter-data-in-database="(filter) => filterDataInDatabase(filter)"
+        :lead-properties="leadProperties"
+        :custom-form-data="filterQueryData"
+        :lead-sources="leadSources"
+        :owners="owners"
+        ref="filterRightSidebarRef"
+      />
 
       <datatable-header class="" v-if="isFirstLoading || fetchLeads.length">
         <div class="tbl-th" style="width: 3.6rem; flex-grow: 1"></div>
@@ -641,37 +596,10 @@ export default {
             style="width: 4rem; margin-left: -7px; flex-grow: 1"
             class="tbl-td full-width"
           >
-            <label
+            <custom-checkbox
               @click="singleRowSelectedHandler(lead.id)"
-              class="custom-form-checkbox btn btn-floating btn-light"
-            >
-              <svg
-                v-if="!selectedRows.includes(lead.id)"
-                class="unchecked"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                height="24"
-                viewBox="0 -960 960 960"
-                width="24"
-              >
-                <path
-                  d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"
-                />
-              </svg>
-              <svg
-                v-else
-                class="checked"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-                ></path>
-              </svg>
-            </label>
+              :checked="selectedRows.includes(lead.id)"
+            />
           </div>
 
           <div

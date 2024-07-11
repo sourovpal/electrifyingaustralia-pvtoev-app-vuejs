@@ -1,30 +1,26 @@
 <template>
-  <div class="custom-select position-relative" ref="selectLeadSourceRef">
+  <div class="custom-select" ref="selectLeadSourceRef">
     <div
-      class="dropdown form-control px-0"
-      tabindex="0"
-      :class="{ open: isOpen && filterOptions.length }"
+      class="dropdown px-0 position-relative"
+      :class="{
+        open: isOpen && filterOptions.length,
+        'small-size':small
+      }"
     >
-      <span class="selected-option custom-input">
-        <input
-          ref="customInutRef"
-          type="text"
-          @focus="isOpen = true"
-          :placeholder="placeholder"
-          v-model="selectedOption"
-        />
-        <span
-          class="clear-input"
-          v-if="selectedOption"
-          @click="clearInputField(null)"
-          >&times;</span
-        >
-      </span>
+      <input
+        class="form-control"
+        :class="{ 'form-control-sm': small }"
+        ref="customInutRef"
+        type="text"
+        @focus="isOpen = true"
+        :placeholder="placeholder"
+        v-model="selectedOption"
+      />
 
       <Transition>
         <div
           v-if="isOpen && filterOptions.length"
-          class="assign-options position-absolute pb-5"
+          class="assign-options position-absolute"
         >
           <ul class="item-list">
             <li
@@ -56,6 +52,10 @@ export default {
       required: true,
     },
     modelValue: {},
+    small: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -94,12 +94,6 @@ export default {
       this.selectedOption = option;
       this.isOpen = false;
     },
-    clearInputField(option) {
-      this.selectedOption = option;
-      this.$emit("update:modelValue", option);
-      this.$emit("change", option);
-      this.isOpen = true;
-    },
   },
 };
 </script>
@@ -116,87 +110,15 @@ export default {
 }
 
 .form-control {
-  min-height: 35.77px;
   box-shadow: none !important;
-  cursor: text;
+  outline: none !important;
   border-color: #bdbdbd !important;
-  &.open {
-    border-bottom: none !important;
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
-  }
-  .selected-option {
-    padding: 0px 12px 0px 12px;
-    box-sizing: border-box;
-    position: relative;
-    &.custom-input {
-      padding: 0px !important;
-      input {
-        width: 100%;
-        outline: none;
-        box-shadow: none !important;
-        border: none;
-        padding: 0px 12px;
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 1.6;
-        color: #4f4f4f;
-        background-color: #fff;
-      }
-    }
-    .clear-input {
-      position: absolute;
-      right: 5px;
-      font-size: 20px;
-      top: 48%;
-      transform: translateY(-50%);
-      padding: 6px 8px;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-    }
-  }
-}
-.option-list {
-  margin: 0px;
-  padding: 0px;
-  list-style: none;
-  margin-top: -5px;
-  .option-item {
-    margin-top: 5px;
-    line-height: 12px;
-    padding: 6px 0px 6px 8px;
-    background: #dddddd;
-    border-radius: 2px;
-    font-size: 14px;
-    margin-right: 5px;
-    .remove-btn {
-      padding: 6px 8px 6px 4px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-  }
-  .option-search {
-    flex-grow: 1;
-    margin-top: 5px;
-    input {
-      border: none;
-      outline: none;
-      box-shadow: none !important;
-      width: 100%;
-      height: 100%;
-      font-size: 14px;
-      padding: 3.5px 0px;
-    }
-  }
 }
 .assign-options {
-  left: -1px;
-  right: -1px;
+  left: 0px;
+  right: 0px;
   overflow: hidden;
-  top: 34px;
+  top: 100%;
   z-index: 9999;
 }
 .item-list {
@@ -223,6 +145,23 @@ export default {
       border: none;
       outline: none;
       padding: 6px 6px;
+    }
+  }
+}
+.dropdown {
+  &.open {
+    .form-control {
+      border-bottom: none !important;
+      border-bottom-left-radius: 0px;
+      border-bottom-right-radius: 0px;
+    }
+    &.small-size{
+      .item-list {
+        .item {
+          padding: 3px 14px !important;
+          font-size: 0.776rem !important;
+        }
+      }
     }
   }
 }

@@ -41,7 +41,7 @@ const routes = [
                     {
                         name:"tasks",
                         path:'tasks',
-                        component:()=>import('../views/platform/lead/LeadIndexPage.vue'),
+                        component:()=>import('../views/platform/tasks/TaskIndexPage.vue'),
                         beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
@@ -104,12 +104,31 @@ const routes = [
             { 
                 name:"LibraryIndex",
                 path: '/library',
+                redirect: '/library/active',
                 component:()=>import('../views/library/LibraryIndex.vue'),
                 beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                 meta:{
                     title:'Home Page',
                 },
                 children: [
+                    {
+                        name:'LibraryProjects',
+                        path:'active',
+                        component:()=>import('../views/library/LibraryProjectsList.vue'),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
+                        meta:{
+                            title:'Projects',
+                        },
+                    },
+                    {
+                        name:'LibraryProposals',
+                        path:'proposals',
+                        component:()=>import('../views/library/LibraryProposalList.vue'),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
+                        meta:{
+                            title:'Projects',
+                        },
+                    }
                 ]
             },
             { 
@@ -463,6 +482,24 @@ const routes = [
                         beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
                         meta:{
                             title:'Home Page',
+                        },
+                    },
+                    {
+                        name:'WorkflowCreateForm',
+                        path:'workflows/new',
+                        component:()=>import('../views/settings/crm/workflow/WorkflowForm.vue'),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
+                        meta:{
+                            title:'Workflow create form',
+                        },
+                    },
+                    {
+                        name:'lorkflowUpdateForm',
+                        path:'workflows/:workflow_id',
+                        component:()=>import('../views/settings/crm/workflow/WorkflowForm.vue'),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
+                        meta:{
+                            title:'Workflow update form',
                         },
                     },
                     {

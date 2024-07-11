@@ -17,7 +17,7 @@ export default {
                 lead_sources: 1,
             },
             limit: 50,
-            toggleFilterSidebar: false,
+            toggleFilterSidebar:'close',
             selectedRows: [],
             isSelectedAllRows: false,
             isSelectedAllRowsReset: false,
@@ -56,29 +56,6 @@ export default {
                 path: "/platform/leads",
                 query: { ...current, ...query },
             });
-        },
-        toggleFilterSidebarHandler() {
-            this.toggleFilterSidebar = !this.toggleFilterSidebar;
-        },
-        resetFilterSidebar(show) {
-            try {
-                if (!this.toggleFilterSidebar) {
-                    this.toggleFilterSidebar = true;
-                    return;
-                }
-                if (show) {
-                    this.toggleFilterSidebar = true;
-                } else {
-                    this.$refs["filterRightSidebarRef"].resetFilterHandler();
-                    this.toggleFilterSidebar = false;
-                    if (Object.keys(this.filterQueryData).length) {
-                        this.filterQueryData = {};
-                        setTimeout(() => {
-                            this.fetchAllLeadsHandler({ page: 1 });
-                        }, 1000);
-                    }
-                }
-            } catch (error) { }
         },
         filterDataInDatabase(filter) {
             try {

@@ -127,7 +127,7 @@ const simulateApiCall = () => {
 					<p class="lead fw-bold d-md-none fs-24px mb-5">
 						Beans
 					</p>
-					<div class="mb-4">
+					<div class="mb-4 mb-md-2">
 						<div class="section-heading d-none d-md-block">
 							<small class="fw-bold fs-12px"
 								>PROJECT STATS</small
@@ -137,23 +137,23 @@ const simulateApiCall = () => {
 						<div
 							class="info-cell-wrapper justify-content-between row"
 						>
-							<div class="info-cell mb-4 mb-md-0 col-md-6">
+							<div class="info-cell mb-4 mb-md-0 col-md-12 col-lg-6">
 								<small>System Size (DC)</small>
 								<p>12.4 kW</p>
 							</div>
 
-							<div class="info-cell mb-4 mb-md-0 col-md-6">
+							<div class="info-cell mb-4 mb-md-0 col-md-12 col-lg-6">
 								<small>Annual production (DC)</small>
 								<p>17,800 kWh</p>
 							</div>
 
-							<div class="info-cell mb-4 mb-md-0 col-md-6">
+							<div class="info-cell mb-4 mb-md-0 col-md-12 col-lg-6">
 								<small>Self consumption</small>
 								<p>80%</p>
 							</div>
 
 							<div
-								class="info-cell mb-md-4 mb-md-0 col-md-6"
+								class="info-cell mb-md-0 col-md-12 col-lg-6"
 							>
 								<small>Annual bill</small>
 								<p>$3,555.99</p>
@@ -165,7 +165,7 @@ const simulateApiCall = () => {
 						<div
 							class="section-heading d-none d-md-flex align-items-center gap-2"
 						>
-							<small class="fw-bold fs-12px"
+							<small class="fw-bold text-black fs-12px"
 								>FINANCIAL FIGURES</small
 							>
 
@@ -178,22 +178,22 @@ const simulateApiCall = () => {
 						<div
 							class="info-cell-wrapper justify-content-between row"
 						>
-							<div class="info-cell mb-4 mb-md-0 col-md-6">
+							<div class="info-cell mb-4 mb-md-0 col-md-12 col-lg-6">
 								<small>Discounted payback</small>
 								<p>7.41 years</p>
 							</div>
 
-							<div class="info-cell mb-4 mb-md-0 col-md-6">
+							<div class="info-cell mb-4 mb-md-0 col-md-12 col-lg-6">
 								<small>ROI</small>
 								<p>291.1%</p>
 							</div>
 
-							<div class="info-cell mb-4 mb-md-0 col-md-6">
+							<div class="info-cell mb-4 mb-md-0 col-md-12 col-lg-6">
 								<small>Net present value</small>
 								<p>$81,469.63</p>
 							</div>
 
-							<div class="info-cell mb-4 mb-md-0 col-md-6">
+							<div class="info-cell mb-4 mb-md-0 col-md-12 col-lg-6">
 								<small>IRR</small>
 								<p>15.19%</p>
 							</div>

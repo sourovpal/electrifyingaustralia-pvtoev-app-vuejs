@@ -103,7 +103,7 @@ const simulateApiCall = () => {
                     </ul>
 			    </div>
 
-                <div class="dropdown">
+                <div class="dropdown d-none d-lg-none">
                     <div class="d-flex cursor-pointer align-items-center gap-2 p-2 rounded"
                         data-mdb-toggle="dropdown"
                         aria-expanded="false"
@@ -117,7 +117,7 @@ const simulateApiCall = () => {
                     <DropdownOwnerList :owners="owners" />
                 </div>
 
-				<div class="dropdown">
+				<div class="dropdown d-none d-lg-none">
 				    <button
                         class="cursor-pointer btn btn-light proposal-menu-dropdown"
                         data-mdb-toggle="dropdown"

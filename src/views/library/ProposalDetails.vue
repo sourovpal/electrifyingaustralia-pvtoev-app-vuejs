@@ -1,7 +1,7 @@
 <script setup>
-import Chart from 'chart.js/auto';
-import {onMounted, ref} from 'vue';
-import { Skeletor } from 'vue-skeletor';
+import Chart from 'chart.js/auto'
+import {onMounted, ref} from 'vue'
+import {Skeletor} from 'vue-skeletor'
 
 import TabbedDisplay from './components/TabbedDisplay.vue'
 import Pricing from './LibraryComponents/Pricing.vue'
@@ -13,116 +13,154 @@ import Inverters from './LibraryComponents/Inverters.vue'
 import EVChargers from './LibraryComponents/EVChargers.vue'
 import HeatPumps from './LibraryComponents/HeatPumps.vue'
 
-import LoadProfile from './LibraryComponents/LoadProfile.vue';
-import BatteryStorage from './LibraryComponents/BatteryStorage.vue';
-import IntervalAnalysis from './LibraryComponents/IntervalAnalysis.vue';
-import ExportLimit from './LibraryComponents/ExportLimit.vue';
+import LoadProfile from './LibraryComponents/LoadProfile.vue'
+import BatteryStorage from './LibraryComponents/BatteryStorage.vue'
+import IntervalAnalysis from './LibraryComponents/IntervalAnalysis.vue'
+import ExportLimit from './LibraryComponents/ExportLimit.vue'
 
-import CurrentBills from './LibraryComponents/CurrentBills.vue';
-import FinancialOutcomes from './LibraryComponents/FinancialOutcomes.vue';
+import CurrentBills from './LibraryComponents/CurrentBills.vue'
+import FinancialOutcomes from './LibraryComponents/FinancialOutcomes.vue'
 
-import Mounting from './LibraryComponents/Mounting.vue';
+import Mounting from './LibraryComponents/Mounting.vue'
 
-import CustomSettings from './LibraryComponents/CustomSettings.vue';
-import Notes from './LibraryComponents/Notes.vue';
-import Wholesaler from './LibraryComponents/Wholesaler.vue';
+import CustomSettings from './LibraryComponents/CustomSettings.vue'
+import Notes from './LibraryComponents/Notes.vue'
+import Wholesaler from './LibraryComponents/Wholesaler.vue'
 
 const data = [
-    { year: 2010, count: 10 },
-    { year: 2011, count: 20 },
-    { year: 2012, count: 15 },
-    { year: 2013, count: 25 },
-    { year: 2014, count: 22 },
-    { year: 2015, count: 30 },
-    { year: 2016, count: 28 },
-];
+	{year: 2010, count: 10},
+	{year: 2011, count: 20},
+	{year: 2012, count: 15},
+	{year: 2013, count: 25},
+	{year: 2014, count: 22},
+	{year: 2015, count: 30},
+	{year: 2016, count: 28},
+]
 
-const barChart = ref(null);
-onMounted(() => {
-    new Chart(
-        barChart.value,
-        {
-            type: 'bar',
-            data: {
-                labels: data.map(row => row.year),
-                datasets: [
-                    {
-                        label: 'Acquisitions by year',
-                        data: data.map(row => row.count)
-                    }
-                ]
-            }
-        }
-    )
+const barChart = ref(null)
 
-});
-
-
-onMounted(() => {
-    simulateApiCall();
-});
-const isLoading = ref(false);
-
-const simulateApiCall = () => {
-    isLoading.value = true;
-    setTimeout(() => {
-        isLoading.value = false;
-    }, 1500);
+const initChart = () => {
+	new Chart(barChart.value, {
+		type: 'bar',
+		data: {
+			labels: data.map((row) => row.year),
+			datasets: [
+				{
+					label: 'Acquisitions by year',
+					data: data.map((row) => row.count),
+				},
+			],
+		},
+	})
 }
 
+onMounted(() => {
+	simulateApiCall()
+})
+const isLoading = ref(false)
+
+const simulateApiCall = () => {
+	isLoading.value = true
+	setTimeout(() => {
+		isLoading.value = false
+		initChart()
+	}, 1500)
+}
 </script>
 
 <template>
 	<div class="proposal-details col-md-8 --px-lg-4">
 		<Skeletor
-		    v-if="isLoading"
-		    height="15px"
-		    width="10rem"
-		    style="border-radius: 1rem;"
+			v-if="isLoading"
+			height="15px"
+			width="10rem"
+			style="border-radius: 1rem"
 		/>
-		<small v-else class="text-info fw-bold">System production</small>
+		<small
+			v-else
+			class="text-info fw-bold"
+			>System production</small
+		>
 		<div class="card mt-3">
 			<div class="tabs">
-				<button
-					class="btn btn-sm fs-12px text-info fw-bold btn-transparent shadow me-2"
-				>
-					1 year
-				</button>
+				<Skeletor
+					width="7rem"
+					height="1.5rem"
+					v-if="isLoading"
+				/>
 
-				<div
-					class="btn-group"
-					role="group"
-					aria-label="Button group with nested dropdown"
-				>
+				<template v-else>
 					<button
-						class="btn btn-sm fs-12px text-info fw-bold btn-transparent"
+						class="btn btn-sm fs-12px text-info fw-bold btn-transparent shadow me-2"
 					>
-						Daily average
+						1 year
 					</button>
-					<button
-						class="btn btn-sm fs-12px text-muted fw-bold btn-transparent"
+
+					<div
+						class="btn-group"
+						role="group"
+						aria-label="Button group with nested dropdown"
 					>
-						Monthly Total
-					</button>
-				</div>
+						<button
+							class="btn btn-sm fs-12px text-info fw-bold btn-transparent"
+						>
+							Daily average
+						</button>
+						<button
+							class="btn btn-sm fs-12px text-muted fw-bold btn-transparent"
+						>
+							Monthly Total
+						</button>
+					</div>
+				</template>
 			</div>
 			<!-- Pretend graph -->
-			<canvas id="bar-chart" ref="barChart"></canvas>
+			<canvas
+				id="bar-chart"
+				ref="barChart"
+			></canvas>
 		</div>
-		<div class="mt-3 w-100">
+		<div style="padding-bottom: 20rem;" class="card d-flex mt-4" v-if="isLoading">
+			<Skeletor
+			    width="7rem"
+                class="mb-4"
+			    height="1.5rem"
+			/>
+
+
+			<Skeletor
+				width="75%"
+				height="1rem"
+			    class="mb-4"
+			/>
+
+			<Skeletor
+				width="80%"
+				height="1rem"
+			/>
+		</div>
+		<div
+			class="mt-3 w-100"
+			v-if="!isLoading"
+		>
 			<TabbedDisplay
 				component-class="w-100 mt-3 card shadow"
 				:tabs="[
 					{label: 'Pricing', component: 'Pricing'},
 					{label: 'Financing', component: 'Financing'},
 					{label: 'Rebates', component: 'Rebates'},
-					{label: 'Settings', component: 'CertificateSettings', icon: { name: 'fa-gear', toRight: true  }, toRight: true},
+					{
+						label: 'Settings',
+						component: 'CertificateSettings',
+						icon: {name: 'fa-gear', toRight: true},
+						toRight: true,
+					},
 				]"
 				:components="{
 					Financing,
 					Pricing,
 					Rebates,
-                    CertificateSettings
+					CertificateSettings,
 				}"
 			/>
 
@@ -134,7 +172,7 @@ const simulateApiCall = () => {
 					{label: 'EVChargers', component: 'EVChargers'},
 					{label: 'HeatPumps', component: 'HeatPumps'},
 				]"
-				:components="{ Inverters, EVChargers, HeatPumps }"
+				:components="{Inverters, EVChargers, HeatPumps}"
 			/>
 
 			<TabbedDisplay
@@ -142,11 +180,24 @@ const simulateApiCall = () => {
 				component-class="w-100 mt-2 card shadow pb-4"
 				:tabs="[
 					{label: 'Load profile', component: 'LoadProfile'},
-					{label: 'Battery storage', component: 'BatteryStorage', icon: { name: 'fa-lock' }, },
-					{label: 'Interval analysis', component: 'IntervalAnalysis', icon: { name: 'fa-lock' }},
-					{label: 'Export limit', component: 'ExportLimit' },
+					{
+						label: 'Battery storage',
+						component: 'BatteryStorage',
+						icon: {name: 'fa-lock'},
+					},
+					{
+						label: 'Interval analysis',
+						component: 'IntervalAnalysis',
+						icon: {name: 'fa-lock'},
+					},
+					{label: 'Export limit', component: 'ExportLimit'},
 				]"
-				:components="{ LoadProfile, BatteryStorage, IntervalAnalysis, ExportLimit }"
+				:components="{
+					LoadProfile,
+					BatteryStorage,
+					IntervalAnalysis,
+					ExportLimit,
+				}"
 			/>
 
 			<TabbedDisplay
@@ -154,37 +205,41 @@ const simulateApiCall = () => {
 				component-class="w-100 mt-2 card shadow pb-4"
 				:tabs="[
 					{label: 'Current bills', component: 'CurrentBills'},
-					{label: 'Financial Outcomes', component: 'FinancialOutcomes'},
+					{
+						label: 'Financial Outcomes',
+						component: 'FinancialOutcomes',
+					},
 				]"
-				:components="{ CurrentBills, FinancialOutcomes }"
+				:components="{CurrentBills, FinancialOutcomes}"
 			/>
 
 			<TabbedDisplay
 				class="w-100 mt-5"
 				component-class="w-100 mt-2 card shadow pb-4"
+				:tabs="[{label: 'Mounting', component: 'Mounting'}]"
+				:components="{Mounting}"
+			/>
+			<TabbedDisplay
+				class="w-100 mt-5"
+				component-class="w-100 mt-2 card shadow"
 				:tabs="[
-					{label: 'Mounting', component: 'Mounting'},
+					{
+						label: 'Custom settings',
+						component: 'CustomSettings',
+					},
+					{label: 'Notes', component: 'Notes'},
+					{label: 'Wholesaler', component: 'Wholesaler'},
 				]"
-				:components="{ Mounting }"
+				:components="{CustomSettings, Notes, Wholesaler}"
 			/>
-            <TabbedDisplay
-			    class="w-100 mt-5"
-			    component-class="w-100 mt-2 card shadow"
-			    :tabs="[
-				    {label: 'Custom settings', component: 'CustomSettings'},
-				    {label: 'Notes', component: 'Notes'},
-				    {label: 'Wholesaler', component: 'Wholesaler'},
-			    ]"
-			    :components="{ CustomSettings, Notes, Wholesaler }"
-			/>
-			<p style="margin-top: 50rem;">DELETE THIS TAG</p>
+			<p style="margin-top: 50rem">DELETE THIS TAG</p>
 		</div>
 	</div>
 </template>
 
 <style scoped>
 .proposal-details {
-    height: 87vh;
-    overflow-y: scroll;
+	height: 87vh;
+	overflow-y: scroll;
 }
 </style>

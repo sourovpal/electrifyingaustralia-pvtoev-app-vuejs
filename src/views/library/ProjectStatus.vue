@@ -101,7 +101,7 @@ const simulateApiCall = () => {
 				</button>
 			</div>
 			<div class="proposal-info-display mt-2 rounded border">
-				<div class="editor-display position-relative">
+				<div :class="`editor-display position-relative ${isLoading ? 'opacity-0' : ''}`">
 					<img
 						class="w-100"
 						style="height: 14rem"
@@ -123,7 +123,7 @@ const simulateApiCall = () => {
 						</div>
 					</div>
 				</div>
-				<div class="project-stats-wrapper px-3 pt-1">
+				<div :class="`project-stats-wrapper px-3 pt-1 ${isLoading ? 'opacity-0' : ''}`">
 					<p class="lead fw-bold d-md-none fs-24px mb-5">
 						Beans
 					</p>
@@ -306,6 +306,10 @@ const simulateApiCall = () => {
 	}
 }
 
+.opacity-0 {
+    opacity: 0;
+}
+
 .project-status {
 	// min-width: 20rem;
 	position: fixed;
@@ -319,6 +323,18 @@ const simulateApiCall = () => {
 		x: hidden;
 		y: auto;
 	}
+
+    @media only screen and (max-width: 768px) { padding: 0; }
+
+    @media only screen and (min-width: 768px) {
+		position: static;
+		height: auto;
+
+		overflow: {
+			x: visible;
+			y: visible;
+		}
+    }
 }
 
 .info-cell-wrapper .info-cell {
@@ -337,29 +353,6 @@ const simulateApiCall = () => {
 			opacity: 1;
 			font-size: 1rem;
 		}
-	}
-}
-
-@media only screen and (max-width: 768px) {
-	.project-status { padding: 0; }
-}
-
-@media only screen and (min-width: 768px) {
-	.project-status {
-		position: static;
-		height: auto;
-
-		overflow: {
-			x: visible;
-			y: visible;
-		}
-	}
-}
-
-
-@media only screen and (min-width: 992px) {
-	.project-status {
-	    // width: 1rem;
 	}
 }
 

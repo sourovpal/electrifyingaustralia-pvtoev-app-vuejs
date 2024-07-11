@@ -26,31 +26,18 @@ import ProposalDetails from './ProposalDetails.vue'
     &:hover { background: #f1f1f1; }
 }
 
-// .proposal-content-wrapper {
-//     width: 100%;
-//
-//     @media only screen and (min-width: 768px) {
-//         width: calc(100% - 3rem);
-//         margin-left: 3rem !important;
-//     }
-// }
-
-@media only screen and (min-width: 768px) {
-    .proposal-content-wrapper {
+.proposal-content-wrapper {
+    @media only screen and (min-width: 768px) {
         width: calc(100% - 3rem);
         margin-left: 3rem !important;
     }
-}
 
-@media only screen and (min-width: 992px) {
-    .proposal-content-wrapper {
+    @media only screen and (min-width: 992px) {
         width: calc(100% - 4rem);
         margin-left: 4.35rem !important;
     }
-}
 
-@media only screen and (min-width: 1200px) {
-    .proposal-content-wrapper {
+    @media only screen and (min-width: 1200px) {
         width: 73%;
         margin-left: 0 !important;
     }

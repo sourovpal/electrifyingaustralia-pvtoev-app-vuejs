@@ -1,9 +1,9 @@
-import moment from "moment";
+import { watch } from "vue";
 import {
-  FetchLeads,
-  UpdateLeadPropertieHeaders,
-  UpdateMultipelLeadStatus,
-  UpdateMultipelLeadOwner,
+    FetchLeads,
+    UpdateLeadPropertieHeaders,
+    UpdateMultipelLeadStatus,
+    UpdateMultipelLeadOwner,
 } from "../../../../actions/LeadAction";
 
 export default {
@@ -17,7 +17,9 @@ export default {
                 lead_sources: 1,
             },
             limit: 50,
-            toggleFilterSidebar:'close',
+            payload: {},
+            customFilterFormData: {},
+            toggleFilterSidebar: 'close',
             selectedRows: [],
             isSelectedAllRows: false,
             isSelectedAllRowsReset: false,
@@ -26,7 +28,6 @@ export default {
             disabledHeaderColumns: [],
             leadProperties: [],
             isFirstLoading: false,
-            filterQueryData: {},
             column: "updated_at",
             order: "desc",
             pagination: {
@@ -39,32 +40,39 @@ export default {
                 from: 0,
                 to: 0,
             },
-            moment: null,
-            instanceSettimeout: null,
         };
     },
     watch: {
-        $route(to) {
+        "currentRoute"(to) {
             this.fullpath = to?.fullPath;
-            this.fetchAllLeadsHandler({ page: 1 });
         },
     },
     methods: {
-        updateUrlQuery(query = {}) {
-            var current = this.$route.query;
-            this.$router.push({
-                path: "/platform/leads",
-                query: { ...current, ...query },
-            });
+        paginationHandler(payload=null) {
+            if(payload){
+                this.$router.push({
+                    path: '/platform/leads',
+                    query: { ...this.$route.query, ...payload },
+                });
+            }else{
+                this.$router.push({
+                    path: '/platform/leads',
+                    query:{page:1},
+                });
+            }
+            this.fetchAllLeadsHandler();
         },
-        filterDataInDatabase(filter) {
-            try {
-                clearInterval(this.instanceSettimeout);
-                this.filterQueryData = filter;
-                this.instanceSettimeout = setTimeout(() => {
-                    this.fetchAllLeadsHandler();
-                }, 1000);
-            } catch (error) { }
+        toggleFilterSidebarHandler(stage = 'close') {
+            if (stage == 'close') {
+                this.toggleFilterSidebar = 'close';
+                this.customFilterFormData = {};
+                this.fetchAllLeadsHandler();
+            } else if (stage == 'hide' && Object.keys(this.customFilterFormData).length <= 0) {
+                this.toggleFilterSidebar = 'close';
+                this.customFilterFormData = {};
+            } else {
+                this.toggleFilterSidebar = stage;
+            }
         },
         leadSortedHandler(column) {
             if (this.column == column) {
@@ -73,40 +81,39 @@ export default {
                 this.column = column;
                 this.order = "desc";
             }
-            this.updateUrlQuery({ column: this.column, order: this.order });
+            this.paginationHandler({ column: this.column, order: this.order });
         },
         async fetchAllLeadsHandler(payload = {}) {
             try {
                 this.isLoading = true;
 
-                var query = this.$route.query ?? {};
-                payload = { ...payload, ...query };
+                var query = this.$route.query;
+                this.payload = { ...payload, ...query };
 
-                if (Object.keys(this.filterQueryData).length) {
-                    var search = JSON.stringify(this.filterQueryData);
+                if (Object.keys(this.customFilterFormData).length) {
+                    var search = JSON.stringify(this.customFilterFormData);
                     if (search) {
-                        payload["search"] = search;
+                        this.payload["search"] = search;
                     }
                 }
 
                 if (!payload["page"]) {
-                    payload["page"] = this.pagination?.current_page;
-                } else {
+                    this.payload["page"] = this.$route.query.page ?? this.pagination?.current_page ?? 1;
                 }
 
                 if (!payload["limit"]) {
-                    payload["limit"] = this.limit;
+                    this.payload["limit"] = this.limit;
                 }
 
                 if (!payload["column"]) {
-                    payload["column"] = this.column;
+                    this.payload["column"] = this.column;
                 }
 
                 if (!payload["order"]) {
-                    payload["order"] = this.order;
+                    this.payload["order"] = this.order;
                 }
 
-                const res = await FetchLeads(payload);
+                const res = await FetchLeads(this.payload);
 
                 try {
                     this.selectedRows = [];
@@ -116,13 +123,13 @@ export default {
                     this.fetchLeads = res?.leads;
                     this.pagination = res?.pagination;
 
-                    if (payload["lead_properties"]) {
+                    if (this.payload["lead_properties"]) {
                         this.leadProperties = res?.lead_properties;
                     }
-                    if (payload["headers"]) {
+                    if (this.payload["headers"]) {
                         this.disabledHeaderColumns = res?.headers;
                     }
-                    if (payload["lead_sources"]) {
+                    if (this.payload["lead_sources"]) {
                         this.leadSources = res?.lead_sources;
                     }
                 } catch (error) {
@@ -146,9 +153,9 @@ export default {
                     var current = leadProperties[propertie.unique_id];
                     if (current && current?.length) {
                         if (propertie.data_type_id == "yes_or_no") {
-                            if(current.toLowerCase() == 'yes'){
+                            if (current.toLowerCase() == 'yes') {
                                 return 'Yes';
-                            }else if(current.toLowerCase() == 'no'){
+                            } else if (current.toLowerCase() == 'no') {
                                 return 'No';
                             }
                         }
@@ -295,11 +302,18 @@ export default {
     mounted() {
         this.isFirstLoading = true;
         this.fetchAllLeadsHandler(this.fetch);
-        this.moment = moment;
         this.fullpath = this.$route?.fullPath;
         this.leadStore.setLeadPrevUrl(null);
+        watch(() => this.customFilterFormData, (newValue, oldValue) => {
+            if (this.toggleFilterSidebar == 'show') {
+                this.fetchAllLeadsHandler();
+            }
+        }, { deep: true });
     },
     computed: {
+        currentRoute() {
+            return this.$route;
+        },
         leadStatus() {
             return this.appStore.getLeadStatuses;
         },

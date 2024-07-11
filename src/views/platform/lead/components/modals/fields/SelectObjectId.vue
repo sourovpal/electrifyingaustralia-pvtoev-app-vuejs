@@ -78,7 +78,7 @@ export default {
   },
   watch: {
     selectedObject(n) {
-      if (n) {
+      if (n && typeof n == "object") {
         this.selectOptionHandler(n);
       } else {
         this.selectedOption = null;

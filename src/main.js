@@ -3,7 +3,7 @@ import App from './App.vue';
 import router from './router';
 import * as mdb from 'mdb-ui-kit';
 import LoadingButton from "./components/LoadingButton.vue";
-
+import SvgCustomIcon from "./assets/svg/SvgCustomIcon.vue";
 import { plugin as VueTippy } from 'vue-tippy';
 
 import ToastPlugin from 'vue-toast-notification';
@@ -34,6 +34,7 @@ var app = createApp(App);
 app.component('LoadingButton', LoadingButton);
 app.component('custom-checkbox', CustomCheckbox);
 app.component('font-awesome-icon', FontAwesomeIcon);
+app.component('svg-custom-icon', SvgCustomIcon);
 
 app.provide('app_data', {
   appData: appData.value,

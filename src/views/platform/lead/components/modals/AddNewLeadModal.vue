@@ -6,11 +6,13 @@ import Storage from "../../../../../helpers/Storage";
 import { useAppStore } from "../../../../../stores/app";
 import { CONFIG } from "../../../../../config";
 import SelectObjectId from "./fields/SelectObjectId.vue";
+import SelectLeadSource from "./fields/SelectLeadSource.vue";
 
 export default {
   components: {
     DropdownOwnerList,
     SelectObjectId,
+    SelectLeadSource,
   },
   props: ["leadSources", "leadStatus", "fetchAllLeadsHandler"],
   setup(props) {
@@ -261,7 +263,7 @@ export default {
                   >Lead source
                   <span class="text-soft fs-12px ms-1">(Optional)</span>
                 </label>
-                <select-object-id
+                <select-lead-source
                   v-model="lead_source"
                   :options="leadSources"
                   @click="delete errors?.lead_source"

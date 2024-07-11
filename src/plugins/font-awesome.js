@@ -66,6 +66,7 @@ const iconsToUse = [
     fa.faAngleRight,
     fa.faHandshake,
     fa.faHashtag,
+    fa.faRotateRight,
     // Regular
     far.faSquare,
     far.faSquareMinus,
@@ -73,7 +74,7 @@ const iconsToUse = [
     far.faPenToSquare,
     far.faThumbsUp,
     far.faCalendarCheck,
-    far.faClock
+    far.faClock,
 ];
 
 library.add(iconsToUse)

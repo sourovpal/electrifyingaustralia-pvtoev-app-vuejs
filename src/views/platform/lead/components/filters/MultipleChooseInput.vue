@@ -243,7 +243,7 @@ onClickOutside(multipleChooseRef, (e) => {
   border-top: none !important;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 18px 50px -10px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
   max-height: 130px;
   overflow: auto;
   z-index: 99;

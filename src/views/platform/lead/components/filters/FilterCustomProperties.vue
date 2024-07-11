@@ -44,6 +44,7 @@ function toggleDropdownHandler(uniqueId) {
         type="text"
         :unique-id="propertie.unique_id"
         v-model="customFormData[propertie.unique_id]"
+        @change="(val)=>val?.length?'':delete customFormData[propertie.unique_id]"
       />
 
       <free-text-input
@@ -51,6 +52,7 @@ function toggleDropdownHandler(uniqueId) {
         type="textarea"
         :unique-id="propertie.unique_id"
         v-model="customFormData[propertie.unique_id]"
+        @change="(val)=>val?.length?'':delete customFormData[propertie.unique_id]"
       />
 
       <free-text-input
@@ -58,8 +60,9 @@ function toggleDropdownHandler(uniqueId) {
         type="number"
         :unique-id="propertie.unique_id"
         v-model="customFormData[propertie.unique_id]"
-      />
-
+        @change="(val)=>val?'':delete customFormData[propertie.unique_id]"
+        />
+        
       <date-and-time-input
         v-else-if="
           propertie?.data_type_id === 'date' ||
@@ -68,6 +71,7 @@ function toggleDropdownHandler(uniqueId) {
         :type="propertie?.data_type_id === 'date' ? 'date' : 'datetime-local'"
         :unique-id="propertie.unique_id"
         v-model="customFormData[propertie.unique_id]"
+        @change="(val)=>val?.length?'':delete customFormData[propertie.unique_id]"
       />
 
       <multiple-choose-input
@@ -76,6 +80,7 @@ function toggleDropdownHandler(uniqueId) {
         :unique-id="propertie.unique_id"
         :options="propertie.options ?? []"
         v-model="customFormData[propertie.unique_id]"
+        @change="(val)=>val?.length?'':delete customFormData[propertie.unique_id]"
       />
 
       <multiple-choose-input
@@ -83,12 +88,14 @@ function toggleDropdownHandler(uniqueId) {
         :unique-id="propertie.unique_id"
         :options="propertie.options ?? []"
         v-model="customFormData[propertie.unique_id]"
+        @change="(val)=>val?.length?'':delete customFormData[propertie.unique_id]"
       />
 
       <yes-or-no-input
         v-else-if="propertie?.data_type_id === 'yes_or_no'"
         :small="true"
         v-model="customFormData[propertie.unique_id]"
+        @change="(val)=>val?.length?'':delete customFormData[propertie.unique_id]"
       />
     </make-dropdown>
   </div>

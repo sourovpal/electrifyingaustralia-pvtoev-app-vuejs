@@ -39,7 +39,7 @@ import ProposalDetails from './ProposalDetails.vue'
 
     @media only screen and (min-width: 1200px) {
         width: 73%;
-        margin-left: 0 !important;
+        margin-left: 0.25rem !important;
     }
 }
 

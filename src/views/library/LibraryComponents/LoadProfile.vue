@@ -14,7 +14,7 @@
 				Simple self consumption
 			</p>
             <div class="col-md-8">
-			    <SaveableInput v-model="selfConsumption" />
+			    <SaveableInput :amount-formatter="(num => num + '%')"  v-model="selfConsumption" />
             </div>
 		</div>
 		<div class="help-icon position-absolute">
@@ -31,7 +31,7 @@ import { ref } from 'vue';
 import CustomCheckbox from '../../../components/forms/CustomCheckbox.vue'
 import SaveableInput from '../components/SaveableInput.vue';
 
-const selfConsumption = ref('40%');
+const selfConsumption = ref(40);
 
 </script>
 

@@ -1,3 +1,13 @@
+<script setup>
+import { ref } from 'vue';
+import SaveableInput from '../components/SaveableInput.vue';
+import Formatter from '../../../helpers/Formatter';
+
+const installationYear = ref(2023);
+const systemEfficiency = ref(81);
+
+</script>
+
 <template>
 	<div>
 		<div class="row mt-4">
@@ -6,11 +16,7 @@
 			</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">2024</p>
-					<font-awesome-icon
-						class="text-secondary fs-14px"
-						icon="fas fa-pen"
-					/>
+			        <SaveableInput v-model="installationYear" />
 				</div>
 				<p class="fs-12px">
 					The year of installation determines how many STCs this
@@ -24,11 +30,10 @@
 			</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">87%</p>
-					<font-awesome-icon
-						class="text-secondary fs-14px"
-						icon="fas fa-pen"
-					/>
+			        <SaveableInput 
+			            :amount-formatter="(num) => Formatter.toIntlFormat(num) + '%'" 
+			            v-model="systemEfficiency" 
+			        />
 				</div>
 				<p class="fs-12px">
 					This value should account for inverter losses, AC/DC
@@ -79,6 +84,5 @@
 	</div>
 </template>
 
-<script setup></script>
 
 <style lang="scss" scoped></style>

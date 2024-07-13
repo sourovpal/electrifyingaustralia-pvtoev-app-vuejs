@@ -1,3 +1,19 @@
+<script setup>
+import { ref } from 'vue';
+import SaveableInput from '../components/SaveableInput.vue';
+import Formatter from '../../../helpers/Formatter'
+
+const invertersInInventory = ref(false);
+const showAdditionalInverterDetails = ref(false);
+
+const handleClick = () => 
+    showAdditionalInverterDetails.value = !showAdditionalInverterDetails.value;
+
+const quantity = ref(1);
+const acOutputQuantity = ref(10_000);
+
+</script>
+
 <template>
     <div class="overflow-x-hidden">
  	    <div class="row align-items-baseline border-bottom py-3 px-4">
@@ -11,13 +27,14 @@
 	        <p class="text-muted mb-0">Search to add an inverter</p>
 	    </div>
 	    <div class="position-relative" v-else>
-			<div class="inverter-control position-absolute text-end d-inline-flex align-items-center gap-3">
+			<div  class="inverter-control position-absolute text-end d-inline-flex align-items-center gap-3">
 		        <font-awesome-icon
 			        class="fs-13px text-secondary"
 			        icon="fas fa-trash"
 		        />
 
 				<font-awesome-icon
+                    @click="handleClick"
 				    class="text-secondary fs-14px"
 				    style="transform: rotate(-90deg);"
 				    icon="fas fa-chevron-right"
@@ -39,11 +56,12 @@
 			    </p>
 			    <div class="col-md-8">
 				    <div class="d-flex align-items-center gap-3">
-				        <p class="text-black fs-14px mb-0">1</p>
-		                <font-awesome-icon
-			                class="fs-13px text-secondary"
-			                icon="fas fa-pen"
-		                />
+				        <!-- <p class="text-black fs-14px mb-0">1</p> -->
+		          <!--       <font-awesome-icon -->
+			         <!--        class="fs-13px text-secondary" -->
+			         <!--        icon="fas fa-pen" -->
+		          <!--       /> -->
+		                <SaveableInput v-model="quantity" />
 				    </div>
 
 		            <div class="info-table d-flex align-items-center" style="gap: 7rem;">
@@ -80,15 +98,14 @@
 			    </div>
 		    </div>
 
-            <div class="row mt-4 position-relative">
-			    <p class="text-end fs-14px col-md-4 text-secondary">
+            <div class="row mt-4 align-items-center position-relative">
+			    <p class="text-end fs-14px col-md-4 text-secondary mb-0">
 				    AC Output limit
 			    </p>
 			    <div class="col-md-8 d-flex align-items-center gap-3">
-				    <p class="fs-14px mb-0">10,000 VA</p>
-		            <font-awesome-icon
-			            class="fs-12px text-secondary"
-			            icon="fas fa-pen"
+		            <SaveableInput  
+		                v-model="acOutputQuantity" 
+                        :amount-formatter="(num) => Formatter.toIntlFormat(num) + ' VA'"
 		            />
 		            <small class="text-primary fs-12px fw-bold">Maximise AC Output</small>
 			    </div>
@@ -97,12 +114,6 @@
     </div>
 </template>
 
-<script setup>
-import {ref} from 'vue';
-
-const invertersInInventory = ref(false);
-
-</script>
 
 <style lang="scss" scoped>
 .inverter-control {

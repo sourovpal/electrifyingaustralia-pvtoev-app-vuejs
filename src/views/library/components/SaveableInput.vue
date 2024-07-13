@@ -2,7 +2,8 @@
 	<div>
 		<template v-if="!toggleInput">
 			<div class="d-flex gap-2 align-items-center">
-				<p class="fs-14px mb-0 text-black">{{ modelValue }}</p>
+				<p class="fs-14px mb-0 text-black" v-if="amountFormatter">{{ amountFormatter(modelValue) }}</p>
+				<p class="fs-14px mb-0 text-black" v-else>{{ modelValue }}</p>
 				<button
 					class="btn btn-sm toggle-btn rounded-circle btn-light"
 					@click="handlePenClick"
@@ -20,6 +21,7 @@
 					id="saveable-input-input"
 					type="text"
 					class="form-control"
+				    @keyup.enter="handleSave"
 					v-model="updatedStcPrice"
 				/>
 				<button
@@ -45,7 +47,7 @@
 <script setup>
 import {ref} from 'vue'
 
-const props = defineProps(['modelValue'])
+const props = defineProps(['modelValue', 'amountFormatter'])
 const emit = defineEmits(['update:modelValue'])
 
 const toggleInput = ref(false)

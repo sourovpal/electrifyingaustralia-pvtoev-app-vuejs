@@ -1,8 +1,12 @@
 <script setup>
 import { ref } from 'vue';
 import SaveableInput from '../components/SaveableInput.vue';
+import Formatter from '../../../helpers/Formatter';
 
-const totalAmount = ref('$27,990');
+const totalAmount = ref(27990);
+const dailySupplyCharge = ref(1.00);
+const electricityRate = ref(0.34);
+const tariffFeed = ref(0.10);
 
 </script>
 
@@ -13,8 +17,11 @@ const totalAmount = ref('$27,990');
 				Total amount
 			</p>
 			<div class="col-md-8">
-			    <SaveableInput v-model="totalAmount" />
-				<p class="fs-12px">
+			    <SaveableInput 
+			        :amount-formatter="(num) => '$' + Formatter.toIntlFormat(num)" 
+			        v-model="totalAmount" 
+			    />
+ 			    <p class="fs-12px">
 				    This is used to calculate the customer's energy usage and provides the baseline for the <span class="text-info">financial outcomes</span> charts. 
 				</p>
 			</div>
@@ -42,11 +49,10 @@ const totalAmount = ref('$27,990');
 			</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">$1.00 per day</p>
-					<font-awesome-icon
-					    class="text-secondary fs-14px"
-					    icon="fas fa-pen"
-					/>
+			        <SaveableInput 
+			            :amount-formatter="(num) => '$' + Formatter.toIntlFormat(num)" 
+			            v-model="dailySupplyCharge" 
+			        />
 				</div>
 				<p class="fs-12px"> The daily charge is inclusive in the customer's bill. </p>
 			</div>
@@ -58,11 +64,10 @@ const totalAmount = ref('$27,990');
 			</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">$0.34 per kWh</p>
-					<font-awesome-icon
-					    class="text-secondary fs-14px"
-					    icon="fas fa-pen"
-					/>
+			        <SaveableInput 
+			            :amount-formatter="(num) => '$' + Formatter.toIntlFormat(num) + ' per kWh'" 
+			            v-model="electricityRate" 
+			        />
 				</div>
 				<p class="fs-12px"> The electricity rate is used when calculating the savings from not consuming utility power. </p>
 			</div>
@@ -74,11 +79,10 @@ const totalAmount = ref('$27,990');
 			</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">$0.07 per kWh</p>
-					<font-awesome-icon
-					    class="text-secondary fs-14px"
-					    icon="fas fa-pen"
-					/>
+			        <SaveableInput 
+			            :amount-formatter="(num) => '$' + Formatter.toIntlFormat(num) + ' per kWh'" 
+			            v-model="tariffFeed" 
+			        />
 				</div>
 				<p class="fs-12px">This is used when self consumption is not 100%.</p>
 			</div>

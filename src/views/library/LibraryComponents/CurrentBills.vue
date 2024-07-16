@@ -45,6 +45,7 @@ const tariffFeed = ref(0.10);
 			        <SaveableInput 
 			            v-model="billSeason" 
 			            :input-type="'select'"
+			            :option-list="seasonList"
 			        />
 				</div>
 				<p class="fs-12px"> For which season was the bill amount above? </p>

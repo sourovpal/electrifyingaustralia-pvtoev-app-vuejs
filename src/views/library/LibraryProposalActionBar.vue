@@ -16,6 +16,8 @@ const owners = ref([
 	{ id: 8, name: 'beans', display_name: null, email: 'fahim@gmail.com', profile_avatar: 'https://ui-avatars.com/api/?background=48D1CC&color=fff&name=beans&bold=true&id=83', is_owner: 1, user_role: null, },
 ])
 
+const emit = defineEmits(['link-to-crm-click']);
+
 
 onMounted(() => {
     simulateApiCall();
@@ -27,6 +29,10 @@ const simulateApiCall = () => {
     setTimeout(() => {
         isLoading.value = false;
     }, 1500);
+}
+
+const handleLinkToCrmBtnClick = () => {
+    emit('link-to-crm-click');
 }
 
 </script>
@@ -75,7 +81,12 @@ const simulateApiCall = () => {
 				    class="text-success d-none d-xl-inline"
 				    icon="fas fa-check"
 				/>
-				<button class="btn btn-transparent text-info btn-link rounded-lg --shadow-none fw-bold">Link to CRM</button>
+				<button
+				    @click="handleLinkToCrmBtnClick" 
+				    class="btn btn-transparent text-info btn-link rounded-lg fw-bold"
+				>
+				    Link to CRM
+				</button>
                 <LibraryDesignDropdownList />
 
                 <div class="dropdown">

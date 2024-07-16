@@ -3,18 +3,37 @@ import SearchBar from '../../components/SearchBar.vue'
 import LibraryProposalActionBar from './LibraryProposalActionBar.vue'
 import ProjectStatus from './ProjectStatus.vue'
 import ProposalDetails from './ProposalDetails.vue'
+import LinkToCrmModal from './LinkToCrmModal/LinkToCrmModal.vue'
+import { ref } from 'vue'
+
+const crmLinkModalClose = ref(false);
+const openCrmModal = () => {
+    crmLinkModalClose.value = true;
+}
+
+const handleCrmLinkModalClose = () => {
+    crmLinkModalClose.value = false;
+}
+
 
 </script>
 
 <template>
 	<section class="content lead-list --content-y-100vh">
 		<SearchBar placeholder-text="Search for a project" />
-        <LibraryProposalActionBar class="d-none d-md-flex" />
+        <LibraryProposalActionBar
+            class="d-none d-md-flex" 
+            @link-to-crm-click="openCrmModal"
+        />
 
         <section class="row no-wrap proposal-content-wrapper mx-auto mx-md-0 mt-3">
 	        <ProposalDetails class="d-none d-md-block" />
 	        <ProjectStatus />
 	    </section>
+	    <LinkToCrmModal
+		    @close="handleCrmLinkModalClose"
+		    v-if="crmLinkModalClose"
+	    />
 	</section>
 </template>
 

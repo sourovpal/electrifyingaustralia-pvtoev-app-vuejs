@@ -3,6 +3,15 @@ import { ref } from 'vue';
 import SaveableInput from '../components/SaveableInput.vue';
 import Formatter from '../../../helpers/Formatter';
 
+const billSeason = ref('winter');
+
+const seasonList = [
+    {id: 'winter', label: 'Winter'},
+    {id: 'summer', label: 'Summer'},
+    {id: 'autumn', label: 'Autumn'},
+    {id: 'spring', label: 'Spring'},
+]
+
 const totalAmount = ref(27990);
 const dailySupplyCharge = ref(1.00);
 const electricityRate = ref(0.34);
@@ -33,11 +42,10 @@ const tariffFeed = ref(0.10);
 			</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">Winter</p>
-					<font-awesome-icon
-					    class="text-secondary fs-14px"
-					    icon="fas fa-pen"
-					/>
+			        <SaveableInput 
+			            v-model="billSeason" 
+			            :input-type="'select'"
+			        />
 				</div>
 				<p class="fs-12px"> For which season was the bill amount above? </p>
 			</div>

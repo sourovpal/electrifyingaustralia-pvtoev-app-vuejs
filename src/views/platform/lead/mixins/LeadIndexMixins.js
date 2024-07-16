@@ -43,16 +43,23 @@ export default {
         };
     },
     watch: {
-        "currentRoute"(to) {
+        "currentRoute"(to, from) {
+            var query = {};
+            if(to.query.status !== from.query.status){
+                query['page'] = 1;
+            }
+            this.fetchAllLeadsHandler(query);
+
             this.fullpath = to?.fullPath;
         },
     },
     methods: {
         paginationHandler(payload=null) {
+            var query = { ...this.$route.query, ...payload };
             if(payload){
                 this.$router.push({
                     path: '/platform/leads',
-                    query: { ...this.$route.query, ...payload },
+                    query,
                 });
             }else{
                 this.$router.push({
@@ -60,7 +67,6 @@ export default {
                     query:{page:1},
                 });
             }
-            this.fetchAllLeadsHandler();
         },
         toggleFilterSidebarHandler(stage = 'close') {
             if (stage == 'close') {
@@ -86,35 +92,32 @@ export default {
         async fetchAllLeadsHandler(payload = {}) {
             try {
                 this.isLoading = true;
-
                 var query = this.$route.query;
-                this.payload = { ...payload, ...query };
-
+                this.payload = { ...query, ...payload};
+                
                 if (Object.keys(this.customFilterFormData).length) {
-                    var search = JSON.stringify(this.customFilterFormData);
-                    if (search) {
-                        this.payload["search"] = search;
+                    var filters = JSON.stringify(this.customFilterFormData);
+                    if (filters) {
+                        this.payload["filters"] = filters;
                     }
                 }
-
-                if (!payload["page"]) {
-                    this.payload["page"] = this.$route.query.page ?? this.pagination?.current_page ?? 1;
+                
+                if (!this.payload["page"]) {
+                    this.payload["page"] = this.pagination?.current_page ?? 1;
                 }
 
-                if (!payload["limit"]) {
+                if (!this.payload["limit"]) {
                     this.payload["limit"] = this.limit;
                 }
 
-                if (!payload["column"]) {
+                if (!this.payload["column"]) {
                     this.payload["column"] = this.column;
                 }
 
-                if (!payload["order"]) {
+                if (!this.payload["order"]) {
                     this.payload["order"] = this.order;
                 }
-
                 const res = await FetchLeads(this.payload);
-
                 try {
                     this.selectedRows = [];
                     this.isSelectedAllRows = false;

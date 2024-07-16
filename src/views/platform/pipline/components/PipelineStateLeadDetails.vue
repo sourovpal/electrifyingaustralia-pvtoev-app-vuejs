@@ -30,7 +30,6 @@
         if (lead?.post_code) {
             temp += lead?.post_code;
         }
-        console.log(temp);
         if (temp != '') {
             return temp;
         }

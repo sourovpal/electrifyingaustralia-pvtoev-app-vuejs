@@ -17,7 +17,6 @@ export const useLeadStore = defineStore('lead', {
       leadHasPipeline: [],
       primaryContact: null,
       leadContacts: [],
-      primaryContact: null,
       leadStages: [],
       leadPipelineProperties: [],
       leadSubscribers: [],

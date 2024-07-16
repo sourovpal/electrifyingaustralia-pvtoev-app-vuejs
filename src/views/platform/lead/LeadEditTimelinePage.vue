@@ -44,6 +44,11 @@ export default {
     return { leadStore, appStore, progressBar, AvatarIcon };
   },
   mixins: [LeadEditTimelineMixins],
+  unmounted() {
+    this.leadStore.setCurrentLead({});
+    this.leadStore.setPrimaryContact(null);
+    this.leadStore.setLeadContacts([]);
+  },
 };
 </script>
 

@@ -64,9 +64,10 @@
 
         <button class="btn btn-light btn-floating ms-2"
           :disabled="isLoading"
-          @click="paginationHandler()">
+          @click="fetchAllLeadsHandler">
           <svg-custom-icon icon="loader-icon" />
         </button>
+
         <button @click="$refs['DeleteMultipleLeadModalRef'].showModalHandler()"
           class="btn btn-danger btn-sm me-3 ms-3 d-flex justify-content-between align-items-center white-space-nowrap"
           v-tippy="{ content: 'Delete Leads', placement: 'top' }"
@@ -76,7 +77,9 @@
             <svg-custom-icon icon="trash-icon" />
           </span>
         </button>
+
         <!-- Leas Status -->
+
         <div v-if="selectedRows.length"
           v-tippy="{ content: 'Change Lead Status', placement: 'top' }"
           class="dropdown ms-2 d-none d-xl-block">
@@ -119,6 +122,7 @@
                 alt="" />
             </div>
           </button>
+          
           <DropdownOwnerList :owners="owners"
             :selectOwnerHandler="(item) => updateLeadOwnerHandler(item, null)" />
         </div>

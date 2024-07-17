@@ -65,6 +65,9 @@ import {
     faGear,
     faArrowRotateRight,
     faDroplet,
+    // new icons
+    faUserPlus,
+    faTag
 } from '@fortawesome/free-solid-svg-icons'
 
 const iconsToUse = [
@@ -111,6 +114,9 @@ const iconsToUse = [
     faGear,
     faArrowRotateRight,
     faDroplet,
+    // new icons
+    faUserPlus,
+    faTag
 ]
 
 library.add(iconsToUse)

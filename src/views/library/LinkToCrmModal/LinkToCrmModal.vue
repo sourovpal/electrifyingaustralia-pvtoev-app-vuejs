@@ -44,7 +44,7 @@ const owners = ref([
 				<div class="modal-body p-0 row g-0" id="modal-body">
                     <div class="row g-0">
 
-                        <div class="border col-md-8">
+                        <div class="border col-lg-8 col-6">
                             <div class="section-heading d-flex align-items-baseline justify-content-between pe-4">
                                 <div class="d-flex align-items-center gap-2" style="padding: 1.65rem 1.65rem 1rem 1.65rem">
 					                <font-awesome-icon
@@ -102,7 +102,7 @@ const owners = ref([
                         </div>
 
                         <!-- second column -->
-                        <div class="col-md-4 p-4" style="background-color: #f5f7fa;">
+                        <div class="col-lg-4 col-6 p-4" style="background-color: #f5f7fa;">
                             <div class="section-heading d-flex align-items-baseline justify-content-between">
                                 <div class="d-flex align-items-center gap-2">
 					                <font-awesome-icon

@@ -4,7 +4,7 @@ import LibraryProposalActionBar from './LibraryProposalActionBar.vue'
 import ProjectStatus from './ProjectStatus.vue'
 import ProposalDetails from './ProposalDetails.vue'
 import LinkToCrmModal from './LinkToCrmModal/LinkToCrmModal.vue'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const crmLinkModalClose = ref(false);
 const openCrmModal = () => {
@@ -14,6 +14,15 @@ const openCrmModal = () => {
 const handleCrmLinkModalClose = () => {
     crmLinkModalClose.value = false;
 }
+
+onMounted(() => {
+    window.addEventListener('resize', () => {
+        const threshold = 768;
+        if (innerWidth <= threshold) {
+            crmLinkModalClose.value = false 
+        };
+    })
+});
 
 
 </script>

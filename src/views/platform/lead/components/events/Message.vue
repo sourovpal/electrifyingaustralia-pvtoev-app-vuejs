@@ -1,52 +1,71 @@
 <script setup>
+    import EventByUser from './EventByUser.vue';
+    import UpdateLeadStatusEvent from './UpdateLeadStatusEvent.vue';
+    import ChangeLeadOwnerEvent from './ChangeLeadOwnerEvent.vue';
 
+    import { defineProps, computed } from 'vue';
+    const props = defineProps({
+        logs: {
+            type: Array,
+            default: [],
+        },
+    });
+
+    const user = computed(() => {
+        if (props.logs.length) {
+            return props.logs[0].user ?? {};
+        }
+    });
+    const createdAt = computed(() => {
+        if (props.logs.length) {
+            return props.logs[0].created_at;
+        }
+        return new Date();
+    });
 </script>
 
 <template>
-    <div class="lead-feed-row d-flex justify-content-between py-1">
-        <div class="left-feed-col d-flex">
-            <div class="me-2">
-                <div class="circle-avatar">
-                    <img :src="`https://ui-avatars.com/api/?background=random&name=Bijoy+Chowdhury&bold=true&id=${Math.random()}`"
-                        alt="">
-                </div>
-            </div>
-            <div class="">
-                <div>
-                    <span class="fs-14px fw-bold text-head d-inline-flex">Bijoy Chowdhury</span>
-                    <span class="feed-time fs-12px text-head ms-3">16:26 am</span>
-                </div>
-                <div class="d-block">
-                    <div class="fs-14px fw-bold feed-wrap mb-1">
-                        <a class="feed-badge mx-0"
-                            href="">Screenshot_89.png</a>
-                        <br>
-                        You updated the deal's quarter bill amount, appointment date
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                    </div>
-                </div>
-                <div class="d-block">
-                    <div class="fs-14px fw-bold feed-wrap mb-1">
-                        You converted the deal from <a class="feed-badge mx-0"
-                            href="">New</a> to <a class="feed-badge mx-0"
-                            href="">Newly qualified</a>
-                    </div>
-                </div>
-                <div class="d-block">
-                    <div class="fs-14px fw-bold feed-wrap mb-1">
-                        <a class="feed-badge mx-0"href="">@Sourov Pal</a>
-                    </div>
-                </div>
-                <div class="d-block">
-                    <div class="fs-14px fw-bold feed-wrap mb-1">
-                        <a class="feed-badge mx-0"href="">@Sourov Pal</a>
-                    </div>
-                </div>
+    <event-by-user :user="user"
+        :event-date-time="createdAt">
+        <div v-for="(log, index) in logs"
+            :key="index">
+            <UpdateLeadStatusEvent
+                v-if="log.event_type == 'update-lead-status' || log.event_type == 'added-lead-status' || log.event_type == 'remove-lead-status'"
+                :log="log" />
+
+            <ChangeLeadOwnerEvent
+                v-else-if="log.event_type == 'update-lead-owner' || log.event_type == 'added-lead-owner' || log.event_type == 'remove-lead-owner'"
+                :log="log" />
+        </div>
+        <div class="d-block">
+            <div class="fs-14px fw-bold feed-wrap mb-1">
+                <a class="feed-badge mx-0"
+                    href="">Screenshot_89.png</a>
+                <br>
+                You updated the deal's quarter bill amount, appointment date
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
             </div>
         </div>
-        <div class="right-feed-col">
+        <div class="d-block">
+            <div class="fs-14px fw-bold feed-wrap mb-1">
+                You converted the deal from <a class="feed-badge mx-0"
+                    href="">New</a> to <a class="feed-badge mx-0"
+                    href="">Newly qualified</a>
+            </div>
         </div>
-    </div>
+        <div class="d-block">
+            <div class="fs-14px fw-bold feed-wrap mb-1">
+                <a class="feed-badge mx-0"
+                    href="">@Sourov Pal</a>
+            </div>
+        </div>
+        <div class="d-block">
+            <div class="fs-14px fw-bold feed-wrap mb-1">
+                <a class="feed-badge mx-0"
+                    href="">@Sourov Pal</a>
+            </div>
+        </div>
+    </event-by-user>
 
     <div class="lead-feed-row d-flex justify-content-between py-1">
         <div class="left-feed-col d-flex">

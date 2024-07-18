@@ -5,7 +5,9 @@
     import '@vueup/vue-quill/dist/vue-quill.bubble.css';
     import Message from './events/Message.vue';
     import GroupByDateEvent from './events/GroupByDateEvent.vue';
-
+    import { FetchTimelineLogs } from '../../../../actions/TimelineLogAction';
+    import { ref, watch } from 'vue';
+    import { useInfiniteScroll } from '@vueuse/core'
     export default {
         components: {
             CustomScrollbar,
@@ -13,82 +15,96 @@
             Message,
             GroupByDateEvent,
         },
+        setup(props) {
+            const timelineScrollBar = ref(null);
+            return { timelineScrollBar };
+        },
         data() {
             return {
                 counter: 5,
-                messages: {
-                    "2024-07-16 00:00:00": {
-                        "2": [
-                            {
-                                "created_at": "2024-07-16T00:00:00.000000Z",
-                                "id": 1,
-                                "user_id": 2,
-                                "timeline_id": 1,
-                                "message": null,
-                                "event_type": "created-new-lead",
-                                "event_data": null
-                            }
-                        ]
-                    },
-                    "2024-07-17 00:00:00": {
-                        "2": [
-                            {
-                                "created_at": "2024-07-17T00:00:00.000000Z",
-                                "id": 2,
-                                "user_id": 2,
-                                "timeline_id": 1,
-                                "message": null,
-                                "event_type": "added-lead-source",
-                                "event_data": null
-                            }
-                        ]
-                    }
-                },
-            }
-        },
-        computed: {
-            reversedMessages() {
-                // return this.messages.slice().reverse();
+                timelineLogs: {},
+                timelinelogsDate: [],
+                isLoading: false,
+                isScrolling: false,
+                isInfiniteFetch: false,
+                total: 0,
+                isMounted: false,
+                scrollPosition: 0,
             }
         },
         methods: {
-            timelineScrollBarBottomHandler(time = 0) {
-                try {
-                    var scroll = this.$refs['leadTimelineHistoryScrollBar'];
-                    if (scroll) {
-                        var ele = scroll.scrollEl;
-                        if (ele) {
-                            setTimeout(() => {
-                                //behavior:'smooth'
-                                ele.scroll({ top: ele.scrollHeight });
-                            }, time);
+            async fetchTimelineLogsHandler(payload = {}) {
+                this.isLoading = true;
+                payload['lead_id'] = this.$route.params.id;
+                const res = await FetchTimelineLogs(payload);
+
+                this.total = res.total;
+                var logs = res?.logs ?? {};
+
+                Object.keys(logs).forEach(key => {
+                    if (Object.keys(this.timelineLogs).includes(key)) {
+                        this.timelineLogs[key] = logs[key].concat(this.timelineLogs[key]);
+                    } else {
+                        this.timelineLogs[key] = logs[key];
+                    }
+                });
+
+                this.timelinelogsDate = Object.keys(this.timelineLogs).sort();
+                this.isLoading = false;
+                this.isInfiniteFetch = true;
+                this.timelineScrollPositionBottom();
+                if(this.isMounted){
+                    this.isMounted = false;
+                }
+            },
+            infiniteLoadedTimeline(event) {
+                this.$nextTick(()=>{
+                    var position = null;
+                    this.scrollPosition = event.target.scrollHeight;
+                    if (event) {
+                        position = (100 / event.target.scrollHeight) * (event.target.scrollTop);
+                        if(position < 20 && this.isInfiniteFetch && this.total){
+                            this.isInfiniteFetch = false;
+                            this.fetchTimelineLogsHandler({total:this.total});
                         }
                     }
-                } catch (error) { }
-            }
+                });
+            },
+            timelineScrollPositionBottom() {
+                this.$nextTick(()=>{
+                    var scroll = this.timelineScrollBar;
+                    if(scroll && !this.isScrolling){
+                        this.scrollPosition = scroll.scrollHeight - this.scrollPosition;
+                        console.log(this.scrollPosition)
+                        scroll.scrollTop = this.scrollPosition;
+                    }
+                });
+            },
         },
         mounted() {
-            this.timelineScrollBarBottomHandler();
-            console.log(this.reversedMessages);
+            this.isMounted = true;
+            this.fetchTimelineLogsHandler()
+            // console.log(this.reversedMessages);
         },
     }
 </script>
 
 <template>
     <div class="col-left">
-        <div class="history-logs">
-            <CustomScrollbar ref="leadTimelineHistoryScrollBar">
-                <div class="history-area">
-                    <div class="text-center mb-1 mt-2">
-                        <span class="text-soft">No older activity to display.</span>
-                    </div>
-                    <div class="history-row"
-                        v-for="(item, index) in Object.keys(messages)"
-                        :key="index">
-                        <group-by-date-event :group="messages[item]" />
-                    </div>
+        <div class="history-logs"
+            @scroll="infiniteLoadedTimeline"
+            ref="timelineScrollBar">
+            <div class="history-area">
+                <div class="text-center mb-1 mt-2">
+                    <span class="text-soft">No older activity to display. {{ isScrolling }}</span>
                 </div>
-            </CustomScrollbar>
+                <div class="history-row"
+                    v-for="(log_date, index) in timelinelogsDate"
+                    :key="index">
+                    <group-by-date-event :logs-group="timelineLogs[log_date]"
+                        :event-date="log_date" />
+                </div>
+            </div>
         </div>
         <div class="message-box">
             <div class="tab-area border h-100 rounded">
@@ -98,7 +114,8 @@
                         role="tablist">
                         <li class="nav-item"
                             role="presentation">
-                            <button class="nav-link fs-14px py-2 fw-bold text-capitalize active">Comment</button>
+                            <button @click="timelineScrollPositionBottom"
+                                class="nav-link fs-14px py-2 fw-bold text-capitalize active">Comment</button>
                         </li>
                         <li class="nav-item"
                             role="presentation">
@@ -125,16 +142,26 @@
         border-right: 1px solid #dddddd;
         width: calc(100% - 24rem);
         position: relative;
-        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        /* height: 100vh; */
 
         @media only screen and (max-width:991.99px) {
             width: 100% !important;
         }
 
         &:deep(.history-logs) {
-            .scrollbar__scroller {
+
+            background-color: #e8ebef;
+            overflow: auto;
+            max-height: 70vh;
+            overflow: auto;
+            /* .timeline-logs {
                 background-color: #e8ebef;
-            }
+                overflow: auto;
+                max-height: 70vh;
+                overflow: auto;
+            } */
 
             .circle-avatar {
                 background-color: transparent;
@@ -180,13 +207,13 @@
                     top: 2px;
 
                     .updated-date {
-                        background: #f5f7fa;
-                        border: 1px solid #e4e7eb;
-                        -webkit-border-radius: .75rem;
-                        border-radius: .75rem;
-                        font-size: .8125rem;
+                        background: #ffffff;
+                        border: 1px solid #cacaca;
+                        -webkit-border-radius: 0.75rem;
+                        border-radius: 0.75rem;
+                        font-size: 0.8125rem;
                         font-weight: 600;
-                        padding: .125rem .5rem;
+                        padding: 0.125rem 1rem;
                         pointer-events: all;
                     }
                 }
@@ -250,7 +277,7 @@
         }
 
         .message-box {
-            position: absolute;
+            /* position: absolute; */
             width: 100%;
             min-height: 12rem;
             bottom: 100px;

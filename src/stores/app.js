@@ -15,6 +15,9 @@ export const useAppStore = defineStore('app', {
         lead_statuses:[],
         pipelines:[],
         permissions:[],
+
+        // this value is used to open the send modal on mobile screens
+        toggleSendModal: false,
     }
   },
 
@@ -37,6 +40,9 @@ export const useAppStore = defineStore('app', {
   },
 
   actions: {
+    setToggleSendModal(state = true) {
+        this.toggleSendModal = state;
+    },
     async fetchAppData() {
       this.setLocalStorageData();
       try{

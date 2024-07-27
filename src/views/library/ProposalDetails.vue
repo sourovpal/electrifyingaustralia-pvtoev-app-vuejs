@@ -20,6 +20,7 @@ import ExportLimit from './LibraryComponents/ExportLimit.vue'
 
 import CurrentBills from './LibraryComponents/CurrentBills.vue'
 import FinancialOutcomes from './LibraryComponents/FinancialOutcomes.vue'
+import TermSettings from './LibraryComponents/TermSettings.vue'
 
 import Mounting from './LibraryComponents/Mounting.vue'
 
@@ -169,10 +170,10 @@ const simulateApiCall = () => {
 				component-class="w-100 mt-2 card shadow pb-3"
 				:tabs="[
 					{label: 'Inverters', component: 'Inverters'},
-					{label: 'EVChargers', component: 'EVChargers'},
-					{label: 'HeatPumps', component: 'HeatPumps'},
+					// {label: 'EVChargers', component: 'EVChargers'},
+					// {label: 'HeatPumps', component: 'HeatPumps'},
 				]"
-				:components="{Inverters, EVChargers, HeatPumps}"
+				:components="{Inverters, /* EVChargers, HeatPumps */}"
 			/>
 
 			<TabbedDisplay
@@ -185,17 +186,17 @@ const simulateApiCall = () => {
 						component: 'BatteryStorage',
 						icon: {name: 'fa-lock'},
 					},
-					{
-						label: 'Interval analysis',
-						component: 'IntervalAnalysis',
-						icon: {name: 'fa-lock'},
-					},
+					// {
+					// 	label: 'Interval analysis',
+					// 	component: 'IntervalAnalysis',
+					// 	icon: {name: 'fa-lock'},
+					// },
 					{label: 'Export limit', component: 'ExportLimit'},
 				]"
 				:components="{
 					LoadProfile,
 					BatteryStorage,
-					IntervalAnalysis,
+					// IntervalAnalysis,
 					ExportLimit,
 				}"
 			/>
@@ -209,16 +210,22 @@ const simulateApiCall = () => {
 						label: 'Financial Outcomes',
 						component: 'FinancialOutcomes',
 					},
+					{
+						label: 'Settings',
+						component: 'TermSettings',
+						icon: {name: 'fa-gear', toRight: true},
+						toRight: true,
+					},
 				]"
-				:components="{CurrentBills, FinancialOutcomes}"
+				:components="{CurrentBills, FinancialOutcomes, TermSettings}"
 			/>
 
-			<TabbedDisplay
-				class="w-100 mt-5"
-				component-class="w-100 mt-2 card shadow pb-4"
-				:tabs="[{label: 'Mounting', component: 'Mounting'}]"
-				:components="{Mounting}"
-			/>
+			<!-- <TabbedDisplay -->
+			<!-- 	class="w-100 mt-5" -->
+			<!-- 	component-class="w-100 mt-2 card shadow pb-4" -->
+			<!-- 	:tabs="[{label: 'Mounting', component: 'Mounting'}]" -->
+			<!-- 	:components="{Mounting}" -->
+			<!-- /> -->
 			<TabbedDisplay
 				class="w-100 mt-5"
 				component-class="w-100 mt-2 card shadow"
@@ -228,9 +235,9 @@ const simulateApiCall = () => {
 						component: 'CustomSettings',
 					},
 					{label: 'Notes', component: 'Notes'},
-					{label: 'Wholesaler', component: 'Wholesaler'},
+					// {label: 'Wholesaler', component: 'Wholesaler'},
 				]"
-				:components="{CustomSettings, Notes, Wholesaler}"
+				:components="{CustomSettings, Notes, /* Wholesaler */}"
 			/>
 			<p style="margin-top: 50rem">DELETE THIS TAG</p>
 		</div>

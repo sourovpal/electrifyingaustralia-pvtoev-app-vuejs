@@ -1,5 +1,5 @@
 <template>
-    <div :class="`custom-checkbox ${active ? 'active' : ''}`">
+    <div @click="handleClick" :class="`custom-checkbox ${modelValue ? 'active' : ''}`">
         <div class="circle">
 			<font-awesome-icon
 				class="fs-12px check-sign"
@@ -11,10 +11,19 @@
 
 <script setup>
 const props = defineProps({
-    active: {
+    modelValue: {
         default: false,
     }
 });
+
+const emit = defineEmits(['update:modelValue']);
+
+const handleClick = () => emit(
+    'update:modelValue', 
+    !props.modelValue
+);
+
+
 </script>
 
 <style lang="scss" scoped>

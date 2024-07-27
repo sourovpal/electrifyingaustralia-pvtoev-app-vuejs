@@ -121,7 +121,7 @@ const routes = [
                         },
                     },
                     {
-                        name:'LibraryProposals',
+                        name:'LibraryProposals', // DO NOT CHANGE THIS NAME
                         path:'proposals',
                         component:()=>import('../views/library/LibraryProposalList.vue'),
                         beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),

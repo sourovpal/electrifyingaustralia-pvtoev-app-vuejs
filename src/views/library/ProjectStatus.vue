@@ -1,10 +1,21 @@
 <script setup>
 import ShareModal from './ShareModal/ShareModal.vue'
 import ProjectInstallModal from './ProjectInstallModal/ProjectInstallModal.vue'
-import {ref, onMounted} from 'vue'
+import {ref, onMounted, watch} from 'vue'
+import {storeToRefs} from 'pinia'
+import { useAppStore } from '../../stores/app';
 import {Skeletor} from 'vue-skeletor'
 
-const shareModalOpen = ref(false)
+const appStore = useAppStore();
+const { toggleSendModal } = storeToRefs(appStore);
+
+watch(toggleSendModal, (newValue) => {
+    if (!newValue) return; // to prevent infinite recursion
+    shareModalOpen.value = newValue;
+    appStore.setToggleSendModal(false); // resetting it immediately after opening the modal
+});
+
+const shareModalOpen = ref(false);
 
 const handleShareBtnClick = () => {
 	shareModalOpen.value = true

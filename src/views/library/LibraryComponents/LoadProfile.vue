@@ -6,7 +6,7 @@
 			</p>
 			<div class="col-md-8">
 				<!-- placeholder -->
-				<CustomCheckbox />
+				<CustomCheckbox v-model="simulateLoadProfile" />
 			</div>
 		</div>
 		<div class="row align-items-baseline py-3 px-4">
@@ -32,6 +32,7 @@ import CustomCheckbox from '../../../components/forms/CustomCheckbox.vue'
 import SaveableInput from '../components/SaveableInput.vue';
 
 const selfConsumption = ref(40);
+const simulateLoadProfile = ref(false);
 
 </script>
 

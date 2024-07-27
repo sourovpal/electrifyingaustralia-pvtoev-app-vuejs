@@ -27,3 +27,12 @@ npm run dev
 ```sh
 npm run build
 ```
+
+Myself
+Iehtesham
+Tahlil
+Hanzalah
+Syum
+Abrar
+Raiyan
+Sadaf

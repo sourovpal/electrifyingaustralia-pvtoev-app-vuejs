@@ -1,4 +1,14 @@
-<script>
+<script setup>
+import { useRouter } from 'vue-router';
+import {useAppStore} from '../stores/app.js';
+
+const router = useRouter();
+const routeName = router?.currentRoute?.value?.name ?? null;
+
+const appStore = useAppStore();
+
+const handleShareModalBtnClick = () => appStore.setToggleSendModal(true);
+
 
 </script>
 
@@ -13,6 +23,14 @@
             <!-- <div class="title">Leads</div> -->
         </div>
         <div class="navbar-right">
+            <!-- is -->
+            <div class="nav-item" @click="handleShareModalBtnClick" v-if="routeName === 'LibraryProposals'">
+                <a href="javascript:;" class="navbar-brand nav-link align-items-end">
+					<font-awesome-icon
+						icon="fas fa-share-nodes"
+					/>
+                </a>
+            </div>
             
             <div class="nav-item">
                 <a href="" class="navbar-brand nav-link align-items-end">

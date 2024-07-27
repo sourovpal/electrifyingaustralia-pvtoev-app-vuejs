@@ -8,12 +8,11 @@ import ShareHistory from './ShareHistory.vue'
 const props = defineProps(['activeTab']);
 const emit = defineEmits(['close']);
 
-const componentToShow = computed(() => {
-    if (props.activeTab === 'send-proposal') return SendProposalInput;
-    if (props.activeTab === 'esignature-input') return ESignatureInput;
-    if (props.activeTab === 'share-history') return ShareHistory;
-    return '';
-});
+const componentToShow = computed(() => ({
+    'send-proposal': SendProposalInput,
+    'esignature-input': ESignatureInput,
+    'share-history': ShareHistory,
+})[props.activeTab]);
 
 const handleCloseClick = () => {
     emit('close');

@@ -21,11 +21,11 @@ const handleCloseClick = () => {
 </script>
 
 <template>
-	<div class="content-wrapper py-4 px-3 h-100 position-relative col-md-9">
+	<div class="content-wrapper py-md-4 px-3 h-100 position-relative col-md-9">
         <button
             @click="handleCloseClick"
             type="button"
-            class="position-absolute btn btn-light p-0"
+            class="position-absolute d-none d-md-block btn btn-light p-0"
             style="right: 0.75rem; top: 0.75rem;"
             data-bs-dismiss="modal"
             aria-label="Close">

@@ -54,14 +54,14 @@
             <button class="btn btn-light">Reset</button>
             <button class="btn btn-primary d-flex align-items-center gap-2">
                 <span>Send</span>
-                <img
-                class="me-1"
-                src="https://app.getpylon.com/img/gem.png"
-                alt="gemstone" 
-            />
-                <span class="count">0</span>
+                <!-- <img -->
+                <!--     class="me-1" -->
+                <!--     src="https://app.getpylon.com/img/gem.png" -->
+                <!--     alt="gemstone"  -->
+                <!-- /> -->
+                <!-- <span class="count">0</span> -->
                 <font-awesome-icon
-			    icon="fas fa-paper-plane"
+			        icon="fas fa-paper-plane"
 			    />
             </button>
         </div>

@@ -27,6 +27,7 @@ const handleModalClose = () => {
     emit('close');
 };
 const handleTabClick = (tabName) => {
+    console.log('beans123');
     activeTab.value = tabName;
 }
 
@@ -37,8 +38,15 @@ const handleTabClick = (tabName) => {
 		<div class="modal-dialog modal-xl modal-fullscreen-lg-down modal-dialog-centered custom-radius share-modal-dialog">
 			<div class="modal-content custom-radius">
 				<div class="modal-body p-0 row g-0" id="modal-body">
-				    <ModalSidebar class="d-none d-md-block" @tab-click="handleTabClick" />
-				    <ModalNav class="d-md-none" />
+				    <ModalSidebar 
+				        class="d-none d-md-block" 
+				        @tab-click="handleTabClick" 
+				    />
+				    <ModalNav
+				        class="d-md-none" 
+				        @tab-click="handleTabClick" 
+                        @close="handleModalClose"
+				    />
 				    <ModalBody @close="handleModalClose" :activeTab="activeTab" />
 				</div>
 			</div>

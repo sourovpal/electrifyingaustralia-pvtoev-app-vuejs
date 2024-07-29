@@ -3,11 +3,11 @@
 <template>
 	<div class="content-body">
 		<div class="header d-flex align-items-center gap-2 mb-3">
-			<p class="mb-0 lead text-black fw-bold fs-18px">Share history</p>
+			<p class="mb-0 lead mt-4 mt-md-0 text-black fw-bold fs-18px">Share history</p>
 		</div>
 
 		<div class="row g-0">
-			<div class="col-md-8 --p-2 rounded">
+			<div class="col-md-8 rounded">
 				<div class="info-card active-info-card p-2 d-flex rounded gap-2 mb-3" style="width: 98%;">
 					<div class="icon-wrapper">
 						<svg

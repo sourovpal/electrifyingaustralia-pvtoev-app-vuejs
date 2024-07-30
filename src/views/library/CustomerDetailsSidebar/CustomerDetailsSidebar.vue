@@ -23,7 +23,7 @@ $sidebar-width: 20rem;
     background-color: #ffffff;
     width: $sidebar-width;
     transition: 200ms;
-    box-shadow: -3px 0px 5px 0px #adadad;
+    border-left: 2px solid rgb(59, 113, 202);
 
     z-index: 999;
     position: fixed;

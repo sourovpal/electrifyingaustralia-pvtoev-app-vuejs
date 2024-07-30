@@ -670,9 +670,8 @@ textarea::-webkit-scrollbar {
 
 .custom-blur {
   filter: blur(3px);
-  & > * {
-    pointer-events: none;
-  }
+
+  & > * { pointer-events: none; }
 }
 
 .loading-opacity {

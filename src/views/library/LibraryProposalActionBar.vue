@@ -16,7 +16,7 @@ const owners = ref([
 	{ id: 8, name: 'beans', display_name: null, email: 'fahim@gmail.com', profile_avatar: 'https://ui-avatars.com/api/?background=48D1CC&color=fff&name=beans&bold=true&id=83', is_owner: 1, user_role: null, },
 ])
 
-const emit = defineEmits(['link-to-crm-click']);
+const emit = defineEmits(['link-to-crm-click', 'open-customer-details-sidebar']);
 
 
 onMounted(() => {
@@ -35,6 +35,10 @@ const handleLinkToCrmBtnClick = () => {
     emit('link-to-crm-click');
 }
 
+const handleAddressClick = () => {
+    emit('open-customer-details-sidebar');
+}
+
 </script>
 
 <template>
@@ -44,7 +48,7 @@ const handleLinkToCrmBtnClick = () => {
 			    <Skeletor />
 			    <Skeletor width="65%" />
 			</div>
-			<div v-else>
+			<div class="cursor-pointer" @click="handleAddressClick" v-else>
 				<p class="mb-0">
 					185 Military Road , Dover Heights
 					<span class="text-secondary d-none d-lg-inline">New South Wales</span>

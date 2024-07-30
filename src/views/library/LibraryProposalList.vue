@@ -4,6 +4,7 @@ import LibraryProposalActionBar from './LibraryProposalActionBar.vue'
 import ProjectStatus from './ProjectStatus.vue'
 import ProposalDetails from './ProposalDetails.vue'
 import LinkToCrmModal from './LinkToCrmModal/LinkToCrmModal.vue'
+import CustomerDetailsSidebar from './CustomerDetailsSidebar/CustomerDetailsSidebar.vue'
 import { onMounted, ref } from 'vue'
 
 const crmLinkModalClose = ref(false);
@@ -24,15 +25,24 @@ onMounted(() => {
     })
 });
 
+// section.library-menu, section.content.lead-list > section
+const customerDetailsSidebarOpen = ref(false);
+const handleCustomerDetailsSidebarOpen = () => {
+    customerDetailsSidebarOpen.value = true; 
+}
 
 </script>
 
 <template>
 	<section class="content lead-list --content-y-100vh">
+        <CustomerDetailsSidebar
+            :class="customerDetailsSidebarOpen ? '' : 'hidden'" 
+        />
 		<SearchBar placeholder-text="Search for a project" />
         <LibraryProposalActionBar
             class="d-none d-md-flex" 
             @link-to-crm-click="openCrmModal"
+            @open-customer-details-sidebar="handleCustomerDetailsSidebarOpen"
         />
 
         <section class="row no-wrap proposal-content-wrapper mx-auto mx-md-0 mt-3">

@@ -668,6 +668,13 @@ textarea::-webkit-scrollbar {
   outline: none;
 }
 
+.custom-blur {
+  filter: blur(3px);
+  & > * {
+    pointer-events: none;
+  }
+}
+
 .loading-opacity {
   transition: 100ms;
   opacity: 50%;

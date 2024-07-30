@@ -1,11 +1,18 @@
 <template>
-    <div class="customer-detail-sidebar">
-        <p class="display-1">beans</p>
+    <div class="customer-detail-sidebar content py-2 content-y-100vh">
+        <p class="sidebar-heading border-bottom fw-bold px-3">Customer details</p>
+
+        <div class="sidebar-content px-3">
+            <div>
+                <label class="fs-13px">Customer name</label>
+                <input type="text" class="form-control" />
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup>
-
+// section.library-menu, section.content.lead-list > section
 
 </script>
 
@@ -13,9 +20,10 @@
 $sidebar-width: 20rem;
 
 .customer-detail-sidebar {
-    background-color: #bada55;
+    background-color: #ffffff;
     width: $sidebar-width;
     transition: 200ms;
+    box-shadow: -3px 0px 5px 0px #adadad;
 
     z-index: 999;
     position: fixed;
@@ -23,9 +31,11 @@ $sidebar-width: 20rem;
     top: 0;
     bottom: 0;
 
-    &.hidden {
-        right: -$sidebar-width;
-    }
+    &.hidden { right: -$sidebar-width; }
+}
+
+.sidebar-heading {
+    padding-bottom: 0.75rem;
 }
 
 </style>

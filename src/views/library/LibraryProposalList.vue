@@ -6,6 +6,9 @@ import ProposalDetails from './ProposalDetails.vue'
 import LinkToCrmModal from './LinkToCrmModal/LinkToCrmModal.vue'
 import CustomerDetailsSidebar from './CustomerDetailsSidebar/CustomerDetailsSidebar.vue'
 import { onMounted, ref } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useAppStore } from '../../stores/app'
+import { onClickOutside } from '@vueuse/core'
 
 const crmLinkModalClose = ref(false);
 const openCrmModal = () => {
@@ -25,27 +28,40 @@ onMounted(() => {
     })
 });
 
+const appStore = useAppStore();
+const { toggleCustomerDetailsSidebar } = storeToRefs(appStore);
+
 // section.library-menu, section.content.lead-list > section
-const customerDetailsSidebarOpen = ref(false);
+// const customerDetailsSidebarOpen = ref(false);
 const handleCustomerDetailsSidebarOpen = () => {
-    customerDetailsSidebarOpen.value = true; 
+    appStore.setToggleCustomerDetailsSidebar(true);
 }
+
+const sidebar = ref(null);
+onClickOutside(sidebar, () => {
+    if (!toggleCustomerDetailsSidebar) return;
+    appStore.setToggleCustomerDetailsSidebar(false);
+});
 
 </script>
 
 <template>
 	<section class="content lead-list --content-y-100vh">
         <CustomerDetailsSidebar
-            :class="customerDetailsSidebarOpen ? '' : 'hidden'" 
+            ref="sidebar"
+            :class="toggleCustomerDetailsSidebar ? '' : 'hidden'" 
         />
-		<SearchBar placeholder-text="Search for a project" />
+		<SearchBar :class="toggleCustomerDetailsSidebar ? 'custom-blur' : ''" placeholder-text="Search for a project" />
         <LibraryProposalActionBar
             class="d-none d-md-flex" 
+            :class="toggleCustomerDetailsSidebar ? 'custom-blur' : ''"
             @link-to-crm-click="openCrmModal"
             @open-customer-details-sidebar="handleCustomerDetailsSidebarOpen"
         />
 
-        <section class="row no-wrap proposal-content-wrapper mx-auto mx-md-0 mt-3">
+        <section
+            :class="toggleCustomerDetailsSidebar ? 'custom-blur' : ''"
+            class="row no-wrap proposal-content-wrapper mx-auto mx-md-0 mt-3">
 	        <ProposalDetails class="d-none d-md-block" />
 	        <ProjectStatus />
 	    </section>

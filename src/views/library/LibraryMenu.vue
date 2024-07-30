@@ -1,5 +1,5 @@
 <template>
-    <section class="library-menu">
+    <section :class="`library-menu ${ toggleCustomerDetailsSidebar ? 'custom-blur' : '' }`">
         <div class="submenu-header">
             <h1 v-if="!isLoading">beans</h1>
             <Skeletor v-else />
@@ -29,6 +29,11 @@
 import { onMounted, ref } from 'vue';
 import LibraryMenuItem from './LibraryMenuItem.vue';
 import { Skeletor } from 'vue-skeletor';
+import { useAppStore } from '../../stores/app';
+import { storeToRefs } from 'pinia';
+
+const appStore = useAppStore()
+const { toggleCustomerDetailsSidebar } = storeToRefs(appStore);
 
 onMounted(() => {
     simulateApiCall();

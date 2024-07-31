@@ -24,6 +24,7 @@ onMounted(() => {
         const threshold = 768;
         if (innerWidth <= threshold) {
             crmLinkModalClose.value = false 
+            appStore.setToggleCustomerDetailsSidebar(false);
         };
     })
 });
@@ -31,8 +32,6 @@ onMounted(() => {
 const appStore = useAppStore();
 const { toggleCustomerDetailsSidebar } = storeToRefs(appStore);
 
-// section.library-menu, section.content.lead-list > section
-// const customerDetailsSidebarOpen = ref(false);
 const handleCustomerDetailsSidebarOpen = () => {
     appStore.setToggleCustomerDetailsSidebar(true);
 }

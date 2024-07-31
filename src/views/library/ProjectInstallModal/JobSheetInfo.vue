@@ -94,8 +94,8 @@ const handleCloseClick = () => {
                     <p class="text-muted fs-13px mb-2">Unsolicited Customer</p>
 
                     <div class="btn-group shadow-none me-3 w-100 rounded border" style="padding: 0.125rem;">
-                        <button class="btn btn-secondary text-muted">Unsolicited</button>
-                        <button class="btn btn-primary">Solicited</button>
+                        <button class="btn btn-sm btn-secondary text-muted">Unsolicited</button>
+                        <button class="btn btn-sm btn-primary">Solicited</button>
                     </div>
                 </div>
 

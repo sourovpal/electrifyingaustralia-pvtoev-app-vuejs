@@ -1,4 +1,5 @@
 <script setup>
+import  axios from '../../actions/api.js';
 import {ref} from 'vue';
 import SearchBar from '../../components/SearchBar.vue';
 import ActionBar from '../../components/ActionBar/ActionBar.vue';
@@ -18,6 +19,13 @@ const handleRowClick = () => {
     router.push('/library/proposals');
 }
 
+const handleProjectCreate = () => {
+    axios.post('projects/create')
+        .then(res => {
+            console.log(res);
+        })
+}
+
 </script>
 
 <template>
@@ -25,6 +33,8 @@ const handleRowClick = () => {
         <SearchBar
             placeholderText="Search for a project" 
         />
+        <!-- temporary -->
+        <button @click="handleProjectCreate" class="btn btn-primary">Create Project</button>
         <action-bar>
             <left-action-bar>
                 <div class=" d-flex justify-content-center align-item-start">

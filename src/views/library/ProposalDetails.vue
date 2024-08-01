@@ -151,7 +151,7 @@ const simulateApiCall = () => {
 					{label: 'Financing', component: 'Financing'},
 					{label: 'Rebates', component: 'Rebates'},
 					{
-						label: 'Settings',
+						label: 'Payment settings',
 						component: 'CertificateSettings',
 						icon: {name: 'fa-gear', toRight: true},
 						toRight: true,
@@ -211,7 +211,7 @@ const simulateApiCall = () => {
 						component: 'FinancialOutcomes',
 					},
 					{
-						label: 'Settings',
+						label: 'Term Settings',
 						component: 'TermSettings',
 						icon: {name: 'fa-gear', toRight: true},
 						toRight: true,

@@ -1,8 +1,17 @@
 
-export const CONFIG ={
+export const CONFIG = {
     ...import.meta.env,
-    TOAST:{
+    TOAST: {
         position: 'bottom',
-        duration:5000,
+        duration: 5000,
+    },
+    TIPPYOPTIONS: {
+        directive: 'tippy',
+        component: 'tippy',
+        componentSingleton: 'tippy-singleton',
+        defaultProps: {
+            placement: 'auto-end',
+            allowHTML: true,
+        },
     }
 }

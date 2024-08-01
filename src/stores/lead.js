@@ -1,125 +1,184 @@
 import { defineStore } from 'pinia';
-import {useAppStore} from "../stores/app";
+import { useAppStore } from "../stores/app";
 
 export const useLeadStore = defineStore('lead', {
   state: () => {
     return {
-      leadPrevUrl:null,
-      findLead:{},
-      prev_lead:null,
-      next_lead:null,
-      leadProperties:[],
-      leadCustomProperties:[],
-      leadSources:[],
-      owners:[],
-      currentOwner:null,
-      pipelines:[],
-      leadPipeline:[],
-      leadHasPipeline:[],
-      primaryContact:null,
-      leadContacts:[],
-      primaryContact:null,
-      leadStatus:[],
+      leadPrevUrl: null,
+      currentLead: {},
+      prev_lead: null,
+      next_lead: null,
+      leadProperties: [],
+      leadPropertiesValues:{},
+      leadSources: [],
+      leadOwner: null,
+      pipelines: [],
+      leadPipeline: [],
+      leadHasPipeline: [],
+      primaryContact: null,
+      leadContacts: [],
+      leadStages: [],
+      leadPipelineProperties: [],
+      leadSubscribers: [],
+      isPipelineLead:false,
+      pipelineProperties:[],
+      leadFiles:[],
     }
   },
-  getters:{
-    getLeadPrevUrl(state){
+  getters: {
+    getLeadPrevUrl(state) {
       return state.leadPrevUrl;
     },
-    getFindLead(state){
-      return state.findLead;
+    getCurrentLead(state) {
+      return state.currentLead;
     },
-    getNextLead(state){
-      return state.next_lead;
-    },
-    getPrevLead(state){
+    getPrevLead(state) {
       return state.prev_lead;
     },
-    getLeadStatus(state){
-      return state.leadStatus;
+    getNextLead(state) {
+      return state.next_lead;
     },
-    getLeadProperties(state){
+    getLeadProperties(state) {
       return state.leadProperties;
     },
-    getLeadCustomProperties(state){
-      return state.leadCustomProperties;
+    getPipelineProperties(state) {
+      return state.pipelineProperties;
     },
-    getLeadSources(state){
+    getLeadPropertiesValues(state) {
+      return state.leadPropertiesValues;
+    },
+    getLeadSources(state) {
       return state.leadSources;
     },
-    getOwners(state){
-      return state.owners;
+    getLeadOwner(state) {
+      return state.leadOwner;
     },
-    getLeadContacts(state){
+    getLeadContacts(state) {
       return state.leadContacts;
     },
-    getPrimaryContact(state){
+    getPrimaryContact(state) {
       return state.primaryContact;
     },
-    getCurrentOwner(state){
-      return state.currentOwner;
+    getCurrentOwner(state) {
+      return state.leadOwner;
     },
-    getPipelinesWithStage(state){
-        return state.pipelines;
+    getPipelinesWithStage(state) {
+      return state.pipelines;
     },
-    getLeadPipeline(){
-        return state.leadPipeline;
+    getLeadPipeline(state) {
+      return state.leadPipeline;
     },
-    getLeadHasPipelines(){
-        return state.leadHasPipelines;
+    getLeadHasPipelines(state) {
+      return state.leadHasPipelines;
     },
+    getLeadStages(state) {
+      return state.leadStages;
+    },
+    getLeadPipelineStage(stage) {
+      return stage.leadPipelineStage
+    },
+    getLeadSubscribers(stage) {
+      return stage.leadSubscribers;
+    },
+    getIsPipelineLead(stage){
+      return stage.isPipelineLead;
+    },
+    getLeadFiles(stage){
+      return stage.leadFiles;
+    }
   },
-  actions:{
-    setLeadPrevUrl(payload){
+  actions: {
+    setLeadPrevUrl(payload) {
       this.leadPrevUrl = payload;
     },
+    setCurrentLead(payload) {
+      this.currentLead = payload;
+    },
+    setNextLead(payload) {
+      this.next_lead = payload;
+    },
+    setPrevLead(payload) {
+      this.prev_lead = payload;
+    },
+    setLeadProperties(payload) {
+      this.leadProperties = payload;
+    },
+    setPipelineProperties(payload) {
+      this.pipelineProperties = payload;
+    },
+    setLeadPropertiesValues(payload) {
+      this.leadPropertiesValues = payload;
+    },
+    setLeadSources(payload) {
+      this.leadSources = payload;
+    },
+    setOwners(payload) {
+      this.owners = payload;
+    },
+    setLeadOwner(payload) {
+      this.leadOwner = payload;
+    },
+    setLeadContacts(payload) {
+      this.leadContacts = payload;
+    },
+    setPrimaryContact(payload) {
+      this.primaryContact = payload;
+    },
+    setPipelinesWithStage(payload) {
+      this.pipelines = payload;
+    },
+    setLeadHasPipelines(payload) {
+      this.leadHasPipelines = payload;
+    },
+    setLeadStages(payload) {
+      this.leadStages = payload;
+    },
+    setLeadSubscribers(payload) {
+      this.leadSubscribers = payload;
+    },
+    setIsPipelineLead(payload){
+      return this.isPipelineLead = payload;
+    },
+    setLeadFiles(payload){
+      this.leadFiles = payload;
+    },
     setLeadEditTimelineData(payload) {
-      try{
-        const appStore = useAppStore();
-        this.leadStatus = appStore.getLeadStatuses;
-  
+      try {
         const {
-          lead, 
-          next_lead, 
-          prev_lead, 
-          lead_properties, 
-          pipelines, 
-          owners, 
-          lead_sources
+          lead,
+          next_lead,
+          prev_lead,
+          lead_properties,
+          lead_sources,
+          lead_stages,
+          pipeline_properties,
         } = payload;
-  
-        this.findLead  = lead;
-        this.leadCustomProperties = lead?.custom_properties;
-        this.prev_lead = prev_lead;
-        this.next_lead = next_lead;
-  
-        if(owners){
-          this.owners = owners;
+
+        this.setCurrentLead(lead);
+        this.setIsPipelineLead(!!(lead?.pipeline_id && lead?.pipeline_stage_id));
+        this.setLeadPropertiesValues(lead?.properties_values??{});
+        this.setPrevLead(prev_lead);
+        this.setNextLead(next_lead);
+        this.setLeadSubscribers(lead?.lead_subscribers ?? []);
+        this.setLeadProperties(lead_properties ?? []);
+        this.setPipelineProperties(pipeline_properties);
+        this.setLeadSources(lead_sources ?? []);
+        this.setLeadOwner(lead?.owner ?? {});
+        this.setLeadStages(lead_stages);
+        this.setLeadFiles(lead?.lead_files);
+        if (lead?.contacts?.length) {
+          this.setLeadContacts(lead?.contacts??[]);
+          if (lead?.primary_contact) {
+            this.setPrimaryContact(lead.primary_contact??{})
+          } else {
+            this.setPrimaryContact(lead?.contacts[0]??{})
+          }
+        } else {
+          this.leadContacts = [];
+          this.primaryContact = {};
         }
-        if(pipelines){
-          this.pipelines = pipelines;
-        }
-  
-        if(lead_properties){
-          this.leadProperties = lead_properties;
-        }
-  
-        if(lead_sources){
-          this.leadSources = lead_sources;
-        }
-        
-        if(lead?.contacts?.length){
-            this.leadContacts = lead?.contacts;
-            if(lead?.contact){
-                this.primaryContact = lead.contact;
-            }else{
-                this.primaryContact = lead?.contacts[0];
-            }
-        }
-        if(lead?.owner){
-            this.currentOwner = lead?.owner;
-        }
-      }catch(error){
+
+      } catch (error) {
         console.log(error);
       }
     },

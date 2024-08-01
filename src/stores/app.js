@@ -4,48 +4,61 @@ import { defineStore } from 'pinia';
 import { CONFIG } from "../config";
 
 const appStorage = new Storage(CONFIG.VITE_AUTH_APP);
-const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
 
 export const useAppStore = defineStore('app', {
 
   state: () => {
     return {
-        user:null,
         company:{},
-        lead_statuses:[],
+        leadStatuses:[],
         pipelines:[],
         permissions:[],
 
         // this value is used to open the send modal on mobile screens
         toggleSendModal: false,
         toggleCustomerDetailsSidebar: false,
+        users:[],
     }
   },
 
   getters:{
-    getUser(state){
-      return state.user;
+    getUsers(state){
+      return state.users;
+    },
+    getPermissions(state){
+      return state.permissions;
     },
     getCompany(state){
       return state.company;
     },
     getLeadStatuses(state){
-      return state.lead_statuses;
+      return state.leadStatuses;
     },
     getPipelines(state){
       return state.pipelines;
     },
-    getPermissions(state){
-      return state.permissions;
-    },
   },
-
   actions: {
     setToggleSendModal(state = true) {
         this.toggleSendModal = state;
     },
     setToggleCustomerDetailsSidebar(state = true) {
         this.toggleCustomerDetailsSidebar = state;
+    },
+    setUsers(payload){
+      this.users = payload;
+    },
+    setPermssions(payload){
+      this.permissions = payload;
+    },
+    setCompany(payload){
+      this.company = payload;
+    },
+    setLeadStatuses(payload){
+      this.leadStatuses = payload;
+    },
+    setPipelines(payload){
+      this.pipelines = payload;
     },
     async fetchAppData() {
       this.setLocalStorageData();
@@ -58,41 +71,24 @@ export const useAppStore = defineStore('app', {
       }catch(error){}
     },
     setLocalStorageData(payload=null){
-      var data = {};
+      var {
+        lead_statuses, 
+        pipelines, 
+        permissions, 
+        company, 
+        users
+      } = {...appStorage.get(), ...payload??{}};
       if(payload){
-        data = payload;
         appStorage.remove();
-        appStorage.set(payload);
-      }else{
-        data = appStorage.get();
+        appStorage.set({lead_statuses, permissions, company, pipelines});
       }
-
-      if(Object.keys(data??{})?.length > 0){
-        var {lead_statuses, pipelines, permissions, company} = data;
-      }else{
-        return;
-      }
-
-      try{
-        this.lead_statuses = lead_statuses??[];
-      }catch(error){}
-
-      try{
-        this.pipelines = pipelines??[];
-      }catch(error){}
-
-      try{
-        this.permissions = permissions??[];
-      }catch(error){}
-
-      try{
-        this.company = company??{};
-      }catch(error){}
       
-      try{
-        this.user = userStorage.get()??{};
-      }catch(error){}
-       
+      this.setUsers(users);
+      this.setCompany(company);
+      this.setPermssions(permissions);
+      this.setLeadStatuses(lead_statuses);
+      this.setPipelines(pipelines);
+
     },
   }
 

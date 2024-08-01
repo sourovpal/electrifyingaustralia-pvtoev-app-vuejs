@@ -30,7 +30,7 @@ export const useAuthStore = defineStore('auth', {
     },
     getters:{
         getUser(state){
-            return state.user;
+            return state.user || userStorage.get();
         },
         getAccessToken(state){
             return state.access_token;

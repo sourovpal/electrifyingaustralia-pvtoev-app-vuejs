@@ -1,8 +1,8 @@
 <script setup>
 import {onBeforeUnmount, onMounted, ref} from 'vue'
 import {Modal} from 'mdb-ui-kit'
-import DropdownOwnerList from '../../platform/lead/components/DropdownOwnerList.vue';
 import TagInput from './TagInput.vue';
+import DropdownOwnerList from '../../platform/lead/components/dropdowns/DropdownOwnerList.vue';
 
 const emit = defineEmits(['close']);
 const shareModal = ref(null)

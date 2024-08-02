@@ -4,7 +4,7 @@ import ActionBar from '../../components/ActionBar/ActionBar.vue'
 import LeftActionBar from '../../components/ActionBar/LeftActionBar.vue'
 import RightActionBar from '../../components/ActionBar/RightActionBar.vue'
 import LibraryDesignDropdownList from './LibraryDesignDropdownList.vue'
-import DropdownOwnerList from '../platform/lead/components/DropdownOwnerList.vue';
+import DropdownOwnerList from '../platform/lead/components/dropdowns/DropdownOwnerList.vue'
 import { Skeletor } from 'vue-skeletor';
 
 const owners = ref([

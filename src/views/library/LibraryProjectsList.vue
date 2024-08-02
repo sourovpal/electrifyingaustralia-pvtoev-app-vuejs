@@ -1,6 +1,6 @@
 <script setup>
 import  axios from '../../actions/api.js';
-import {ref} from 'vue';
+import {onMounted, ref} from 'vue';
 import SearchBar from '../../components/SearchBar.vue';
 import ActionBar from '../../components/ActionBar/ActionBar.vue';
 import LeftActionBar from '../../components/ActionBar/LeftActionBar.vue';
@@ -9,22 +9,32 @@ import Datatable from '../../components/Datatable/Datatable.vue';
 import DatatableHeader from '../../components/Datatable/DatatableHeader.vue';
 import DatatableBody from '../../components/Datatable/DatatableBody.vue';
 import DatatableNoDataMessage from '../../components/Datatable/DatatableNoDataMessage.vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
+
 const router = useRouter();
+const currentRoute = useRoute();
 
 const selectedRows = ref([]);
 const filterQueryData = ref({});
 
-const handleRowClick = () => {
-    router.push('/library/proposals');
+const handleRowClick = (projectId) => {
+    router.push(`/library/proposals/${projectId}`); 
 }
 
-const handleProjectCreate = () => {
-    axios.post('projects/create')
-        .then(res => {
-            console.log(res);
-        })
+const projects = ref([]);
+const handleProjectCreate = async () => {
+    await axios.post('projects/create')
+    getProjects();
 }
+
+const getProjects = async () => {
+    const response = await axios.get('projects/');
+    projects.value = response?.data?.data ?? [];
+}
+
+onMounted(() => {
+    getProjects();
+})
 
 </script>
 
@@ -172,7 +182,7 @@ const handleProjectCreate = () => {
             <!-- Datatable body -->
             <datatable-body>
                 <!-- loop this -->
-                <div class="tbl-tr full-width" @click="handleRowClick">
+                <div class="tbl-tr full-width" @click="handleRowClick(project.id)" v-for="project in projects">
                     <div style="width:4rem;margin-left: -7px;flex-grow: 1;" class="tbl-td full-width">
                         <label @click="singleRowSelectedHandler(lead.id)" class="custom-form-checkbox btn btn-floating btn-light">
                             <svg v-if="true" class="unchecked" xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
@@ -181,7 +191,7 @@ const handleProjectCreate = () => {
                     </div>
                     <div class="tbl-td cursor-pointer d-block d-flex gap-2" style="width:29rem;flex-grow: 1;">
                         <div>
-                            <p class="fs-6 mb-0">Some name <span class="text-secondary">New south wales</span> </p>
+                            <p class="fs-6 mb-0">lead_id: <span class="text-secondary">{{ project.lead_id }}</span> </p>
                             <small class="mb-0 text-secondary">Lorem ipsum dolor sit amet, qui minim labore adipisicing...</small>
                         </div>
                     </div>

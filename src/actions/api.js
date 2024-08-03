@@ -11,6 +11,24 @@ if(!!securityStorage.get() && !!userStorage.get()){
     headers['Authorization'] = 'Bearer '+ securityStorage.get();
 }
 
+export function getLocationFromIP() {
+    // return axios({
+    //     url: 'https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDpjtF2TkV6aGbhalKMlroZPhXJF8Fkhm4',
+    //     data: JSON.stringify({ "considerIp": "true" }),
+    //     type: 'POST',
+    //     contentType: 'application/json',
+    //     success: function (data) {
+    //         if (data.location) {
+    //             return data.location
+    //         } else {
+    //             alert('Not found');
+    //         }
+    //     }
+    // });
+}
+
+
+
 const instance = axios.create({
     baseURL: `${CONFIG.VITE_API_BASE_URL}`,
     timeout: 60000,

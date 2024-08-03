@@ -48,6 +48,7 @@ export default {
     this.leadStore.setCurrentLead({});
     this.leadStore.setPrimaryContact(null);
     this.leadStore.setLeadContacts([]);
+    this.leadStore.setIsPipelineLead(false);
   },
 };
 </script>

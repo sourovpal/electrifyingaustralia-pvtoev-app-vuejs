@@ -1,23 +1,27 @@
 <script>
     import CustomScrollbar from 'custom-vue-scrollbar';
-    import { QuillEditor } from '@vueup/vue-quill'
+
     import '@vueup/vue-quill/dist/vue-quill.snow.css';
     import '@vueup/vue-quill/dist/vue-quill.bubble.css';
     import Message from './events/Message.vue';
     import GroupByDateEvent from './events/GroupByDateEvent.vue';
     import { FetchTimelineLogs } from '../../../../actions/TimelineLogAction';
     import { ref, watch } from 'vue';
-    import { useInfiniteScroll } from '@vueuse/core'
+    import { useInfiniteScroll } from '@vueuse/core';
+    import MessageBox from './MessageBox.vue';
+    import { useLeadStore } from "../../../../stores/lead";
+
     export default {
         components: {
             CustomScrollbar,
-            QuillEditor,
-            Message,
             GroupByDateEvent,
+            Message,
+            MessageBox
         },
         setup(props) {
+            const leadStore = useLeadStore();
             const timelineScrollBar = ref(null);
-            return { timelineScrollBar };
+            return { timelineScrollBar, leadStore };
         },
         data() {
             return {
@@ -53,27 +57,27 @@
                 this.isLoading = false;
                 this.isInfiniteFetch = true;
                 this.timelineScrollPositionBottom();
-                if(this.isMounted){
+                if (this.isMounted) {
                     this.isMounted = false;
                 }
             },
             infiniteLoadedTimeline(event) {
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     var position = null;
                     this.scrollPosition = event.target.scrollHeight;
                     if (event) {
                         position = (100 / event.target.scrollHeight) * (event.target.scrollTop);
-                        if(position < 20 && this.isInfiniteFetch && this.total){
+                        if (position < 20 && this.isInfiniteFetch && this.total) {
                             this.isInfiniteFetch = false;
-                            this.fetchTimelineLogsHandler({total:this.total});
+                            this.fetchTimelineLogsHandler({ total: this.total });
                         }
                     }
                 });
             },
             timelineScrollPositionBottom() {
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     var scroll = this.timelineScrollBar;
-                    if(scroll && !this.isScrolling){
+                    if (scroll && !this.isScrolling) {
                         this.scrollPosition = scroll.scrollHeight - this.scrollPosition;
                         console.log(this.scrollPosition)
                         scroll.scrollTop = this.scrollPosition;
@@ -90,7 +94,8 @@
 </script>
 
 <template>
-    <div class="col-left">
+    <div class="col-left"
+        :class="{'is-pipeline-lead':leadStore.isPipelineLead}">
         <div class="history-logs"
             @scroll="infiniteLoadedTimeline"
             ref="timelineScrollBar">
@@ -98,6 +103,7 @@
                 <div class="text-center mb-1 mt-2">
                     <span class="text-soft">No older activity to display. {{ isScrolling }}</span>
                 </div>
+
                 <div class="history-row"
                     v-for="(log_date, index) in timelinelogsDate"
                     :key="index">
@@ -106,32 +112,7 @@
                 </div>
             </div>
         </div>
-        <div class="message-box">
-            <div class="tab-area border h-100 rounded">
-                <div class="tab-menu px-2">
-                    <ul class="nav nav-tabs mb-3"
-                        id="myTab0"
-                        role="tablist">
-                        <li class="nav-item"
-                            role="presentation">
-                            <button @click="timelineScrollPositionBottom"
-                                class="nav-link fs-14px py-2 fw-bold text-capitalize active">Comment</button>
-                        </li>
-                        <li class="nav-item"
-                            role="presentation">
-                            <button class="nav-link fs-14px fw-bold text-capitalize py-2">Send email</button>
-                        </li>
-                        <li class="nav-item"
-                            role="presentation">
-                            <button class="nav-link fs-14px fw-bold text-capitalize py-2">Send SMS</button>
-                        </li>
-                    </ul>
-                </div>
-                <div class="tab-content">
-
-                </div>
-            </div>
-        </div>
+        <message-box />
     </div>
 </template>
 
@@ -144,24 +125,20 @@
         position: relative;
         display: flex;
         flex-direction: column;
-        /* height: 100vh; */
+        height: calc(90vh - 7px);
+
+        &.is-pipeline-lead {
+            height: calc(84vh - 5px);
+        }
 
         @media only screen and (max-width:991.99px) {
             width: 100% !important;
         }
 
         &:deep(.history-logs) {
-
+            height: calc(100% - 192px);
             background-color: #e8ebef;
             overflow: auto;
-            max-height: 70vh;
-            overflow: auto;
-            /* .timeline-logs {
-                background-color: #e8ebef;
-                overflow: auto;
-                max-height: 70vh;
-                overflow: auto;
-            } */
 
             .circle-avatar {
                 background-color: transparent;
@@ -273,24 +250,6 @@
                         .feed-time {}
                     }
                 }
-            }
-        }
-
-        .message-box {
-            /* position: absolute; */
-            width: 100%;
-            min-height: 12rem;
-            bottom: 100px;
-            padding: 1rem;
-            background-color: #ffffff;
-            display: flex;
-            flex-direction: column;
-
-            .tab-area {
-                box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-                border-color: #007ee5 !important;
-                position: relative;
-                flex-grow: 1;
             }
         }
     }

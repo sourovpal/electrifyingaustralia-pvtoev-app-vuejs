@@ -3,25 +3,71 @@ let cleanedString = string.replace(/[^0-9.]/g, "");
 
 console.log(cleanedString); // Output: 3067.00
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    
-</body>
-</html>
+<script setup>
+    import { GoogleMap, Marker, Polyline, CustomMarker } from 'vue3-google-map';
+    import { ref, onMounted, reactive, watchEffect } from 'vue';
+    import { useRoute } from 'vue-router';
+    import { useGeolocation } from '@vueuse/core';
+    import { Loader } from '@googlemaps/js-api-loader';
+    import { getLocationFromIP } from '../../actions/api';
+    import SearchBar from '../../components/SearchBar.vue';
 
-<script>
+    const route = useRoute();
+    const googleMapRef = ref();
+    const googleMapZoom = ref(10);
+    var center = ref({ lat: 23.80409, lng: 90.41524 });
 
-[   
-    '', 
-    '',
-]
+    const loader = new Loader({
+        apiKey: "AIzaSyDpjtF2TkV6aGbhalKMlroZPhXJF8Fkhm4",
+        version: "weekly",
+        libraries: ["places"]
+    });
+
+    const apiPromise = loader.load();
+
+    onMounted(() => {
+        try {
+            // const { lng, lat } = route.params;
+            // center.value = { lat: Number(lat), lng: Number(lng) }
+        } catch (error) {
+            console.log('error', error)
+        }
+    });
 
 
-
+    // getLocationFromIP();
 </script>
+
+<template>
+    <section class="map">
+        <SearchBar />
+        <GoogleMap style="width: 100%; height: 100vh !important;flex-grow: 1;"
+            ref="googleMapRef"
+            mapTypeId="hybrid"
+            :center="center"
+            :api-promise="apiPromise"
+            :mapTypeControl="false"
+            :streetViewControl="true"
+            :fullscreenControl="true"
+            :zoomControl="true"
+            :zoom="googleMapZoom">
+            <CustomMarker :options="{ position: center, anchorPoint: 'BOTTOM_CENTER' }">
+                <div v-drag="{ axis: 'x', handle: '#someElement' }" style="width: 100px;height:100px;border:1px solid #ffffff;z-index:9999;background:#ffffff36;display: flex;justify-content: center;align-items: center;z-index: 999999;">
+                    <h5 id="someElement" style="color:red;">M</h5>
+                </div>
+            </CustomMarker>
+        </GoogleMap>
+    </section>
+</template>
+
+<style lang="scss"
+    scoped>
+    .map {
+        height: 100vh;
+        background: rgb(255, 255, 255);
+        margin-left: 4rem;
+        display: flex;
+        flex-direction: column;
+    }
+</style>
+

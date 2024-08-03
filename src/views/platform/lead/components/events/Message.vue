@@ -2,6 +2,7 @@
     import EventByUser from './EventByUser.vue';
     import UpdateLeadStatusEvent from './UpdateLeadStatusEvent.vue';
     import ChangeLeadOwnerEvent from './ChangeLeadOwnerEvent.vue';
+    import UpdateCustomPropertie from './UpdateCustomPropertie.vue';
 
     import { defineProps, computed } from 'vue';
     const props = defineProps({
@@ -36,8 +37,12 @@
             <ChangeLeadOwnerEvent
                 v-else-if="log.event_type == 'update-lead-owner' || log.event_type == 'added-lead-owner' || log.event_type == 'remove-lead-owner'"
                 :log="log" />
+
+            <UpdateCustomPropertie 
+            v-else-if="log.event_type == 'update-lead-propertie' || log.event_type == 'remove-lead-propertie'"
+            :log="log" />
         </div>
-        <div class="d-block">
+        <!-- <div class="d-block">
             <div class="fs-14px fw-bold feed-wrap mb-1">
                 <a class="feed-badge mx-0"
                     href="">Screenshot_89.png</a>
@@ -64,10 +69,10 @@
                 <a class="feed-badge mx-0"
                     href="">@Sourov Pal</a>
             </div>
-        </div>
+        </div> -->
     </event-by-user>
 
-    <div class="lead-feed-row d-flex justify-content-between py-1">
+    <!-- <div class="lead-feed-row d-flex justify-content-between py-1">
         <div class="left-feed-col d-flex">
             <div class="me-2">
                 <div class="circle-avatar">
@@ -91,10 +96,10 @@
         </div>
         <div class="right-feed-col">
         </div>
-    </div>
+    </div> -->
 
 
-    <div class="lead-feed-row d-flex justify-content-between py-1">
+    <!-- <div class="lead-feed-row d-flex justify-content-between py-1">
         <div class="left-feed-col d-flex">
             <div class="me-2">
                 <div class="circle-avatar">
@@ -131,7 +136,7 @@
         </div>
         <div class="right-feed-col">
         </div>
-    </div>
+    </div> -->
 
 </template>
 <style>

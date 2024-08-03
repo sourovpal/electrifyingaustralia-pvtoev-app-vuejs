@@ -13,7 +13,7 @@ import VueLazyLoad from 'vue3-lazyload';
 import { createPinia } from 'pinia';
 import { FontAwesomeIcon } from './plugins/font-awesome';
 import { ProgressBar, ProgressBarOptions } from './plugins/progress-bar';
-import {CONFIG} from './config';
+import { CONFIG } from './config';
 
 import 'mdb-ui-kit/css/mdb.min.css';
 import 'custom-vue-scrollbar/dist/style.css';
@@ -21,6 +21,7 @@ import 'tippy.js/dist/tippy.css'
 import 'vue-toast-notification/dist/theme-bootstrap.css';
 import 'vue-skeletor/dist/vue-skeletor.css';
 import CustomCheckbox from './components/CustomCheckbox.vue';
+import drag from "v-drag"
 
 var appData = ref({});
 function updateAppData(key, val) {
@@ -44,6 +45,8 @@ app.provide('app_data', {
 app.use(ProgressBar, ProgressBarOptions);
 app.use(pinia);
 app.use(router);
+app.use(drag);
+
 
 app.use(ToastPlugin, {
   position: 'bottom',

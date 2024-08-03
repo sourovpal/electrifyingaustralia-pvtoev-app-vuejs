@@ -50,6 +50,7 @@ const iconsToUse = [
     fa.faDroplet,
     fa.faUserPlus,
     fa.faTag,
+    fa.faCaretDown,
     // Regular
     far.faSquare,
     far.faSquareMinus,

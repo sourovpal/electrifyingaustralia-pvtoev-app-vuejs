@@ -9,10 +9,10 @@ import Datatable from '../../components/Datatable/Datatable.vue';
 import DatatableHeader from '../../components/Datatable/DatatableHeader.vue';
 import DatatableBody from '../../components/Datatable/DatatableBody.vue';
 import DatatableNoDataMessage from '../../components/Datatable/DatatableNoDataMessage.vue';
-import { useRouter, useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
+import { onClickOutside } from '@vueuse/core';
 
 const router = useRouter();
-const currentRoute = useRoute();
 
 const selectedRows = ref([]);
 const filterQueryData = ref({});
@@ -23,7 +23,7 @@ const handleRowClick = (projectId) => {
 
 const projects = ref([]);
 const handleProjectCreate = async () => {
-    await axios.post('projects/create')
+    await axios.post('projects/')
     getProjects();
 }
 

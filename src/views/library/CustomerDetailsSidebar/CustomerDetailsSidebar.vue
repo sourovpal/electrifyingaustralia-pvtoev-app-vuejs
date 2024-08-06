@@ -135,7 +135,7 @@ $sidebar-width: 20rem;
     background-color: #ffffff;
     width: $sidebar-width;
     transition: 200ms;
-    border-left: 2px solid rgb(59, 113, 202);
+    border-left: 2px solid rgb(59, 113, 202) !important;
 
     z-index: 999;
     position: fixed;

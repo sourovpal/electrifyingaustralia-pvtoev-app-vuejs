@@ -10,7 +10,6 @@ import DatatableHeader from '../../components/Datatable/DatatableHeader.vue';
 import DatatableBody from '../../components/Datatable/DatatableBody.vue';
 import DatatableNoDataMessage from '../../components/Datatable/DatatableNoDataMessage.vue';
 import { useRouter } from 'vue-router';
-import { onClickOutside } from '@vueuse/core';
 
 const router = useRouter();
 

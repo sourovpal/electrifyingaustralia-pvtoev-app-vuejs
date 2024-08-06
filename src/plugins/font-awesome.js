@@ -51,6 +51,7 @@ const iconsToUse = [
     fa.faUserPlus,
     fa.faTag,
     fa.faCaretDown,
+    fa.faCircleXmark,
     // Regular
     far.faSquare,
     far.faSquareMinus,

@@ -1,5 +1,5 @@
 <template>
-    <div class="row px-4 py-2 align-items-center">
+    <div class="row px-4 pe-5 py-2 align-items-center">
         <div class="col-5 col-md-4">
             <input
                 v-model="description" 
@@ -10,24 +10,7 @@
         </div>
 
         <div class="col-1 col-md-2">
-            <div class="dropdown dropup text-end p-0">
-                <small
-                    class="fw-bold cursor-pointer text-secondary"
-                    data-mdb-toggle="dropdown"
-                    aria-expanded="false"
-                >
-				    <span class="me-3">watt</span>
-				    <font-awesome-icon
-				        class="text-secondary"
-				        icon="fas fa-caret-down"
-				    />
-				</small>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li class="py-2 px-3 dropdown-item cursor-pointer"> 
-                        kWh
-                    </li>
-                </ul>
-			</div>
+            <UnitSelector />
         </div>
 
         <div class="col-md-2">
@@ -50,15 +33,25 @@
 
         <div class="col-md-2 d-flex gap-3 justify-content-end pricing-control">
 			<font-awesome-icon
-			    class="create-pricing-btn cursor-pointer"
-				icon="fas fa-check"
+			    :class="`create-pricing-btn cursor-pointer ${Boolean(description) ? '' : 'disabled'}`"
+				icon="fas fa-circle-check"
 			    @click="handleCreateClick"
 			/>
 
 			<font-awesome-icon
 			    class="discard-pricing-btn cursor-pointer"
-				icon="fas fa-xmark"
+				icon="fas fa-circle-xmark"
+			    @click="handleCancelClick"
 			/>
+
+			<!-- <font-awesome-icon -->
+			<!-- 	class="discard-pricing-btn cursor-pointer" -->
+			<!-- 	icon="fas fa-trash" -->
+			<!-- 	v-tippy="{ -->
+			<!-- 		content: 'Delete', -->
+			<!-- 		placement: 'top', -->
+			<!-- 	}" -->
+			<!-- /> -->
         </div>
     </div>
 </template>
@@ -67,8 +60,9 @@
 import { ref } from 'vue';
 import  axios from '../../../actions/api.js';
 import { useRoute } from 'vue-router';
+import UnitSelector from './UnitSelector.vue';
 
-const emit = defineEmits(['pricing-created'])
+const emit = defineEmits(['pricing-created', 'pricing-cancel'])
 const currentRoute = useRoute();
 
 const description = ref('');
@@ -86,6 +80,11 @@ const handleCreateClick = async () => {
     await axios.post(`projects/${projectId}/pricing`, payload)
     emit('pricing-created');
 }
+
+const handleCancelClick = () => {
+    emit('pricing-cancel');
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -96,14 +95,22 @@ $scale-factor: 1.25;
     transition: 100ms;
 }
 
-.create-pricing-btn:hover { 
-    transform: scale($scale-factor); 
-    color: #14a44d;
+.create-pricing-btn {
+    &:hover { 
+        transform: scale($scale-factor); 
+        color: #14a44d;
+    }
+
+    &.disabled {
+        pointer-events: none !important;
+        opacity: 0.5;
+    }
 }
 
 .discard-pricing-btn:hover { 
     transform: scale($scale-factor); 
     color: #dc4c64;
 }
+
 
 </style>

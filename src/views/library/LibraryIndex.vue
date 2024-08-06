@@ -4,8 +4,16 @@ import Menu from '../../components/Menu/Menu.vue';
 import LibraryMenu from './LibraryMenu.vue';
 import {title, menus} from './menu';
 import {useRoute} from 'vue-router';
+import { useAppStore } from '../../stores/app';
+import { onMounted } from 'vue';
 
 const route = useRoute();
+
+const appStore = useAppStore();
+
+onMounted(() => {
+    appStore.setUnits();
+});
  
 </script>
 

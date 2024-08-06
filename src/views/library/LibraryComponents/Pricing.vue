@@ -1,7 +1,7 @@
 <template>
-    <div class="overflow-x-hidden">
+    <div class="--overflow-x-hidden">
         <!-- table header -->
-        <div class="row px-4 py-2 table-header border-bottom">
+        <div class="row px-4 py-2 pe-5 table-header border-bottom">
             <small class="fw-bold col-5 col-md-4 ">Description</small>
             <small class="fw-bold col-1 col-md-2 text-end">Units</small>
             <small class="fw-bold col-2 col-md-2 text-end">Quantity</small>
@@ -10,7 +10,7 @@
         </div>
 
         <!-- table rows -->
-        <div class="row px-4 py-2" v-for="pricing in pricings">
+        <div class="row pricing-value px-4 py-2 pe-5" v-for="pricing in pricings">
             <!-- Description -->
             <small class="col-5 col-md-4">{{ pricing.description }}</small>
 
@@ -24,7 +24,30 @@
             <small class="col-2 col-md-2 text-end">{{pricing.unit_price}}</small>
 
             <!-- Total -->
-            <small class="col-2 col-md-2 text-end">{{'$' + Formatter.toIntlFormat(pricing.total)}}</small>
+            <small class="col-2 col-md-2 text-end">
+                {{ pricing.total ? '$' + Formatter.toIntlFormat(pricing.total) : '-' }}
+            </small>
+
+			<div class="pricing-action">
+                <div class="dropdown text-end p-0 w-100">
+                    <div
+                        class="fw-bold cursor-pointer"
+                        style="display: grid; place-items: center"
+                        data-mdb-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+			            <font-awesome-icon 
+			                class="fs-14px" 
+			                icon="fas fa-ellipsis-vertical" 
+			            />
+		            </div>
+                    <div class="dropdown-menu shadow" aria-labelledby="dropdownMenuLink">
+                        <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer"> Hide item </li>
+                        <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer"> Hide price </li>
+                        <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer text-danger"> Delete item </li>
+                    </div>
+	            </div>
+			</div>
         </div>
 
         <AddPricingInput
@@ -32,6 +55,7 @@
             class="mb-3"
             v-if="showAddInput"
             @pricing-created="handlePricingCreated"
+            @pricing-cancel="handlePricingCancel"
         />
 
         <div v-else class="row px-4 py-2 cursor-pointer" @click="handleAddAnotherItemClick">
@@ -70,14 +94,31 @@ const getPricings = async () => {
 
 const handlePricingCreated = () => {
     showAddInput.value = false;
-    getPricings() 
+    getPricings();
 }
+const handlePricingCancel = () => showAddInput.value = false;
 
+const showUnitSelector = ref(false);
+const handleUnitClick = () => showUnitSelector.value = !showUnitSelector.value
 
 </script>
 
 <style lang="scss" scoped>
 .table-header {
     background: rgba(0, 0, 0, 0.05);
+}
+
+.pricing-value {
+    position: relative;
+
+    .pricing-action {
+        width: 4.5rem;
+        // border: 1px solid #bada55;
+
+        top: 50%;
+        transform: translateY(-50%);
+        position: absolute;
+        right: 0;
+    }
 }
 </style>

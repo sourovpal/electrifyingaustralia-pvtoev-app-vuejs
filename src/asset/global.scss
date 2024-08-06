@@ -688,6 +688,13 @@ textarea::-webkit-scrollbar {
   animation: spin 1s linear infinite;
 }
 
+.custom-blur {
+  filter: blur(3px);
+  & > * {
+    pointer-events: none;
+  }
+}
+
 @keyframes spin {
   from {
     transform: rotate(0deg);

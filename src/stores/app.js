@@ -17,6 +17,7 @@ export const useAppStore = defineStore('app', {
         // this value is used to open the send modal on mobile screens
         toggleSendModal: false,
         toggleCustomerDetailsSidebar: false,
+        units: [],
         users:[],
     }
   },
@@ -36,6 +37,9 @@ export const useAppStore = defineStore('app', {
     },
     getPipelines(state){
       return state.pipelines;
+    },
+    getUnits(state){
+      return state.units;
     },
   },
   actions: {
@@ -89,6 +93,10 @@ export const useAppStore = defineStore('app', {
       this.setLeadStatuses(lead_statuses);
       this.setPipelines(pipelines);
 
+    },
+    async setUnits() {
+        const response = await api.get('/units');
+        this.units = response.data;
     },
   }
 

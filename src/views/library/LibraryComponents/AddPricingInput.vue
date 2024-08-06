@@ -54,6 +54,7 @@ import { useRoute } from 'vue-router';
 import UnitSelector from './UnitSelector.vue';
 
 const emit = defineEmits(['pricing-created', 'pricing-cancel'])
+const props = defineProps(['pricing'])
 const currentRoute = useRoute();
 
 const description = ref('');

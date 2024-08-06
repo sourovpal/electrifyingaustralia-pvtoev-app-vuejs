@@ -43,9 +43,12 @@
 			            />
 		            </div>
                     <div class="dropdown-menu shadow" aria-labelledby="dropdownMenuLink">
-                        <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer"> Hide item </li>
-                        <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer"> Hide price </li>
-                        <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer text-danger"> Delete item </li>
+                        <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer" @click="handleItemHide(pricing)"> Hide item </li>
+                        <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer" @click="handleItemPriceHide(pricing)"> Hide price </li>
+                        <li 
+                            class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer text-danger" 
+                            @click="handleDeleteClick(pricing.id)"
+                        > Delete item </li>
                     </div>
 	            </div>
 			</div>
@@ -88,7 +91,9 @@ onMounted(() => {
 const pricings = ref([]);
 const getPricings = async () => {
     const response = await axios.get(`projects/${params.project_id}/pricing`)
-    if (!response.data.length) return;
+    if (!response.data.length) {
+        pricings.value = [];
+    };
 
     pricings.value = response.data;
 }
@@ -101,6 +106,25 @@ const handlePricingCancel = () => showAddInput.value = false;
 
 const showUnitSelector = ref(false);
 const handleUnitClick = () => showUnitSelector.value = !showUnitSelector.value
+
+const handleDeleteClick = async (pricingId) => {
+    await axios.delete(`projects/${params.project_id}/pricing/${pricingId}`)
+    getPricings();
+}
+
+const handleItemHide = async (pricing) => {
+    await axios.put(`projects/${params.project_id}/pricing/${pricing.id}/item-hide`, {
+        hide_item: !Boolean(pricing.item_hidden)
+    });
+    getPricings();
+}
+
+const handleItemPriceHide = async (pricing) => {
+    await axios.put(`projects/${params.project_id}/pricing/${pricing.id}/item-price-hide`, {
+        hide_item_price: !Boolean(pricing.price_hidden)
+    });
+    getPricings();
+}
 
 </script>
 

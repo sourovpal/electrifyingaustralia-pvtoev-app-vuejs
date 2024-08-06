@@ -1,35 +1,36 @@
 <template>
     <div class="--overflow-x-hidden">
         <!-- table header -->
-        <div class="row px-4 py-2 pe-5 table-header border-bottom">
-            <small class="fw-bold col-5 col-md-4 ">Description</small>
+        <div class="row px-4 py-2 table-header border-bottom gx-0">
+            <small class="fw-bold col-5 col-md-3 ">Description</small>
             <small class="fw-bold col-1 col-md-2 text-end">Units</small>
             <small class="fw-bold col-2 col-md-2 text-end">Quantity</small>
             <small class="fw-bold col-2 col-md-2 text-end">Unit price</small>
             <small class="fw-bold col-2 col-md-2 text-end">Total</small>
+            <small class="col-2 col-md-1"></small>
         </div>
 
         <!-- table rows -->
-        <div class="row pricing-value px-4 py-2 pe-5" v-for="pricing in pricings">
+        <div class="row pricing-value align-items-center px-4 py-2" v-for="pricing in pricings">
             <!-- Description -->
-            <small class="col-5 col-md-4">{{ pricing.description }}</small>
+            <small class="col-5 col-md-3">{{ pricing.description }}</small>
 
             <!-- Units -->
-            <small class="col-1 col-md-2 text-end">{{pricing.unit}}</small>
+            <small class="col-1 col-md-2 text-end">{{ pricing.unit }}</small>
 
             <!-- Quantity -->
-            <small class="col-2 col-md-2 text-end">{{pricing.quantity}}</small>
+            <small class="col-2 col-md-2 text-end">{{ pricing.quantity }}</small>
 
             <!-- Unit Price -->
-            <small class="col-2 col-md-2 text-end">{{pricing.unit_price}}</small>
+            <small class="col-2 col-md-2 text-end">{{ pricing.unit_price }}</small>
 
             <!-- Total -->
             <small class="col-2 col-md-2 text-end">
                 {{ pricing.total ? '$' + Formatter.toIntlFormat(pricing.total) : '-' }}
             </small>
 
-			<div class="pricing-action">
-                <div class="dropdown text-end p-0 w-100">
+			<div class="col-md-1">
+                <div class="dropdown text-end p-0">
                     <div
                         class="fw-bold cursor-pointer"
                         style="display: grid; place-items: center"

@@ -1,6 +1,6 @@
 <template>
-    <div class="row px-4 pe-5 py-2 align-items-center">
-        <div class="col-5 col-md-4">
+    <div class="row px-4 py-2 align-items-center">
+        <div class="col-5 col-md-3">
             <input
                 v-model="description" 
                 placeholder="Enter description" 
@@ -43,15 +43,6 @@
 				icon="fas fa-circle-xmark"
 			    @click="handleCancelClick"
 			/>
-
-			<!-- <font-awesome-icon -->
-			<!-- 	class="discard-pricing-btn cursor-pointer" -->
-			<!-- 	icon="fas fa-trash" -->
-			<!-- 	v-tippy="{ -->
-			<!-- 		content: 'Delete', -->
-			<!-- 		placement: 'top', -->
-			<!-- 	}" -->
-			<!-- /> -->
         </div>
     </div>
 </template>

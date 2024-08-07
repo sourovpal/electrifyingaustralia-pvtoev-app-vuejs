@@ -13,16 +13,16 @@
         <!-- table rows -->
         <div class="row pricing-value align-items-center px-4 py-2" v-for="pricing in pricings">
             <!-- Description -->
-            <small class="col-5 col-md-3">{{ pricing.description }}</small>
+            <small class="col-5 col-md-3 cursor-pointer" @click="toggleEditMode">{{ pricing.description }}</small>
 
             <!-- Units -->
-            <small class="col-1 col-md-2 text-end">{{ pricing.unit }}</small>
+            <small class="col-1 col-md-2 text-end">{{ pricing?.unit?.name }}</small>
 
             <!-- Quantity -->
-            <small class="col-2 col-md-2 text-end">{{ pricing.quantity }}</small>
+            <small class="col-2 col-md-2 text-end cursor-pointer" @click="toggleEditMode">{{ pricing.quantity }}</small>
 
             <!-- Unit Price -->
-            <small class="col-2 col-md-2 text-end">{{ pricing.unit_price }}</small>
+            <small class="col-2 col-md-2 text-end cursor-pointer" @click="toggleEditMode">{{ pricing.unit_price }}</small>
 
             <!-- Total -->
             <small class="col-2 col-md-2 text-end">
@@ -75,6 +75,7 @@ import AddPricingInput from './AddPricingInput.vue';
 import { onMounted, ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import Formatter from '../../../helpers/Formatter';
+import UnitSelector from './UnitSelector.vue';
 const { params } = useRoute();
 
 const addInputWrapper = ref(null);
@@ -124,6 +125,10 @@ const handleItemPriceHide = async (pricing) => {
         hide_item_price: !Boolean(pricing.price_hidden)
     });
     getPricings();
+}
+
+const toggleEditMode = () => {
+    console.log('beans');
 }
 
 </script>

@@ -10,7 +10,7 @@
         </div>
 
         <div class="col-1 col-md-2">
-            <UnitSelector />
+            <UnitSelector v-model="unit_id" />
         </div>
 
         <div class="col-md-2">
@@ -60,6 +60,7 @@ const currentRoute = useRoute();
 const description = ref('');
 const quantity = ref()
 const unitPrice = ref()
+const unit_id = ref(1);
 
 const handleCreateClick = async () => {
     const projectId = currentRoute.params.project_id;
@@ -67,6 +68,7 @@ const handleCreateClick = async () => {
         description: description.value,
         quantity: quantity.value,
         unit_price: unitPrice.value,
+        unit_id: unit_id.value,
     }
 
     await axios.post(`projects/${projectId}/pricing`, payload)

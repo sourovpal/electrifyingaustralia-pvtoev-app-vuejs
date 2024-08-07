@@ -11,48 +11,14 @@
         </div>
 
         <!-- table rows -->
-        <div class="row pricing-value align-items-center px-4 py-2" v-for="pricing in pricings">
-            <!-- Description -->
-            <small class="col-5 col-md-3 cursor-pointer" @click="toggleEditMode">{{ pricing.description }}</small>
-
-            <!-- Units -->
-            <small class="col-1 col-md-2 text-end">{{ pricing?.unit?.name }}</small>
-
-            <!-- Quantity -->
-            <small class="col-2 col-md-2 text-end cursor-pointer" @click="toggleEditMode">{{ pricing.quantity }}</small>
-
-            <!-- Unit Price -->
-            <small class="col-2 col-md-2 text-end cursor-pointer" @click="toggleEditMode">{{ pricing.unit_price }}</small>
-
-            <!-- Total -->
-            <small class="col-2 col-md-2 text-end">
-                {{ pricing.total ? '$' + Formatter.toIntlFormat(pricing.total) : '-' }}
-            </small>
-
-			<div class="col-md-1">
-                <div class="dropdown text-end p-0">
-                    <div
-                        class="fw-bold cursor-pointer"
-                        style="display: grid; place-items: center"
-                        data-mdb-toggle="dropdown"
-                        aria-expanded="false"
-                    >
-			            <font-awesome-icon 
-			                class="fs-14px" 
-			                icon="fas fa-ellipsis-vertical" 
-			            />
-		            </div>
-                    <div class="dropdown-menu shadow" aria-labelledby="dropdownMenuLink">
-                        <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer" @click="handleItemHide(pricing)"> Hide item </li>
-                        <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer" @click="handleItemPriceHide(pricing)"> Hide price </li>
-                        <li 
-                            class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer text-danger" 
-                            @click="handleDeleteClick(pricing.id)"
-                        > Delete item </li>
-                    </div>
-	            </div>
-			</div>
-        </div>
+        <PricingItem
+            v-for="pricing in pricings" 
+            :pricing
+            @item-hide="handleItemHide"
+            @item-price-hide="handleItemPriceHide"
+            @item-delete="handleDelete"
+            @unit-change="handleUnitChange"
+        />
 
         <AddPricingInput
             ref="addInputWrapper"
@@ -72,10 +38,9 @@
 import  axios from '../../../actions/api.js';
 import { useRoute } from 'vue-router';
 import AddPricingInput from './AddPricingInput.vue';
+import PricingItem from './PricingItem.vue';
 import { onMounted, ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
-import Formatter from '../../../helpers/Formatter';
-import UnitSelector from './UnitSelector.vue';
 const { params } = useRoute();
 
 const addInputWrapper = ref(null);
@@ -105,24 +70,28 @@ const handlePricingCreated = () => {
 }
 const handlePricingCancel = () => showAddInput.value = false;
 
-const showUnitSelector = ref(false);
-const handleUnitClick = () => showUnitSelector.value = !showUnitSelector.value
-
-const handleDeleteClick = async (pricingId) => {
+const handleDelete = async (pricingId) => {
     await axios.delete(`projects/${params.project_id}/pricing/${pricingId}`)
     getPricings();
 }
 
 const handleItemHide = async (pricing) => {
     await axios.put(`projects/${params.project_id}/pricing/${pricing.id}/item-hide`, {
-        hide_item: !Boolean(pricing.item_hidden)
+        'hide_item': !Boolean(pricing.item_hidden)
     });
     getPricings();
 }
 
 const handleItemPriceHide = async (pricing) => {
     await axios.put(`projects/${params.project_id}/pricing/${pricing.id}/item-price-hide`, {
-        hide_item_price: !Boolean(pricing.price_hidden)
+        'hide_item_price': !Boolean(pricing.price_hidden)
+    });
+    getPricings();
+}
+
+const handleUnitChange = async (payload) => {
+    await axios.put(`projects/${params.project_id}/pricing/${payload.pricingId}/item-unit-update`, {
+        'unit_id': payload.new_unit_id
     });
     getPricings();
 }

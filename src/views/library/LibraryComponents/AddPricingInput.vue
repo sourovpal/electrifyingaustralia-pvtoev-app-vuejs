@@ -60,7 +60,7 @@ const currentRoute = useRoute();
 const description = ref('');
 const quantity = ref()
 const unitPrice = ref()
-const unit_id = ref(1);
+const unit_id = ref(1); // temporary id
 
 const handleCreateClick = async () => {
     const projectId = currentRoute.params.project_id;

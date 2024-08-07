@@ -744,3 +744,32 @@ textarea::-webkit-scrollbar {
     border-radius: 50%;
   }
 }
+
+.custom-blur {
+  filter: blur(3px);
+
+  & > * { pointer-events: none; }
+}
+
+.loading-opacity {
+  transition: 100ms;
+  opacity: 50%;
+  pointer-events: none;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

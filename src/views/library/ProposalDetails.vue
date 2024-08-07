@@ -4,7 +4,7 @@ import {onMounted, ref} from 'vue'
 import {Skeletor} from 'vue-skeletor'
 
 import TabbedDisplay from './components/TabbedDisplay.vue'
-import Pricing from './LibraryComponents/Pricing.vue'
+import PricingDisplay from './LibraryComponents/PricingDisplay.vue'
 import Financing from './LibraryComponents/Financing.vue'
 import Rebates from './LibraryComponents/Rebates.vue'
 import CertificateSettings from './LibraryComponents/CertificateSettings.vue'
@@ -147,7 +147,7 @@ const simulateApiCall = () => {
 			<TabbedDisplay
 				component-class="w-100 mt-3 card shadow"
 				:tabs="[
-					{label: 'Pricing', component: 'Pricing'},
+					{label: 'Pricing', component: 'PricingDisplay'},
 					{label: 'Financing', component: 'Financing'},
 					{label: 'Rebates', component: 'Rebates'},
 					{
@@ -159,7 +159,7 @@ const simulateApiCall = () => {
 				]"
 				:components="{
 					Financing,
-					Pricing,
+					PricingDisplay,
 					Rebates,
 					CertificateSettings,
 				}"

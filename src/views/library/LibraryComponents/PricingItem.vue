@@ -1,5 +1,5 @@
 <template>
-    <div class="row pricing-value align-items-center px-4 py-2">
+    <div v-if="!editMode" class="row pricing-value align-items-center px-4 py-2">
         <!-- Description -->
         <small class="col-5 col-md-3 cursor-pointer" @click="toggleEditMode">{{ pricing.description }}</small>
 
@@ -36,27 +36,41 @@
                 <div class="dropdown-menu shadow" aria-labelledby="dropdownMenuLink">
                     <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer" @click="handleItemHide"> Hide item </li>
                     <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer" @click="handleItemPriceHide"> Hide price </li>
-                    <li 
-                        class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer text-danger" 
+                    <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer text-danger" 
                         @click="handleDeleteClick(pricing.id)"
-                    > Delete item </li>
+                    >
+                        Delete item
+                    </li>
                 </div>
 	        </div>
 		</div>
     </div>
+
+    <AddPricingInput
+        v-else
+        :pricing
+        @created="handleCreated"
+        @cancel="toggleEditMode"
+    />
 </template>
 
 <script setup>
 import { ref, watch } from 'vue';
 import Formatter from '../../../helpers/Formatter';
 import UnitSelector from './UnitSelector.vue';
+import AddPricingInput from './AddPricingInput.vue';
 
 const props = defineProps(['pricing']);
 const emit = defineEmits(['item-hide', 'item-price-hide', 'item-delete', 'unit-change']);
 
 const unit = ref(props.pricing.unit_id);
 
-const toggleEditMode = () => {};
+const editMode = ref(false);
+const toggleEditMode = () => editMode.value = !editMode.value;
+const handleCreated = () => {
+    console.log('beans');
+}
+
 
 const handleItemHide = () => emit('item-hide', props.pricing);
 const handleItemPriceHide = () => emit('item-price-hide', props.pricing);

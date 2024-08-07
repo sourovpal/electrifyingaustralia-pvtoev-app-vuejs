@@ -24,8 +24,8 @@
             ref="addInputWrapper"
             class="mb-3"
             v-if="showAddInput"
-            @pricing-created="handlePricingCreated"
-            @pricing-cancel="handlePricingCancel"
+            @created="handlePricingCreated"
+            @cancel="handlePricingCancel"
         />
 
         <div v-else class="row px-4 py-2 cursor-pointer" @click="handleAddAnotherItemClick">

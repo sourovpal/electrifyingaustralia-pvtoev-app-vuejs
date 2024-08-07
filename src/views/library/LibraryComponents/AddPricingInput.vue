@@ -53,30 +53,39 @@ import  axios from '../../../actions/api.js';
 import { useRoute } from 'vue-router';
 import UnitSelector from './UnitSelector.vue';
 
-const emit = defineEmits(['pricing-created', 'pricing-cancel'])
+const emit = defineEmits(['created', 'cancel'])
 const props = defineProps(['pricing'])
 const currentRoute = useRoute();
 
-const description = ref('');
-const quantity = ref()
-const unitPrice = ref()
-const unit_id = ref(1); // temporary id
+const description = ref(props.pricing?.description ?? '');
+const quantity = ref(props.pricing?.quantity ?? '')
+const unitPrice = ref(props.pricing?.unit_price ?? '')
+const unit_id = ref(props.pricing?.unit_id ?? 1);
+
+const formData = ref({
+    description: props.pricing?.description ?? '',
+    quantity: props.pricing?.quantity ?? '',
+    unitPrice: props.pricing?.unit_price ?? '',
+    unit_id: props.pricing?.unit_id ?? 1,
+})
 
 const handleCreateClick = async () => {
     const projectId = currentRoute.params.project_id;
+    const { description, quantity, unit_price, unit_id } = formData.value;
+
     const payload = {
-        description: description.value,
-        quantity: quantity.value,
-        unit_price: unitPrice.value,
-        unit_id: unit_id.value,
+        description,
+        quantity,
+        unit_price,
+        unit_id
     }
 
     await axios.post(`projects/${projectId}/pricing`, payload)
-    emit('pricing-created');
+    emit('created');
 }
 
 const handleCancelClick = () => {
-    emit('pricing-cancel');
+    emit('cancel');
 }
 
 </script>

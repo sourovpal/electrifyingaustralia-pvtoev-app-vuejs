@@ -115,7 +115,7 @@
     .map-design {
         height: 100vh;
         background: rgb(255, 255, 255);
-        margin-left: 4rem;
+        margin-left:var(--main-left-navbar-width);
         display: flex;
         flex-direction: column;
 

@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600');
 
+:root {
+  --main-left-navbar-width: 4rem;
+  --child-left-navbar-width: 16rem;
+  --content-body-width: calc(100% - calc(var(--main-left-navbar-width) + var(--child-left-navbar-width)));
+  --layout-border-color: rgb(144 164 174 / 25%);
+}
 
 * {
   font-family: 'Source Sans Pro', sans-serif !important;
@@ -17,6 +23,7 @@ body,
 html {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
+  scroll-behavior: smooth;
 }
 
 ::-webkit-scrollbar-track,
@@ -30,6 +37,30 @@ body::-webkit-scrollbar,
 html::-webkit-scrollbar {
   height: 0;
   width: 0
+}
+
+.content {
+  padding-left: 0rem;
+  width: var(--content-body-width);
+  height: 100%;
+  right: 0;
+  overflow: hidden;
+  border: none !important;
+  margin-left: 0px;
+
+  @media (max-width: 767px) {
+    margin-top: 4rem;
+  }
+
+  @media (min-width: 1200px) {
+    // left: 22rem;
+  }
+
+  &.content-y-100vh {
+    height: 100vh !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
 }
 
 @media(min-width: 768px) {
@@ -286,30 +317,6 @@ button[disabled],
 
 .cursor-pointer {
   cursor: pointer;
-}
-
-.content {
-  padding-left: 0rem;
-  width: 100%;
-  height: 100%;
-  right: 0;
-  overflow: hidden;
-  border: none !important;
-  margin-left: 0px;
-
-  @media (max-width: 767px) {
-    margin-top: 4rem;
-  }
-
-  @media (min-width: 1200px) {
-    // left: 22rem;
-  }
-
-  &.content-y-100vh {
-    height: 100vh !important;
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-  }
 }
 
 .svg-disabled {

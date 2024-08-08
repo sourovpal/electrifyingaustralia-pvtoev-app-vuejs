@@ -16,8 +16,9 @@
         <div class="col-md-2">
             <input
                 placeholder="Quantity"
-                v-model="formData.quantity"
-                class="form-control text-end p-1"
+                :min="0"
+                v-model.number="formData.quantity"
+                :class="`form-control text-end p-1 ${ formData.quantity < 0 ? 'invalid-input' : '' }`"
                 type="number"
             />
         </div>
@@ -25,15 +26,16 @@
         <div class="col-md-2">
             <input
                 placeholder="Unit price"
-                class="form-control text-end p-1"
-                v-model="formData.unit_price"
+                :class="`form-control text-end p-1 ${ formData.unit_price < 0 ? 'invalid-input' : '' }`"
+                :min="0"
+                v-model.number="formData.unit_price"
                 type="number"
             />
         </div>
 
         <div class="col-md-2 d-flex gap-3 justify-content-end pricing-control">
 			<font-awesome-icon
-			    :class="`create-pricing-btn cursor-pointer ${Boolean(formData.description) ? '' : 'disabled'}`"
+			    :class="`create-pricing-btn cursor-pointer ${invalidInput ? 'disabled' : ''}`"
 				icon="fas fa-circle-check"
 			    @click="handleCreateClick"
 			/>
@@ -48,7 +50,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import  axios from '../../../actions/api.js';
 import { useRoute } from 'vue-router';
 import UnitSelector from './UnitSelector.vue';
@@ -63,6 +65,21 @@ const formData = ref({
     unit_price: props.pricing?.unit_price ?? '',
     unit_id: props.pricing?.unit_id ?? 1,
 })
+
+const invalidInput = computed(() => {
+    if (!Boolean(formData.value.description)) return true;
+
+    // not just relying on :min attribute due to firefox's incompatibility
+    if (typeof formData.value.quantity === 'number') {
+        if (formData.value.quantity < 0) return true;
+    }
+
+    if (typeof formData.value.unit_price === 'number') {
+        if (formData.value.unit_price < 0) return true;
+    }
+
+    return false;
+});
 
 const handleCreateClick = async () => {
     const projectId = currentRoute.params.project_id;
@@ -96,6 +113,11 @@ $scale-factor: 1.25;
 .pricing-control svg {
     color: #adadad;
     transition: 100ms;
+}
+
+.invalid-input {
+    color: #dc4c64;
+    border: 2px solid;
 }
 
 .create-pricing-btn {

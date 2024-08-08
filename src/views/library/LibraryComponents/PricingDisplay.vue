@@ -14,10 +14,12 @@
         <PricingItem
             v-for="pricing in pricings" 
             :pricing
+            :key="pricingItemKey"
             @item-hide="handleItemHide"
             @item-price-hide="handleItemPriceHide"
             @item-delete="handleDelete"
             @unit-change="handleUnitChange"
+            @item-updated="handleItemUpdated"
         />
 
         <AddPricingInput
@@ -96,8 +98,10 @@ const handleUnitChange = async (payload) => {
     getPricings();
 }
 
-const toggleEditMode = () => {
-    console.log('beans');
+const pricingItemKey = ref(0);
+const handleItemUpdated = async () => {
+    await getPricings();
+    pricingItemKey.value++;
 }
 
 </script>

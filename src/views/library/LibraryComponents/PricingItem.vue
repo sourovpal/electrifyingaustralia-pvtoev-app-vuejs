@@ -49,28 +49,38 @@
     <AddPricingInput
         v-else
         :pricing
-        @created="handleCreated"
+        @updated="handleUpdated"
         @cancel="toggleEditMode"
     />
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import Formatter from '../../../helpers/Formatter';
 import UnitSelector from './UnitSelector.vue';
 import AddPricingInput from './AddPricingInput.vue';
 
 const props = defineProps(['pricing']);
-const emit = defineEmits(['item-hide', 'item-price-hide', 'item-delete', 'unit-change']);
+const emit = defineEmits([
+    'item-hide',
+    'item-price-hide',
+    'item-delete',
+    'unit-change',
+    'item-update',
+]);
 
-const unit = ref(props.pricing.unit_id);
+const unit = ref();
+
+onMounted(() => {
+    unit.value = props.pricing.unit_id;
+});
 
 const editMode = ref(false);
 const toggleEditMode = () => editMode.value = !editMode.value;
-const handleCreated = () => {
-    console.log('beans');
-}
-
+const handleUpdated = () => {
+    editMode.value = false;
+    emit('item-updated') 
+};
 
 const handleItemHide = () => emit('item-hide', props.pricing);
 const handleItemPriceHide = () => emit('item-price-hide', props.pricing);

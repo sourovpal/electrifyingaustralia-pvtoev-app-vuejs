@@ -34,12 +34,34 @@
 			        />
 		        </div>
                 <div class="dropdown-menu shadow" aria-labelledby="dropdownMenuLink">
-                    <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer" @click="handleItemHide"> Hide item </li>
-                    <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer" @click="handleItemPriceHide"> Hide price </li>
-                    <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer text-danger" 
-                        @click="handleDeleteClick(pricing.id)"
+                    <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer d-flex align-items-center justify-content-between px-4" 
+                        @click="handleItemHide"
                     >
+                        <span>{{ pricing.item_hidden ? 'Show item' : 'Hide item' }}</span>
+			            <font-awesome-icon 
+			                class="fs-12px" 
+			                :icon="`fas ${ !pricing.item_hidden ? 'fa-eye-slash' : 'fa-eye' }`" 
+			            />
+                    </li>
+
+                    <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer d-flex align-items-center justify-content-between px-4"
+                        @click="handleItemPriceHide"
+                    >
+                        <span>{{ pricing.price_hidden ? 'Show price' : 'Hide price' }}</span>
+                        <div>
+			                <font-awesome-icon 
+			                class="fs-12px" 
+			                icon="fas fa-dollar-sign" 
+			                />
+                        </div>
+                    </li>
+
+                    <li class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer d-flex align-items-center justify-content-between px-4 text-danger" @click="handleDeleteClick(pricing.id)">
                         Delete item
+			            <font-awesome-icon 
+			                class="fs-12px" 
+			                icon="fas fa-trash" 
+			            />
                     </li>
                 </div>
 	        </div>

@@ -52,6 +52,9 @@ const iconsToUse = [
     fa.faTag,
     fa.faCaretDown,
     fa.faCircleXmark,
+    fa.faEye,
+    fa.faEyeSlash,
+    fa.faDollarSign,
     // Regular
     far.faSquare,
     far.faSquareMinus,

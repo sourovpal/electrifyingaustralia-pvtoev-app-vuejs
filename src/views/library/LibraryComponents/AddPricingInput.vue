@@ -34,17 +34,26 @@
         </div>
 
         <div class="col-md-2 d-flex gap-3 justify-content-end pricing-control">
-			<font-awesome-icon
-			    :class="`create-pricing-btn cursor-pointer ${invalidInput ? 'disabled' : ''}`"
-				icon="fas fa-circle-check"
-			    @click="handleCreateClick"
-			/>
+		    <template v-if="!loading">
+                <font-awesome-icon
+			        :class="`create-pricing-btn cursor-pointer ${invalidInput ? 'disabled' : ''}`"
+				    icon="fas fa-circle-check"
+			        @click="handleCreateClick"
+			    />
 
-			<font-awesome-icon
-			    class="discard-pricing-btn cursor-pointer"
-				icon="fas fa-circle-xmark"
-			    @click="handleCancelClick"
-			/>
+			    <font-awesome-icon
+			        class="discard-pricing-btn cursor-pointer"
+				    icon="fas fa-circle-xmark"
+			        @click="handleCancelClick"
+			    />
+            </template>
+
+            <template v-else>
+			    <font-awesome-icon 
+			        class="animate-spin" 
+			        icon="fas fa-spinner" 
+			    />
+            </template>
         </div>
     </div>
 </template>
@@ -54,11 +63,14 @@ import { ref, computed } from 'vue';
 import  axios from '../../../actions/api.js';
 import { useRoute } from 'vue-router';
 import UnitSelector from './UnitSelector.vue';
+import { useToast } from 'vue-toast-notification';
 
 const emit = defineEmits(['created', 'cancel'])
 const props = defineProps(['pricing'])
 const currentRoute = useRoute();
+const toast = useToast();
 
+const loading = ref(false);
 const formData = ref({
     description: props.pricing?.description ?? '',
     quantity: props.pricing?.quantity ?? '',
@@ -82,6 +94,7 @@ const invalidInput = computed(() => {
 });
 
 const handleCreateClick = async () => {
+    loading.value = true;
     const projectId = currentRoute.params.project_id;
     const { description, quantity, unit_price, unit_id } = formData.value;
 
@@ -93,11 +106,24 @@ const handleCreateClick = async () => {
     }
 
     if (!props.pricing) {
-        await axios.post(`projects/${projectId}/pricing`, payload)
+        try {
+            await axios.post(`projects/${projectId}/pricing`, payload)
+        } catch (error) {
+            toast.error(error?.response?.data?.message ?? 'Something went wrong, please check your inputs');
+        } finally {
+            loading.value = false;
+        }
         return emit('created');
     }
 
-    await axios.put(`projects/${projectId}/pricing/${props.pricing.id}`, payload)
+    try {
+        await axios.put(`projects/${projectId}/pricing/${props.pricing.id}`, payload)
+    } catch (error) {
+        toast.error(error?.response?.data?.message ?? 'Something went wrong, please check your inputs');
+    } finally {
+        loading.value = false;
+    }
+    
     emit('updated');
 }
 

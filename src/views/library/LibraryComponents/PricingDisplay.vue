@@ -2,7 +2,7 @@
     <div class="--overflow-x-hidden">
         <!-- table header -->
         <div class="row px-4 py-2 table-header border-bottom gx-0">
-            <small class="fw-bold col-5 col-md-3 ">Description</small>
+            <small class="fw-bold col-5 col-md-3 ">Description*</small>
             <small class="fw-bold col-1 col-md-2 text-end">Units</small>
             <small class="fw-bold col-2 col-md-2 text-end">Quantity</small>
             <small class="fw-bold col-2 col-md-2 text-end">Unit price</small>

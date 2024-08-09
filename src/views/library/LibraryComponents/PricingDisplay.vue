@@ -15,10 +15,6 @@
             v-for="pricing in pricings" 
             :pricing
             :key="pricingItemKey"
-            @item-hide="handleItemHide"
-            @item-price-hide="handleItemPriceHide"
-            @item-delete="handleDelete"
-            @unit-change="handleUnitChange"
             @item-updated="handleItemUpdated"
         />
 
@@ -39,7 +35,7 @@
 </template>
 
 <script setup>
-import  axios from '../../../actions/api.js';
+import axios from '../../../actions/api.js';
 import { useRoute } from 'vue-router';
 import AddPricingInput from './AddPricingInput.vue';
 import PricingItem from './PricingItem.vue';
@@ -73,32 +69,6 @@ const handlePricingCreated = () => {
     getPricings();
 }
 const handlePricingCancel = () => showAddInput.value = false;
-
-const handleDelete = async (pricingId) => {
-    await axios.delete(`projects/${params.project_id}/pricing/${pricingId}`)
-    getPricings();
-}
-
-const handleItemHide = async (pricing) => {
-    await axios.put(`projects/${params.project_id}/pricing/${pricing.id}/item-hide`, {
-        'hide_item': !Boolean(pricing.item_hidden)
-    });
-    getPricings();
-}
-
-const handleItemPriceHide = async (pricing) => {
-    await axios.put(`projects/${params.project_id}/pricing/${pricing.id}/item-price-hide`, {
-        'hide_item_price': !Boolean(pricing.price_hidden)
-    });
-    getPricings();
-}
-
-const handleUnitChange = async (payload) => {
-    await axios.put(`projects/${params.project_id}/pricing/${payload.pricingId}/item-unit-update`, {
-        'unit_id': payload.new_unit_id
-    });
-    getPricings();
-}
 
 const pricingItemKey = ref(0);
 const handleItemUpdated = async () => {

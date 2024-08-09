@@ -134,6 +134,9 @@ import { ref, watch } from 'vue'
 import Formatter from '../../../helpers/Formatter'
 import UnitSelector from './UnitSelector.vue'
 import AddPricingInput from './AddPricingInput.vue'
+import  axios from '../../../actions/api.js';
+import { useRoute } from 'vue-router';
+const {params} = useRoute();
 
 const props = defineProps(['pricing'])
 const emit = defineEmits([
@@ -153,14 +156,38 @@ const handleUpdated = () => {
 	emit('item-updated')
 }
 
-const handleItemHide = () => emit('item-hide', props.pricing)
-const handleItemPriceHide = () => emit('item-price-hide', props.pricing)
-const handleDeleteClick = () => emit('item-delete', props.pricing.id)
+const pricing = props.pricing;
 
-watch(unit, (newValue) => 
-	emit('unit-change', {
-	    pricingId: props.pricing.id,
-	    new_unit_id: newValue
+const handleItemHide = async () => {
+    await axios.put(`projects/${params.project_id}/pricing/${pricing.id}/item-hide`, {
+        'hide_item': !Boolean(pricing.item_hidden)
+    });
+	emit('item-updated')
+}
+
+const handleItemPriceHide = async () => {
+    await axios.put(`projects/${params.project_id}/pricing/${pricing.id}/item-price-hide`, {
+        'hide_item_price': !Boolean(pricing.price_hidden)
+    });
+	emit('item-updated')
+}
+
+const handleDeleteClick = async () => {
+    await axios.delete(`projects/${params.project_id}/pricing/${pricing.id}`)
+	emit('item-updated');
+}
+
+const handleUnitChange = async (payload) => {
+    await axios.put(`projects/${params.project_id}/pricing/${payload.pricingId}/item-unit-update`, {
+        'unit_id': payload.new_unit_id
+    });
+	emit('item-updated');
+}
+
+watch(unit, (new_unit_id) => 
+	handleUnitChange({
+	    pricingId: pricing.id,
+	    new_unit_id
 	})
 )
 

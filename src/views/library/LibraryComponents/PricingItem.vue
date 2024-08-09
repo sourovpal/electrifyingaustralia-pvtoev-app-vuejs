@@ -134,55 +134,29 @@ import { ref, watch } from 'vue'
 import Formatter from '../../../helpers/Formatter'
 import UnitSelector from './UnitSelector.vue'
 import AddPricingInput from './AddPricingInput.vue'
-import  axios from '../../../actions/api.js';
-import { useRoute } from 'vue-router';
-const {params} = useRoute();
+import useItemActions from './composables/useItemActions.js'
 
 const props = defineProps(['pricing'])
-const emit = defineEmits([
-	'item-hide',
-	'item-price-hide',
-	'item-delete',
-	'unit-change',
-	'item-update',
-])
+const emit = defineEmits(['item-updated'])
 
 const unit = ref(props.pricing.unit_id)
-
 const editMode = ref(false)
+
 const toggleEditMode = () => (editMode.value = !editMode.value)
+
 const handleUpdated = () => {
 	editMode.value = false
 	emit('item-updated')
 }
 
 const pricing = props.pricing;
-
-const handleItemHide = async () => {
-    await axios.put(`projects/${params.project_id}/pricing/${pricing.id}/item-hide`, {
-        'hide_item': !Boolean(pricing.item_hidden)
-    });
-	emit('item-updated')
-}
-
-const handleItemPriceHide = async () => {
-    await axios.put(`projects/${params.project_id}/pricing/${pricing.id}/item-price-hide`, {
-        'hide_item_price': !Boolean(pricing.price_hidden)
-    });
-	emit('item-updated')
-}
-
-const handleDeleteClick = async () => {
-    await axios.delete(`projects/${params.project_id}/pricing/${pricing.id}`)
-	emit('item-updated');
-}
-
-const handleUnitChange = async (payload) => {
-    await axios.put(`projects/${params.project_id}/pricing/${payload.pricingId}/item-unit-update`, {
-        'unit_id': payload.new_unit_id
-    });
-	emit('item-updated');
-}
+const {
+    loading,
+    handleDeleteClick,
+    handleItemPriceHide,
+    handleUnitChange,
+    handleItemHide
+} = useItemActions(emit, pricing);
 
 watch(unit, (new_unit_id) => 
 	handleUnitChange({
@@ -219,7 +193,7 @@ watch(unit, (new_unit_id) =>
     .unit-selector-loader { display: none; }
 
     &.loading {
-        small, div {opacity: 50%;}
+        small, div {opacity: 0 !important;}
         .unit-selector-loader { display: inline; }
     }
 }

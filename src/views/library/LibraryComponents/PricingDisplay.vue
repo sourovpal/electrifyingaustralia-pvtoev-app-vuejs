@@ -31,7 +31,9 @@
         />
 
         <div v-else class="row px-4 py-2 cursor-pointer" @click="handleAddAnotherItemClick">
-            <small class="fw-bold col-5 col-md-4 text-secondary">Add another item...</small>
+            <small class="fw-bold col-5 col-md-4 text-secondary">{{
+                pricings.length ? 'Click to add another item' : 'Click to add items'
+            }}</small>
         </div>
     </div>
 </template>

@@ -1,7 +1,7 @@
 <template>
 	<div
 		v-if="!editMode"
-		class="row pricing-value align-items-center px-4 py-2 gx-0"
+		:class="`row pricing-value ${ loading ? 'loading' : '' } align-items-center px-4 py-2 gx-0 position-relative`"
 	>
 		<!-- Description -->
 		<small
@@ -112,6 +112,13 @@
 				</div>
 			</div>
 		</div>
+
+        <span class="position-absolute unit-selector-loader">
+			<font-awesome-icon
+			    icon="fas fa-spinner"
+			    class="animate-spin"
+			/>
+        </span>
 	</div>
 
 	<AddPricingInput
@@ -163,6 +170,9 @@ watch(unit, (newValue) =>
 
 .strike-through { text-decoration: line-through; }
 .pricing-value > small { transition: 200ms; }
+.pricing-value {
+    transition: 200ms; 
+}
 
 .pricing-item-menu {
     opacity: 0.7;
@@ -172,5 +182,18 @@ watch(unit, (newValue) =>
         opacity: 1;
     }
 
+}
+
+.unit-selector-loader {
+    left: 50%;
+}
+
+.pricing-value {
+    .unit-selector-loader { display: none; }
+
+    &.loading {
+        small, div {opacity: 50%;}
+        .unit-selector-loader { display: inline; }
+    }
 }
 </style>

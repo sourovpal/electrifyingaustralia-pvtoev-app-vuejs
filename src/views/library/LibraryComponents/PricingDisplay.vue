@@ -1,7 +1,7 @@
 <template>
-    <div class="--overflow-x-hidden">
+    <div class="pricing-display">
         <!-- table header -->
-        <div class="row px-4 py-2 table-header border-bottom gx-0">
+        <div class="row px-4 py-2 table-header border-bottom --gx-0">
             <small class="fw-bold col-5 col-md-3 ">Description*</small>
             <small class="fw-bold col-1 col-md-2 text-end">Units</small>
             <small class="fw-bold col-2 col-md-2 text-end">Quantity</small>
@@ -82,6 +82,8 @@ const handleItemUpdated = async () => {
 .table-header {
     background: rgba(0, 0, 0, 0.05);
 }
+
+.pricing-display { overflow-x: clip; }
 
 .pricing-value {
     position: relative;

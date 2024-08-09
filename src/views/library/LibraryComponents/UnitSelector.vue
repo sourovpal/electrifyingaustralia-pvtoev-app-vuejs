@@ -10,9 +10,9 @@
 			    icon="fas fa-caret-down"
 			/>
 		</small>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        <ul class="dropdown-menu overflow-hidden" aria-labelledby="dropdownMenuLink">
             <li
-                class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer" 
+                class="py-2 px-3  dropdown-item cursor-pointer" 
                 v-for="unit in units" 
                 @click="handleUnitSelect(unit)"
             > 

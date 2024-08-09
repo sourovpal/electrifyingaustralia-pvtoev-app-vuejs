@@ -1,7 +1,7 @@
 <template>
 	<div
 		v-if="!editMode"
-		:class="`row pricing-value ${ loading ? 'loading' : '' } align-items-center px-4 py-2 gx-0 position-relative`"
+		:class="`row pricing-value ${ loading ? 'loading' : '' } align-items-center px-4 py-2 position-relative`"
 	>
 		<!-- Description -->
 		<small
@@ -50,7 +50,7 @@
 			}}
 		</small>
 
-		<div class="col-md-1">
+		<div class="col-2 col-md-1">
 			<div class="dropdown text-end p-0">
 				<div
 					class="fw-bold cursor-pointer pricing-item-menu"

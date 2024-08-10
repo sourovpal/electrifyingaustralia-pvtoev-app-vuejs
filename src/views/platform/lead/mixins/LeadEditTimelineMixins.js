@@ -108,7 +108,7 @@ export default {
                     return;
                 }
                 var data = {
-                    leads: [this.currentLead.id],
+                    leads:this.currentLead.id,
                     status: status.id,
                 };
                 const res = await UpdateMultipelLeadStatus(data);
@@ -126,7 +126,7 @@ export default {
             try {
                 var data = {
                     owner: owner?.id,
-                    leads: [this.currentLead?.id],
+                    leads: this.currentLead?.id,
                 };
                 const res = await UpdateMultipelLeadOwner(data);
                 this.leadStore.setLeadOwner(owner);

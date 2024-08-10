@@ -36,7 +36,6 @@ export default{
   border-bottom: 1px solid rgba(182, 182, 182, 0.4);
   padding: 3px 10px 3px 15px;
   display:flex;
-  font-size: 14px;
   font-weight: 400;
   white-space: nowrap;
   position: relative;

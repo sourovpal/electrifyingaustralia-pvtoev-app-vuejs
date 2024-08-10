@@ -16,14 +16,14 @@
 <template>
   <nav class="sidebar--submenu d-none d-md-block">
     <CustomScrollbar thumbWidth="8">
-      <div class="submenu-header">
-        <h1>{{ title }}</h1>
+      <div class="submenu-header d-none">
+        <h1 class="text-soft mb-0">{{ title }}</h1>
       </div>
 
       <div class="submenu-body">
 
         <div v-for="menu in menus"
-          :class="`submenu-group`"
+          :class="`submenu-group mt-2`"
           :key="menu.label">
           <a class="submenu-heading d-flex justify-content-start align-items-center">
             <span class="icon d-flex justify-content-start align-items-center"
@@ -55,20 +55,10 @@
     height: 100vh;
     margin-left: var(--main-left-navbar-width);
     overflow: hidden;
-    border-right: 1px solid #dddddd;
+    border-right: 1px solid var(--layout-border-color);
     position: relative;
     z-index: 99;
     padding-bottom: 40px;
-
-    @media (min-width: 767px) {
-      width: 13rem;
-      min-width: 13rem;
-    }
-
-    @media (min-width: 1200px) {
-      width: 18rem;
-      min-width: 18rem;
-    }
 
     .submenu-header {
       padding: 1.4rem;
@@ -92,7 +82,6 @@
 
     .submenu-heading {
       padding: 1rem 1.5rem 0.5rem;
-      font-size: .8125rem;
       font-weight: 700;
       margin: 0;
       color: #616e7c;
@@ -113,15 +102,14 @@
 
     .submenu-list {
       .submenu-link {
-        padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+        padding: 0.3rem 0.5rem 0.3rem 1.5rem;
         margin: 0 1rem 0 1.5rem;
         cursor: pointer;
         transition: background-color .2s ease;
         display: block;
         position: relative;
-        font-size: .8125rem;
         border-radius: 0.25rem;
-        color: #3e4c59;
+        color: #8094ae;
 
         &:hover,
         &:focus,

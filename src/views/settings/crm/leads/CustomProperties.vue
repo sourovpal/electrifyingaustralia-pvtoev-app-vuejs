@@ -9,7 +9,8 @@
     import DataNotFound from './DataNotFound.vue';
     import { FetchLeadProperties } from '../../../../actions/CrmLeads';
     import CreateCustomPropertieModal from './components/CreateCustomPropertieModal.vue';
-    import { propertiesIconList } from '../../../../asset/svgicon.js';
+    import { getCustomPropertieIcon } from "../../../../helpers/formats";
+
     export default {
         components: {
             ActionBar,
@@ -21,6 +22,9 @@
             PropetiesSkeletor,
             DataNotFound,
             CreateCustomPropertieModal,
+        },
+        setup() {
+            return { getCustomPropertieIcon };
         },
         data() {
             return {
@@ -40,13 +44,11 @@
                 selectedRows: [],
                 isSelectedAllRows: false,
                 isSelectedAllRowsReset: false,
-                iconList: {},
                 pipeline_id: 0,
                 pipeline_title: null,
             }
         },
         mounted() {
-            this.iconList = propertiesIconList;
             this.isFirstLoading = true;
             this.fetchPropertieDataHandler();
         },
@@ -54,6 +56,7 @@
             async fetchPropertieDataHandler(page = 1, limit = 25) {
                 try {
                     if (this.isLoading) { return; }
+
                     this.isLoading = true;
                     const querys = this.$route.query;
                     if (querys && querys.pipeline) {
@@ -62,6 +65,7 @@
                     }
 
                     const res = await FetchLeadProperties({ page, limit, pipeline_id: this.pipeline_id });
+
                     try {
                         const { properties, pagination } = res;
                         this.isFirstLoading = false;
@@ -151,7 +155,7 @@
                         d="M0 0h24v24H0V0z"></path>
                 </svg>
             </div>
-            <router-link :to="`/settings/crm/leads/${pipeline_id}`">
+            <router-link :to="`/settings/crm/pipeline/${pipeline_id}`">
                 <h1 class="mb-0 text-soft">{{ pipeline_title }}</h1>
             </router-link>
             <div class="mx-2 d-flex justify-content-center align-items-center">
@@ -191,51 +195,11 @@
         <div class="content-body- border-top">
             <action-bar>
                 <left-action-bar>
-                    <div class="ps-2">
-
-                        <label class="custom-form-checkbox btn btn-floating btn-light"
-                            @click="selectedAllRowsHandler">
-                            <svg v-if="!isSelectedAllRows && !isSelectedAllRowsReset"
-                                class="unchecked"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="currentColor"
-                                height="24"
-                                viewBox="0 -960 960 960"
-                                width="24">
-                                <path
-                                    d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z" />
-                            </svg>
-                            <svg v-if="isSelectedAllRows && !isSelectedAllRowsReset"
-                                class="checked"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="currentColor"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24">
-                                <path
-                                    d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z">
-                                </path>
-                            </svg>
-                            <svg v-if="isSelectedAllRowsReset"
-                                fill="currentColor"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24">
-                                <defs>
-                                    <path id="a"
-                                        d="M0 0h24v24H0z"></path>
-                                </defs>
-                                <clipPath id="b">
-                                    <use xlink:href="#a"
-                                        overflow="visible"></use>
-                                </clipPath>
-                                <path
-                                    d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z"
-                                    clip-path="url(#b)"></path>
-                            </svg>
-                        </label>
-
+                    <div class="d-flex justify-content-center align-item-start"
+                        style="margin-left: 8px">
+                        <custom-checkbox @click="selectedAllRowsHandler"
+                            :checked="isSelectedAllRows"
+                            :reset="isSelectedAllRowsReset" />
                     </div>
                     <div>
 
@@ -313,7 +277,7 @@
                     </div>
 
                     <div class="fw-bold d-flex justify-content-center align-items-center me-3 text-overflow-ellipsis fs-16px"
-                        style="min-width: 8rem;">{{ pagination.from }} - {{ pagination.to }} of {{ pagination.total }}
+                        style="min-width: 4rem;">{{ pagination.from }} - {{ pagination.to }} of {{ pagination.total }}
                     </div>
 
                     <button :disabled="!pagination.prev_page"
@@ -374,32 +338,8 @@
 
                         <div style="width:4rem;margin-left: -7px;"
                             class="tbl-td full-width">
-
-                            <label @click="singleRowSelectedHandler(propertie.id)"
-                                class="custom-form-checkbox btn btn-floating btn-light">
-                                <svg v-if="!selectedRows.includes(propertie.id)"
-                                    class="unchecked"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="currentColor"
-                                    height="24"
-                                    viewBox="0 -960 960 960"
-                                    width="24">
-                                    <path
-                                        d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z" />
-                                </svg>
-                                <svg v-else
-                                    class="checked"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="currentColor"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z">
-                                    </path>
-                                </svg>
-                            </label>
-
+                            <custom-checkbox @click="singleRowSelectedHandler(propertie.id)"
+                                :checked="selectedRows.includes(propertie.id)" />
                         </div>
 
                         <div style="width:15rem;"
@@ -417,8 +357,10 @@
                         <div style="width:10rem;flex-grow: 1;"
                             class="tbl-td">
                             <span class="me-2"
-                                v-if="iconList[propertie.data_type_id]"
-                                v-html="iconList[propertie.data_type_id]"></span>
+                                v-if="getCustomPropertieIcon(propertie.data_type_id)">
+                                <font-awesome-icon class="text-head"
+                                    :icon="getCustomPropertieIcon(propertie.data_type_id)" />
+                            </span>
                             <span class="text-overflow-ellipsis">{{ propertie.data_type }}</span>
                         </div>
 

@@ -60,7 +60,7 @@ const FindPipeline = (payload)=>{
     });
 }
 
-const UpdateOrCreatePipelines = (payload, id)=>{
+const UpdateOrCreatePipelines = (payload, id=null)=>{
     return new Promise((resolve, reject)=>{
         try{
             api.post(`/pipelines${id?'/'+id:''}`, payload)
@@ -75,10 +75,25 @@ const UpdateOrCreatePipelines = (payload, id)=>{
     });
 }
 
+const ChangePipelinePosition = (payload)=>{
+    return new Promise((resolve, reject)=>{
+        try{
+            api.post(`/pipelines/change-position`, payload)
+            .then((res)=>{
+                return resolve(res.data);
+            }).catch((error)=>{
+                return reject(error);
+            });
+        }catch(error){
+            return reject(error);
+        }
+    });
+}
+
 const FetchLeadProperties = (payload)=>{
     return new Promise((resolve, reject)=>{
         try{
-            api.get(`/lead-properties?page=${payload.page}&limit=${payload.limit}&pipeline_id=${payload.pipeline_id}`)
+            api.get(`/properties?page=${payload.page}&limit=${payload.limit}&pipeline_id=${payload.pipeline_id}`)
             .then((res)=>{
                 return resolve(res.data);
             }).catch((error)=>{
@@ -93,7 +108,7 @@ const FetchLeadProperties = (payload)=>{
 const FindLeadPropertie = (payload)=>{
     return new Promise((resolve, reject)=>{
         try{
-            api.get(`/lead-properties/${payload.id}`)
+            api.get(`/properties/${payload.id}`)
             .then((res)=>{
                 return resolve(res.data);
             }).catch((error)=>{
@@ -108,7 +123,7 @@ const FindLeadPropertie = (payload)=>{
 const CreateLeadPropertie = (payload)=>{
     return new Promise((resolve, reject)=>{
         try{
-            api.post(`/lead-properties`, payload)
+            api.post(`/properties`, payload)
             .then((res)=>{
                 return resolve(res.data);
             }).catch((error)=>{
@@ -123,7 +138,7 @@ const CreateLeadPropertie = (payload)=>{
 const UpdateLeadPropertie = (payload, id)=>{
     return new Promise((resolve, reject)=>{
         try{
-            api.post(`/lead-properties/${id}`, payload)
+            api.post(`/properties/${id}`, payload)
             .then((res)=>{
                 return resolve(res.data);
             }).catch((error)=>{
@@ -141,6 +156,7 @@ export {
     FetchLeadStatus,
     UpdateLeadStatus,
     UpdateOrCreatePipelines,
+    ChangePipelinePosition,
     FindPipeline,
     FetchLeadProperties,
     CreateLeadPropertie,

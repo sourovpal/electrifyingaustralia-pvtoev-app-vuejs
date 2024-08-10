@@ -40,7 +40,6 @@ export default{
 .tbl-header .tbl-tr .tbl-th{
   border-bottom: 1px solid rgb(182 182 182 / 40%);
   display: table-cell;
-  font-size: .875rem;
   font-weight: 700;
   color: #515253;
   padding: 6px 10px 6px 15px;

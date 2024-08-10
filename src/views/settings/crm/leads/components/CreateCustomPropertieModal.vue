@@ -289,7 +289,7 @@
                                 <ul class="list-unstyled mb-0">
                                     <li v-for="(item, index) in datatypeList"
                                         :key="index"
-                                        :class="`dropdown-item ${selectedDataTypeId == item.id?'bg-primary text-white':''}`"
+                                        :class="`py-1 dropdown-item ${selectedDataTypeId == item.id?'bg-primary text-white':''}`"
                                         @click="datatypeHandler(item.id)">
                                         {{ item.data_type }}
                                     </li>

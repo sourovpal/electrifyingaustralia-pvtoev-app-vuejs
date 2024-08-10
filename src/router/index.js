@@ -431,6 +431,33 @@ const routes = [
                 beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
                 children: [
                     {
+                        name: 'LeadsIndex',
+                        path: 'leads',
+                        component: () => import('../views/settings/crm/leads/LeadsOptionsIndex.vue'),
+                        beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
+                        meta: {
+                            title: 'Home Page',
+                        },
+                    },
+                    {
+                        name: 'PipelineEdit',
+                        path: 'pipeline/create',
+                        component: () => import('../views/settings/crm/leads/PipelineEdit.vue'),
+                        beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
+                        meta: {
+                            title: 'Home Page',
+                        },
+                    },
+                    {
+                        name: 'PipelineEdit',
+                        path: 'pipeline/:id',
+                        component: () => import('../views/settings/crm/leads/PipelineEdit.vue'),
+                        beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
+                        meta: {
+                            title: 'Home Page',
+                        },
+                    },
+                    {
                         name: 'EmailIndex',
                         path: 'email',
                         component: () => import('../views/settings/crm/email/EmailIndex.vue'),
@@ -449,27 +476,9 @@ const routes = [
                         },
                     },
                     {
-                        name: 'LeadsIndex',
-                        path: 'leads',
-                        component: () => import('../views/settings/crm/leads/LeadsIndex.vue'),
-                        beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
-                        meta: {
-                            title: 'Home Page',
-                        },
-                    },
-                    {
                         name: 'LeadCustomProperties',
-                        path: 'leads/properties',
+                        path: 'properties',
                         component: () => import('../views/settings/crm/leads/CustomProperties.vue'),
-                        beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
-                        meta: {
-                            title: 'Home Page',
-                        },
-                    },
-                    {
-                        name: 'PipelineEdit',
-                        path: 'leads/:id',
-                        component: () => import('../views/settings/crm/leads/PipelineEdit.vue'),
                         beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
                         meta: {
                             title: 'Home Page',

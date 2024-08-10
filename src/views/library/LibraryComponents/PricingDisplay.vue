@@ -11,12 +11,15 @@
         </div>
 
         <!-- table rows -->
-        <PricingItem
-            v-for="pricing in pricings" 
-            :pricing
-            :key="pricingItemKey"
-            @item-updated="handleItemUpdated"
-        />
+
+        <vue-draggable-next class="pricing-item-list" tag="div" :list="items" handle=".handle">
+            <PricingItem
+                v-for="pricing in pricings" 
+                :pricing
+                :key="pricingItemKey"
+                @item-updated="handleItemUpdated"
+            />
+        </vue-draggable-next>
 
         <AddPricingInput
             ref="addInputWrapper"
@@ -37,6 +40,7 @@
 <script setup>
 import axios from '../../../actions/api.js';
 import { useRoute } from 'vue-router';
+import { VueDraggableNext } from 'vue-draggable-next';
 import AddPricingInput from './AddPricingInput.vue';
 import PricingItem from './PricingItem.vue';
 import { onMounted, ref } from 'vue';

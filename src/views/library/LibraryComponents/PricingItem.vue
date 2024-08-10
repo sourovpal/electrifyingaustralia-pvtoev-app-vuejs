@@ -3,6 +3,9 @@
 		v-if="!editMode"
 		:class="`row pricing-value ${ loading ? 'loading' : '' } align-items-center px-4 py-2 position-relative`"
 	>
+        <div class="icon handle position-absolute">
+            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path> <path  d="M20 9H4v2h16V9zM4 15h16v-2H4v2z"></path></svg>
+        </div>
 		<!-- Description -->
 		<small
 			:class="pricing.item_hidden ? 'opacity-50' : ''"
@@ -170,10 +173,6 @@ watch(unit, (new_unit_id) =>
 <style lang="scss">
 
 .strike-through { text-decoration: line-through; }
-.pricing-value > small { transition: 200ms; }
-.pricing-value {
-    transition: 200ms; 
-}
 
 .pricing-item-menu {
     opacity: 0.7;
@@ -190,11 +189,26 @@ watch(unit, (new_unit_id) =>
 }
 
 .pricing-value {
+    transition: 200ms; 
+
+    & > small { transition: 200ms; }
     .unit-selector-loader { display: none; }
 
     &.loading {
-        small, div {opacity: 0 !important;}
+        small, div { opacity: 0 !important; }
         .unit-selector-loader { display: inline; }
     }
+
+    .icon.handle { 
+        opacity: 0;
+        display: grid;
+        place-items: center;
+        width: 1rem;
+        left: 0.175rem; 
+        cursor: move;
+    }
+
+    &:hover .icon.handle { opacity: 1; }
+
 }
 </style>

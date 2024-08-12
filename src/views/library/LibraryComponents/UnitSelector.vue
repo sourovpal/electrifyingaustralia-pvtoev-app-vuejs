@@ -5,18 +5,24 @@
             data-mdb-toggle="dropdown"
             aria-expanded="false"
         >
-			<span class="me-3">{{ selectedUnitName }}</span>
-			<font-awesome-icon
-			    icon="fas fa-caret-down"
-			/>
+			<span class="me-3" v-if="selectedUnitName">{{ selectedUnitName }}</span>
+			<span class="me-3 text-secondary" v-else>Select</span>
+
+			<font-awesome-icon icon="fas fa-caret-down" />
 		</small>
         <ul class="dropdown-menu overflow-hidden" aria-labelledby="dropdownMenuLink">
             <li
-                class="py-2 px-3  dropdown-item cursor-pointer" 
-                v-for="unit in units" 
+                class="py-2 px-3 dropdown-item cursor-pointer d-flex align-items-center justify-content-between" 
+                v-for="unit in computedUnits" 
                 @click="handleUnitSelect(unit)"
             > 
-                {{ unit.name }}
+                <span :class="unit.id ? '' : 'text-danger'">{{ unit.name }}</span>
+                <span class="text-secondary fs-11px">({{ unit.description }})</span>
+                <font-awesome-icon 
+                    v-if="!unit.id" 
+                    class="text-danger" 
+                    icon="fas fa-trash" 
+                />
             </li>
         </ul>
 	</div>
@@ -30,8 +36,15 @@ import { computed } from 'vue';
 const appStore = useAppStore();
 const { units } = storeToRefs(appStore);
 
-const props = defineProps(['selected', 'modelValue']);
-const emit = defineEmits(['update:modelValue']);
+const props = defineProps([
+    'selected',
+    'modelValue'
+]);
+
+const emit = defineEmits([
+    'update:modelValue',
+    'unit-remove-click'
+]);
 
 const selectedUnitName = computed(() => {
     if (!units?.value?.length) return '';
@@ -41,9 +54,15 @@ const selectedUnitName = computed(() => {
     return selectedUnit.name;
 });
 
-const handleUnitSelect = (unit) => {
-    emit('update:modelValue', unit.id);
-}
+const computedUnits = computed(() => (
+    [  
+        props.modelValue ? { name: 'Remove unit', id: null } : null,
+       ...units.value
+    ]
+    .filter(v => v))
+);
+
+const handleUnitSelect = (unit) => emit('update:modelValue', unit.id);
 
 </script>
 

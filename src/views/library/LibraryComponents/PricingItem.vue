@@ -12,7 +12,6 @@
 			class="col-5 col-md-3 cursor-pointer"
 			@click="toggleEditMode"
 		>
-            <span class="text-danger fw-bold">({{ $attrs.idx + 1 }})</span>
 			{{ pricing.description }}
 		</small>
 

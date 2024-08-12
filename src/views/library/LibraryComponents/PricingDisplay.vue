@@ -1,5 +1,5 @@
 <template>
-    <div class="pricing-display">
+    <div class="pricing-display position-relative">
         <!-- table header -->
         <div class="row px-4 py-2 table-header border-bottom --gx-0">
             <small class="fw-bold col-5 col-md-3 ">Description*</small>
@@ -12,11 +12,18 @@
 
         <!-- table rows -->
 
-        <vue-draggable-next class="pricing-item-list" tag="div" :list="items" handle=".handle">
+        <vue-draggable-next
+            :class="`pricing-item-list ${loading ? 'opacity-30 pe-none' : ''}`"
+            tag="div" 
+            :list="pricings" 
+            @change="handleChange" 
+            handle=".handle"
+        >
             <PricingItem
-                v-for="pricing in pricings" 
+                v-for="(pricing, idx) in pricings" 
                 :pricing
-                :key="pricingItemKey"
+                :idx
+                :key="`#${pricingItemKey}-${pricing.id}`"
                 @item-updated="handleItemUpdated"
             />
         </vue-draggable-next>
@@ -34,17 +41,26 @@
                 pricings.length ? 'Click to add another item' : 'Click to add items'
             }}</small>
         </div>
+
+        <div v-if="loading" class="position-absolute pricing-items-loader">
+			<font-awesome-icon
+			    icon="fas fa-spinner"
+			    class="animate-spin"
+			/>
+        </div>
     </div>
 </template>
 
 <script setup>
 import axios from '../../../actions/api.js';
-import { useRoute } from 'vue-router';
-import { VueDraggableNext } from 'vue-draggable-next';
 import AddPricingInput from './AddPricingInput.vue';
 import PricingItem from './PricingItem.vue';
+
+import { useRoute } from 'vue-router';
+import { VueDraggableNext } from 'vue-draggable-next';
 import { onMounted, ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
+
 const { params } = useRoute();
 
 const addInputWrapper = ref(null);
@@ -80,6 +96,20 @@ const handleItemUpdated = async () => {
     pricingItemKey.value++;
 }
 
+const loading = ref(false);
+const handleChange = async () => {
+    loading.value = true;
+    const indicesMappedToOrders = pricings.value.map(({id, description}, i) => ({id, order: i, description}))
+
+    await axios.put(
+        `projects/${params.project_id}/pricing/items-order-update`,
+        { new_order_values: indicesMappedToOrders }
+    );
+
+    await getPricings();
+    loading.value = false
+};
+
 </script>
 
 <style lang="scss" scoped>
@@ -101,5 +131,10 @@ const handleItemUpdated = async () => {
         position: absolute;
         right: 0;
     }
+}
+
+.pricing-items-loader {
+    top: 50%;
+    left: 50%;
 }
 </style>

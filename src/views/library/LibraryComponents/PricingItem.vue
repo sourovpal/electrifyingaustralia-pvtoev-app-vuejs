@@ -11,8 +11,10 @@
 			:class="pricing.item_hidden ? 'opacity-50' : ''"
 			class="col-5 col-md-3 cursor-pointer"
 			@click="toggleEditMode"
-			>{{ pricing.description }}</small
 		>
+            <span class="text-danger fw-bold">({{ $attrs.idx + 1 }})</span>
+			{{ pricing.description }}
+		</small>
 
 		<!-- Units -->
 		<small

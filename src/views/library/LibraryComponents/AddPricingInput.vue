@@ -3,6 +3,7 @@
         <div class="col-5 col-md-3">
             <input
                 v-model="formData.description" 
+                @keyup.enter="handleCreateClick"
                 placeholder="Enter description" 
                 class="form-control p-1 ps-2" 
                 type="text" 
@@ -17,7 +18,9 @@
             <input
                 placeholder="Quantity"
                 :min="0"
+                :disabled="!formData.description"
                 v-model.number="formData.quantity"
+                @keyup.enter="handleCreateClick"
                 :class="`form-control text-end p-1 ${ formData.quantity < 0 ? 'invalid-input' : '' }`"
                 type="number"
             />
@@ -28,7 +31,9 @@
                 placeholder="Unit price"
                 :class="`form-control text-end p-1 ${ formData.unit_price < 0 ? 'invalid-input' : '' }`"
                 :min="0"
+                :disabled="!formData.description"
                 v-model.number="formData.unit_price"
+                @keyup.enter="handleCreateClick"
                 type="number"
             />
         </div>
@@ -75,7 +80,7 @@ const formData = ref({
     description: props.pricing?.description ?? '',
     quantity: props.pricing?.quantity ?? '',
     unit_price: props.pricing?.unit_price ?? '',
-    unit_id: props.pricing?.unit_id ?? 1,
+    unit_id: props.pricing?.unit_id ?? null, // the 'null' serves as the id for a default placeholder record
 })
 
 const invalidInput = computed(() => {
@@ -94,15 +99,17 @@ const invalidInput = computed(() => {
 });
 
 const handleCreateClick = async () => {
-    loading.value = true;
-    const projectId = currentRoute.params.project_id;
-    const { description, quantity, unit_price, unit_id } = formData.value;
+    if (!formData.value.description)
+        return;
 
+    loading.value = true;
+
+    const projectId = currentRoute.params.project_id;
     const payload = {
-        description,
-        quantity,
-        unit_price,
-        unit_id
+        description: formData.value.description,
+        quantity: formData.value.quantity,
+        unit_price: formData.value.unit_price,
+        unit_id: formData.value.unit_id
     }
 
     if (!props.pricing) {

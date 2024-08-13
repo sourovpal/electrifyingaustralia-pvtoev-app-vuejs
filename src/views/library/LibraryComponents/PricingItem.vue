@@ -4,7 +4,16 @@
 		:class="`row pricing-value ${ loading ? 'loading' : '' } align-items-center px-4 py-2 position-relative`"
 	>
         <div class="icon handle position-absolute">
-            <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 0 24 24" width="18px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"></path> <path  d="M20 9H4v2h16V9zM4 15h16v-2H4v2z"></path></svg>
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="18px"
+                viewBox="0 0 24 24"
+                width="18px"
+                fill="#000000"
+            >
+                <path d="M0 0h24v24H0z" fill="none"></path> 
+                <path  d="M20 9H4v2h16V9zM4 15h16v-2H4v2z"></path>
+            </svg>
         </div>
 		<!-- Description -->
 		<small

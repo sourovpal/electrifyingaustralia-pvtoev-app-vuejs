@@ -42,11 +42,12 @@
 
 		<!-- Unit Price -->
 		<small
-			:class="pricing.item_hidden ? 'opacity-50' : ''"
-			class="col-2 col-md-2 text-end cursor-pointer"
-			@click="toggleEditMode"
-			>{{ pricing.unit_price ?? '-' }}</small
+		    :class="pricing.item_hidden ? 'opacity-50' : ''" 
+		    class="col-2 col-md-2 text-end cursor-pointer" 
+		    @click="toggleEditMode"
 		>
+		    {{ pricing.unit_price ? '$ ' + Formatter.toIntlFormat(pricing.unit_price) : '-' }}
+		</small>
 
 		<!-- Total -->
 		<small
@@ -58,7 +59,7 @@
 		>
 			{{
 				pricing.total
-					? '$' + Formatter.toIntlFormat(pricing.total)
+					? '$ ' + Formatter.toIntlFormat(pricing.total)
 					: '-'
 			}}
 		</small>
@@ -116,9 +117,9 @@
 						class="py-2 px-3 overflow-hidden dropdown-item cursor-pointer d-flex align-items-center justify-content-between px-4 text-danger"
 						@click="handleDeleteClick(pricing.id)"
 					>
-						Delete item
+						<span class="text-danger">Delete item</span>
 						<font-awesome-icon
-							class="fs-12px"
+							class="fs-12px text-danger"
 							icon="fas fa-trash"
 						/>
 					</li>

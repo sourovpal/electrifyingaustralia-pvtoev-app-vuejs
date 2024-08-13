@@ -17,7 +17,7 @@
                 @click="handleUnitSelect(unit)"
             > 
                 <span :class="unit.id ? '' : 'text-danger'">{{ unit.name }}</span>
-                <span class="text-secondary fs-11px">({{ unit.description }})</span>
+                <span class="text-secondary fs-11px" v-if="unit.description">({{ unit.description }})</span>
                 <font-awesome-icon 
                     v-if="!unit.id" 
                     class="text-danger" 

@@ -1,6 +1,6 @@
 <script>
     export default {
-        
+
     }
 </script>
 <template>
@@ -13,7 +13,8 @@
         <div class="col-lg-5 col-12">
 
             <div class="settings-group-item">
-                <label class="form-label-title" for="">Map base layer style</label>
+                <label class="form-label-title"
+                    for="">Map base layer style</label>
                 <div class="select-box">
                     <select class="form-control">
                         <option value="">Select Options</option>
@@ -24,7 +25,9 @@
             </div>
 
             <div>
-                <button class="btn btn-primary fw-bold">Save Settings</button>
+                <loading-button class="btn-sm">
+                    Save Settings
+                </loading-button>
             </div>
         </div>
     </div>

@@ -9,7 +9,7 @@ export const useLeadStore = defineStore('lead', {
       prev_lead: null,
       next_lead: null,
       leadProperties: [],
-      leadPropertiesValues:{},
+      leadPropertiesValues: {},
       leadSources: [],
       leadOwner: null,
       pipelines: [],
@@ -20,9 +20,9 @@ export const useLeadStore = defineStore('lead', {
       leadStages: [],
       leadPipelineProperties: [],
       leadSubscribers: [],
-      isPipelineLead:false,
-      pipelineProperties:[],
-      leadFiles:[],
+      isPipelineLead: false,
+      pipelineProperties: [],
+      leadFiles: [],
     }
   },
   getters: {
@@ -80,10 +80,10 @@ export const useLeadStore = defineStore('lead', {
     getLeadSubscribers(stage) {
       return stage.leadSubscribers;
     },
-    getIsPipelineLead(stage){
+    getIsPipelineLead(stage) {
       return stage.isPipelineLead;
     },
-    getLeadFiles(stage){
+    getLeadFiles(stage) {
       return stage.leadFiles;
     }
   },
@@ -136,51 +136,11 @@ export const useLeadStore = defineStore('lead', {
     setLeadSubscribers(payload) {
       this.leadSubscribers = payload;
     },
-    setIsPipelineLead(payload){
+    setIsPipelineLead(payload) {
       return this.isPipelineLead = payload;
     },
-    setLeadFiles(payload){
+    setLeadFiles(payload) {
       this.leadFiles = payload;
-    },
-    setLeadEditTimelineData(payload) {
-      try {
-        const {
-          lead,
-          next_lead,
-          prev_lead,
-          lead_properties,
-          lead_sources,
-          lead_stages,
-          pipeline_properties,
-        } = payload;
-
-        this.setCurrentLead(lead);
-        this.setIsPipelineLead(!!(lead?.pipeline_id && lead?.pipeline_stage_id));
-        this.setLeadPropertiesValues(lead?.properties_values??{});
-        this.setPrevLead(prev_lead);
-        this.setNextLead(next_lead);
-        this.setLeadSubscribers(lead?.lead_subscribers ?? []);
-        this.setLeadProperties(lead_properties ?? []);
-        this.setPipelineProperties(pipeline_properties);
-        this.setLeadSources(lead_sources ?? []);
-        this.setLeadOwner(lead?.owner ?? {});
-        this.setLeadStages(lead_stages);
-        this.setLeadFiles(lead?.lead_files);
-        if (lead?.contacts?.length) {
-          this.setLeadContacts(lead?.contacts??[]);
-          if (lead?.primary_contact) {
-            this.setPrimaryContact(lead.primary_contact??{})
-          } else {
-            this.setPrimaryContact(lead?.contacts[0]??{})
-          }
-        } else {
-          this.leadContacts = [];
-          this.primaryContact = {};
-        }
-
-      } catch (error) {
-        console.log(error);
-      }
     },
   }
 });

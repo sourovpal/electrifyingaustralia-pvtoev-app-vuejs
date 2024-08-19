@@ -439,18 +439,10 @@ const routes = [
                             title: 'Home Page',
                         },
                     },
+                    
                     {
                         name: 'PipelineEdit',
-                        path: 'pipeline/create',
-                        component: () => import('../views/settings/crm/leads/PipelineEdit.vue'),
-                        beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
-                        meta: {
-                            title: 'Home Page',
-                        },
-                    },
-                    {
-                        name: 'PipelineEdit',
-                        path: 'pipeline/:id',
+                        path: 'pipeline/:id?',
                         component: () => import('../views/settings/crm/leads/PipelineEdit.vue'),
                         beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
                         meta: {

@@ -1,4 +1,6 @@
 
+import { useToast } from "vue-toast-notification";
+
 export const CONFIG = {
     ...import.meta.env,
     TOAST: {
@@ -14,4 +16,10 @@ export const CONFIG = {
             allowHTML: true,
         },
     }
+}
+
+const $toast = useToast(CONFIG.TOAST);
+
+export {
+    $toast
 }

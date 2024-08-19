@@ -3,16 +3,44 @@ import Storage from "../helpers/Storage";
 import { defineStore } from 'pinia';
 import { CONFIG } from "../config";
 
+var initialCompany = {};
+var initialLeadStatuses = [];
+var initialPipelines = [];
+var initialPermissions = [];
+
+
 const appStorage = new Storage(CONFIG.VITE_AUTH_APP);
+const {
+  lead_statuses,
+  pipelines,
+  permissions,
+  company
+} = appStorage.get();
+
+if (typeof company == 'object') {
+  initialCompany = company;
+}
+
+if (Array.isArray(lead_statuses)) {
+  initialLeadStatuses = lead_statuses;
+}
+
+if (Array.isArray(pipelines)) {
+  initialPipelines = pipelines;
+}
+
+if (Array.isArray(permissions)) {
+  initialPermissions = permissions;
+}
 
 export const useAppStore = defineStore('app', {
 
   state: () => {
     return {
-      company: {},
-      leadStatuses: [],
-      pipelines: [],
-      permissions: [],
+      company: initialCompany,
+      leadStatuses: initialLeadStatuses,
+      pipelines: initialPipelines,
+      permissions: initialPermissions,
       users: [],
     }
   },
@@ -51,7 +79,6 @@ export const useAppStore = defineStore('app', {
       this.pipelines = payload;
     },
     async fetchAppData() {
-      this.setLocalStorageData();
       try {
         await api.get(`/app`).then((res) => {
           this.setLocalStorageData(res.data);
@@ -60,23 +87,23 @@ export const useAppStore = defineStore('app', {
         });
       } catch (error) { }
     },
-    setLocalStorageData(payload = null) {
+    setLocalStorageData(payload = {}) {
       var {
         lead_statuses,
         pipelines,
         permissions,
         company,
         users
-      } = { ...appStorage.get(), ...payload ?? {} };
-      if (payload) {
-        this.setCompany(company ?? {});
-        this.setUsers(users ?? []);
-        appStorage.remove();
-        appStorage.set({ lead_statuses, permissions, company, pipelines });
-      }
-      this.setPermssions(permissions);
-      this.setLeadStatuses(lead_statuses);
-      this.setPipelines(pipelines);
+      } = payload ?? {};
+      
+      appStorage.remove();
+      appStorage.set({ lead_statuses, permissions, company, pipelines });
+
+      if (typeof lead_statuses != 'undefined') this.setLeadStatuses(lead_statuses);
+      if (typeof pipelines != 'undefined') this.setPipelines(pipelines);
+      if (typeof permissions != 'undefined') this.setPermssions(permissions);
+      if (typeof company != 'undefined') this.setCompany(company);
+      if (typeof users != 'undefined') this.setUsers(users);
 
     },
   }

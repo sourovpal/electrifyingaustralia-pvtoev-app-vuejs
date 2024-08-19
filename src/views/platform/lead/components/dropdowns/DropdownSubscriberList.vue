@@ -19,24 +19,41 @@
     },
     methods: {
       async selectSubscribersHandler(item) {
-        if (this.selectedSubscribers.includes(item?.id)) {
+
+        if (this.selectedSubscribers.includes(item?.user_id)) {
+
           this.selectedSubscribers.splice(
-            this.selectedSubscribers.indexOf(item?.id),
+            this.selectedSubscribers.indexOf(item?.user_id),
             1
           );
+
         } else {
-          this.selectedSubscribers.push(item?.id);
+
+          this.selectedSubscribers.push(item?.user_id);
+
         }
+
         try {
-          if (this.owner?.id) {
-            this.selectedSubscribers.push(this.owner.id);
+
+          if (this.owner?.user_id && !this.selectedSubscribers.includes(this.owner?.user_id)) {
+            this.selectedSubscribers.push(this.owner.user_id);
           }
+
           const payload = {
-            lead_id: this.$route.params?.id ?? "",
-            user_ids: this.selectedSubscribers,
+            lead: this.$route.params?.id,
+            subscribers: this.selectedSubscribers,
           };
+
           const res = await UpdateSubscribers(payload);
-        } catch (error) { }
+          const { success, message } = res
+
+          if (!success) {
+            this.$toast.error(message.text);
+          }
+          
+        } catch (error) {
+          this.$toast.error("Oops, something went wrong");
+        }
       },
       filterOwners() {
         return this.owners?.filter((item) => {
@@ -89,7 +106,7 @@
 
           <div class="dropdown-header">Primary Subscriber</div>
 
-          <div v-if="owner?.id"
+          <div v-if="owner?.user_id"
             class="dropdown-item noselect px-2">
             <img :src="owner?.profile_avatar"
               draggable="false" />
@@ -124,7 +141,7 @@
               :key="index"
               @click="selectSubscribersHandler(item)">
               <label class="custom-form-checkbox btn btn-floating btn-light me-2 disabled">
-                <svg v-if="!selectedSubscribers.includes(item?.id)"
+                <svg v-if="!selectedSubscribers.includes(item?.user_id)"
                   class="unchecked"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"

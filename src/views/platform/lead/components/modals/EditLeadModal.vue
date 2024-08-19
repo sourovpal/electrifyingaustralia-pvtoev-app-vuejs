@@ -14,7 +14,7 @@ import { useAppStore } from "../../../../../stores/app";
 import LeadCustomProperties from "./sections/LeadCustomProperties.vue";
 import { useToast } from "vue-toast-notification";
 import { CONFIG } from "../../../../../config";
-import MultipleSelectVue from "./fields/MultipleSelect.vue";
+import SelectLeadSource from "./fields/SelectLeadSource.vue";
 // Define
 const emits = defineEmits(["findLeadByIdHandler"]);
 // Assign Veriable
@@ -79,7 +79,7 @@ async function submitLeadFormHandler() {
     var data = {
       ...leadFormData,
       properties_values: { ...customFormData.value },
-      lead_id: currentLead.value.id,
+      lead_id: currentLead.value.lead_id,
     };
     const res = await LeadUpdate(data);
     const { message } = res;
@@ -211,7 +211,7 @@ defineExpose({ showModalHandler, hideModalHandler });
               <div class="col-lg-6">
                 <div class="mb-3 position-relative">
                   <label class="form-label-title" for="">Lead source</label>
-                  <MultipleSelectVue
+                  <SelectLeadSource
                     :options="leadSources"
                     v-model="leadFormData['lead_source']"
                     :input="true"

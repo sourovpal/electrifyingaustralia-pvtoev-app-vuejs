@@ -5,8 +5,8 @@
     import Datatable from '../../../../components/Datatable/Datatable.vue';
     import DatatableHeader from '../../../../components/Datatable/DatatableHeader.vue';
     import DatatableBody from '../../../../components/Datatable/DatatableBody.vue';
-    import PropetiesSkeletor from './PropetiesSkeletor.vue';
-    import DataNotFound from './DataNotFound.vue';
+    import PropetiesSkeletor from './components/PropetiesSkeletor.vue';
+    import DataNotFound from './components/DataNotFound.vue';
     import { FetchLeadProperties } from '../../../../actions/CrmLeads';
     import CreateCustomPropertieModal from './components/CreateCustomPropertieModal.vue';
     import { getCustomPropertieIcon } from "../../../../helpers/formats";

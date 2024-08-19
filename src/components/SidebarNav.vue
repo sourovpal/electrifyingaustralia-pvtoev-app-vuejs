@@ -5,7 +5,6 @@
   import { useToast } from "vue-toast-notification";
   import ProfileDropdown from "./ProfileDropdown.vue";
   import NotificationsDropdown from "./NotificationsDropdown.vue";
-  import { LogoutAction } from "../actions/AuthAction";
   import Storage from "../helpers/Storage";
   import { CONFIG } from "../config";
   import { useAppStore } from "../stores/app";

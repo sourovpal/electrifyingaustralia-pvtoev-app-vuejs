@@ -30,9 +30,7 @@
     if (index > -1) {
       selectedIds.value.splice(index, 1);
     } else {
-      if (id > -1) {
-        selectedIds.value.push(id);
-      }
+      selectedIds.value.push(id);
     }
     emits("update:modelValue", selectedIds.value);
     emits("change", selectedIds.value);
@@ -51,9 +49,9 @@
 
     <label v-for="(owner, index) in owners"
       :key="index"
-      @click="selectOwnerHandler(owner.id)"
+      @click="selectOwnerHandler(owner.user_id)"
       class="d-flex justify-content-start align-items-center py-1 check-label-propertis">
-      <custom-checkbox :checked="selectedIds.includes(owner.id)" />
+      <custom-checkbox :checked="selectedIds.includes(owner.user_id)" />
       <span class="fs-14px ms-1">{{ owner.name }}</span>
     </label>
   </make-dropdown>

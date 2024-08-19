@@ -1,16 +1,16 @@
 import api from "./api";
 
-const FetchAppData = ()=>{
-    // return new Promise((resolve, reject)=>{
-    //     api.get(`/login`, payload)
-    //     .then((res)=>{
-    //         return resolve(res.data);
-    //     }).catch((error)=>{
-    //         return reject(error);
-    //     });
-    // });
+const GetAppDependencies = (payload) => {
+    return new Promise((resolve, reject) => {
+        api.post(`/app/dependencies`, payload)
+            .then((res) => {
+                return resolve(res.data);
+            }).catch((error) => {
+                return reject(error);
+            });
+    });
 }
 
 export {
-    FetchAppData
+    GetAppDependencies
 }

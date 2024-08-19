@@ -1,19 +1,17 @@
 <script>
     import DealPipelinesSkeletor from './DealPipelinesSkeletor.vue';
-    import { ChangePipelinePosition } from '../../../../actions/CrmLeads';
+    import {
+        ChangePipelinePosition,
+        FetchAllPipelines
+    } from '../../../../../actions/PipelineAction';
+
     export default {
         name: 'ProfileIndex',
-        props: {
-            pipelines: {
-                type: Array,
-                default:[],
-            },
-            isFirstLoading: {
-                default: false,
-            },
-        },
         data() {
             return {
+                pipelines: [{ id: null, title: 'Example Pipeline', total_stages: 0, created_ago: '1 seconds ago', total_properties: 1, }],
+                isLoading: false,
+                isFirstLoading: false,
                 isSubmitPipelineUpdate: false,
             }
         },
@@ -51,7 +49,24 @@
                 } finally {
                     this.isSubmitPipelineUpdate = false;
                 }
+            },
+            async fetchAllPipeline() {
+                try {
+                    this.$toast.clear();
+                    this.isLoading = true;
+                    const res = await FetchAllPipelines();
+                    const { success, pipelines } = res;
+                    this.isFirstLoading = this.isLoading = false;
+                    if (success) {
+                        this.pipelines = pipelines;
+                    }
+                } finally {
+                }
             }
+        },
+        mounted() {
+            this.isFirstLoading = true;
+            this.fetchAllPipeline();
         },
     }
 </script>
@@ -94,14 +109,14 @@
                             </svg>
                         </div>
                         <div>
-                            <router-link :to="item.id?`/settings/crm/pipeline/${item.id}`:``"
+                            <router-link :to="item.pipeline_id?`/settings/crm/pipeline/${item.pipeline_id}`:``"
                                 class="btn btn-outline-primary edit-pipeline-btn fw-bold btn-sm">Edit
                                 pipeline</router-link>
                         </div>
                     </div>
                     <div class="card-body flex-wrap d-flex justify-content-between align-items-center px-3">
                         <div class="">
-                            <span class="time">Created {{ item.created_ago }} · {{ item.total_stages }} stages</span>
+                            <span class="time">Created {{ item.created_at }} ago · {{ item.stages_count }} stages</span>
                         </div>
                         <div class="d-flex align-items-center flex-grow-1 justify-content-end">
                             <div>
@@ -160,7 +175,7 @@
             </div>
 
             <div class="mt-3">
-                <router-link to="/settings/crm/pipeline/create"
+                <router-link to="/settings/crm/pipeline"
                     class="btn btn-primary fw-bold">Add new pipeline</router-link>
             </div>
 

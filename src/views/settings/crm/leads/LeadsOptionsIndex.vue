@@ -1,56 +1,6 @@
-<script>
-    import LeadStatuses from './LeadStatuses.vue';
-    import DealPipelines from './DealPipelines.vue';
-    import { FetchLeadStatus, UpdateLeadStatus, FetchLeadStatusAndDealPiplines } from '../../../../actions/CrmLeads';
-
-    export default {
-        name: 'ProfileIndex',
-        data() {
-            return {
-                lead_statuses: [],
-                pipelines: [{ id: null, title: 'Example Pipeline', total_stages: 0, created_ago: '1 seconds ago', total_properties: 1, }],
-                isFirstLoading: false,
-            }
-        },
-        components: {
-            LeadStatuses,
-            DealPipelines,
-        },
-        methods: {
-            async fetchLeadStatusAndDealPiplinesHandler() {
-                try {
-                    const res = await FetchLeadStatusAndDealPiplines();
-                    try {
-                        const { lead_statuses, pipelines } = res;
-                        if (lead_statuses.length > 0) {
-                            this.lead_statuses = lead_statuses;
-                        }
-                        if (pipelines.length > 0) {
-                            this.pipelines = pipelines;
-                        }
-                        this.isFirstLoading = false;
-                    } catch (error) {
-                        throw new Error(error.message);
-                    }
-
-                } catch (error) {
-                    try {
-                        var message = error.response.data.message;
-                        this.$toast[message.type](message.text);
-                    } catch (e) {
-                        this.$toast.error('Oops, something went wrong');
-                    }
-                } finally {
-                    this.isFirstLoading = false;
-                }
-            }
-        },
-        mounted() {
-            this.isFirstLoading = true;
-            this.fetchLeadStatusAndDealPiplinesHandler();
-        },
-    }
-
+<script setup>
+    import LeadStatuses from './components/LeadStatuses.vue';
+    import DealPipelines from './components/DealPipelines.vue';
 </script>
 
 <template>
@@ -62,12 +12,11 @@
         <div class="content-body">
             <section class="">
 
-                <DealPipelines :pipelines="pipelines"
-                    :is-first-loading="isFirstLoading" />
+                <DealPipelines />
 
                 <hr class="mt-4 mb-5">
 
-                <LeadStatuses :lead_statuses="lead_statuses" />
+                <LeadStatuses />
 
 
                 <hr class="mt-4 mb-5">

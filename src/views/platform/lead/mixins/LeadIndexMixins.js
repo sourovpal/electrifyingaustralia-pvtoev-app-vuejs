@@ -4,7 +4,9 @@ import {
     UpdateLeadPropertieHeaders,
     UpdateMultipelLeadStatus,
     UpdateMultipelLeadOwner,
+    GetLeadDependencies
 } from "../../../../actions/LeadAction";
+import { Exception } from "sass";
 
 export default {
     data() {
@@ -45,7 +47,7 @@ export default {
     watch: {
         "currentRoute"(to, from) {
             var query = {};
-            if(to.query.status !== from.query.status){
+            if (to.query.status !== from.query.status) {
                 query['page'] = 1;
             }
             this.fetchAllLeadsHandler(query);
@@ -54,17 +56,37 @@ export default {
         },
     },
     methods: {
-        paginationHandler(payload=null) {
+        async fetchLeadDependencies(payload = {}) {
+            try {
+                payload = {
+                    'sources': true,
+                    'headers': true,
+                    'properties': true,
+                };
+                const res = await GetLeadDependencies(payload);
+                const { success, sources, headers, properties } = res;
+                if (success) {
+                    this.leadSources = sources;
+                    this.disabledHeaderColumns = headers;
+                    this.leadProperties = properties;
+                } else {
+                    throw new Exception('Refresh again required.');
+                }
+            } catch (error) {
+                this.$toast.error("Refresh again required.");
+            }
+        },
+        paginationHandler(payload = null) {
             var query = { ...this.$route.query, ...payload };
-            if(payload){
+            if (payload) {
                 this.$router.push({
                     path: '/platform/leads',
                     query,
                 });
-            }else{
+            } else {
                 this.$router.push({
                     path: '/platform/leads',
-                    query:{page:1},
+                    query: { page: 1 },
                 });
             }
         },
@@ -93,15 +115,15 @@ export default {
             try {
                 this.isLoading = true;
                 var query = this.$route.query;
-                this.payload = { ...query, ...payload};
-                
+                this.payload = { ...query, ...payload };
+
                 if (Object.keys(this.customFilterFormData).length) {
                     var filters = JSON.stringify(this.customFilterFormData);
                     if (filters) {
                         this.payload["filters"] = filters;
                     }
                 }
-                
+
                 if (!this.payload["page"]) {
                     this.payload["page"] = this.pagination?.current_page ?? 1;
                 }
@@ -118,33 +140,18 @@ export default {
                     this.payload["order"] = this.order;
                 }
                 const res = await FetchLeads(this.payload);
-                try {
+                const { success, leads, pagination } = res;
+                if (success) {
                     this.selectedRows = [];
                     this.isSelectedAllRows = false;
                     this.isSelectedAllRowsReset = false;
-
-                    this.fetchLeads = res?.leads;
-                    this.pagination = res?.pagination;
-
-                    if (this.payload["lead_properties"]) {
-                        this.leadProperties = res?.lead_properties;
-                    }
-                    if (this.payload["headers"]) {
-                        this.disabledHeaderColumns = res?.headers;
-                    }
-                    if (this.payload["lead_sources"]) {
-                        this.leadSources = res?.lead_sources;
-                    }
-                } catch (error) {
-                    throw new Error(error.message);
+                    this.fetchLeads = leads;
+                    this.pagination = pagination;
+                }else {
+                    throw new Exception('Refresh again required.');
                 }
             } catch (error) {
-                try {
-                    var message = error.response.data.message;
-                    this.$toast[message.type](message.text);
-                } catch (e) {
-                    this.$toast.error("Oops, something went wrong");
-                }
+                this.$toast.error("Refresh again required.");
             } finally {
                 this.isFirstLoading = false;
                 this.isLoading = false;
@@ -196,7 +203,7 @@ export default {
                 } else if (!this.isSelectedAllRows) {
                     this.isSelectedAllRows = !this.isSelectedAllRows;
                     this.fetchLeads.map((item) => {
-                        this.selectedRows.push(item.id);
+                        this.selectedRows.push(item.lead_id);
                     });
                 } else {
                     this.selectedRows = [];
@@ -239,13 +246,13 @@ export default {
         async updateLeadStatusHandler(leads, status, lead = null) {
             try {
                 if (lead) {
-                    if (lead?.status?.id == status.id) {
+                    if (lead?.status?.status_id == status.status_id) {
                         return;
                     }
                 }
                 var data = {
                     leads: leads,
-                    status: status.id,
+                    status: status.status_id,
                 };
                 const res = await UpdateMultipelLeadStatus(data);
                 if (lead) {
@@ -267,11 +274,13 @@ export default {
                 var data = {};
 
                 if (owner) {
-                    data["owner"] = owner?.id;
+                    data["owner"] = owner?.user_id;
+                } else {
+                    data["owner"] = 0;
                 }
 
                 if (lead) {
-                    data["leads"] = [lead?.id];
+                    data["leads"] = [lead?.lead_id];
                 } else {
                     data["leads"] = this.selectedRows;
                 }
@@ -303,6 +312,7 @@ export default {
         },
     },
     mounted() {
+        this.fetchLeadDependencies();
         this.isFirstLoading = true;
         this.fetchAllLeadsHandler(this.fetch);
         this.fullpath = this.$route?.fullPath;

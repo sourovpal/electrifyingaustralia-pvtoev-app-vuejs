@@ -41,7 +41,7 @@ export default {
       this.currentOwner = this.owner = owner || this.leadStore.getLeadOwner;
       try {
         if (this.pipelines.length > 0) {
-          this.selectPipelineHandler(this.pipelines[0]?.id);
+          this.selectPipelineHandler(this.pipelines[0]?.pipeline_id);
         }
       } catch (error) {}
 
@@ -52,18 +52,16 @@ export default {
     },
     async selectPipelineHandler(id) {
       try {
-        var pipeline = this.pipelines.find((item) => item.id === id);
+        var pipeline = this.pipelines.find((pipeline) => pipeline.pipeline_id === id);
         this.selectedPipelineStage = null;
         if (pipeline) {
           this.selectedPipeline = pipeline;
           if (pipeline.stages?.length) {
             delete this.errors?.pipeline_stage;
             this.pipelineStages = pipeline.stages;
-            try {
-              if (this.pipelineStages[0]) {
-                this.selectedPipelineStage = this.pipelineStages[0];
-              }
-            } catch (error) {}
+            if (this.pipelineStages[0]) {
+              this.selectedPipelineStage = this.pipelineStages[0];
+            }
           } else {
             this.errors["pipeline_stage"] = ["Not found pipeline stage."];
             this.pipelineStages = [];
@@ -75,7 +73,7 @@ export default {
     },
     selectPipelineStageHandler(id) {
       try {
-        var stage = this.pipelineStages.find((item) => item.id === id);
+        var stage = this.pipelineStages.find((stage) => stage.stage_id === id);
         if (stage) {
           this.selectedPipelineStage = stage;
         } else {
@@ -94,12 +92,12 @@ export default {
         var leadId = this.$route.params?.id ?? null;
         var data = {
           lead: leadId,
-          pipeline: this.selectedPipeline?.id ?? null,
-          pipeline_stage: this.selectedPipelineStage?.id ?? null,
+          pipeline: this.selectedPipeline?.pipeline_id ?? null,
+          pipeline_stage: this.selectedPipelineStage?.stage_id ?? null,
           commant: this.commant,
         };
         if (this.currentOwner) {
-          data["owner"] = this.currentOwner?.id;
+          data["owner"] = this.currentOwner?.user_id;
         } else {
           data["owner"] = null;
         }
@@ -199,7 +197,7 @@ export default {
               @change="selectPipelineHandler"
               @click="delete errors?.pipeline"
               label="title"
-              returnValue="id"
+              returnValue="pipeline_id"
             />
             <span
               class="fs-14px text-danger py-1 w-100 d-block"
@@ -219,7 +217,7 @@ export default {
               @change="selectPipelineStageHandler"
               @click="delete errors?.pipeline_stage"
               label="name"
-              returnValue="id"
+              returnValue="stage_id"
             />
             <span
               class="fs-14px text-danger py-1 w-100 d-block"
@@ -290,12 +288,11 @@ export default {
               <div class="owner-info">
                 <div class="circle-avatar me-2">
                   <img
-                    v-if="currentOwner"
                     class="avatar"
-                    :src="currentOwner?.profile_avatar"
+                    :src="currentOwner?.profile_avatar??AvatarIcon"
                     alt=""
                   />
-                  <img v-else class="avatar" :src="AvatarIcon" alt="" />
+                  <!-- <img v-else class="avatar" :src="AvatarIcon" alt="" /> -->
                 </div>
                 <div class="owner-name fs-16px fw--bold text-hard">
                   {{ currentOwner?.name ?? "No Owner" }}

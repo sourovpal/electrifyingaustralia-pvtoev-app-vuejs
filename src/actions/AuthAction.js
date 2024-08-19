@@ -24,20 +24,9 @@ const RegisterAction = async (payload=null)=>{
     });
 }
 
-const LogoutAction = async (token_id=null)=>{
-    return new Promise((resolve, reject)=>{
-        api.post(`/users/logout${token_id?'?token_id='+token_id:''}`)
-        .then((res)=>{
-            return resolve(res.data);
-        }).catch((error)=>{
-            return reject(error);
-        });
-    });
-}
 
 
 export {
     LoginAction,
     RegisterAction,
-    LogoutAction
 }

@@ -59,7 +59,7 @@ export default {
 
           <div class="dropdown-header">Primary owner</div>
 
-          <div v-if="owner?.id" class="dropdown-item noselect px-2">
+          <div v-if="owner?.user_id" class="dropdown-item noselect px-2">
             <img :src="owner?.profile_avatar" draggable="false" />
             <span class="fs-14px fw-bold text-head">
               {{ owner?.name }}

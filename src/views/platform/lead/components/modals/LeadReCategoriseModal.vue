@@ -49,7 +49,7 @@ export default {
       try {
         this.errors = {};
         this.selectedStatus = null;
-        var pipeline = this.pipelines.find((item) => item.id === id);
+        var pipeline = this.pipelines.find((item) => item.pipeline_id === id);
         this.selectedPipelineStage = null;
         if (pipeline) {
           this.selectedPipeline = pipeline;
@@ -74,7 +74,7 @@ export default {
       try {
         this.errors = {};
         this.selectedStatus = null;
-        var stage = this.pipelineStages.find((item) => item.id === id);
+        var stage = this.pipelineStages.find((item) => item.stage_id === id);
         if (stage) {
           this.selectedPipelineStage = stage;
         } else {
@@ -87,7 +87,7 @@ export default {
         this.errors = {};
         this.selectedPipeline = null;
         this.selectedPipelineStage = null;
-        var status = this.leadStatus.find((item) => item.id === id);
+        var status = this.leadStatus.find((item) => item.status_id === id);
         if (status) {
           this.selectedStatus = status;
         } else {
@@ -103,9 +103,9 @@ export default {
         var leadId = this.$route.params?.id ?? null;
         var data = {
           lead: leadId,
-          status: this.selectedStatus?.id ?? null,
-          pipeline: this.selectedPipeline?.id ?? null,
-          pipeline_stage: this.selectedPipelineStage?.id ?? null,
+          status: this.selectedStatus?.status_id ?? null,
+          pipeline: this.selectedPipeline?.pipeline_id ?? null,
+          pipeline_stage: this.selectedPipelineStage?.stage_id ?? null,
         };
         const res = await MoveLeadStatusToPipeline(data);
         this.isSubmitConfirmMoveForm = false;
@@ -210,7 +210,7 @@ export default {
               @change="selectStatusHandler"
               @click="delete errors?.status"
               label="name"
-              returnValue="id"
+              returnValue="status_id"
             />
             <span
               class="fs-14px text-danger py-1 w-100 d-block"
@@ -234,7 +234,7 @@ export default {
               @change="selectPipelineHandler"
               @click="delete errors?.pipeline"
               label="title"
-              returnValue="id"
+              returnValue="pipeline_id"
             />
             <span
               class="fs-14px text-danger py-1 w-100 d-block"
@@ -250,7 +250,7 @@ export default {
               @change="selectPipelineStageHandler"
               @click="delete errors?.pipeline_stage"
               label="name"
-              returnValue="id"
+              returnValue="stage_id"
             />
             <span
               class="fs-14px text-danger py-1 w-100 d-block"

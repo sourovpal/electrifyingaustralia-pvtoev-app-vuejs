@@ -9,7 +9,7 @@ export const menus = async () => {
         return {
             label: item.name,
             path: '/platform/leads',
-            query: { status: item.id },
+            query: { status: item.status_id },
             icon: item.is_lost == 1 ? 'fas fa-square-caret-down' : null,
         };
     });
@@ -18,7 +18,7 @@ export const menus = async () => {
         return {
             label: item.title,
             path: '/platform/deals',
-            query: { pipeline: item.id },
+            query: { pipeline: item.pipeline_id },
         };
     });
 

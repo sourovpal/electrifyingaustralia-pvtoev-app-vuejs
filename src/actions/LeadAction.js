@@ -1,5 +1,22 @@
 import api from "./api";
 
+const GetLeadDependencies = (payload) => {
+    return new Promise((resolve, reject) => {
+        try {
+            var query = new URLSearchParams(payload);
+            api.get(`/leads/dependencies?${query.toString()}`)
+                .then((res) => {
+                    return resolve(res.data);
+                }).catch((error) => {
+                    return reject(error);
+                });
+        } catch (error) {
+            return reject(error);
+        }
+    });
+}
+
+
 const FetchLeads = (payload) => {
     return new Promise((resolve, reject) => {
         try {
@@ -136,10 +153,10 @@ const MoveLeadStatusToPipeline = (payload) => {
     });
 }
 
-const UpdateLeadConfidence = (payload, id) => {
+const UpdateLeadConfidence = (payload) => {
     return new Promise((resolve, reject) => {
         try {
-            api.post(`/leads/confidence/${id}`, payload)
+            api.post(`/leads/confidence`, payload)
                 .then((res) => {
                     return resolve(res.data);
                 }).catch((error) => {
@@ -151,65 +168,6 @@ const UpdateLeadConfidence = (payload, id) => {
     });
 }
 
-const CreateLeadContact = (payload) => {
-    return new Promise((resolve, reject) => {
-        try {
-            api.post(`/leads/contact/create`, payload)
-                .then((res) => {
-                    return resolve(res.data);
-                }).catch((error) => {
-                    return reject(error);
-                });
-        } catch (error) {
-            return reject(error);
-        }
-    });
-}
-
-const UpdateLeadContact = (payload) => {
-    return new Promise((resolve, reject) => {
-        try {
-            api.post(`/leads/contact/update`, payload)
-                .then((res) => {
-                    return resolve(res.data);
-                }).catch((error) => {
-                    return reject(error);
-                });
-        } catch (error) {
-            return reject(error);
-        }
-    });
-}
-
-const SearchLeadContact = (payload) => {
-    return new Promise((resolve, reject) => {
-        try {
-            api.post(`/leads/contact/search`, payload)
-                .then((res) => {
-                    return resolve(res.data);
-                }).catch((error) => {
-                    return reject(error);
-                });
-        } catch (error) {
-            return reject(error);
-        }
-    });
-}
-
-const DeleteLeadContact = (id) => {
-    return new Promise((resolve, reject) => {
-        try {
-            api.post(`/leads/contact/delete/${id}`)
-                .then((res) => {
-                    return resolve(res.data);
-                }).catch((error) => {
-                    return reject(error);
-                });
-        } catch (error) {
-            return reject(error);
-        }
-    });
-}
 
 const LeadPropertieUpdate = (payload) => {
     return new Promise((resolve, reject) => {
@@ -229,7 +187,7 @@ const LeadPropertieUpdate = (payload) => {
 const UpdateSubscribers = (payload) => {
     return new Promise((resolve, reject) => {
         try {
-            api.post(`/leads/update/subscribers`, payload)
+            api.post(`/leads/subscribers`, payload)
                 .then((res) => {
                     return resolve(res.data);
                 }).catch((error) => {
@@ -268,11 +226,8 @@ export {
     ConfirmQualify,
     MoveLeadStatusToPipeline,
     UpdateLeadConfidence,
-    CreateLeadContact,
-    UpdateLeadContact,
-    SearchLeadContact,
-    DeleteLeadContact,
     LeadPropertieUpdate,
     UpdateSubscribers,
     LeadUpdate,
+    GetLeadDependencies
 }

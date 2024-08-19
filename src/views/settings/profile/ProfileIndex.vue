@@ -1,107 +1,72 @@
-<script>
-import {FetchProfile} from '../../../actions/ProfileAction';
-import BasicDetailsSection from './components/BasicDetailsSection.vue';
-import ContactSection from './components/ContactSection.vue';
-import ProfileAvatarSection from './components/ProfileAvatarSection.vue';
-import PreferencesSection from './components/PreferencesSection.vue';
-import {useAppStore} from '../../../stores/app';
-import {ref, provide} from 'vue';
+<script setup>
+    import { FetchProfile } from '../../../actions/UserAction';
+    import BasicDetailsSection from './components/BasicDetailsSection.vue';
+    import ContactSection from './components/ContactSection.vue';
+    import ProfileAvatarSection from './components/ProfileAvatarSection.vue';
+    import PreferencesSection from './components/PreferencesSection.vue';
+    import { useAppStore } from '../../../stores/app';
+    import { useAuthStore } from '../../../stores/auth';
+    import { $toast } from '../../../config';
+    import { ref, computed, provide, onMounted, watch } from 'vue';
 
-export default {
-    name:'ProfileIndex',
-    components:{
-        BasicDetailsSection,
-        ContactSection,
-        PreferencesSection,
-        ProfileAvatarSection,
-    },
-    setup(props) {
-        const appStore = useAppStore();
-        const user = ref({});
-        function updateUser(obj){
-            user.value = obj;
-        }
-        provide('user_profile', {
-            user,
-            updateUser
-        })
-        return {appStore, user, updateUser};
-    },
-    data() {
-        return{
-            fetchUser:{},
-            isLoading:false,
-            isError:false,
-            map_base_layer_style:null,
-        }
-    },
-    methods: {
-        async fetchProfileData(){
-            try{
-                this.isError = false;
-                this.isLoading = true;
+    const isLoading = ref(false);
+    const appStore = useAppStore();
+    const authStore = useAuthStore();
+    const profileData = ref({});
+    const company = ref({});
 
-                const res = await FetchProfile();
-                const {user} = res;
-                this.updateUser(user);
-                this.fetchUser = user;
-                this.isLoading = false;
-
-            }catch(error){
-
-                this.isError = true;
-
-                try{
-                    var message = error.response.data.message;
-                    this.$toast[message.type](message.text);
-                }catch(e){
-                    this.$toast.error('Oops, something went wrong');
-                }
-
-            }finally{
-                this.isLoading = false;
+    async function fetchProfileData() {
+        try {
+            isLoading.value = true;
+            const res = await FetchProfile();
+            const { success, user } = res;
+            if (success) {
+                profileData.value = user;
             }
-        },
-    },
-    mounted() {
+        } catch (error) {
+            $toast.error('Oops, something went wrong');
+        } finally {
+            isLoading.value = false;
+        }
+    }
 
-        try{
-            const user = this.appStore.getUser;
-            const company = this.appStore.getCompany;
-            this.fetchUser = {...user, ...company};
-            this.updateUser(this.fetchUser);
-        }catch(error){}
 
-        this.fetchProfileData();
-    },
-    
-}
+    onMounted(() => {
+        profileData.value = authStore.getUser;
+        company.value = appStore.getCompany;
+        fetchProfileData();
+    });
+
 
 </script>
 
 <template>
-    <div class="content content-y-100vh">        
-          
-            <div class="content-header">
-                <h1>Profile</h1>
-            </div>
-      
-            <div class="content-body">
-                <section class="">
+    <div class="content content-y-100vh">
 
-                    <BasicDetailsSection />
-                    <hr class="mt-4 mb-5">
+        <div class="content-header">
+            <h1>Profile</h1>
+        </div>
 
-                    <ContactSection :fetch-user="fetchUser" />
-                    <hr class="mt-4 mb-5">
+        <div class="content-body">
+            <section class="">
 
-                    <PreferencesSection :fetch-user="fetchUser" />
-                    <hr class="mt-4 mb-5">
+                <BasicDetailsSection :company="company"
+                    :profileData="profileData"
+                    @fetch-profile="fetchProfileData" />
+                <hr class="mt-4 mb-5">
 
-                    <ProfileAvatarSection :fetch-user="fetchUser" />
-                    <br><br><br>
+                <ContactSection :profileData="profileData"
+                    @fetch-profile="fetchProfileData" />
+                <hr class="mt-4 mb-5">
 
-                </section>
-            </div>
+                <PreferencesSection :profileData="profileData"
+                    @fetch-profile="fetchProfileData" />
+                <hr class="mt-4 mb-5">
+
+                <ProfileAvatarSection @fetch-profile="fetchProfileData" :profileData="profileData" />
+                <br><br><br>
+
+            </section>
+        </div>
     </div>
 </template>

@@ -449,22 +449,22 @@
       </datatable-header>
 
       <datatable-body>
-        <div :class="selectedRows.includes(lead.id) ? 'active' : ''"
+        <div :class="selectedRows.includes(lead.lead_id) ? 'active' : ''"
           v-if="!isFirstLoading || fetchLeads.length"
           class="tbl-tr full-width"
           v-for="(lead, index) in fetchLeads"
           :key="index">
           <div style="width: 4rem; margin-left: -7px; flex-grow: 1"
             class="tbl-td full-width">
-            <custom-checkbox @click="singleRowSelectedHandler(lead.id)"
-              :checked="selectedRows.includes(lead.id)" />
+            <custom-checkbox @click="singleRowSelectedHandler(lead.lead_id)"
+              :checked="selectedRows.includes(lead.lead_id)" />
           </div>
 
           <div v-show="!disabledHeaderColumns.includes('lead')"
             style="width: 20rem; flex-grow: 1"
             class="tbl-td full-width">
             <router-link class="text-overflow-ellipsis"
-              :to="`/platform/leads/${lead.id}`">
+              :to="`/platform/leads/${lead.lead_id}`">
               {{ lead.lead_title ?? lead?.primary_contact?.full_name }}
             </router-link>
           </div>
@@ -506,7 +506,7 @@
                   :class="`${
                     status.name == lead.status?.name ? 'selected' : ''
                   }`"
-                  @click="updateLeadStatusHandler([lead.id], status, lead)">
+                  @click="updateLeadStatusHandler(lead.lead_id, status, lead)">
                   <span class="text-overflow-ellipsis text-head">{{
                     status.name
                     }}</span>

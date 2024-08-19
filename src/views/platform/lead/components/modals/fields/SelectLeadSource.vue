@@ -21,7 +21,7 @@
             v-for="(option, index) in filterOptions"
             :key="index"
             @click="selectOptionHandler(option)">
-            {{ option }}
+            {{ option.title }}
           </li>
         </ul>
       </div>
@@ -64,7 +64,7 @@
       filterOptions() {
         return this.options.filter((item) => {
           var search =
-            item.toLowerCase().search(this.selectedOption?.toLowerCase()) > -1;
+            item?.title?.toLowerCase().search(this.selectedOption?.toLowerCase()) > -1;
           if (search) {
             return item;
           }
@@ -82,9 +82,9 @@
     },
     methods: {
       selectOptionHandler(option) {
-        this.$emit("update:modelValue", option);
-        this.$emit("change", option);
-        this.selectedOption = option;
+        this.$emit("update:modelValue", option.title);
+        this.$emit("change", option.title);
+        this.selectedOption = option.title;
         this.isOpen = false;
       },
     },

@@ -27,11 +27,14 @@
     });
 
     watch(() => props.company, () => {
+        state.errors = {};
         state.companyLogo = props.company?.business_logo ?? null;
     }, { deep: true });
 
     async function uploadCompanyLogoHandler(event) {
         try {
+            $toast.clear();
+            state.errors = {};
             state.isSubmitCompanyLogo = true;
             var formData = new FormData();
             var files = event.target.files;
@@ -56,6 +59,8 @@
 
     async function removeCompanyLogo() {
         try {
+            $toast.clear();
+            state.errors = {};
             state.isSubmitRemoveLogo = true;
             const res = await RemoveCompanyLogo();
             const { success, company_logo, errors, message } = res;

@@ -25,7 +25,7 @@
             </div>
 
             <div>
-                <loading-button class="btn-sm">
+                <loading-button disabled="true">
                     Save Settings
                 </loading-button>
             </div>

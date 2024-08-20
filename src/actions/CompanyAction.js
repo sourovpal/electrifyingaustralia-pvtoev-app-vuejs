@@ -33,6 +33,17 @@ export const UpdateSocialDetails = (payload) => {
     });
 }
 
+export const UpdateTimezone = (payload) => {
+    return new Promise((resolve, reject) => {
+        api.post(`/company/timezone`, payload)
+            .then((res) => {
+                return resolve(res.data);
+            }).catch((error) => {
+                return reject(error);
+            });
+    });
+}
+
 export const UploadCompanyLogo = (payload) => {
     return new Promise((resolve, reject) => {
         api.post(`/company/logo/upload`, payload)

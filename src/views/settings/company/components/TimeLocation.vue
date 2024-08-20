@@ -1,4 +1,87 @@
-<script setup></script>
+<script setup>
+    import { ref, reactive, defineProps, watch, computed, onMounted } from 'vue';
+    import { UpdateTimezone } from '../../../../actions/CompanyAction';
+    import { FetchTimezoneList } from '../../../../actions/AppAction';
+
+    import { $toast } from '../../../../config';
+    const props = defineProps({
+        company: {
+            type: Object,
+            default: {},
+        },
+        isLoading: {
+            type: Boolean,
+            default: false,
+        }
+    });
+
+    const emits = defineEmits(['getCompanyDetailsHandler']);
+
+    const state = reactive({
+        errors: {},
+        time_zone: '',
+        timezones: [],
+        isSubmitSocialInformation: false,
+    });
+
+    watch(() => props.company, (company) => {
+        state.errors = {};
+        state.time_zone = company.time_zone;
+    }, { deep: true });
+
+    const isResetButtonActive = computed({
+        get() {
+            function isEqual(val1, val2) {
+                return (val1 === val2) || (val1 === null && val2 === "") || (val1 === "" && val2 === null);
+            }
+            return !(isEqual(state.time_zone, props.company.time_zone));
+        }
+    });
+
+
+    async function fetchTimezoneListHandler() {
+        try {
+            const res = await FetchTimezoneList();
+            const { success, timezones } = res;
+            if (success) {
+                state.timezones = timezones;
+            }
+        } catch (error) {
+            $toast.error('Oops, something went wrong');
+        } finally {
+
+        }
+    }
+
+
+    async function updateTimeZoneHandler() {
+        try {
+            $toast.clear();
+            state.errors = {};
+            state.isSubmitSocialInformation = true;
+            var payload = {
+                time_zone: state.time_zone,
+            };
+            var res = await UpdateTimezone(payload);
+            const { success, errors, message } = res;
+            $toast[message.type](message.text);
+            if (success) {
+                emits('getCompanyDetailsHandler');
+            } else {
+                state.errors = errors;
+            }
+        } catch (error) {
+            $toast.error('Oops, something went wrong');
+        } finally {
+            state.isSubmitSocialInformation = false;
+        }
+    }
+
+    onMounted(() => {
+        fetchTimezoneListHandler();
+    });
+
+</script>
 <template>
     <div class="row">
         <div class="col-lg-2 col-12 mb-3 mb-lg-0">
@@ -13,43 +96,31 @@
                 <label class="form-label-title"
                     for="">Default timezone</label>
                 <div class="select-box">
-                    <select @click="delete errors?.time_zone"
+                    <select @click="delete state.errors?.time_zone"
                         class="form-control"
-                        v-model="time_zone">
-                        <option v-for="(timezome, index) in timezomes"
+                        v-model="state.time_zone">
+                        <option v-for="(timezone, index) in state.timezones"
                             :key="index"
-                            :value="timezome.name">{{ timezome.name }} &nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;&nbsp; {{
-                            timezome.offset }}</option>
+                            :value="timezone.name">{{ timezone.name }} &nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;&nbsp; {{
+                            timezone.offset }}</option>
                     </select>
                 </div>
-                <span v-if="!errors?.time_zone?.length"
+                <span class="fs-14px text-danger py-1 w-100 d-block"
+                    v-if="state.errors?.time_zone?.length">{{ state.errors?.time_zone[0] }}</span>
+                <span v-else
                     class="form-input-commant">This timezone will be used when time-stamping e-signature
                     documents.</span>
-                <span class="fs-14px text-danger py-1 w-100 d-block"
-                    v-if="errors?.time_zone?.length">{{ errors?.time_zone[0] }}</span>
             </div>
 
             <div class="d-flex">
-                <button :disabled="isSubmitTimeZoneUpdate"
-                    @click="updateCompanyData('update_time_zone')"
-                    class="btn btn-primary fw-bold">
-                    <div v-if="isSubmitTimeZoneUpdate">
-                        <svg class="spinner"
-                            viewBox="0 0 50 50"
-                            style="width:20px;height:20px;margin-left:0px;">
-                            <circle style="stroke: #ffffff;"
-                                class="path"
-                                cx="25"
-                                cy="25"
-                                r="20"
-                                fill="none"
-                                stroke-width="5"></circle>
-                        </svg>
-                        <span>Submitting...</span>
-                    </div>
-                    <span v-if="!isSubmitTimeZoneUpdate">Save Settings</span>
-                </button>
-                <button class="btn btn-danger fw-bold ms-auto">Reset</button>
+                <loading-button :disabled="!isResetButtonActive"
+                    :isLoading="state.isSubmitSocialInformation"
+                    @click="updateTimeZoneHandler">
+                    Save Settings
+                </loading-button>
+                <button v-if="isResetButtonActive"
+                    @click="company['random_number']=Math.random()"
+                    class="btn btn-danger fw-bold ms-auto">Reset</button>
             </div>
 
         </div>

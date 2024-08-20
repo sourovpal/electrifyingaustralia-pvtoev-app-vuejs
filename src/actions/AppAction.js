@@ -1,16 +1,12 @@
 import api from "./api";
 
-const GetAppDependencies = (payload) => {
+export const FetchTimezoneList = ()=>{
     return new Promise((resolve, reject) => {
-        api.post(`/app/dependencies`, payload)
+        api.get(`/app/timezones`)
             .then((res) => {
                 return resolve(res.data);
             }).catch((error) => {
                 return reject(error);
             });
     });
-}
-
-export {
-    GetAppDependencies
 }

@@ -2,8 +2,8 @@
     import { UpdateContactInformation } from '../../../../actions/UserAction';
     import { inject } from 'vue';
     export default {
-        props:{
-            profileData:Object
+        props: {
+            profileData: Object
         },
         data() {
             return {
@@ -28,6 +28,8 @@
             },
             async formSubmitHandler(payload = null) {
                 try {
+                    this.$toast.clear();
+                    this.errors = {};
                     var data = {
                         phone_office: this.phone_office,
                         phone_mobile: this.phone_mobile,
@@ -90,7 +92,7 @@
 
             <div class="d-flex">
                 <div>
-                    <loading-button class="btn-sm"
+                    <loading-button :disabled="!isResetButtonActive"
                         :isLoading="isSubmitContactInfo"
                         @click="formSubmitHandler()">
                         Save Settings
@@ -99,7 +101,7 @@
                 <div class="ms-auto">
                     <button v-if="isResetButtonActive"
                         @click="setData()"
-                        class="btn btn-sm btn-danger fw-bold ms-auto">
+                        class="btn btn-danger fw-bold ms-auto">
                         Reset
                     </button>
                 </div>

@@ -1,6 +1,6 @@
 <script setup>
     import { computed, ref, reactive, watchEffect } from 'vue';
-    import { SendEmailOtp, ChangeEmailAddress, LogoutAction} from '../../../../actions/UserAction';
+    import { SendEmailOtp, ChangeEmailAddress, LogoutAction } from '../../../../actions/UserAction';
     import { useAuthStore } from '../../../../stores/auth';
     import CustomModal from '../../../../components/Modals/CustomModal.vue';
     import { $toast } from '../../../../config';
@@ -21,8 +21,20 @@
     const user = computed(() => authStore.getUser);
     state.email = user.value.email ?? null;
 
+    const isResetButtonActive = computed({
+        get() {
+            function isEqual(val1, val2) {
+                return (val1 === val2) || (val1 === null && val2 === "") || (val1 === "" && val2 === null);
+            }
+            return !(isEqual(state.email, user.value.email));
+        }
+    });
+
+
     async function sendEmailOptHandler() {
         try {
+            $toast.clear();
+            state.errors = {};
             state.isSubmitSendOtp = true;
             if (state.email == user.value.email) {
                 state.errors['email'] = ['Please change your current email to proceed.'];
@@ -45,9 +57,11 @@
             state.isSubmitSendOtp = false;
         }
     }
-    
+
     async function updateEmailAddress() {
         try {
+            $toast.clear();
+            state.errors = {};
             state.isSubmitChangeEmail = true;
             var payload = {
                 email: state.email,
@@ -80,7 +94,7 @@
                 <h2>Account email</h2>
             </div>
         </div>
-        <div class="col-lg-6 col-12">
+        <div class="col-lg-5 col-12">
 
             <div class="settings-group-item">
                 <label class="form-label-title"
@@ -98,11 +112,15 @@
                     v-if="state.errors?.email?.length">{{ state.errors?.email[0] }}</span>
             </div>
 
-            <div>
-                <loading-button :isLoading="state.isSubmitSendOtp"
+            <div class="d-flex justify-content-between align-items-center">
+                <loading-button :disabled="!isResetButtonActive"
+                    :isLoading="state.isSubmitSendOtp"
                     @click="sendEmailOptHandler">
                     Save Change
                 </loading-button>
+                <button class="btn btn-danger"
+                    v-if="isResetButtonActive"
+                    @click="state.email = user.email">Reset</button>
             </div>
 
         </div>

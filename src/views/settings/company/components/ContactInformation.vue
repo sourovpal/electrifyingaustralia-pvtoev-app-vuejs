@@ -34,6 +34,7 @@
     });
 
     watch(() => props.company, (company) => {
+        state.errors = {};
         state.company_name = company.company_name;
         state.business_name = company.business_name;
         state.business_number = company.business_number;
@@ -76,6 +77,7 @@
     async function updateContactInformation() {
         try {
             $toast.clear();
+            state.errors = {};
             state.isSubmitContactInformation = true;
             var payload = {
                 company_name: state.company_name,
@@ -160,118 +162,148 @@
                     Please make sure it's correct.</span>
             </div>
 
-            <div class="settings-group-item">
-                <label class="form-label-title"
-                    for="">Contact phone (office)</label>
-                <input @focus="delete state.errors?.office_phone"
-                    v-model="state.office_phone"
-                    type="text"
-                    class="form-control">
-                <span class="fs-14px text-danger py-1 w-100 d-block"
-                    v-if="state.errors?.office_phone?.length">{{ state.errors?.office_phone[0] }}</span>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="settings-group-item">
+                        <label class="form-label-title"
+                            for="">Contact phone (office)</label>
+                        <input @focus="delete state.errors?.office_phone"
+                            v-model="state.office_phone"
+                            type="text"
+                            class="form-control">
+                        <span class="fs-14px text-danger py-1 w-100 d-block"
+                            v-if="state.errors?.office_phone?.length">{{ state.errors?.office_phone[0] }}</span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="settings-group-item">
+                        <label class="form-label-title"
+                            for="">Contact phone (mobile)</label>
+                        <input @focus="delete state.errors?.mobile_phone"
+                            v-model="state.mobile_phone"
+                            type="text"
+                            class="form-control">
+                        <span class="fs-14px text-danger py-1 w-100 d-block"
+                            v-if="state.errors?.mobile_phone?.length">{{ state.errors?.mobile_phone[0] }}</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="settings-group-item">
-                <label class="form-label-title"
-                    for="">Contact phone (mobile)</label>
-                <input @focus="delete state.errors?.mobile_phone"
-                    v-model="state.mobile_phone"
-                    type="text"
-                    class="form-control">
-                <span class="fs-14px text-danger py-1 w-100 d-block"
-                    v-if="state.errors?.mobile_phone?.length">{{ state.errors?.mobile_phone[0] }}</span>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="settings-group-item">
+                        <label class="form-label-title"
+                            for="">Company contact email</label>
+                        <input @focus="delete state.errors?.email"
+                            v-model="state.email"
+                            type="text"
+                            class="form-control">
+                        <span class="fs-14px text-danger py-1 w-100 d-block"
+                            v-if="state.errors?.email?.length">{{ state.errors?.email[0] }}</span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="settings-group-item">
+                        <label class="form-label-title"
+                            for="">Company Website</label>
+                        <input @focus="delete state.errors?.website"
+                            v-model="state.website"
+                            type="text"
+                            class="form-control">
+                        <span class="fs-14px text-danger py-1 w-100 d-block"
+                            v-if="state.errors?.website?.length">{{ state.errors?.website[0] }}</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="settings-group-item">
-                <label class="form-label-title"
-                    for="">Company contact email</label>
-                <input @focus="delete state.errors?.email"
-                    v-model="state.email"
-                    type="text"
-                    class="form-control">
-                <span class="fs-14px text-danger py-1 w-100 d-block"
-                    v-if="state.errors?.email?.length">{{ state.errors?.email[0] }}</span>
+
+            <div class="row">
+                <div class="col-lg-6">
+
+                    <div class="settings-group-item">
+                        <label class="form-label-title"
+                            for="">Unit</label>
+                        <input @focus="delete state.errors?.unit"
+                            v-model="state.unit"
+                            type="text"
+                            class="form-control">
+                        <span class="fs-14px text-danger py-1 w-100 d-block"
+                            v-if="state.errors?.unit?.length">{{ state.errors?.unit[0] }}</span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="settings-group-item">
+                        <label class="form-label-title"
+                            for="">Street Name</label>
+                        <input @focus="delete state.errors?.street_name"
+                            v-model="state.street_name"
+                            type="text"
+                            class="form-control">
+                        <span class="fs-14px text-danger py-1 w-100 d-block"
+                            v-if="state.errors?.street_name?.length">{{ state.errors?.street_name[0] }}</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="settings-group-item">
-                <label class="form-label-title"
-                    for="">Company Website</label>
-                <input @focus="delete state.errors?.website"
-                    v-model="state.website"
-                    type="text"
-                    class="form-control">
-                <span class="fs-14px text-danger py-1 w-100 d-block"
-                    v-if="state.errors?.website?.length">{{ state.errors?.website[0] }}</span>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="settings-group-item">
+                        <label class="form-label-title"
+                            for="">City</label>
+                        <input @focus="delete state.errors?.city"
+                            v-model="state.city"
+                            type="text"
+                            class="form-control">
+                        <span class="fs-14px text-danger py-1 w-100 d-block"
+                            v-if="state.errors?.city?.length">{{ state.errors?.city[0] }}</span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="settings-group-item">
+                        <label class="form-label-title"
+                            for="">State</label>
+                        <input @focus="delete state.errors?.state"
+                            v-model="state.state"
+                            type="text"
+                            class="form-control">
+                        <span class="fs-14px text-danger py-1 w-100 d-block"
+                            v-if="state.errors?.state?.length">{{ state.errors?.state[0] }}</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="settings-group-item">
-                <label class="form-label-title"
-                    for="">Unit</label>
-                <input @focus="delete state.errors?.unit"
-                    v-model="state.unit"
-                    type="text"
-                    class="form-control">
-                <span class="fs-14px text-danger py-1 w-100 d-block"
-                    v-if="state.errors?.unit?.length">{{ state.errors?.unit[0] }}</span>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="settings-group-item">
+                        <label class="form-label-title"
+                            for="">Country</label>
+                        <input @focus="delete state.errors?.country"
+                            v-model="state.country"
+                            type="text"
+                            class="form-control">
+                        <span class="fs-14px text-danger py-1 w-100 d-block"
+                            v-if="state.errors?.country?.length">{{ state.errors?.country[0] }}</span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="settings-group-item">
+                        <label class="form-label-title"
+                            for="">Postcode</label>
+                        <input @focus="delete state.errors?.postcode"
+                            v-model="state.postcode"
+                            type="text"
+                            class="form-control">
+                        <span class="fs-14px text-danger py-1 w-100 d-block"
+                            v-if="state.errors?.postcode?.length">{{ state.errors?.postcode[0] }}</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="settings-group-item">
-                <label class="form-label-title"
-                    for="">Street Name</label>
-                <input @focus="delete state.errors?.street_name"
-                    v-model="state.street_name"
-                    type="text"
-                    class="form-control">
-                <span class="fs-14px text-danger py-1 w-100 d-block"
-                    v-if="state.errors?.street_name?.length">{{ state.errors?.street_name[0] }}</span>
-            </div>
-
-            <div class="settings-group-item">
-                <label class="form-label-title"
-                    for="">City</label>
-                <input @focus="delete state.errors?.city"
-                    v-model="state.city"
-                    type="text"
-                    class="form-control">
-                <span class="fs-14px text-danger py-1 w-100 d-block"
-                    v-if="state.errors?.city?.length">{{ state.errors?.city[0] }}</span>
-            </div>
-
-            <div class="settings-group-item">
-                <label class="form-label-title"
-                    for="">State</label>
-                <input @focus="delete state.errors?.state"
-                    v-model="state.state"
-                    type="text"
-                    class="form-control">
-                <span class="fs-14px text-danger py-1 w-100 d-block"
-                    v-if="state.errors?.state?.length">{{ state.errors?.state[0] }}</span>
-            </div>
-
-            <div class="settings-group-item">
-                <label class="form-label-title"
-                    for="">Country</label>
-                <input @focus="delete state.errors?.country"
-                    v-model="state.country"
-                    type="text"
-                    class="form-control">
-                <span class="fs-14px text-danger py-1 w-100 d-block"
-                    v-if="state.errors?.country?.length">{{ state.errors?.country[0] }}</span>
-            </div>
-
-            <div class="settings-group-item">
-                <label class="form-label-title"
-                    for="">Postcode</label>
-                <input @focus="delete state.errors?.postcode"
-                    v-model="state.postcode"
-                    type="text"
-                    class="form-control">
-                <span class="fs-14px text-danger py-1 w-100 d-block"
-                    v-if="state.errors?.postcode?.length">{{ state.errors?.postcode[0] }}</span>
-            </div>
 
             <div class="d-flex">
                 <loading-button :isLoading="state.isSubmitContactInformation"
+                    :disabled="!isResetButtonActive"
                     @click="updateContactInformation">
                     Save Settings
                 </loading-button>

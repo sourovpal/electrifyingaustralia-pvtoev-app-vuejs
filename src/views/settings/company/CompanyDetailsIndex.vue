@@ -3,6 +3,9 @@
     import { FetchComapny } from '../../../actions/CompanyAction';
     import CompanyLogo from './components/CompanyLogo.vue';
     import ContactInformation from './components/ContactInformation.vue';
+    import SocialMediaDetails from './components/SocialMediaDetails.vue';
+    import TimeLocation from './components/TimeLocation.vue';
+
     import { $toast } from '../../../config';
 
     const state = reactive({
@@ -41,23 +44,23 @@
 
         <div class="content-body">
             <section class="">
-                <!-- company logo -->
                 <CompanyLogo :company="state.company"
                     :is-loading="state.isLoading"></CompanyLogo>
                 <hr class="mt-4 mb-5">
-                <ContactInformation 
-                    @getCompanyDetailsHandler="getCompanyDetailsHandler"
-                    :company="state.company" 
+
+                <ContactInformation @getCompanyDetailsHandler="getCompanyDetailsHandler"
+                    :company="state.company"
                     :is-loading="state.isLoading"></ContactInformation>
-
-                <!-- information -->
-
                 <hr class="mt-4 mb-5">
 
-                <!-- time -->
-
+                <TimeLocation @getCompanyDetailsHandler="getCompanyDetailsHandler"
+                    :company="state.company"
+                    :is-loading="state.isLoading"></TimeLocation>
                 <hr class="mt-4 mb-5">
-                <!-- social -->
+
+                <SocialMediaDetails @getCompanyDetailsHandler="getCompanyDetailsHandler"
+                    :company="state.company"
+                    :is-loading="state.isLoading"></SocialMediaDetails>
                 <br><br><br>
             </section>
         </div>

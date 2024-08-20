@@ -11,10 +11,22 @@
                 isSubmitPasswordChange: false,
             }
         },
+        computed: {
+            isResetButtonActive: {
+                get() {
+                    return (
+                        this.current_password?.length &&
+                        this.new_password?.length &&
+                        this.confirm_password.length
+                    );
+                }
+            }
+        },
         methods: {
             async changePasswordHandler() {
                 try {
                     this.$toast.clear();
+                    this.errors = {};
                     this.isSubmitPasswordChange = true;
                     const res = await ChangePassword({
                         current_password: this.current_password,
@@ -44,7 +56,7 @@
                 <h2>Change password</h2>
             </div>
         </div>
-        <div class="col-lg-6 col-12">
+        <div class="col-lg-5 col-12">
 
             <div class="settings-group-item">
                 <label class="form-label-title"
@@ -81,7 +93,8 @@
             </div>
 
             <div class="d-flex justify-content-start align-items-center">
-                <loading-button class="btn-sm"
+                <loading-button
+                    :disabled="!isResetButtonActive"
                     :isLoading="isSubmitPasswordChange"
                     @submit="changePasswordHandler">
                     Change Password

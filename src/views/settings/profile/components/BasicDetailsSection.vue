@@ -26,6 +26,7 @@
         },
         methods: {
             setData() {
+                this.$toast.clear()
                 this.errors = {};
                 this.name = this.profileData.name;
                 this.display_name = this.profileData.display_name;
@@ -34,6 +35,7 @@
             },
             async formSubmitHandler(payload = null) {
                 this.$toast.clear();
+                this.errors = {};
                 this.isSubmitBasicDetails = true;
                 var data = {
                     name: this.name,
@@ -131,7 +133,7 @@
             </div>
             <div class="d-flex">
                 <div>
-                    <loading-button class="btn-sm"
+                    <loading-button :disabled="!isResetButtonActive"
                         :isLoading="isSubmitBasicDetails"
                         @click="formSubmitHandler()">
                         Save Settings
@@ -140,7 +142,7 @@
                 <div class="ms-auto">
                     <button v-if="isResetButtonActive"
                         @click="setData()"
-                        class="btn btn-sm btn-danger fw-bold ms-auto">
+                        class="btn btn-danger fw-bold ms-auto">
                         Reset
                     </button>
                 </div>

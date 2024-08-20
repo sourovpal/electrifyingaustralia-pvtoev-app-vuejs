@@ -1,9 +1,9 @@
 import api from "./api";
 
-const FetchLocalization = ()=>{
+export const FindLocalizationByCompany = ()=>{
     return new Promise((resolve, reject)=>{
         try{
-            api.get(`/localizations`)
+            api.get(`/localizations/company`)
             .then((res)=>{
                 return resolve(res.data);
             }).catch((error)=>{
@@ -15,10 +15,10 @@ const FetchLocalization = ()=>{
     });
 }
 
-const UpdateLocalization = (payload)=>{
+export const UpdateLocalization = (payload)=>{
     return new Promise((resolve, reject)=>{
         try{
-            api.post(`/localizations`, payload)
+            api.post(`/localizations/update`, payload)
             .then((res)=>{
                 return resolve(res.data);
             }).catch((error)=>{
@@ -28,9 +28,4 @@ const UpdateLocalization = (payload)=>{
             return reject(error);
         }
     });
-}
-
-export {
-    FetchLocalization,
-    UpdateLocalization
 }

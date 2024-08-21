@@ -21,14 +21,9 @@ import 'tippy.js/dist/tippy.css'
 import 'vue-toast-notification/dist/theme-bootstrap.css';
 import 'vue-skeletor/dist/vue-skeletor.css';
 import CustomCheckbox from './components/CustomCheckbox.vue';
-import drag from "v-drag"
+import request from './plugins/request';
+import drag from "v-drag";
 
-var appData = ref({});
-function updateAppData(key, val) {
-  try {
-    appData.value = appData.value[key] = val;
-  } catch (error) { }
-}
 
 const pinia = createPinia();
 var app = createApp(App);
@@ -36,30 +31,20 @@ app.component('LoadingButton', LoadingButton);
 app.component('custom-checkbox', CustomCheckbox);
 app.component('font-awesome-icon', FontAwesomeIcon);
 app.component('svg-custom-icon', SvgCustomIcon);
-
-app.provide('app_data', {
-  appData: appData.value,
-  updateAppData: updateAppData,
-});
-
 app.use(ProgressBar, ProgressBarOptions);
 app.use(pinia);
 app.use(router);
 app.use(drag);
-
-
+app.use(request);
 app.use(ToastPlugin, {
   position: 'bottom',
   duration: 5000,
 });
-
 app.use(VueLazyLoad, {});
-
 app.use(
   VueTippy,
   CONFIG.TIPPYOPTIONS
 );
-
 app.mount('#app');
 
 // app.config.errorHandler = (err, instance, info) => {

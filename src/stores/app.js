@@ -8,14 +8,13 @@ var initialLeadStatuses = [];
 var initialPipelines = [];
 var initialPermissions = [];
 
-
 const appStorage = new Storage(CONFIG.VITE_AUTH_APP);
 const {
   lead_statuses,
   pipelines,
   permissions,
   company
-} = appStorage.get();
+} = appStorage.get() ?? {};
 
 if (typeof company == 'object') {
   initialCompany = company;
@@ -95,7 +94,7 @@ export const useAppStore = defineStore('app', {
         company,
         users
       } = payload ?? {};
-      
+
       appStorage.remove();
       appStorage.set({ lead_statuses, permissions, company, pipelines });
 

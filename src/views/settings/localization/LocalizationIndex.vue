@@ -70,6 +70,8 @@
 
   async function updateLocalizationHandler() {
     try {
+      $toast.clear();
+      state.errors = {};
       state.isSubmitLocalization = true;
       var payload = {
         countries: state.countries

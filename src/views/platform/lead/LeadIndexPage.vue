@@ -85,9 +85,7 @@
           class="dropdown ms-2 d-none d-xl-block">
           <button style="width: 130px"
             class="btn btn-sm btn-outline-secondary fw-400 d-flex justify-content-between align-items-center curtom-dropdown-toggler-btn"
-            type="button"
-            data-mdb-toggle="dropdown"
-            aria-expanded="false">
+            data-mdb-toggle="dropdown">
             <span class="fw-bold text-fs tbl-dropdown-title text-overflow-ellipsis text-head">Lead Status</span>
             <div class="dropdown--icon">
               <svg-custom-icon icon="down-arrow" />

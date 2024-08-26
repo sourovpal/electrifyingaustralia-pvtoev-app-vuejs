@@ -86,6 +86,12 @@ const iconsToUse = [
     fa.faSliders,
     fa.faIdBadge,
     fa.faSquareCaretDown,
+    fa.faEllipsisVertical,
+    fa.faMailReply,
+    fa.faEnvelope,
+    fa.faPhone,
+    fa.faCopy,
+    fa.faArrowUpRightFromSquare,
     // Regular
     far.faSquare,
     far.faSquareMinus,

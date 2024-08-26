@@ -27,21 +27,23 @@
         another_emails: [],
         intendedUse: ["Home", "Office", "Work", "Personal", "Mobile"],
         searchContacts: [],
+        debounceSearchContact: null,
+        isSearchStart: false,
         isCreateNewContact: false,
         isSubmitCreateNewContact: false,
       };
     },
     watch: {
-      first_name(val) {
+      "contact.first_name"(val) {
         this.searchLeadContactHandler(val, ["first_name", "last_name"]);
       },
-      last_name(val) {
+      "contact.last_name"(val) {
         this.searchLeadContactHandler(val, ["first_name", "last_name"]);
       },
-      email(val) {
+      "contact.email"(val) {
         this.searchLeadContactHandler(val, ["email", "another_emails"]);
       },
-      phone_number(val) {
+      "contact.phone_number"(val) {
         this.searchLeadContactHandler(val, ["phone_number", "another_phones"]);
       },
     },
@@ -50,7 +52,6 @@
         get() {
           return this.leadStore.getLeadContacts;
         },
-        set() { },
       },
     },
     methods: {
@@ -61,41 +62,59 @@
       hideModalHandler() {
         this.modalInstance.hide();
       },
+      selectSearchContactHandler(contact = null) {
+        if (contact) {
+          this.isSearchStart = false;
+          this.another_emails = [];
+          this.another_phones = [];
+          var attributes = {
+            title: contact.title,
+            first_name: contact.first_name,
+            last_name: contact.last_name,
+            email: contact.email,
+            phone_number: contact.phone_number,
+            email_use: contact.email_use,
+            phone_use: contact.phone_use,
+          }
+          this.contact = attributes;
+          if (Array.isArray(contact.another_phones)) {
+            this.another_phones = contact.another_phones;
+          }
+          if (Array.isArray(contact.another_emails)) {
+            this.another_emails = contact.another_emails;
+          }
+        }
+      },
       selectContactHandler(contact = null) {
+        this.isSearchStart = false;
         this.errors = {};
+        this.another_emails = [];
+        this.another_phones = [];
         this.searchContacts = [];
         if (contact) {
           this.isCreateNewContact = false;
-          this.contact = {...contact};
-
+          this.contact = { ...contact };
           if (Array.isArray(this.contact?.another_phones)) {
             this.another_phones = this.contact.another_phones;
           }
-
           if (Array.isArray(this.contact?.another_emails)) {
             this.another_emails = this.contact.another_emails;
           }
-
         } else {
+          this.isSearchStart = true;
           this.isCreateNewContact = true;
           this.contact = {};
         }
       },
       addedAnatherPhoneHandler() {
-
         if (this.contact?.phone_number == null || this.contact?.phone_number == "") {
           this.errors["phone_number"] = ["This phone number field is required."];
           return;
         }
-
         if (this.another_phones?.length > 0) {
-
           var last = this.another_phones[this.another_phones.length - 1];
-
           if (last) {
-
             if (last.phone_number == null || last.phone_number == "") {
-
               this.errors["phone_number"] = [
                 "This phone number field is required.",
               ];
@@ -105,87 +124,70 @@
         }
         delete this.errors["phone_number"];
         this.another_phones.push({ phone_number: "", phone_use: "" });
-
       },
       addedAnatherEmailHandler() {
-
         if (this.contact?.email == null || this.contact?.email == "") {
           this.errors["email"] = ["This email address field is required."];
           return;
         }
 
         if (this.another_emails?.length > 0) {
-
           var last = this.another_emails[this.another_emails.length - 1];
-
           if (last) {
-
             if (last.email == null || last.email == "") {
               this.errors["email"] = ["This email address field is required."];
               return;
             }
-
           }
-
         }
         delete this.errors["email"];
-
         this.another_emails.push({ email: "", email_use: "" });
-
       },
       async searchLeadContactHandler(search, fields) {
-
-        if (!this.isCreateNewContact) {
-          return;
-        }
-
-        if (search == "") {
-          this.searchContacts = [];
-          return;
-        }
-
-        try {
-
-          var leadId = this.$route.params?.id ?? null;
-          var payload = { lead_id: leadId, search: search, fields: fields };
-
-          const res = await SearchLeadContact(payload);
-
-          try {
-
-            const { contacts } = res;
-            this.searchContacts = contacts;
-
-          } catch (error) {}
-
-        } catch (error) {}
+        if (!this.isCreateNewContact || !search || !this.isSearchStart) { this.searchContacts = []; return; }
+        clearInterval(this.debounceSearchContact);
+        var leadId = this.$route.params?.id ?? null;
+        var payload = { lead_id: leadId, search: search, fields: fields };
+        this.debounceSearchContact = setTimeout(() => {
+          this.$apiRequest({
+            url: '/contacts/search',
+            method: 'POST',
+            payload
+          }).then((res) => {
+            const { success, contacts, message } = res;
+            if (success) {
+              return this.searchContacts = contacts;
+            }
+            this.$toast[message.type](message.text);
+          }).catch(error => {
+            this.$toast.error("Oops, something went wrong");
+          });
+        }, 500);
       },
-      async createLeadContactHandler(currentContact = null) {
-
+      async createLeadContactHandler(copyContact = null) {
         try {
-
           this.$toast.clear();
-          this.isSubmitCreateNewContact = true;
+          this.errors = {};
           var res = {};
           var leadId = this.$route.params?.id ?? null;
 
-          if (currentContact) {
+          if (copyContact) {
 
             var payload = {
               lead_id: leadId,
-              contact_id: currentContact.contact_id,
+              contact_id: copyContact.contact_id,
             };
 
-            // res = await CreateLeadContact(payload);
-
           } else {
+
+            this.isSubmitCreateNewContact = true;
 
             var phones = this.another_phones.filter((item) => {
               if (item.phone_number != '' && item.phone_number != null) {
                 return item;
               }
             });
-            
+
             var emails = this.another_emails.filter((item) => {
               if (item.email != '' && item.email != null) {
                 return item;
@@ -199,43 +201,27 @@
               lead_id: leadId,
             };
 
-            if (!this.isCreateNewContact) {
-              res = await UpdateContact(payload);
-            } else {
+            if (this.isCreateNewContact) {
               res = await CreateContact(payload);
+            } else {
+              res = await UpdateContact(payload);
             }
           }
 
           this.isSubmitCreateNewContact = false;
-          this.findLeadByIdHandler();
-
-          if (!currentContact) {
+          var { success, message, errors } = res;
+          if (!success && errors) {
+            return this.errors = errors;
+          } else if (success) {
+            this.isCreateNewContact = false;
+            this.findLeadByIdHandler();
             this.hideModalHandler();
           }
-
-          var { message, contact } = res;
-
-          if (!currentContact) {
-            this.$toast[message.type](message.text);
-          }
-
-          this.selectContactHandler(contact);
-
+          this.$toast[message.type](message.text);
         } catch (error) {
-
-          try {
-
-            var message = error.response?.data?.message;
-            this.$toast[message.type](message.text);
-
-          } catch (e) {
-
-            this.$toast.error("Oops, something went wrong");
-          }
+          this.$toast.error("Oops, something went wrong");
         } finally {
-
           this.isSubmitCreateNewContact = false;
-
         }
       },
     },
@@ -302,6 +288,25 @@
                       }}</span>
                   </div>
                 </li>
+                <li v-if="searchContacts.length"
+                  class="pb-2 text-soft">Existing Contacts</li>
+                <li v-for="(item, index) in searchContacts"
+                  :key="index"
+                  @click="selectSearchContactHandler(item)"
+                  class="list-item d-flex justify-content-start align-items-center">
+                  <div class="circle-avatar me-2 cursor-pointer"
+                    style="width: 40px; height: 40px; min-width: 40px">
+                    <img class="rounded-circle border"
+                      alt="avatar1"
+                      :src="item.avatar" />
+                  </div>
+                  <div class="contact-details">
+                    <span class="details-text text-head fs-16px d-block fw-bold">{{ item.full_name }}</span>
+                    <span class="details-text text-soft fs-14px d-block">{{
+                      item.email ?? item.phone_number ?? "example@gmail.com"
+                      }}</span>
+                  </div>
+                </li>
               </ul>
               <button v-if="contact"
                 @click="selectContactHandler()"
@@ -321,9 +326,9 @@
                   <path
                     d="M185-80q-17 0-29.5-12.5T143-122v-105q0-90 56-159t144-88q-40 28-62 70.5T259-312v190q0 11 3 22t10 20h-87Zm147 0q-17 0-29.5-12.5T290-122v-190q0-70 49.5-119T459-480h189q70 0 119 49t49 119v64q0 70-49 119T648-80H332Zm148-484q-66 0-112-46t-46-112q0-66 46-112t112-46q66 0 112 46t46 112q0 66-46 112t-112 46Z" />
                 </svg>
-                <span v-if="contact"
+                <span v-if="!isCreateNewContact"
                   class="text-hard fw-bold fs-16px">Edit Contact</span>
-                <span v-if="!contact"
+                <span v-else
                   class="text-hard fw-bold fs-16px">Add Contact</span>
                 <svg v-if="contact?.is_primary"
                   :class="`ms-2 text-success `"
@@ -527,55 +532,15 @@
                 <span class="fs-14px text-danger py-1 w-100 d-block"
                   v-if="errors?.notes?.length">{{ errors?.notes[0] }}</span>
               </div>
-              <div class="mb-3"
-                v-if="searchContacts.length">
-                <label class="form-label-title">Existing Contacts</label>
-                <div class="">
-                  <ul class="list-unstyled mb-0 search-contacts">
-                    <li @click="createLeadContactHandler(item)"
-                      v-for="(item, index) in searchContacts"
-                      :key="index"
-                      class="list-item cursor-pointer"
-                      style="line-height: 18px">
-                      <span class="d-block fs-14px text-head fw-bold">
-                        {{ item.title }}
-                        <span v-if="item.title && item.full_name"> - </span>
-                        {{ item.full_name }}
-                      </span>
-                      <span class="d-block fs-12px text-soft">
-                        {{ item.phone_number }}
-                        <span v-if="item.email && item.phone_number"> - </span>
-                        {{ item.email }}
-                      </span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
               <div class="d-flex justify-content-between align-items-center pt-2">
                 <button @click="hideModalHandler()"
-                  class="btn btn-danger btn-sm">
+                  class="btn btn-danger">
                   Close
                 </button>
-                <button :disabled="isSubmitCreateNewContact"
-                  @click="createLeadContactHandler()"
-                  type="submit"
-                  class="btn btn-primary btn-sm px-3 d-flex justify-content-center align-items-center">
-                  <div v-if="isSubmitCreateNewContact">
-                    <svg class="spinner"
-                      viewBox="0 0 50 50"
-                      style="width: 20px; height: 20px; margin-left: 0px">
-                      <circle style="stroke: #ffffff"
-                        class="path"
-                        cx="25"
-                        cy="25"
-                        r="20"
-                        fill="none"
-                        stroke-width="5"></circle>
-                    </svg>
-                    <span>Submitting...</span>
-                  </div>
-                  <span v-if="!isSubmitCreateNewContact">Save Change</span>
-                </button>
+                <loading-button :isLoading="isSubmitCreateNewContact"
+                  @click="createLeadContactHandler()">
+                  {{ isCreateNewContact?'Create New':'Update Contact' }}
+                </loading-button>
               </div>
             </div>
           </div>

@@ -1,6 +1,7 @@
 <script>
   import { useLeadStore } from "../../../../../stores/lead";
   import { useAppStore } from "../../../../../stores/app";
+  import { useAuthStore } from "../../../../../stores/auth";
   import { UpdateSubscribers } from "../../../../../actions/LeadAction";
   import { AvatarIcon } from "../../../../../assets/icons";
 
@@ -10,33 +11,31 @@
       return {
         searchOwner: null,
         selectedSubscribers: [],
+        setTimeoutDebounce: null,
       };
     },
     setup(props) {
       const leadStore = useLeadStore();
       const appStore = useAppStore();
-      return { leadStore, appStore, AvatarIcon };
+      const authStore = useAuthStore();
+      return { leadStore, appStore, authStore, AvatarIcon };
     },
     methods: {
       async selectSubscribersHandler(item) {
-
-        if (this.selectedSubscribers.includes(item?.user_id)) {
-
-          this.selectedSubscribers.splice(
-            this.selectedSubscribers.indexOf(item?.user_id),
-            1
-          );
-
-        } else {
-
-          this.selectedSubscribers.push(item?.user_id);
-
+        this.$toast.clear();
+        if(this.authStore.getUser.is_owner != 1 &&  this.leadStore.getLeadOwner.user_id != this.authStore.getUser.user_id){
+          return this.$toast.error("You can't assign or remove subscribers.");
         }
-
         try {
+          clearInterval(this.setTimeoutDebounce);
 
-          if (this.owner?.user_id && !this.selectedSubscribers.includes(this.owner?.user_id)) {
-            this.selectedSubscribers.push(this.owner.user_id);
+          if (this.selectedSubscribers.includes(item?.user_id)) {
+            this.selectedSubscribers.splice(
+              this.selectedSubscribers.indexOf(item?.user_id),
+              1
+            );
+          } else {
+            this.selectedSubscribers.push(item?.user_id);
           }
 
           const payload = {
@@ -44,12 +43,13 @@
             subscribers: this.selectedSubscribers,
           };
 
-          const res = await UpdateSubscribers(payload);
-          const { success, message } = res
-
-          if (!success) {
-            this.$toast.error(message.text);
-          }
+          this.setTimeoutDebounce = await setTimeout(async () => {
+            const res = await UpdateSubscribers(payload);
+            const { success, message } = res
+            if (!success) {
+              this.$toast.error(message.text);
+            }
+          }, 2000);
           
         } catch (error) {
           this.$toast.error("Oops, something went wrong");

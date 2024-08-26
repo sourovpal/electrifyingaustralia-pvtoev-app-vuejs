@@ -147,7 +147,7 @@ export default {
                     this.isSelectedAllRowsReset = false;
                     this.fetchLeads = leads;
                     this.pagination = pagination;
-                }else {
+                } else {
                     throw new Exception('Refresh again required.');
                 }
             } catch (error) {
@@ -280,25 +280,20 @@ export default {
                 }
 
                 if (lead) {
-                    data["leads"] = [lead?.lead_id];
+                    data["leads"] = lead?.lead_id;
                 } else {
                     data["leads"] = this.selectedRows;
                 }
 
                 const res = await UpdateMultipelLeadOwner(data);
-
-                if (lead) {
-                    lead["owner"] = owner;
-                } else {
+                const { success, message } = res;
+                if (success) {
                     this.fetchAllLeadsHandler();
+                } else {
+                    this.$toast[message.type](message.text);
                 }
             } catch (error) {
-                try {
-                    var message = error.response.data.message;
-                    this.$toast[message.type](message.text);
-                } catch (e) {
-                    this.$toast.error("Oops, something went wrong");
-                }
+                this.$toast.error("Oops, something went wrong");
             }
         },
         copyPhoneNumberHandler(lead) {

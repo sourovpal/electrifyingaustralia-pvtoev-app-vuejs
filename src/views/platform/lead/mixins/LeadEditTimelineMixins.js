@@ -187,19 +187,20 @@ export default {
         },
         async updateLeadOwnerHandler(owner = null) {
             try {
+                this.$toast.clear();
                 var data = {
                     owner: owner?.user_id,
                     leads: this.currentLead?.lead_id,
                 };
                 const res = await UpdateMultipelLeadOwner(data);
-                this.leadStore.setLeadOwner(owner);
-            } catch (error) {
-                try {
-                    var message = error.response.data.message;
+                const { success, message } = res;
+                if (success) {
+                    this.leadStore.setLeadOwner(owner);
+                } else {
                     this.$toast[message.type](message.text);
-                } catch (e) {
-                    this.$toast.error("Oops, something went wrong");
                 }
+            } catch (error) {
+                this.$toast.error("Oops, something went wrong");
             }
         },
     },

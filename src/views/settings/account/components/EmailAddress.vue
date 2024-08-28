@@ -1,9 +1,9 @@
 <script setup>
     import { computed, ref, reactive, watchEffect } from 'vue';
-    import { SendEmailOtp, ChangeEmailAddress, LogoutAction } from '../../../../actions/UserAction';
-    import { useAuthStore } from '../../../../stores/auth';
-    import CustomModal from '../../../../components/Modals/CustomModal.vue';
-    import { $toast } from '../../../../config';
+    import { SendEmailOtp, ChangeEmailAddress, LogoutAction } from '@actions/UserAction';
+    import { useAuthStore } from '@stores/auth';
+    import CustomModal from '@components/Modals/CustomModal.vue';
+    import { $toast } from '@config';
 
     const verificationModalRef = ref(null);
 

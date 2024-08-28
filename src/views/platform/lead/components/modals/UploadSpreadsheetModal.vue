@@ -3,7 +3,7 @@
 
     import {
         ConfirmQualify
-    } from '../../../../../actions/LeadAction';
+    } from '@actions/LeadAction';
 
     export default {
         data() {

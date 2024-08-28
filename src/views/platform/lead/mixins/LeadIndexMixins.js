@@ -5,7 +5,7 @@ import {
     UpdateMultipelLeadStatus,
     UpdateMultipelLeadOwner,
     GetLeadDependencies
-} from "../../../../actions/LeadAction";
+} from "@actions/LeadAction";
 import { Exception } from "sass";
 
 export default {

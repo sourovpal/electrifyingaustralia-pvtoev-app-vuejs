@@ -1,8 +1,10 @@
 <script setup>
     import EventByUser from './EventByUser.vue';
-    import UpdateLeadStatusEvent from './UpdateLeadStatusEvent.vue';
-    import ChangeLeadOwnerEvent from './ChangeLeadOwnerEvent.vue';
+    import LeadStatusEvent from './LeadStatusEvent.vue';
+    import LeadOwnerEvent from './LeadOwnerEvent.vue';
     import UpdateCustomPropertie from './UpdateCustomPropertie.vue';
+    import LeadSubscriberEvent from './LeadSubscriberEvent.vue';
+    import LeadQualifyEvent from './LeadQualifyEvent.vue';
 
     import { defineProps, computed } from 'vue';
     const props = defineProps({
@@ -30,17 +32,23 @@
         :event-date-time="createdAt">
         <div v-for="(log, index) in logs"
             :key="index">
-            <UpdateLeadStatusEvent
-                v-if="log.event_type == 'update-lead-status' || log.event_type == 'added-lead-status' || log.event_type == 'remove-lead-status'"
+            <lead-status-event
+                v-if="log.event_type == 'change-status' || log.event_type == 'assign-status' || log.event_type == 'remove-status'"
+                :events="log" />
+
+            <lead-owner-event
+                v-else-if="log.event_type == 'assign-owner' || log.event_type == 'remove-owner' || log.event_type == 'change-owner'"
+                :events="log" />
+
+            <lead-subscriber-event v-else-if="log.event_type == 'assign-subscribers'"
+                :events="log" />
+
+            <UpdateCustomPropertie
+                v-else-if="log.event_type == 'update-lead-propertie' || log.event_type == 'remove-lead-propertie'"
                 :log="log" />
 
-            <ChangeLeadOwnerEvent
-                v-else-if="log.event_type == 'update-lead-owner' || log.event_type == 'added-lead-owner' || log.event_type == 'remove-lead-owner'"
-                :log="log" />
-
-            <UpdateCustomPropertie 
-            v-else-if="log.event_type == 'update-lead-propertie' || log.event_type == 'remove-lead-propertie'"
-            :log="log" />
+            <LeadQualifyEvent v-else-if="log.event_type == 'confirm-qualify'"
+                :events="log" />
         </div>
         <!-- <div class="d-block">
             <div class="fs-14px fw-bold feed-wrap mb-1">

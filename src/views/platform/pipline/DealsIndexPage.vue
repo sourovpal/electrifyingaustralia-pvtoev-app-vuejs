@@ -1,6 +1,6 @@
 <script>
     import './style.scss';
-    import SearchBar from '../../../components/SearchBar.vue';
+    import SearchBar from '@components/SearchBar.vue';
     import CustomScrollbar from 'custom-vue-scrollbar';
     import FilterRightSidebar from './components/FilterRightSidebar.vue';
     import PipelineStateLeadDetails from './components/PipelineStateLeadDetails.vue';
@@ -12,7 +12,7 @@
     import {
         FetchPipelineWithStagesWithLeads,
         FetchLeadsByPipelineStageId
-    } from '../../../actions/PipelineAction';
+    } from '@actions/PipelineAction';
 
     export default {
         components: {

@@ -1,7 +1,7 @@
 import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import vue from '@vitejs/plugin-vue';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -16,9 +16,17 @@ export default defineConfig({
     vue(),
   ],
   resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+    alias: [
+      { find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
+      { find: '@assets', replacement: fileURLToPath(new URL('./src/assets', import.meta.url)) },
+      { find: '@views', replacement: fileURLToPath(new URL('./src/views', import.meta.url)) },
+      { find: '@components', replacement: fileURLToPath(new URL('./src/components', import.meta.url)) },
+      { find: '@helpers', replacement: fileURLToPath(new URL('./src/helpers', import.meta.url)) },
+      { find: '@plugins', replacement: fileURLToPath(new URL('./src/plugins', import.meta.url)) },
+      { find: '@stores', replacement: fileURLToPath(new URL('./src/stores', import.meta.url)) },
+      { find: '@config', replacement: fileURLToPath(new URL('./src/config.js', import.meta.url)) },
+      { find: '@actions', replacement: fileURLToPath(new URL('./src/actions', import.meta.url)) },
+    ]
   },
   build: {
     rollupOptions: {

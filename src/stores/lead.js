@@ -23,9 +23,15 @@ export const useLeadStore = defineStore('lead', {
       isPipelineLead: false,
       pipelineProperties: [],
       leadFiles: [],
+      timelines: [],
+      fetchTimelineLogsFun: () => { },
+      fetchLeadsByIdFun: () => { }
     }
   },
   getters: {
+    getTimelines(stage) {
+      return stage.timelines;
+    },
     getLeadPrevUrl(state) {
       return state.leadPrevUrl;
     },
@@ -85,9 +91,15 @@ export const useLeadStore = defineStore('lead', {
     },
     getLeadFiles(stage) {
       return stage.leadFiles;
-    }
+    },
   },
   actions: {
+    setTimelines(payload) {
+      this.timelines = payload;
+    },
+    setTimelinesAppend(payload) {
+      this.timelines = this.timelines.concat(payload);
+    },
     setLeadPrevUrl(payload) {
       this.leadPrevUrl = payload;
     },
@@ -142,5 +154,19 @@ export const useLeadStore = defineStore('lead', {
     setLeadFiles(payload) {
       this.leadFiles = payload;
     },
+    // ===
+    setFetchTimelineLogs(payload) {
+      this.fetchTimelineLogsFun = payload;
+    },
+    callFetchTimelineLogs(payload = {}, reset = false, changeLoad = false) {
+      this.fetchTimelineLogsFun(payload, reset, changeLoad);
+    },
+    // ===
+    setFetchLeadsById(payload) {
+      this.loadTimelineLogsFun = payload;
+    },
+    callFetchLeadsById(payload = {}) {
+      this.fetchLeadsByIdFun(payload);
+    }
   }
 });

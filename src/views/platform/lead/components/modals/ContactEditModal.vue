@@ -4,10 +4,10 @@
   import {
     CreateContact,
     UpdateContact
-  } from "../../../../../actions/ContactAction";
+  } from "@actions/ContactAction";
 
-  import { useLeadStore } from "../../../../../stores/lead";
-  import { useAppStore } from "../../../../../stores/app";
+  import { useLeadStore } from "@stores/lead";
+  import { useAppStore } from "@stores/app";
   import { ref } from 'vue';
 
   export default {

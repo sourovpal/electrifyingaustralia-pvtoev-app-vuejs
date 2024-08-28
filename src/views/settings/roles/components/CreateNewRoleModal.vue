@@ -1,6 +1,5 @@
 <script>
     import { Modal } from "mdb-ui-kit";
-    import {InviteMember} from '../../../../actions/UserAction';
     import {CreateNewRole} from '../../../../actions/RoleAction';
     export default{
       props:['fetchRoleDataHandler'],

@@ -2,29 +2,23 @@
   import CustomScrollbar from "custom-vue-scrollbar";
   import { QuillEditor } from "@vueup/vue-quill";
   import "@vueup/vue-quill/dist/vue-quill.snow.css";
-  import "@vueup/vue-quill/dist/vue-quill.bubble.css";  
-  import StarRating from "vue-star-rating";
-  import RightSidebarProperties from "./CustomProperties/RightSidebarProperties.vue";
+  import "@vueup/vue-quill/dist/vue-quill.bubble.css";
+  import RightSidebarProperties from "./RightSidebarProperties.vue";
   import { Skeletor } from "vue-skeletor";
-  import {
-    UpdateLeadConfidence,
-  } from "../../../../actions/LeadAction";
-  import {
-    DeleteContact,
-  } from "../../../../actions/ContactAction";
-  import UploadeFiles from "./sections/UploadeFiles.vue";
-  import { useLeadStore } from "../../../../stores/lead";
-  import { useAppStore } from "../../../../stores/app";
-  import { DocumentIcon, ImageIcon, PdfIcon } from "../../../../assets/icons";
-  import RightSidebarContacts from './sections/RightSidebarContacts.vue';
+  import UploadeFiles from "./UploadeFiles.vue";
+  import { useLeadStore } from "@stores/lead";
+  import { useAppStore } from "@stores/app";
+  import { DocumentIcon, ImageIcon, PdfIcon } from "@assets/icons";
+  import RightSidebarContacts from './RightSidebarContacts.vue';
+  import RightSidebarAddress from './RightSidebarAddress.vue';
   export default {
     components: {
       CustomScrollbar,
       QuillEditor,
-      StarRating,
       RightSidebarProperties,
       Skeletor,
       UploadeFiles,
+      RightSidebarAddress,
       RightSidebarContacts
     },
     props: ["toggleRightDetailsSidebar", "findLeadByIdHandler", "isFirstLoading"],
@@ -42,75 +36,12 @@
         progress: 0,
       };
     },
-    watch: {
-      currentLead(lead) {
-        this.lead = lead;
-        this.confidence = lead?.confidence;
-        var temp = "";
-        if (lead?.address_line_two) {
-          temp += lead?.address_line_two;
-          if (lead?.address_line_one) {
-            temp += "/" + lead?.address_line_one;
-          }
-        } else if (lead?.address_line_one) {
-          temp += lead?.address_line_one;
-        }
-
-        if (lead?.city || lead?.state || lead?.post_code) {
-          temp += ", ";
-        }
-
-        if (lead?.city) {
-          temp += lead?.city + " ";
-        }
-
-        if (lead?.state) {
-          temp += lead?.state + " ";
-        }
-
-        if (lead?.post_code) {
-          temp += lead?.post_code;
-        }
-        if (temp != "") {
-          this.address = temp;
-        }
-      },
-    },
     computed: {
       currentLead() {
         return this.leadStore.getCurrentLead;
       },
-      contacts() {
-        return this.leadStore.getLeadContacts;
-      },
-      contact: {
-        get() {
-          return this.leadStore.getPrimaryContact;
-        },
-        set(val) {
-          this.leadStore.setPrimaryContact(val);
-        },
-      },
     },
     methods: {
-      async confidenceHandler() {
-        try {
-
-          const res = await UpdateLeadConfidence({
-            lead: this.lead?.lead_id,
-            confidence: this.confidence,
-          });
-
-          const { success, message } = res;
-
-          if (!success) {
-            this.$toast.error(message.text);
-          }
-
-        } catch (error) {
-          this.$toast.error("Oops, something went wrong");
-        }
-      },
       getFileIconHandler(name = "img.png") {
         var ext = name.split(".").pop().toLocaleLowerCase();
         var imgExt = ["jpg", "jpeg", "png", "gif", "bmp", "svg", "webp"];
@@ -139,11 +70,9 @@
     :class="{ show: toggleRightDetailsSidebar }">
     <CustomScrollbar>
 
-      <RightSidebarContacts
-      :isFirstLoading="isFirstLoading"
-      ></RightSidebarContacts>
+      <RightSidebarContacts :isFirstLoading="isFirstLoading"></RightSidebarContacts>
 
-      <div>
+      <!-- <div>
         <div class="dropdown-box border-bottom">
           <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center">
             <span class="fw-bold fs-14px text-uppercase text-head d-block">Pinned activity</span>
@@ -167,90 +96,13 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="p-3 border-bottom">
-        <div class="d-flex justify-content-between align-items-center mb-1">
-          <div class="fs-14px fw-bold text-head mb-0 text-uppercase">
-            lead Properties
-          </div>
-          <button class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
-            <svg class="svg-3"
-              xmlns="http://www.w3.org/2000/svg"
-              height="18px"
-              viewBox="0 0 24 24"
-              width="18px">
-              <path d="M0 0h24v24H0z"
-                fill="none"></path>
-              <path
-                d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z">
-              </path>
-            </svg>
-          </button>
-        </div>
-        <div class="mb-1">
-          <div class="fs-12px text-soft mb-0">Address</div>
-          <div class="d-flex">
-            <div class="fs-14px fw-bold text-head mb-0">
-              {{ address ?? " — " }}
-            </div>
-            <a target="_blank"
-              v-if="address"
-              :href="`https://www.google.com/maps/search/${address}`"
-              class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent ms-auto">
-              <svg class="svg-3"
-                xmlns="http://www.w3.org/2000/svg"
-                height="18"
-                viewBox="0 0 24 24"
-                width="18">
-                <path d="M0 0h24v24H0z"
-                  fill="none"></path>
-                <path
-                  d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z">
-                </path>
-              </svg>
-            </a>
-          </div>
-        </div>
-        <div class="mb-1">
-          <div class="fs-12px text-soft mb-0">Value</div>
-          <div class="d-flex">
-            <div class="fs-14px fw-bold text-head mb-0">
-              ${{ lead?.estimated_value ?? "$0.00" }}
-            </div>
-          </div>
-        </div>
-        <div class="mb-1">
-          <div class="fs-12px text-soft mb-0">Source</div>
-          <div class="d-flex">
-            <div class="fs-14px fw-bold text-head mb-0">
-              {{ lead?.source?.title ?? " — " }}
-            </div>
-          </div>
-        </div>
-
-        <div class="mb-1">
-          <div class="fs-12px text-soft mb-0">Confidence</div>
-          <div class="d-flex">
-            <div class="mb-2">
-              <star-rating style="line-height: 20px"
-                :star-size="18"
-                :rounded-corners="true"
-                :border-width="2"
-                inactive-color="#F8F9F9"
-                active-color="#FF9529"
-                border-color="#AEB6BF"
-                active-border-color="#FF9529"
-                :increment="0.5"
-                v-model:rating="confidence"
-                @click="confidenceHandler()"
-                :show-rating="false" />
-            </div>
-          </div>
-        </div>
-        <right-sidebar-properties />
+        <right-sidebar-address :isFirstLoading="isFirstLoading"></right-sidebar-address>
+        <right-sidebar-properties :isFirstLoading="isFirstLoading"></right-sidebar-properties>
       </div>
 
-      <div class="">
+      <!-- <div class="">
         <div class="dropdown-box border-bottom">
           <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center">
             <span class="fw-bold fs-14px text-uppercase text-head d-block">Tasks</span>
@@ -421,13 +273,11 @@
             </div>
           </div>
         </div>
-
         <uploade-files />
-
         <div style="height: 10rem"></div>
-      </div>
+      </div> -->
     </CustomScrollbar>
-    
+
   </div>
 </template>
 
@@ -555,6 +405,6 @@
       }
     }
 
-    
+
   }
 </style>

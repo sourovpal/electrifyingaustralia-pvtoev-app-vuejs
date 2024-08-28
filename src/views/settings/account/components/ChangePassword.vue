@@ -1,5 +1,5 @@
 <script>
-    import { ChangePassword } from '../../../../actions/UserAction';
+    import { ChangePassword } from '@actions/UserAction';
     export default {
         data() {
             return {

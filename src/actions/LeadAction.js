@@ -153,22 +153,6 @@ const MoveLeadStatusToPipeline = (payload) => {
     });
 }
 
-const UpdateLeadConfidence = (payload) => {
-    return new Promise((resolve, reject) => {
-        try {
-            api.post(`/leads/confidence`, payload)
-                .then((res) => {
-                    return resolve(res.data);
-                }).catch((error) => {
-                    return reject(error);
-                });
-        } catch (error) {
-            return reject(error);
-        }
-    });
-}
-
-
 const LeadPropertieUpdate = (payload) => {
     return new Promise((resolve, reject) => {
         try {
@@ -225,7 +209,6 @@ export {
     FetchLeadPipelineWithStage,
     ConfirmQualify,
     MoveLeadStatusToPipeline,
-    UpdateLeadConfidence,
     LeadPropertieUpdate,
     UpdateSubscribers,
     LeadUpdate,

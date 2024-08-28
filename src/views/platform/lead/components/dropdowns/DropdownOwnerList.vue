@@ -1,5 +1,5 @@
 <script>
-import { AvatarIcon } from "../../../../../assets/icons";
+import { AvatarIcon } from "@assets/icons";
 export default {
   setup() {
     return { AvatarIcon };

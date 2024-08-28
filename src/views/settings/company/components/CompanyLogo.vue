@@ -1,9 +1,9 @@
 <script setup>
     import { Skeletor } from 'vue-skeletor';
     import { ref, defineProps, watch, reactive, onMounted } from 'vue';
-    import { RemoveCompanyLogo, UploadCompanyLogo } from '../../../../actions/CompanyAction';
-    import { $toast } from '../../../../config';
-    import CustomModal from '../../../../components/modals/CustomModal.vue';
+    import { RemoveCompanyLogo, UploadCompanyLogo } from '@actions/CompanyAction';
+    import { $toast } from '@config';
+    import CustomModal from '@components/modals/CustomModal.vue';
 
     const confirmRemoveModal = ref(null);
 

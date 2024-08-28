@@ -1,9 +1,9 @@
 <script setup>
     import { ref, reactive, defineProps, watch, computed, onMounted } from 'vue';
-    import { UpdateTimezone } from '../../../../actions/CompanyAction';
-    import { FetchTimezoneList } from '../../../../actions/AppAction';
+    import { UpdateTimezone } from '@actions/CompanyAction';
+    import { FetchTimezoneList } from '@actions/AppAction';
 
-    import { $toast } from '../../../../config';
+    import { $toast } from '@config';
     const props = defineProps({
         company: {
             type: Object,

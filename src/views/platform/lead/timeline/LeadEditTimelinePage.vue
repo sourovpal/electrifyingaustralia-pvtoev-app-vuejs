@@ -1,24 +1,21 @@
 <script>
-  import SearchBar from "../../../components/SearchBar.vue";
-  import ActionBar from "../../../components/ActionBar/ActionBar.vue";
-  import LeftActionBar from "../../../components/ActionBar/LeftActionBar.vue";
-  import RightActionBar from "../../../components/ActionBar/RightActionBar.vue";
-  import LeadQualifyModal from "./components/modals/LeadQualifyModal.vue";
-  import LeadReCategoriseModal from "./components/modals/LeadReCategoriseModal.vue";
-  import EditLeadModal from "./components/modals/EditLeadModal.vue";
-
+  import SearchBar from "@components/SearchBar.vue";
+  import ActionBar from "@components/ActionBar/ActionBar.vue";
+  import LeftActionBar from "@components/ActionBar/LeftActionBar.vue";
+  import RightActionBar from "@components/ActionBar/RightActionBar.vue";
+  import LeadQualifyModal from "../components/modals/LeadQualifyModal.vue";
+  import LeadReCategoriseModal from "../components/modals/LeadReCategoriseModal.vue";
+  import EditLeadModal from "../components/modals/EditLeadModal.vue";
+  import DropdownOwnerList from "../components/dropdowns/DropdownOwnerList.vue";
+  import DropdownSubscriberList from "../components/dropdowns/DropdownSubscriberList.vue";
+  import TimelineHistory from "./sections/TimelineHistory.vue";
+  import RightSidebarTimeline from "./sections/RightSidebarTimeline.vue";
+  import { useLeadStore } from "@stores/lead";
+  import { useAppStore } from "@stores/app";
+  import { AvatarIcon } from "@assets/icons";
+  import LeadEditTimelineMixins from "../mixins/LeadEditTimelineMixins";
   import CustomScrollbar from "custom-vue-scrollbar";
-
   import { Skeletor } from "vue-skeletor";
-  import DropdownOwnerList from "./components/dropdowns/DropdownOwnerList.vue";
-  import DropdownSubscriberList from "./components/dropdowns/DropdownSubscriberList.vue";
-
-  import TimelineHistory from "./components/TimelineHistory.vue";
-  import RightSidebarTimeline from "./components/RightSidebarTimeline.vue";
-  import { useLeadStore } from "../../../stores/lead";
-  import { useAppStore } from "../../../stores/app";
-  import { AvatarIcon } from "../../../assets/icons";
-  import LeadEditTimelineMixins from "./mixins/LeadEditTimelineMixins";
   import { ref } from "vue";
 
   export default {
@@ -64,9 +61,7 @@
         <span @click="$refs['editLeadModalRef'].showModalHandler()"
           v-if="!isFirstLoading"
           class="text-head mb-0 fs-16px fw-bold lead-title-text">
-          {{
-          currentLead?.lead_title ?? currentLead?.primary_contact?.full_name
-          }}
+          {{ currentLead?.lead_title ?? currentLead?.primary_contact?.full_name}}
         </span>
         <!-- Edit Lead Modal Toggle Btn -->
         <button @click="$refs['editLeadModalRef'].showModalHandler()"

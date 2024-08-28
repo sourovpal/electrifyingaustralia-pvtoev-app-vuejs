@@ -1,12 +1,12 @@
 <script>
   import { Modal } from "mdb-ui-kit";
   import DropdownOwnerList from "../dropdowns/DropdownOwnerList.vue";
-  import { ConfirmQualify } from "../../../../../actions/LeadAction";
+  import { ConfirmQualify } from "@actions/LeadAction";
 
-  import { useLeadStore } from "../../../../../stores/lead";
-  import { useAppStore } from "../../../../../stores/app";
+  import { useLeadStore } from "@stores/lead";
+  import { useAppStore } from "@stores/app";
   import SelectObjectId from './fields/SelectObjectId.vue';
-  import { AvatarIcon } from "../../../../../assets/icons";
+  import { AvatarIcon } from "@assets/icons";
   export default {
     components: {
       DropdownOwnerList,
@@ -110,6 +110,7 @@
           if (!success && errors) {
             return this.errors = errors;
           } else if (success) {
+            this.leadStore.callFetchTimelineLogs({}, false, true);
             this.findLeadByIdHandler();
             this.hideModalHandler();
           }

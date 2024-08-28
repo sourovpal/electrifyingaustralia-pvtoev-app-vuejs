@@ -67,6 +67,7 @@ export default {
                     throw new Exception('Please refresh the page.');
                 }
             } catch (error) {
+                console.log(error)
                 this.$toast.error("Please refresh the page.");
             }
         },
@@ -100,7 +101,6 @@ export default {
         async findLeadByIdHandler(payload = {}) {
             try {
                 this.isLoading = true;
-
                 var leadId = this.$route.params?.id ?? "";
 
                 payload = { ...payload };
@@ -175,14 +175,13 @@ export default {
                     status: status.status_id,
                 };
                 const res = await UpdateMultipelLeadStatus(data);
-                this.currentLead["status"] = { ...status };
-            } catch (error) {
-                try {
-                    var message = error.response.data.message;
-                    this.$toast[message.type](message.text);
-                } catch (e) {
-                    this.$toast.error("Oops, something went wrong");
+                const { success, message } = res;
+                if (success) {
+                    this.currentLead["status"] = { ...status };
+                    this.leadStore.callFetchTimelineLogs({}, false, true);
                 }
+            } catch (error) {
+                this.$toast.error("Oops, something went wrong");
             }
         },
         async updateLeadOwnerHandler(owner = null) {
@@ -196,6 +195,7 @@ export default {
                 const { success, message } = res;
                 if (success) {
                     this.leadStore.setLeadOwner(owner);
+                    this.leadStore.callFetchTimelineLogs({}, false, true);
                 } else {
                     this.$toast[message.type](message.text);
                 }
@@ -212,6 +212,7 @@ export default {
         });
         this.isFirstLoading = true;
         this.findLeadByIdHandler();
+        this.leadStore.setFetchLeadsById(this.findLeadByIdHandler);
         this.fullpath = this.$route?.fullPath;
         this.leadStore.setLeadPrevUrl(null);
     },

@@ -1,5 +1,5 @@
 <script setup>
-import { EmptyFolderIcon } from "../../../../assets/icons";
+import { EmptyFolderIcon } from "@assets/icons";
 
 </script>
 

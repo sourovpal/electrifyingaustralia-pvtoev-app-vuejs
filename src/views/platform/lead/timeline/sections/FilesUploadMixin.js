@@ -1,4 +1,4 @@
-import { ImageIcon, DocumentIcon, PdfIcon } from "../../../../../assets/icons";
+import { ImageIcon, DocumentIcon, PdfIcon } from "@assets/icons";
 
 export default {
     data(){

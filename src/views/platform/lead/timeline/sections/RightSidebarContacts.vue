@@ -1,13 +1,13 @@
 <script setup>
     import { defineProps, computed, watchEffect, ref } from 'vue';
     import { Skeletor } from "vue-skeletor";
-    import { useLeadStore } from "../../../../../stores/lead";
-    import { useAppStore } from "../../../../../stores/app";
-    import ContactEditModal from "../modals/ContactEditModal.vue";
-    import CustomModal from '../../../../../components/modals/CustomModal.vue';
-    import { useApiRequest } from '../../../../../actions/api';
+    import { useLeadStore } from "@stores/lead";
+    import { useAppStore } from "@stores/app";
+    import ContactEditModal from "../../components/modals/ContactEditModal.vue";
+    import CustomModal from '@components/modals/CustomModal.vue';
+    import { useApiRequest } from '@actions/api';
     import { useClipboard } from '@vueuse/core';
-    import { $toast } from '../../../../../config';
+    import { $toast } from '@config';
 
     const appStore = useAppStore();
     const leadStore = useLeadStore();
@@ -42,8 +42,6 @@
         copy(source);
         $toast.success(`${source} Copied to clipboard`);
     }
-
-
 
 </script>
 <template>

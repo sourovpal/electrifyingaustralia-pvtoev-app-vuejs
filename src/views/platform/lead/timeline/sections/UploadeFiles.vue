@@ -1,11 +1,11 @@
 <script>
-import api from "../../../../../actions/api";
+import api from "@actions/api";
 import SlideUpDown from "vue-slide-up-down";
-import ImagePreviewModal from "../modals/ImagePreviewModal.vue";
+import ImagePreviewModal from "../../components/modals/ImagePreviewModal.vue";
 import ShowAllFilesModal from "./ShowAllFilesModal.vue";
 import FilesUploadedHistory from "./FilesUploadedHistory.vue";
-import { useLeadStore } from "../../../../../stores/lead";
-import { useAppStore } from "../../../../../stores/app";
+import { useLeadStore } from "@stores/lead";
+import { useAppStore } from "@stores/app";
 import UploadedMixin from "./FilesUploadMixin";
 
 export default {

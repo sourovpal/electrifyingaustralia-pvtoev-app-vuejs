@@ -1,12 +1,12 @@
 <script setup>
     import { ref, reactive, onMounted } from 'vue';
-    import { FetchComapny } from '../../../actions/CompanyAction';
+    import { FetchComapny } from '@actions/CompanyAction';
     import CompanyLogo from './components/CompanyLogo.vue';
     import ContactInformation from './components/ContactInformation.vue';
     import SocialMediaDetails from './components/SocialMediaDetails.vue';
     import TimeLocation from './components/TimeLocation.vue';
 
-    import { $toast } from '../../../config';
+    import { $toast } from '@config';
 
     const state = reactive({
         company: {},

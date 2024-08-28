@@ -1,7 +1,7 @@
 <script setup>
     import Quill from 'quill';
     import { reactive, ref, onMounted, onUnmounted, computed } from 'vue';
-    import { useAppStore } from '../../../../../stores/app';
+    import { useAppStore } from '@stores/app';
     import "quill-mention/autoregister";
     import "quill/dist/quill.core.css";
     import "quill-mention/dist/quill.mention.css";

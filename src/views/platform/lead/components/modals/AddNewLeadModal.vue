@@ -1,10 +1,10 @@
 <script>
   import { Modal } from "mdb-ui-kit";
-  import { CreateNewLead } from "../../../../../actions/LeadAction";
+  import { CreateNewLead } from "@actions/LeadAction";
   import DropdownOwnerList from "../dropdowns/DropdownOwnerList.vue";
-  import Storage from "../../../../../helpers/Storage";
-  import { useAppStore } from "../../../../../stores/app";
-  import { CONFIG } from "../../../../../config";
+  import Storage from "@helpers/Storage";
+  import { useAppStore } from "@stores/app";
+  import { CONFIG } from "@config";
   import SelectObjectId from "./fields/SelectObjectId.vue";
   import SelectLeadSource from "./fields/SelectLeadSource.vue";
 

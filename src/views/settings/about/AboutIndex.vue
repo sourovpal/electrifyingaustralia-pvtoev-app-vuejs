@@ -1,5 +1,5 @@
 <script>
-import {FetchAboutUs, UpdateAboutUs} from '../../../actions/AboutUsAction';
+import {FetchAboutUs, UpdateAboutUs} from '@actions/AboutUsAction';
 export default {
   name:'ProfileIndex',
     data() {

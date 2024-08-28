@@ -4,9 +4,9 @@ import { Modal } from "mdb-ui-kit";
 import {
   ConfirmQualify,
   MoveLeadStatusToPipeline,
-} from "../../../../../actions/LeadAction";
-import { useLeadStore } from "../../../../../stores/lead";
-import { useAppStore } from "../../../../../stores/app";
+} from "@actions/LeadAction";
+import { useLeadStore } from "@stores/lead";
+import { useAppStore } from "@stores/app";
 import SelectObjectId from "./fields/SelectObjectId.vue";
 
 export default {

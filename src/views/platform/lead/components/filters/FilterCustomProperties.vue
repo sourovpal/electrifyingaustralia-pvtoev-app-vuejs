@@ -1,6 +1,6 @@
 <script setup>
 import { defineProps, ref } from "vue";
-import { getCustomPropertieIcon } from "../../../../../helpers/formats";
+import { getCustomPropertieIcon } from "@helpers/formats";
 import SlideUpDown from "vue-slide-up-down";
 import FreeTextInput from "./FreeTextInput.vue";
 import DateAndTimeInput from "./DateAndTimeInput.vue";

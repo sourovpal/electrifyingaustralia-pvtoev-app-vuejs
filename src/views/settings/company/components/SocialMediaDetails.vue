@@ -1,7 +1,7 @@
 <script setup>
     import { ref, reactive, defineProps, watch, computed } from 'vue';
-    import { UpdateSocialDetails } from '../../../../actions/CompanyAction';
-    import { $toast } from '../../../../config';
+    import { UpdateSocialDetails } from '@actions/CompanyAction';
+    import { $toast } from '@config';
     const props = defineProps({
         company: {
             type: Object,

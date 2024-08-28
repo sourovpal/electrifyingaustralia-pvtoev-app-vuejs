@@ -8,12 +8,12 @@ import {
   shallowReactive,
 } from "vue";
 import { Modal } from "mdb-ui-kit";
-import { LeadUpdate } from "../../../../../actions/LeadAction";
-import { useLeadStore } from "../../../../../stores/lead";
-import { useAppStore } from "../../../../../stores/app";
+import { LeadUpdate } from "@actions/LeadAction";
+import { useLeadStore } from "@stores/lead";
+import { useAppStore } from "@stores/app";
 import LeadCustomProperties from "./sections/LeadCustomProperties.vue";
 import { useToast } from "vue-toast-notification";
-import { CONFIG } from "../../../../../config";
+import { CONFIG } from "@config";
 import SelectLeadSource from "./fields/SelectLeadSource.vue";
 // Define
 const emits = defineEmits(["findLeadByIdHandler"]);

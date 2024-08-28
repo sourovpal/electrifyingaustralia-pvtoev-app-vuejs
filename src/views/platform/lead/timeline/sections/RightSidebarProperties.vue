@@ -1,16 +1,23 @@
 <script setup>
-  import { LeadPropertieUpdate } from "../../../../../actions/LeadAction";
-  import FreeTextInput from "./FreeTextInput.vue";
-  import DateAndTimeInput from "./DateAndTimeInput.vue";
-  import MultipleChooseInput from "./MultipleChooseInput.vue";
-  import { useLeadStore } from "../../../../../stores/lead";
-  import { useAppStore } from "../../../../../stores/app";
-  import { computed, ref, watchEffect } from "vue";
+  import { LeadPropertieUpdate } from "@actions/LeadAction";
+  import FreeTextInput from "../../components/CustomProperties/FreeTextInput.vue";
+  import DateAndTimeInput from "../../components/CustomProperties/DateAndTimeInput.vue";
+  import MultipleChooseInput from "../../components/CustomProperties/MultipleChooseInput.vue";
+  import { useLeadStore } from "@stores/lead";
+  import { useAppStore } from "@stores/app";
+  import { computed, ref, watchEffect, defineProps } from "vue";
+  import YesOrNoInput from "../../components/CustomProperties/YesOrNoInput.vue";
   import { useRoute } from "vue-router";
-  import YesOrNoInput from "./YesOrNoInput.vue";
+  import { Skeletor } from "vue-skeletor";
+
+  const props = defineProps({
+    isFirstLoading: { type: Boolean, default: false },
+  });
+
   const route = useRoute();
   const leadStore = useLeadStore();
   const customFormData = ref({});
+
   const leadProperties = computed(() => {
     return []
       .concat(leadStore.getLeadProperties ?? [])
@@ -37,7 +44,12 @@
 
 <template>
   <div>
-    <div class="mb-2 lead-propertie-input"
+    <div v-if="isFirstLoading" v-for="(item, index) in 5" :key="index+1000" class="mb-0 lead-propertie-input">
+      <label class="fs-12px text-soft" for="">Lead Properties</label>
+      <Skeletor class="form-control form-control-sm rounded-sm" style="border-radius:3px;" />
+    </div>
+
+    <div v-else class="mb-2 lead-propertie-input"
       v-for="(propertie, index) in leadProperties"
       :key="index">
       <free-text-input v-if="

@@ -1,5 +1,5 @@
 <script>
-    import { LogoutAction, FetchSessions } from '../../../../actions/UserAction';
+    import { LogoutAction, FetchSessions } from '@actions/UserAction';
     import CustomScrollbar from 'custom-vue-scrollbar';
     import { Skeletor } from 'vue-skeletor';
     export default {

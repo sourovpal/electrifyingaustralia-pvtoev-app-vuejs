@@ -1,9 +1,9 @@
 <script>
-  import { useLeadStore } from "../../../../../stores/lead";
-  import { useAppStore } from "../../../../../stores/app";
-  import { useAuthStore } from "../../../../../stores/auth";
-  import { UpdateSubscribers } from "../../../../../actions/LeadAction";
-  import { AvatarIcon } from "../../../../../assets/icons";
+  import { useLeadStore } from "@stores/lead";
+  import { useAppStore } from "@stores/app";
+  import { useAuthStore } from "@stores/auth";
+  import { UpdateSubscribers } from "@actions/LeadAction";
+  import { AvatarIcon } from "@assets/icons";
 
   export default {
     props: ["owners", "owner"],
@@ -45,9 +45,12 @@
 
           this.setTimeoutDebounce = await setTimeout(async () => {
             const res = await UpdateSubscribers(payload);
-            const { success, message } = res
+            const { success, message } = res;
             if (!success) {
               this.$toast.error(message.text);
+            }else{
+              console.log(message)
+              this.leadStore.callFetchTimelineLogs({}, false, true);
             }
           }, 2000);
           

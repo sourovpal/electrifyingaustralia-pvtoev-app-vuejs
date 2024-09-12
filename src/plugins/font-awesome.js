@@ -6,8 +6,14 @@ import * as far from '@fortawesome/free-regular-svg-icons';
 
 const iconsToUse = [
     fa.faTrash,
+    fa.faArrowLeft,
     fa.faArrowRight,
+    fa.faChevronLeft,
     fa.faChevronRight,
+    fa.faChevronUp,
+    fa.faChevronDown,
+    fa.faFileUpload,
+    fa.faUpload,
     fa.faPlus,
     fa.faXmark,
     fa.faSpinner,
@@ -92,6 +98,8 @@ const iconsToUse = [
     fa.faPhone,
     fa.faCopy,
     fa.faArrowUpRightFromSquare,
+    fa.faUserPlus,
+    fa.faUserCheck,
     // Regular
     far.faSquare,
     far.faSquareMinus,

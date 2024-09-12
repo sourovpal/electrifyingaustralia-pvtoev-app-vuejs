@@ -51,7 +51,7 @@ const routes = [
                     {
                         name: "leads",
                         path: 'leads',
-                        component: () => import('@views/platform/lead/LeadIndexPage.vue'),
+                        component: () => import('@views/platform/leads/LeadIndexPage.vue'),
                         beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
                         meta: {
                             title: 'Home Page',
@@ -61,7 +61,7 @@ const routes = [
                     {
                         name: "leadsEdit",
                         path: 'leads/:id',
-                        component: () => import('@views/platform/lead/timeline/LeadEditTimelinePage.vue'),
+                        component: () => import('@views/platform/timeline/LeadEditTimelinePage.vue'),
                         beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
                         meta: {
                             title: 'Home Page',

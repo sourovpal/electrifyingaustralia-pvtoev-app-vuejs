@@ -6,9 +6,9 @@
   import ProfileDropdown from "./ProfileDropdown.vue";
   import NotificationsDropdown from "./NotificationsDropdown.vue";
   import Storage from "../helpers/Storage";
-  import { CONFIG } from "../config";
-  import { useAppStore } from "../stores/app";
-  import { useLeadStore } from "../stores/lead";
+  import { CONFIG } from "@config";
+  import { useAppStore } from "@stores";
+  import { useLeadStore } from "@stores";
   const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
   const appStorage = new Storage(CONFIG.VITE_AUTH_APP);
   const securityStorage = new Storage(CONFIG.VITE_AUTH_TOKEN);
@@ -126,7 +126,8 @@
 
 <template>
   <aside class="main-left-navbar parent-navbar">
-    <CustomScrollbar class="custom-scrollbar" thumbWidth="8">
+    <CustomScrollbar class="custom-scrollbar"
+      thumbWidth="8">
       <div class="navbar">
         <div class="top-navbar">
           <div v-for="(item, index) in topNavbarItems"
@@ -203,12 +204,15 @@
     bottom: 0;
     border-right: 1px solid var(--layout-border-color);
     z-index: 99;
-    &:deep(.custom-scrollbar){
+
+    &:deep(.custom-scrollbar) {
+
       .scrollbar__scroller,
-      .scrollbar__content{
-        height:100vh;
+      .scrollbar__content {
+        height: 100vh;
       }
     }
+
     .navbar {
       display: flex;
       flex-direction: column;
@@ -239,8 +243,9 @@
             --nav-icon-color: #2196F3 !important;
             --nav-border-color: #2196F3 !important;
             --nav-text-color: #2196F3 !important;
-            transition:all 0.3s;
+            transition: all 0.3s;
           }
+
           cursor: pointer;
           transform: scale(0.8);
 
@@ -253,10 +258,12 @@
             align-items: center;
             border-radius: 15px;
             border: 2px solid var(--nav-border-color);
+
             svg {
               color: var(--nav-icon-color);
             }
           }
+
           .nav-title {
             margin-top: 3px;
             line-height: 20px;

@@ -40,7 +40,7 @@ instance.interceptors.response.use(function (response) {
 });
 
 export async function useApiRequest(http = {}) {
-    const { url, method, payload, headers } = {
+    const { url, method, payload, headers, ...attr } = {
         url: '/',
         method: 'get',
         payload: {},
@@ -68,7 +68,8 @@ export async function useApiRequest(http = {}) {
     return new Promise((resolve, reject) => {
         if (parseMethod == 'get') {
             instance.get(parseUrl, {
-                headers: headers
+                headers: headers,
+                ...attr
             }).then((res) => {
                 return resolve(res.data);
             }).catch((error) => {
@@ -76,7 +77,8 @@ export async function useApiRequest(http = {}) {
             });
         } else {
             instance[parseMethod](parseUrl, payload, {
-                headers
+                headers,
+                ...attr,
             }).then((res) => {
                 return resolve(res.data);
             }).catch((error) => {

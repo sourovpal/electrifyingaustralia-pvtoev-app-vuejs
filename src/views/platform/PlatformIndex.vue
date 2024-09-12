@@ -2,10 +2,10 @@
 
   import MobileHeader from '@components/MobileHeader.vue';
   import Menu from '@components/Menu/Menu.vue';
-  import { FetchLeadStatus } from '@/actions/CrmLeads';
+  import { FetchLeadStatus } from '@actions/CrmLeads';
   import { title, menus } from './menu';
-  import { useLeadStore } from '@stores/lead';
-  import { useAppStore } from '@stores/app';
+  import { useLeadStore } from '@stores';
+  import { useAppStore } from '@stores';
   
   export default {
     name: 'PlatformIndex',

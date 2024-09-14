@@ -6,16 +6,17 @@
     UpdateContact
   } from "@actions/ContactAction";
 
-  import { useLeadStore } from "@stores/lead";
-  import { useAppStore } from "@stores/app";
-  import { ref } from 'vue';
+  import { useLeadStore } from "@stores";
+  import { useAppStore } from "@stores";
+  import { ref, computed } from 'vue';
 
   export default {
     setup(props) {
       const leadStore = useLeadStore();
       const appStore = useAppStore();
       const leadQualifyModalRef = ref();
-      return { leadStore, appStore, leadQualifyModalRef };
+      const contacts = computed(() => leadStore.getLeadContacts);
+      return { leadStore, appStore, contacts, leadQualifyModalRef };
     },
     data() {
       return {
@@ -44,13 +45,6 @@
       },
       "contact.phone_number"(val) {
         this.searchLeadContactHandler(val, ["phone_number", "another_phones"]);
-      },
-    },
-    computed: {
-      contacts: {
-        get() {
-          return this.leadStore.getLeadContacts;
-        },
       },
     },
     methods: {
@@ -168,19 +162,14 @@
           this.$toast.clear();
           this.errors = {};
           var res = {};
-          var leadId = this.$route.params?.id ?? null;
-
+          var leadId = this.leadStore.getEditLeadId;
           if (copyContact) {
-
             var payload = {
               lead_id: leadId,
               contact_id: copyContact.contact_id,
             };
-
           } else {
-
             this.isSubmitCreateNewContact = true;
-
             var phones = this.another_phones.filter((item) => {
               if (item.phone_number != '' && item.phone_number != null) {
                 return item;
@@ -212,13 +201,20 @@
           if (!success && errors) {
             return this.errors = errors;
           } else if (success) {
-            this.leadStore.callFetchLeadsById();
-            this.leadStore.callFetchTimelineLogs();
+            this.leadStore.callFetchLeadContacts(this.leadStore.editLeadId, ({ loading, contacts }) => {
+              if (!this.isCreateNewContact && contacts) {
+                var contact = contacts.find(item => item.contact_id == payload.contact_id);
+                if (contact) {
+                  this.leadStore.setPrimaryContact(contact);
+                }
+              }
+            });
             this.isCreateNewContact = false;
             this.hideModalHandler();
           }
           this.$toast[message.type](message.text);
         } catch (error) {
+          console.log(error)
           this.$toast.error("Oops, something went wrong");
         } finally {
           this.isSubmitCreateNewContact = false;
@@ -308,7 +304,7 @@
                   </div>
                 </li>
               </ul>
-              <button v-if="contact"
+              <button v-if="!isCreateNewContact"
                 @click="selectContactHandler()"
                 class="btn btn-primary w-100">
                 Add New
@@ -537,7 +533,8 @@
                   class="btn btn-danger">
                   Close
                 </button>
-                <loading-button :isLoading="isSubmitCreateNewContact"
+                <loading-button :disabled="!(contact.first_name && contact.last_name)"
+                  :isLoading="isSubmitCreateNewContact"
                   @click="createLeadContactHandler()">
                   {{ isCreateNewContact?'Create New':'Update Contact' }}
                 </loading-button>

@@ -2,13 +2,14 @@
   import { Modal } from "mdb-ui-kit";
   import DropdownOwnerList from "../../components/dropdowns/DropdownOwnerList.vue";
   import { ConfirmQualify } from "@actions/LeadAction";
-  import { leadStore } from "@stores";
+  import { useLeadStore } from "@stores";
   import SelectObjectId from './fields/SelectObjectId.vue';
   import { AvatarIcon } from "@assets/icons";
   import { ref, onMounted, watch, computed, defineExpose } from 'vue';
   import { $toast } from '@config';
   import { useApiRequest } from '@actions';
 
+  const leadStore = useLeadStore();
   const editLeadId = computed(() => leadStore.getEditLeadId);
   const leadOwner = computed(() => leadStore.getLeadOwner);
   const users = computed(() => leadStore.getUsers);
@@ -107,6 +108,7 @@
       leadStore.setLeadPipeline(selectedPipeline.value);
       leadStore.setLeadStage(selectedStage.value);
       leadStore.callFetchLeadStages(leadStore.getEditLeadId);
+      leadStore.callFetchProperties(leadStore.getEditLeadId);
       hideModalHandler();
       leadStore.setIsPipelineLead(true);
       $toast[message.type](message.text);

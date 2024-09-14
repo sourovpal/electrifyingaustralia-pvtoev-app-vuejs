@@ -1,30 +1,22 @@
 <script setup>
     import { defineProps, computed, watchEffect, ref } from 'vue';
     import { Skeletor } from "vue-skeletor";
-    import { useLeadStore } from "@stores/lead";
-    import { useAppStore } from "@stores/app";
-    import CustomModal from '@components/modals/CustomModal.vue';
-    import { useApiRequest } from '@actions/api';
-    import { useClipboard } from '@vueuse/core';
-    import { $toast } from '@config';
     import StarRating from "vue-star-rating";
+    import CustomModal from '@components/modals/CustomModal.vue';
+    import { useApiRequest } from '@actions';
+    import { useClipboard } from '@vueuse/core';
+    import { useLeadStore } from "@stores";
+    import { $toast } from '@config';
 
-    const appStore = useAppStore();
     const leadStore = useLeadStore();
+    const isFirstLoading = computed(() => leadStore.getIsFirstLoading);
+    const editLead = computed(() => leadStore.getEditLead);
+    const address = ref(null);
 
-    const props = defineProps({
-        isFirstLoading: {
-            type: Boolean,
-            default: true,
-        },
-    });
-
-    const address = ref();
     const leadStarRating = ref(0);
-    const lead = ref({});
     watchEffect(() => {
-        lead.value = leadStore.getCurrentLead;
-        const { address_line_one, address_line_two, city, state, post_code, confidence } = lead.value;
+        address.value = null;
+        const { address_line_one, address_line_two, city, state, post_code, confidence } = editLead.value;
         leadStarRating.value = confidence;
         var temp = "";
         if (address_line_two) {
@@ -46,18 +38,18 @@
             url: '/leads/confidence',
             method: 'post',
             payload: {
-                lead: lead.value?.lead_id,
+                lead: editLead.value.lead_id,
                 confidence: leadStarRating.value,
             }
         }).then(res => {
             const { success, message } = res;
             if (!success) {
                 $toast.error(message.text);
-                leadStarRating.value = lead.value.confidence;
+                leadStarRating.value = editLead.value.confidence;
                 return;
             }
-            leadStore.callFetchTimelineLogs({}, false, true);
         }).catch(error => {
+            console
             $toast.error("Oops, something went wrong");
         });
     }
@@ -69,7 +61,8 @@
             <div class="fs-14px fw-bold text-head mb-0 text-uppercase">
                 lead Properties
             </div>
-            <button class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
+            <button @click="leadStore.toggleLeadEditModal(true)"
+                class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
                 <font-awesome-icon icon="fas fa-pen"
                     class="text-soft fs-14px" />
             </button>
@@ -77,9 +70,14 @@
         <div class="mb-1">
             <div class="fs-12px text-soft mb-0">Address</div>
             <div class="d-flex">
-                <div class="fs-14px fw-bold text-head mb-0">
+                <div v-if="!isFirstLoading"
+                    class="fs-14px fw-bold text-head mb-0">
                     {{ address ?? " — " }}
                 </div>
+
+                <Skeletor style="width:50%; height:0.6rem;"
+                    v-else></Skeletor>
+
                 <a target="_blank"
                     v-if="address"
                     :href="`https://www.google.com/maps/search/${address}`"
@@ -92,17 +90,23 @@
         <div class="mb-1">
             <div class="fs-12px text-soft mb-0">Value</div>
             <div class="d-flex">
-                <div class="fs-14px fw-bold text-head mb-0">
-                    ${{ lead?.estimated_value ?? "0.00" }}
+                <div v-if="!isFirstLoading"
+                    class="fs-14px fw-bold text-head mb-0">
+                    ${{ editLead?.estimated_value ?? "0.00" }}
                 </div>
+                <Skeletor style="width:50%; height:0.6rem;"
+                    v-else></Skeletor>
             </div>
         </div>
         <div class="mb-1">
             <div class="fs-12px text-soft mb-0">Source</div>
             <div class="d-flex">
-                <div class="fs-14px fw-bold text-head mb-0">
-                    {{ lead?.source?.title ?? " — " }}
+                <div v-if="!isFirstLoading"
+                    class="fs-14px fw-bold text-head mb-0">
+                    {{ editLead?.source?.title ?? " — " }}
                 </div>
+                <Skeletor style="width:50%; height:0.6rem;"
+                    v-else></Skeletor>
             </div>
         </div>
 

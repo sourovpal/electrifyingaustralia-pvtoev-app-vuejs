@@ -1,6 +1,6 @@
 <script setup>
     import { Modal } from "mdb-ui-kit";
-    import ImagePreviewModal from '../../components/modals/ImagePreviewModal.vue';
+    import ImagePreviewModal from './ImagePreviewModal.vue';
     import { fileNameToExtension, leadImageTypes, shortenFileName } from '@helpers';
     import {
         getMaterialFileIcon,

@@ -33,7 +33,7 @@
 
   const handleSelectNewSubscribers = (id) => {
     $toast.clear();
-    if (authUser.value.is_owner != 1 && leadOwner.value.user_id != authUser.user_id) {
+    if (authUser.value.is_owner != 1 && leadOwner.value.user_id != authUser.value.user_id) {
       $toast.error("You are not allowed to added or remove subscribers");
       return;
     }
@@ -89,7 +89,7 @@
               class="project-owner-filter form-control" />
           </div>
 
-          <div class="dropdown-header fs-12px text-soft">Primary Subscriber</div>
+          <div class="dropdown-header fs-12px text-soft">Primary Subscriber {{ leadOwner.user_id }}</div>
           <div v-if="leadOwner?.user_id"
             class="dropdown-item noselect px-2">
             <img :src="leadOwner?.profile_avatar"

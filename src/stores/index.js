@@ -1,4 +1,4 @@
-import { useLeadStore } from "./timeline";
+import { useLeadStore } from "./platform";
 import { useAuthStore } from "./auth";
 import { useAppStore } from "./app";
 
@@ -10,7 +10,4 @@ export {
     useLeadStore,
     useAuthStore,
     useAppStore,
-    leadStore,
-    authStore,
-    appStore
 }

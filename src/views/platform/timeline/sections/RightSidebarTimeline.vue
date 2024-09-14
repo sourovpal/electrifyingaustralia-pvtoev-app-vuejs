@@ -1,16 +1,11 @@
 <script setup>
+  import { ref } from 'vue';
   import CustomScrollbar from "custom-vue-scrollbar";
-  import RightSidebarProperties from "./RightSidebarProperties.vue";
-  import { Skeletor } from "vue-skeletor";
-  import LeadUploadedFiles from "./LeadUploadedFiles.vue";
-  import { useLeadStore } from "@stores/lead";
-  import { useAppStore } from "@stores/app";
-  import { DocumentIcon, ImageIcon, PdfIcon } from "@assets/icons";
   import RightSidebarContacts from './RightSidebarContacts.vue';
   import RightSidebarAddress from './RightSidebarAddress.vue';
+  import RightSidebarProperties from "./RightSidebarProperties.vue";
+  // import LeadUploadedFiles from "./LeadUploadedFiles.vue";
   import LeadNotes from './LeadNotes.vue';
-  import { ref } from 'vue';
-  const isFirstLoading = ref(false);
   const toggleRightDetailsSidebar = ref(false);
 
 
@@ -20,7 +15,7 @@
     :class="{ show: toggleRightDetailsSidebar }">
     <CustomScrollbar>
 
-      <RightSidebarContacts :isFirstLoading="isFirstLoading"></RightSidebarContacts>
+      <RightSidebarContacts></RightSidebarContacts>
 
       <!-- <div>
         <div class="dropdown-box border-bottom">
@@ -48,10 +43,10 @@
         </div>
       </div> -->
       <div class="p-3 border-bottom">
-        <right-sidebar-address :isFirstLoading="isFirstLoading"></right-sidebar-address>
-        <right-sidebar-properties :isFirstLoading="isFirstLoading"></right-sidebar-properties>
+        <right-sidebar-address></right-sidebar-address>
+        <right-sidebar-properties></right-sidebar-properties>
       </div>
-
+      
       <div class="">
         <div class="dropdown-box border-bottom">
           <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center">
@@ -199,7 +194,7 @@
 
         <lead-notes></lead-notes>
 
-        <lead-uploaded-files></lead-uploaded-files>
+        <!-- <lead-uploaded-files></lead-uploaded-files> -->
 
         <div style="height: 10rem"></div>
       </div>
@@ -217,7 +212,7 @@
   .col-right {
     flex-grow: 1;
     width: 24rem;
-    background-color: #f5f7fa;
+    background-color: #ffffff;
 
     /* @media only screen and (min-width: 767px) and (max-width: 1500px) { */
     @media only screen and (max-width: 991.99px) {

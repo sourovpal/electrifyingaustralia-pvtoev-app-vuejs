@@ -3,9 +3,9 @@
   import { useApiRequest } from "@actions/api";
   import UploadFileWithProgressBar from './UploadFileWithProgressBar.vue';
   import UploadedFilesList from './UploadedFilesList.vue';
-  import ShowAllFilesModal from '../../components/modals/ShowAllFilesModal.vue';
-  import ImagePreviewModal from '../../components/modals/ImagePreviewModal.vue';
-  import { useLeadStore } from '@stores/lead';
+  import ShowAllFilesModal from '../modals/ShowAllFilesModal.vue';
+  import ImagePreviewModal from '../modals/ImagePreviewModal.vue';
+  import { useLeadStore } from '@stores';
   import { ref, onMounted, computed } from "vue";
   import { useRoute } from 'vue-router';
 

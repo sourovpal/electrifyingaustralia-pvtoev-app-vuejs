@@ -1,33 +1,31 @@
 <script setup>
     import { ref, computed } from 'vue';
     import SlideUpDown from "vue-slide-up-down";
-    import { useLeadStore } from '@stores/lead';
+    import { useLeadStore } from '@stores';
     import { useApiRequest } from '@actions/api';
     import { useDebounceFn } from '@vueuse/core';
     import { $toast } from '@config';
 
-    const toggle = ref(true);
     const leadStore = useLeadStore();
-    const editLead = computed(() => leadStore.getCurrentLead);
+    const toggle = ref(true);
+    const editLead = computed(() => leadStore.getEditLead);
+    const editLeadId = computed(() => leadStore.getEditLeadId);
     const leadNotes = computed({
         get() {
-            return leadStore.getCurrentLead.notes;
+            return leadStore.getEditLead.notes;
         },
         set(notes) {
-            return leadStore.getCurrentLead.notes = notes;
+            return leadStore.getEditLead.notes = notes;
         }
     });
-
-
 
     function handleDropdownToggle() {
         toggle.value = !toggle.value;
     }
 
-
     const handleOnUpdateNotes = useDebounceFn(() => {
         useApiRequest({
-            url: `leads/notes/${editLead.value.lead_id}`,
+            url: `leads/${editLeadId.value}/notes`,
             method: 'POST',
             payload: { notes: leadNotes.value }
         }).then(res => {
@@ -39,8 +37,6 @@
 
         })
     }, 2000);
-
-
 
 </script>
 <template>

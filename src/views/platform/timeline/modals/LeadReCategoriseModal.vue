@@ -6,6 +6,7 @@
   import SelectObjectId from "./fields/SelectObjectId.vue";
   import { ref, onMounted, watch, computed, defineExpose } from 'vue';
   import { $toast } from '@config';
+  import { useApiRequest } from '@actions/api';
 
   const leadStore = useLeadStore();
   const appStore = useAppStore();
@@ -92,18 +93,22 @@
   }
 
   async function leadMovePipelineOrStatus() {
-    try {
-      $toast.clear();
-      errors.value = {};
-      var leadId = leadStore.getEditLeadId;
-      isSubmitMovePipelineOrStatus.value = true;
-      var data = {
-        lead: leadId,
-        status: selectedStatus.value?.status_id ?? null,
-        pipeline: selectedPipeline.value?.pipeline_id ?? null,
-        pipeline_stage: selectedStage.value?.stage_id ?? null,
-      };
-      const res = await MoveLeadStatusToPipeline(data);
+    $toast.clear();
+    errors.value = {};
+    var leadId = leadStore.getEditLeadId;
+    isSubmitMovePipelineOrStatus.value = true;
+    var data = {
+      lead: leadId,
+      status: selectedStatus.value?.status_id ?? null,
+      pipeline: selectedPipeline.value?.pipeline_id ?? null,
+      pipeline_stage: selectedStage.value?.stage_id ?? null,
+    };
+
+    await useApiRequest({
+      url: '/leads/move-lead',
+      method: 'post',
+      payload: data,
+    }).then(res => {
       const { success, message, ...args } = res;
       isSubmitMovePipelineOrStatus.value = false;
       if (!success && args.errors) {
@@ -115,23 +120,25 @@
         leadStore.setLeadPipeline({});
         leadStore.setLeadStage({});
         leadStore.setIsPipelineLead(false);
+        leadStore.callFetchProperties(leadStore.getEditLeadId);
       } else {
         leadStore.setLeadStatus({});
         leadStore.setLeadPipeline(selectedPipeline.value);
         leadStore.setLeadStage(selectedStage.value);
         leadStore.callFetchLeadStages(leadStore.getEditLeadId);
+        leadStore.callFetchProperties(leadStore.getEditLeadId);
         leadStore.setIsPipelineLead(true);
       }
+      isSubmitMovePipelineOrStatus.value = false;
       selectedStatus.value = null;
       selectedPipeline.value = null;
       selectedStage.value = null;
       $toast[message.type](message.text);
       hideModalHandler();
-    } catch (error) {
+    }).catch(error => {
       $toast.error("Oops, something went wrong");
-    } finally {
-      isSubmitMovePipelineOrStatus.value = false;
-    }
+    });
+    isSubmitMovePipelineOrStatus.value = false;
   }
 
   defineExpose({
@@ -230,7 +237,8 @@
               class="btn btn-danger">
               Close
             </button>
-            <loading-button :is-loading="isSubmitMovePipelineOrStatus"
+            <loading-button :disabled="!((selectedPipeline && selectedStage) || selectedStatus)"
+              :is-loading="isSubmitMovePipelineOrStatus"
               @submit="leadMovePipelineOrStatus()">Confirm Move</loading-button>
           </div>
         </div>

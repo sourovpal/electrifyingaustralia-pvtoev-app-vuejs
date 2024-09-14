@@ -87,9 +87,9 @@
     async function updateScrollPosition() {
         await nextTick();
         if (prevHeight.value === 0) {
-            targetElement.value.scrollTop = targetElement.value.scrollHeight;
+            targetElement.value.scroll(0, targetElement.value.scrollHeight);
         } else {
-            targetElement.value.scrollTop = (targetElement.value.scrollHeight - targetElement.value.clientHeight / 2) - prevHeight.value;
+            targetElement.value.scroll(0, ((targetElement.value.scrollHeight - targetElement.value.clientHeight / 2) - prevHeight.value));
         }
         prevHeight.value = targetElement.value.scrollHeight;
         startObserver();
@@ -134,7 +134,7 @@
     </div>
 </template>
 <style scoped>
-.history-logs{
-    scroll-behavior: unset !important;
-}
+    .history-logs {
+        scroll-behavior: unset !important;
+    }
 </style>

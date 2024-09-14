@@ -1,43 +1,39 @@
 <script setup>
     import { defineProps, computed, watchEffect, ref } from 'vue';
     import { Skeletor } from "vue-skeletor";
-    import { useLeadStore } from "@stores/lead";
-    import { useAppStore } from "@stores/app";
-    import ContactEditModal from "../../components/modals/ContactEditModal.vue";
+    import { useLeadStore } from "@stores";
+    import { useAppStore } from "@stores";
+    import ContactEditModal from "../modals/ContactEditModal.vue";
     import CustomModal from '@components/modals/CustomModal.vue';
     import { useApiRequest } from '@actions/api';
     import { useClipboard } from '@vueuse/core';
     import { $toast } from '@config';
 
-    const appStore = useAppStore();
     const leadStore = useLeadStore();
-
-    const props = defineProps({
-        isFirstLoading: {
-            type: Boolean,
-            default: true,
-        },
-    });
-
-    const primaryContact = ref({});
-    const contacts = ref([]);
-    watchEffect(() => {
-        primaryContact.value = leadStore.getPrimaryContact;
-        contacts.value = leadStore.getLeadContacts;
+    const isFirstLoading = computed(() => leadStore.getIsFirstLoading);
+    const contacts = computed(() => leadStore.getLeadContacts);
+    const primaryContact = computed({
+        get() { return leadStore.getPrimaryContact; },
+        set(contact) { leadStore.setPrimaryContact(contact); }
     });
 
     async function deleteLeadContactHandler(id) {
         await useApiRequest({
             url: `/contacts/${id}`,
-            method:'delete',
+            method: 'delete',
         }).then(res => {
             const { success, message } = res;
             if (success) {
-                leadStore.callFetchLeadsById();
-                leadStore.callFetchTimelineLogs();
+                leadStore.callFetchLeadContacts(leadStore.editLeadId, ({ loading, contacts }) => {
+                    if (!loading && contacts) {
+                        if (typeof contacts[0] != 'undefined') {
+                            leadStore.setPrimaryContact(contacts[0]);
+                        }
+                    }
+                });
             }
         }).catch(error => {
-
+            $toast.error("Oops, something went wrong");
         });
     }
 
@@ -53,10 +49,11 @@
 <template>
     <div
         class="col-r-header d-flex justify-content-between align-items-center border-bottom overflow-x-auto overflow-y-hidden">
-        <div class="left ps-3 py-1 d-flex justify-content-start align-items-center">
-            <div v-for="(item, index) in contacts"
+        <div class="left ps-2 ms-2 py-1 d-flex justify-content-start align-items-center">
+            <div v-if="!isFirstLoading"
+                v-for="(item, index) in contacts"
                 class="circle-avatar me-2 cursor-pointer"
-                :class="`${primaryContact?.contact_id == item.contact_id ? 'shadow-border' : ''}`"
+                :class="`${primaryContact.contact_id == item.contact_id ? 'shadow-border' : ''}`"
                 @click="primaryContact = item"
                 v-tippy="{ content: `${item.full_name}`, placement: 'top' }"
                 :key="index">
@@ -64,14 +61,13 @@
                     alt="avatar1"
                     :src="item.avatar" />
             </div>
-
-            <div v-if="isFirstLoading"
+            <!-- Skeletor Animation -->
+            <div v-else
                 class="circle-avatar me-2 cursor-pointer"
-                v-for="(item, index) in 2"
-                :key="index">
+                v-for="(item, index) in 5"
+                :key="Math.random()">
                 <Skeletor style="width: 32px; height: 32px; border-radius: 50%" />
             </div>
-
         </div>
 
         <div class="right pe-3 py-1 d-flex justify-content-end align-items-center">
@@ -94,7 +90,7 @@
             </h3>
             <Skeletor v-else
                 width="70%"
-                style="height:20px;" />
+                style="height:1rem;" />
             <button data-mdb-toggle="dropdown"
                 class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
                 <font-awesome-icon icon="fas fa-ellipsis-vertical"
@@ -111,18 +107,19 @@
         <div>
             <table v-if="isFirstLoading"
                 class="tbl-contact-info w-100">
-                <tr v-for="(item, index) in 3"
+                <tr v-for="(item, index) in [55, 70, 45]"
                     :key="index">
                     <td class="d-flex justify-content-between align-items-center mb-2"
                         width="100%">
-                        <Skeletor width="65%" />
+                        <Skeletor :width="`${item}%`"
+                            style="height:0.8rem;" />
                         <div class="d-flex justify-content-end align-items-center"
                             style="width:25%;">
                             <Skeletor width="5%"
-                                style="flex-grow:1;"
+                                style="flex-grow:1;height:0.8rem;"
                                 class="me-2" />
                             <Skeletor width="5%"
-                                style="flex-grow:1;"
+                                style="flex-grow:1;height:0.8rem;"
                                 class="me-2" />
                         </div>
                     </td>
@@ -246,8 +243,7 @@
 
 
     <!-- Modal Area -->
-    <ContactEditModal :findLeadByIdHandler="()=>{}"
-        ref="contactEditModalRef" />
+    <ContactEditModal ref="contactEditModalRef" />
     <!-- Delete Contact Confirm Modal -->
     <CustomModal ref="deleteContactModalRef"
         size="sm">

@@ -1,4 +1,3 @@
-
 export async function mergeTimelineLogs(oldData, newData) {
     for (let date in newData) {
         if (!oldData[date]) {

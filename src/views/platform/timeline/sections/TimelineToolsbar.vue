@@ -5,7 +5,7 @@
     import ActionBar from "@components/ActionBar/ActionBar.vue";
     import LeftActionBar from "@components/ActionBar/LeftActionBar.vue";
     import RightActionBar from "@components/ActionBar/RightActionBar.vue";
-    // import EditLeadModal from "../modals/EditLeadModal.vue";
+    import EditLeadModal from "../modals/EditLeadModal.vue";
     import DropdownSubscriberList from "../../components/dropdowns/DropdownSubscriberList.vue";
     import DropdownOwnerList from "../../components/dropdowns/DropdownOwnerList.vue";
     import { AvatarIcon } from "@assets/icons";
@@ -64,6 +64,27 @@
         });
     }
 
+    async function updateLeadStatusHandler(status) {
+        $toast.clear();
+        await useApiRequest({
+            url: '/leads/status',
+            method: 'POST',
+            payload: {
+                status: status?.status_id,
+                leads: editLeadId.value,
+            }
+        }).then(res => {
+            const { success, errors, message } = res;
+            if (success) {
+                leadStore.setLeadStatus(status);
+                return;
+            }
+            $toast.error('Oops, the lead\'s status hasn\'t changed.');
+        }).catch(error => {
+            $toast.error("Oops, something went wrong");
+        });
+    }
+
 </script>
 
 
@@ -77,7 +98,7 @@
                     style="width: 150px" />
                 <span @click="$refs['editLeadModalRef']?.showModalHandler()"
                     v-else
-                    class="text-head mb-0 fs-16px fw-bold lead-title-text">
+                    class="text-head mb-0 fs-16px fw-bold lead-title-text cursor-pointer">
                     {{ editLead?.lead_title ?? primaryContact?.full_name}}
                 </span>
             </div>
@@ -140,9 +161,8 @@
             <div v-if="!isPipelineLead"
                 v-tippy="{ content: 'Change Lead Status', placement: 'top' }"
                 class="dropdown me-3 d-none d-xl-inline">
-                <Skeletor class="me-3"
-                    v-if="isFirstLoading"
-                    style="width: 150px; height: 32px; border-radius: 3px" />
+                <Skeletor v-if="isFirstLoading"
+                    style="width: 150px; height: 1.6rem; border-radius: 3px" />
                 <button v-else
                     style="min-width: 150px; max-width: 150px"
                     class="btn btn-sm btn-outline-secondary fw-400 d-flex justify-content-between align-items-center curtom-dropdown-toggler-btn"
@@ -155,19 +175,20 @@
                     </div>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end shadow-md custom-dropdown-menu"
-                    aria-labelledby="dropdownMenuButton"
-                    style="max-height: 25rem;overflow: auto;">
-                    <span style="width: 170px"
-                        v-for="(status, index) in statuses"
-                        :key="index"
-                        @click="updateLeadStatusHandler(status)"
-                        :class="`${status.status_id == leadStatus?.status_id ? 'selected' : ''}`"
-                        class="dropdown-item d-flex justify-content-between align-items-center cursor-pointer py-1">
-                        <span class="text-overflow-ellipsis text-head">{{ status.name }}</span>
-                        <font-awesome-icon v-if="status.is_lost"
-                            icon="fas fa-caret-down"
-                            class="text-soft fs-16px"></font-awesome-icon>
-                    </span>
+                    aria-labelledby="dropdownMenuButton">
+                    <div style="max-height: 25rem;overflow:auto;">
+                        <span style="width: 170px"
+                            v-for="(status, index) in statuses"
+                            :key="index"
+                            @click="updateLeadStatusHandler(status)"
+                            :class="`${status.status_id == leadStatus?.status_id ? 'selected' : ''}`"
+                            class="dropdown-item d-flex justify-content-between align-items-center cursor-pointer py-1">
+                            <span class="text-overflow-ellipsis text-head">{{ status.name }}</span>
+                            <font-awesome-icon v-if="status.is_lost"
+                                icon="fas fa-caret-down"
+                                class="text-soft fs-16px"></font-awesome-icon>
+                        </span>
+                    </div>
                 </div>
             </div>
 
@@ -239,8 +260,7 @@
     <lead-qualify-modal ref="leadQualifyModalRef"
         v-if="!isPipelineLead" />
 
-    <!-- <EditLeadModal ref="editLeadModalRef"
-        @findLeadByIdHandler="findLeadByIdHandler" /> -->
+    <EditLeadModal ref="editLeadModalRef" />
 
 
 </template>

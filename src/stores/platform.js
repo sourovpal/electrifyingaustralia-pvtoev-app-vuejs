@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
 import { useApiRequest } from '@actions';
+import Storage from '@helpers/Storage';
+const leadHasPipeline = new Storage('is_pipeline_lead');
 
 export const useLeadStore = defineStore('timeline', {
   state: () => {
@@ -16,7 +18,7 @@ export const useLeadStore = defineStore('timeline', {
       leadPipeline: {},
       leadStage: {},
       primaryContact: {},
-      isPipelineLead: false,
+      isPipelineLead: leadHasPipeline.get() ?? false,
       leadSource: {},
       leadStatus: {},
       // 
@@ -32,6 +34,8 @@ export const useLeadStore = defineStore('timeline', {
       pipelines: [], // ok
       statuses: [],
       users: [],
+      // 
+      leadEditModal: null,
     }
   },
   getters: {
@@ -89,7 +93,7 @@ export const useLeadStore = defineStore('timeline', {
     getLeadContacts(state) {
       return state.leadContacts;
     },
-    getLeadPipelineProperties(state) {
+    getPipelineProperties(state) {
       return state.pipelineProperties;
     },
     getLeadProperties(state) {
@@ -128,7 +132,7 @@ export const useLeadStore = defineStore('timeline', {
       this.editLeadId = payload;
     },
     setEditLead(payload) {
-      if (typeof payload === 'object') {
+      if (typeof payload === 'object' && payload != null) {
         this.editLead = payload;
       }
     },
@@ -139,27 +143,27 @@ export const useLeadStore = defineStore('timeline', {
       this.nextLeadId = payload;
     },
     setLeadPropertiesValues(payload) {
-      if (typeof payload === 'object') {
+      if (typeof payload === 'object' && payload != null) {
         this.leadPropertiesValues = payload;
       }
     },
     setLeadOwner(payload) {
-      if (typeof payload === 'object') {
+      if (typeof payload === 'object' && payload != null) {
         this.leadOwner = payload;
       }
     },
     setPrimaryContact(payload) {
-      if (typeof payload === 'object') {
+      if (typeof payload === 'object' && payload != null) {
         this.primaryContact = payload;
       }
     },
     setLeadSource(payload) {
-      if (typeof payload === 'object') {
+      if (typeof payload === 'object' && payload != null) {
         this.leadSource = payload;
       }
     },
     setLeadStatus(payload) {
-      if (typeof payload === 'object') {
+      if (typeof payload === 'object' && payload != null) {
         this.leadStatus = payload;
       }
     },
@@ -174,15 +178,16 @@ export const useLeadStore = defineStore('timeline', {
       }
     },
     setIsPipelineLead(payload) {
+      leadHasPipeline.set(payload);
       this.isPipelineLead = payload;
     },
     setLeadPipeline(payload) {
-      if (typeof payload === 'object') {
+      if (typeof payload === 'object' && payload != null) {
         this.leadPipeline = payload;
       }
     },
     setLeadStage(payload) {
-      if (typeof payload === 'object') {
+      if (typeof payload === 'object' && payload != null) {
         this.leadStage = payload;
       }
     },
@@ -206,10 +211,28 @@ export const useLeadStore = defineStore('timeline', {
         this.users = payload;
       }
     },
+    setLeadProperties(payload) {
+      if (Array.isArray(payload)) {
+        this.leadProperties = payload;
+      }
+    },
+    setPipelineProperties(payload) {
+      if (Array.isArray(payload)) {
+        this.pipelineProperties = payload;
+      }
+    },
+    // 
+    setLeadEditModal(payload) {
+      this.leadEditModal = payload;
+    },
+    toggleLeadEditModal(status = false) {
+      if (status) return this.leadEditModal?.showModalHandler();
+      this.leadEditModal?.hideModalHandler();
+    },
 
-
-    resetLeadEditTimeline() {
+    resetLeadEditTimeline(all = false) {
       this.setEditLead({});
+      this.setEditLeadId(null);
       this.setNextLeadId(null);
       this.setPrevLeadId(null);
       this.setPrimaryContact({});
@@ -220,12 +243,19 @@ export const useLeadStore = defineStore('timeline', {
       this.setLeadStatus({});
       this.setLeadPipeline({});
       this.setLeadStage({});
+      this.setLeadContacts([]);
+      this.setLeadStages([]);
+      if (all) {
+        this.setPipelines([]);
+        this.setStatuses([]);
+        this.setUsers([]);
+      }
     },
     callFetchNewLead($leadId, $isNew = false) {
       this.setIsLoading($isNew);
       this.setEditLeadId($leadId);
       useApiRequest({
-        url: `/timeline/leads/${$leadId}`,
+        url: `/platform/leads/${$leadId}`,
       }).then(res => {
         const { success, lead, next_lead, prev_lead, is_pipeline } = res;
         if (success && lead) {
@@ -255,7 +285,7 @@ export const useLeadStore = defineStore('timeline', {
     callFetchLeadContacts($leadId, $callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
-        url: `timeline/${$leadId}/contacts`,
+        url: `/platform/${$leadId}/contacts`,
       }).then(res => {
         const { success, contacts } = res;
         if (success && contacts) {
@@ -271,7 +301,7 @@ export const useLeadStore = defineStore('timeline', {
     callFetchLeadStages($leadId, $callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
-        url: `timeline/leads/${$leadId}/stages`,
+        url: `/platform/leads/${$leadId}/stages`,
       }).then(res => {
         const { success, stages } = res;
         if (success && stages) {
@@ -287,7 +317,7 @@ export const useLeadStore = defineStore('timeline', {
     callFetchPipeline($callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
-        url: `timeline/pipelines`,
+        url: `/platform/pipelines`,
       }).then(res => {
         const { success, pipelines } = res;
         if (success && pipelines) {
@@ -303,7 +333,7 @@ export const useLeadStore = defineStore('timeline', {
     callFetchPipelineStages($pieplineId, $callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
-        url: `/timeline/${$pieplineId}/stages`,
+        url: `/platform/${$pieplineId}/stages`,
       }).then(res => {
         const { success, stages, message } = res;
         if (success && stages) {
@@ -318,7 +348,7 @@ export const useLeadStore = defineStore('timeline', {
     callFetchStatuses($callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
-        url: `/timeline/statuses`,
+        url: `/platform/statuses`,
       }).then(res => {
         const { success, statuses } = res;
         if (success && statuses) {
@@ -334,12 +364,29 @@ export const useLeadStore = defineStore('timeline', {
     callFetchUsers($callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
-        url: `/timeline/users`,
+        url: `/platform/users`,
       }).then(res => {
         const { success, users } = res;
         if (success && users) {
           this.setUsers(users);
           $callback({ loading: false, users });
+        } else {
+          $callback({ loading: false });
+        }
+      }).catch(error => {
+        $callback({ loading: false });
+      });
+    },
+    callFetchProperties($leadId, $callback = () => { }) {
+      $callback({ loading: true });
+      useApiRequest({
+        url: `/platform/leads/${$leadId}/properties`,
+      }).then(res => {
+        const { success, lead_properties, pipeline_properties } = res;
+        if (success) {
+          this.setLeadProperties(lead_properties);
+          this.setPipelineProperties(pipeline_properties);
+          $callback({ loading: false, lead_properties, pipeline_properties });
         } else {
           $callback({ loading: false });
         }

@@ -3,10 +3,9 @@
     import '@vueup/vue-quill/dist/vue-quill.snow.css';
     import '@vueup/vue-quill/dist/vue-quill.bubble.css';
     import { ref, watch, onMounted, nextTick, onUnmounted, watchEffect } from 'vue';
-    import { useInfiniteScroll } from '@vueuse/core';
     import LogMessage from '../events/LogMessage.vue';
     import MessageBox from './MessageBox.vue';
-    import { useLeadStore } from "@stores/lead";
+    import { useLeadStore } from "@stores";
     import { useApiRequest } from "@actions/api";
     import { useRoute } from 'vue-router';
     import moment from 'moment';
@@ -44,7 +43,7 @@
                     timelineLogs.value = {};
                 }
                 timelineLogs.value = await mergeTimelineLogs(timelineLogs.value, timeline_logs);
-                await new Promise(resolve => setTimeout(resolve, 10));
+                await nextTick();
                 await $state.loaded();
                 if (!startId.value) $state.complete();
                 return;
@@ -69,7 +68,7 @@
     }
 
     onMounted(() => {
-        leadStore.setFetchTimelineLogs(resetTimelineLogs);
+        // leadStore.setFetchTimelineLogs(resetTimelineLogs);
     });
 
 </script>

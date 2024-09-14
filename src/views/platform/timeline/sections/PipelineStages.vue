@@ -4,13 +4,51 @@
     import RightActionBar from "@components/ActionBar/RightActionBar.vue";
     import { useLeadStore } from '@stores';
     import { ref, computed } from 'vue';
+    import { Skeletor } from "vue-skeletor";
+    import { $toast } from '@config';
+    import { useApiRequest } from '@actions/api';
 
     const leadStore = useLeadStore();
     const editLead = computed(() => leadStore.getEditLead);
+    const editLeadId = computed(() => leadStore.getEditLeadId);
+    const isFirstLoading = computed(() => leadStore.getIsFirstLoading);
     const isPipelineLead = computed(() => leadStore.getIsPipelineLead);
     const leadStages = computed(() => leadStore.getLeadStages);
     const leadStage = computed(() => leadStore.getLeadStage);
     const leadPipeline = computed(() => leadStore.getLeadPipeline);
+    const isLoadingStageId = ref(null);
+
+    function handlePipelineStageUpdate(stage) {
+        isLoadingStageId.value = stage.stage_id;
+        $toast.clear();
+        var data = {
+            lead: editLeadId.value,
+            pipeline: leadPipeline.value?.pipeline_id,
+            pipeline_stage: stage.stage_id,
+        };
+
+        const res = useApiRequest({
+            url: '/leads/move-lead',
+            method: 'post',
+            payload: data,
+        }).then(res => {
+            const { success, message, ...args } = res;
+            if (!success && args.errors) {
+                $toast.error("Oops, something went wrong");
+                return;
+            }
+            leadStore.setLeadStage(stage);
+            leadStore.callFetchLeadStages(leadStore.getEditLeadId, ({ loading }) => {
+                if (!loading) {
+                    isLoadingStageId.value = null;
+                }
+            });
+        }).catch(error => {
+            $toast.error("Oops, something went wrong");
+        });
+    }
+
+
 
 </script>
 
@@ -20,15 +58,28 @@
             <left-action-bar class="w-100">
                 <div class="pipeline-progress-bar w-100 d-flex justify-content-between align-items">
                     <div class="btn-group shadow-0 white-space-nowrap w-100 overflow-auto">
-                        <button v-for="(stage, index) in leadStages"
+                        <button v-if="!isFirstLoading"
+                            v-for="(stage, index) in leadStages"
                             :key="index"
                             ref="progressBar"
-                            @click="updateLeadStageByProgressBar(leadPipeline.pipeline_id, stage?.stage_id)"
+                            @click="handlePipelineStageUpdate(stage)"
                             v-tippy="{ content: stage?.name, placement: 'top' }"
                             class="btn btn-sm btn-stage flex-grow-1 py-0 fw-bold"
                             :class="{complete:((stage?.lead_stage && leadStage.stage_id != stage?.stage_id) || stage.position < leadStage?.position ), active: leadStage.stage_id == stage?.stage_id}">
-                            {{ stage?.lead_stage?.start_at }}
+
+                            <span class="d-flex justify-content-center align-items-center"
+                                v-if="isLoadingStageId == stage?.stage_id">
+                                <svg-custom-icon style="width:1rem;height:1rem;"
+                                    class="me-2"
+                                    icon="SpinnerIcon" />Processing...</span>
+                            <span v-else>{{ stage?.lead_stage?.start_at }}</span>
+
                         </button>
+                        <Skeletor v-else
+                            v-for="(item, index) in 5"
+                            :key="Math.random()"
+                            class="btn btn-sm btn-stage flex-grow-1 py-0 fw-bold"
+                            style="border-radius:3px;"></Skeletor>
                     </div>
                     <div class="btn-group ms-2 shadow-0">
                         <button class="btn btn-sm btn-danger btn-lost py-0 fw-bold me-1">
@@ -40,9 +91,14 @@
                     </div>
                 </div>
             </left-action-bar>
-            <div class="d-flex py-1 current-pipeline-stage">
-                <span class="mb-0 fs-16px text-soft fw-bold me-1">{{ leadPipeline?.title }}:</span>
+            <div v-if="!isFirstLoading"
+                class="d-flex py-1 current-pipeline-stage">
+                <span class="mb-0 fs-16px text-soft fw-bold me-1">{{ leadPipeline?.title }} : </span>
                 <span class="mb-0 fs-16px text-soft">{{ leadStage?.name }}</span>
+            </div>
+            <div v-else>
+                <Skeletor style="width:100px;height:0.6rem;" /> :
+                <Skeletor style="width:50px;height:0.6rem;" />
             </div>
         </action-bar>
     </Transition>

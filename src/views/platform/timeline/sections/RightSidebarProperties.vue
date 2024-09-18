@@ -8,6 +8,7 @@
   import { useApiRequest } from "@actions/api";
   import { useRoute } from "vue-router";
   import { Skeletor } from "vue-skeletor";
+  import { $toast } from '@config';
 
   const route = useRoute();
   const leadStore = useLeadStore();
@@ -32,9 +33,14 @@
         method: 'post',
         payload: data
       }).then(res => {
-
+        const { success, message } = res;
+        if (success) {
+          leadStore.callFetchTimelineLogs();
+        } else {
+          $toast.error(message.text);
+        }
       }).catch(error => {
-
+        $toast.error("Oops, something went wrong");
       });
     }
   }

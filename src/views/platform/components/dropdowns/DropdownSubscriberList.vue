@@ -58,7 +58,9 @@
       const { success, message } = res;
       if (!success) {
         $toast.error(message.text);
+        return;
       }
+      leadStore.callFetchTimelineLogs();
     }).catch(error => {
       $toast.error("Oops, something went wrong");
     });

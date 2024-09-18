@@ -19,30 +19,32 @@
     const startId = ref(0);
     const lastId = ref(0);
     const leadId = ref(null);
+    const maxId = ref(null);
 
     const scrollBottomPositionRef = ref(null);
     async function fetchTimelineLogsHandler($state = null) {
-        if (!$state.isReset) {
-            $state.loading();
-        }
         var payload = {
             lead_id: leadId.value ?? route.params.id,
             start_id: startId.value,
             limit: 30
         };
+
+        if (!$state.isReset) {
+            $state.loading();
+        } else {
+            payload['max_id'] = maxId.value;
+        }
         useApiRequest({
             url: '/timelines',
             method: 'get',
             payload
         }).then(async res => {
-            const { success, message, timeline_logs, start_id, last_id } = res;
+            const { success, message, timeline_logs, start_id, last_id, max_id } = res;
             if (success) {
                 startId.value = start_id;
                 lastId.value = last_id;
-                if ($state.isReset) {
-                    timelineLogs.value = {};
-                }
-                timelineLogs.value = await mergeTimelineLogs(timelineLogs.value, timeline_logs);
+                maxId.value = max_id;
+                timelineLogs.value = await mergeTimelineLogs(timelineLogs.value, timeline_logs, $state.isReset);
                 await nextTick();
                 await $state.loaded();
                 if (!startId.value) $state.complete();
@@ -55,9 +57,9 @@
     }
 
     async function resetTimelineLogs(isNew = false, $leadId = null) {
-        lastId.value = 0;
-        startId.value = 0;
         if (isNew && $leadId) {
+            lastId.value = 0;
+            startId.value = 0;
             leadId.value = $leadId;
             timelineLogs.value = {};
             await nextTick();
@@ -68,7 +70,7 @@
     }
 
     onMounted(() => {
-        // leadStore.setFetchTimelineLogs(resetTimelineLogs);
+        leadStore.setFetchTimelineLogs(resetTimelineLogs);
     });
 
 </script>

@@ -5,27 +5,17 @@
         getVSIFileIcon,
         getVSIFolderIcon,
     } from "file-extension-icon-js";
-    import { defineProps, onMounted, ref, defineEmits } from 'vue';
+    import { defineProps, onMounted, ref, defineEmits, computed } from 'vue';
     import api from "@actions/api";
-    import { shortenFileName, leadImageTypes, fileNameToExtension } from '@helpers';
-    import { useLeadStore } from '@stores/lead';
+    import { shortenFileName, leadImageTypes, fileNameToExtension, handleDownloadFile } from '@helpers';
+    import { useLeadStore } from '@stores';
     const leadStore = useLeadStore();
+    const $leadId = computed(() => leadStore.getEditLeadId);
+    const toggleDownloadBtn = ref(false);
     const props = defineProps({
-        file: {
-            type: Object,
-            default: null,
-        },
-        fileName: {
-            default({ file }) {
-                return file.filename;
-            }
-        },
-        shortFileName: {
-            default({ file }) {
-                return shortenFileName(file.filename, 35);
-            }
-        },
-
+        file: { type: Object, default: null },
+        fileName: { default({ file }) { return file.filename; } },
+        shortFileName: { default({ file }) { return shortenFileName(file.filename, 35); } }
     });
 
     function getFileIcon(file, fileName) {
@@ -36,26 +26,43 @@
     }
 
     const emits = defineEmits(['click']);
-
 </script>
 
 <template>
-    <div @click="emits('click', {})"
-        class="file-details d-flex justify-content-start align-items-center flex-row py-1 border-bottom">
-        <div class="file-item">
+    <div @mouseover="toggleDownloadBtn=true"
+        @mouseleave="toggleDownloadBtn=false"
+        class="file-details d-flex justify-content-start align-items-center flex-row py-1 cursor-pointer">
+        <div @click="emits('click', {})"
+            class="file-item">
             <img width="30"
                 :src="getFileIcon(file, fileName)"
                 :alt="fileName">
         </div>
         <div class="d-flex flex-row ms-2 w-100">
-            <span class="file-name fs-14px text-soft mb-1">{{ shortFileName }}</span>
-            <span class="ms-auto">450KB</span>
+            <span @click="emits('click', {})"
+                class="file-name fs-14px text-soft mb-1">{{ shortFileName }}</span>
+            <span class="ms-auto">
+                <button class="bg-transparent border-0 shadow-none"
+                    @click="handleDownloadFile(`/platform/download/${file.file_id}/files/${file.filename}`, file.filename)"
+                    v-if="toggleDownloadBtn"
+                    href="">
+                    <font-awesome-icon icon="fas fa-download"
+                        class="text-soft fs-16px"></font-awesome-icon>
+                </button>
+                <template v-else>
+                    {{ file?.size?? '0 KB' }}
+                </template>
+            </span>
         </div>
     </div>
 </template>
 
 <style lang="scss"
     scoped>
+    .file-details:first-child {
+        border-top: none !important;
+    }
+
     .file-name {
         line-height: 16px;
         margin-top: -2px;
@@ -81,5 +88,6 @@
             width: 100%;
             object-fit: cover;
         }
+
     }
 </style>

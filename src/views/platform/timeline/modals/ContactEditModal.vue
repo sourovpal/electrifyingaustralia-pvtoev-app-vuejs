@@ -155,7 +155,7 @@
           }).catch(error => {
             this.$toast.error("Oops, something went wrong");
           });
-        }, 500);
+        }, 1000);
       },
       async createLeadContactHandler(copyContact = null) {
         try {
@@ -201,6 +201,7 @@
           if (!success && errors) {
             return this.errors = errors;
           } else if (success) {
+            this.leadStore.callFetchTimelineLogs();
             this.leadStore.callFetchLeadContacts(this.leadStore.editLeadId, ({ loading, contacts }) => {
               if (!this.isCreateNewContact && contacts) {
                 var contact = contacts.find(item => item.contact_id == payload.contact_id);

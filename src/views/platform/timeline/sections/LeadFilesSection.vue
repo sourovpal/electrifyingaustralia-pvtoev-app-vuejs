@@ -1,18 +1,18 @@
 <script setup>
   import SlideUpDown from "vue-slide-up-down";
-  import { useApiRequest } from "@actions/api";
+  import { useApiRequest } from "@actions";
   import UploadFileWithProgressBar from './UploadFileWithProgressBar.vue';
   import UploadedFilesList from './UploadedFilesList.vue';
   import ShowAllFilesModal from '../modals/ShowAllFilesModal.vue';
   import ImagePreviewModal from '../modals/ImagePreviewModal.vue';
   import { useLeadStore } from '@stores';
   import { ref, onMounted, computed } from "vue";
-  import { useRoute } from 'vue-router';
 
   const leadStore = useLeadStore();
   const selectedFiles = ref([]);
   const isDragOver = ref(false);
   const isLoading = ref(false);
+  const $leadId = computed(() => leadStore.getEditLeadId);
 
   const uploadedFiles = computed({
     get() {
@@ -22,11 +22,12 @@
       leadStore.setLeadFiles(files);
     }
   });
+
+  const uploadedFilesSectionRef = ref(null);
+  const loadLeadFilesObserverRef = ref(null);
   const toggleDropdownBox = ref(true);
-  const fileGroupId = ref(null);
   const debounceTimer = ref(null);
   const previewFile = ref(null);
-  const route = useRoute();
 
   const handleFiles = () => {
     var input = document.createElement('input');
@@ -43,13 +44,14 @@
   function fetchTimelineLogs() {
     clearInterval(debounceTimer.value);
     debounceTimer.value = setTimeout(() => {
-      isLoading.value = false;
-      fetchLeadFiles();
-      leadStore.callFetchTimelineLogs({}, false, true);
+      leadStore.callFetchTimelineLogs();
+      leadStore.callFetchFiles($leadId.value, ({ loading }) => {
+        isLoading.value = loading;
+      });
     }, 2000);
   }
 
-  function handleDragStart(){
+  function handleDragStart() {
     selectedFiles.value = [];
     isDragOver.value = true;
   }
@@ -61,43 +63,42 @@
     selectedFiles.value = Array.from(event.dataTransfer.files);
     isLoading.value = true;
   }
-
-  async function fetchLeadFiles() {
-    await useApiRequest({
-      url: '/leads/dependencies',
-      method: 'get',
-      payload: {
-        lead_id: route.params.id,
-        files: true,
-      }
-    }).then(res => {
-      const { success, message, files } = res;
-      if (success) {
-        leadStore.setLeadFiles(files);
-      }
-    }).catch(error => {
-    });
-  }
-
   function handlePreviewFile(file) {
     previewFile.value = file;
   }
 
+  function fetchLeadFiles() {
+    leadStore.callFetchFiles($leadId.value, ({ loading, files }) => {
+      isLoading.value = loading;
+    });
+  }
+
+  function startObserver() {
+    var observer = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (entry.isIntersecting && !isLoading.value && !uploadedFiles.value.length) {
+        fetchLeadFiles();
+      }
+    }, { root: document.querySelector('#timelineRightSidebar'), rootMargin: `0px 0px 0px 0px` });
+    observer.observe(loadLeadFilesObserverRef.value);
+  }
+
   onMounted(() => {
+    startObserver()
   });
 
 
 </script>
 
 <template>
-  <div>
+  <div ref="uploadedFilesSectionRef">
     <div class="dropdown-box border-bottom">
       <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center"
         :class="{ show: toggleDropdownBox }">
         <span class="fw-bold fs-14px text-uppercase text-head d-block">Uploaded files</span>
         <div class="">
           <button class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent me-1 all-files-toggler"
-            @click="$refs['ShowAllFilesModalRef'].showModalHandler()">
+            @click="$refs['imagePreviewModalRef'].showModalHandler(true)">
             <font-awesome-icon icon="fas fa-arrow-up-right-from-square"
               class="text-soft fs-14px"></font-awesome-icon>
           </button>
@@ -120,10 +121,12 @@
                 @dragover.prevent="handleDragStart"
                 @dragleave="isDragOver=false"
                 @drop.prevent="handleDragAndDrop">
-                <div class="icon" v-if="isLoading">
-                  <svg-custom-icon icon="SpinnerIcon" /> Uploading...
+                <div class="icon"
+                  v-if="isLoading">
+                  <svg-custom-icon icon="SpinnerIcon" /> Processing...
                 </div>
-                <div class="icon" v-else>
+                <div class="icon"
+                  v-else>
                   <font-awesome-icon icon="fas fa-file-upload"
                     class="text-primary fs-25px"></font-awesome-icon>
                 </div>
@@ -149,11 +152,14 @@
               <div class="">
                 <UploadedFilesList v-for="(file, index) in uploadedFiles"
                   @click="handlePreviewFile(file)"
-                  :key="index"
+                  :key="index+Math.random()"
                   :file="file">
                 </UploadedFilesList>
-                <div @click="$refs['imagePreviewModalRef'].showModalHandler(true)"
-                  class="fw-bold fs-14px text-soft cursor-pointer text-center py-2">Load More...</div>
+                <div ref="loadLeadFilesObserverRef"
+                  @click="$refs['imagePreviewModalRef'].showModalHandler(true)"
+                  class="fw-bold fs-14px text-soft cursor-pointer text-center py-2">
+                  <span v-show="uploadedFiles?.length">Show All</span>
+                </div>
               </div>
             </div>
           </div>
@@ -164,7 +170,8 @@
     <ImagePreviewModal :files="uploadedFiles"
       :preview="previewFile"
       v-if="previewFile"
-      @toggle="(state)=>previewFile=state">
+      @toggle="(state)=>previewFile=state"
+      @deleteRefresh="fetchLeadFiles">
     </ImagePreviewModal>
 
     <show-all-files-modal :files="uploadedFiles"

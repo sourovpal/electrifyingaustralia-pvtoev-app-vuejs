@@ -13,6 +13,7 @@
     import LeadQualifyModal from '../modals/LeadQualifyModal.vue';
     import { useApiRequest } from '@actions';
     import { $toast } from '@config';
+    import { useClipboard } from '@vueuse/core';
 
     const isLoadingFetchUsers = ref(false);
     const leadStore = useLeadStore();
@@ -30,10 +31,21 @@
     const primaryContact = computed(() => leadStore.getPrimaryContact);
     const users = computed(() => leadStore.getUsers);
 
+    function copyClipboardHandler() {
+        var source = ` Title : ${editLead.value.lead_title ?? null}\n Owner : ${leadOwner.value.name ?? null}\n Value : ${"$" + editLead.value.estimated_value}\n Status : ${leadStatus.value.name ?? null}\n Person : ${primaryContact.value.full_name ?? null}\n Email : ${primaryContact.value.email ?? null}\n Phone : ${primaryContact.value.phone_number ?? null}\n Link : ${window.location.href}`;
+        const { copy, copied } = useClipboard();
+        copy(source);
+        $toast.success(`Copied to clipboard`);
+    }
+
     function handleFetchNewLead($leadId) {
+        leadStore.setIsFirstLoading(true);
+        leadStore.resetLeadEditTimeline();
         leadStore.callFetchNewLead($leadId, true);
         leadStore.callFetchLeadStages($leadId);
         leadStore.callFetchLeadContacts($leadId);
+        leadStore.callFetchFiles($leadId);
+        leadStore.callFetchTimelineLogs(true, $leadId);
     }
 
     function handleLoadUsers() {
@@ -56,6 +68,7 @@
             const { success, errors, message } = res;
             if (success) {
                 leadStore.setLeadOwner(owner);
+                leadStore.callFetchTimelineLogs();
                 return;
             }
             $toast.error(message.text);
@@ -77,6 +90,7 @@
             const { success, errors, message } = res;
             if (success) {
                 leadStore.setLeadStatus(status);
+                leadStore.callFetchTimelineLogs();
                 return;
             }
             $toast.error('Oops, the lead\'s status hasn\'t changed.');
@@ -109,7 +123,8 @@
                 <font-awesome-icon icon="fas fa-pen"
                     class="text-soft fs-14px" />
             </button>
-            <button class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-3 d-none d-md-inline">
+            <button @click="copyClipboardHandler"
+                class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-3 d-none d-md-inline">
                 <font-awesome-icon icon="fas fa-copy"
                     class="text-soft fs-16px"></font-awesome-icon>
             </button>

@@ -105,6 +105,7 @@
         errors.value = args.errors;
         return;
       }
+      leadStore.callFetchTimelineLogs();
       leadStore.setLeadPipeline(selectedPipeline.value);
       leadStore.setLeadStage(selectedStage.value);
       leadStore.callFetchLeadStages(leadStore.getEditLeadId);

@@ -24,6 +24,7 @@
     }
 
     const handleOnUpdateNotes = useDebounceFn(() => {
+        $toast.clear();
         useApiRequest({
             url: `leads/${editLeadId.value}/notes`,
             method: 'POST',
@@ -83,6 +84,8 @@
         background-color: #fff3c4 !important;
         position: relative;
         margin: 0px 14px 14px 14px;
+        border: 2px solid #f2de8f;
+        border-radius: 5px;
 
         .notes {
             color: #8d2b0b !important;

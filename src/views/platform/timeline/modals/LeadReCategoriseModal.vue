@@ -115,6 +115,7 @@
         errors.value = args.errors;
         return;
       }
+      this.leadStore.callFetchTimelineLogs();
       if (data.status) {
         leadStore.setLeadStatus(selectedStatus.value);
         leadStore.setLeadPipeline({});

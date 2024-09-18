@@ -154,8 +154,21 @@
                         </div>
                     </td>
                 </tr>
+                <tr v-else
+                    @click="$refs['contactEditModalRef'].showModalHandler(primaryContact)"
+                    class="cursor-pointer">
+                    <td class="fs-16px"
+                        width="10%">
+                        <font-awesome-icon icon="fas fa-envelope"
+                            class="text-soft fs-16px"></font-awesome-icon>
+                    </td>
+                    <td class="fs-16px text-soft">
+                        Add email
+                    </td>
+                </tr>
                 <tr v-for="(item, index) in primaryContact?.another_emails ?? []"
-                    :key="index">
+                    :key="index"
+                    v-show="item.email">
                     <td class="fs-16px"
                         width="10%">
                         <font-awesome-icon icon="fas fa-envelope"
@@ -210,8 +223,21 @@
                         </div>
                     </td>
                 </tr>
+                <tr v-else
+                    @click="$refs['contactEditModalRef'].showModalHandler(primaryContact)"
+                    class="cursor-pointer">
+                    <td class="fs-16px"
+                        width="10%">
+                        <font-awesome-icon icon="fas fa-phone"
+                            class="text-soft fs-15px"></font-awesome-icon>
+                    </td>
+                    <td class="fs-16px text-soft">
+                        Add phone
+                    </td>
+                </tr>
                 <tr v-for="(item, index) in primaryContact?.another_phones ?? []"
-                    :key="index">
+                    :key="index"
+                    v-show="item.phone_number">
                     <td class="fs-16px"
                         width="10%">
                         <font-awesome-icon icon="fas fa-phone"
@@ -237,6 +263,7 @@
                         </div>
                     </td>
                 </tr>
+
             </table>
         </div>
     </div>

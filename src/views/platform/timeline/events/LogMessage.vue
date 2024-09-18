@@ -8,6 +8,8 @@
     import AddedRatingEvent from './AddedRatingEvent.vue';
     import LeadFilesEvent from './LeadFilesEvent.vue';
     import LeadContactEvent from './LeadContactEvent.vue';
+    import EstimatedValueEvent from './EstimatedValueEvent.vue';
+    import MessageEvent from './MessageEvent.vue';
 
     import { defineProps, computed } from 'vue';
     const props = defineProps({
@@ -32,7 +34,8 @@
 
 <template>
     <event-by-user :user="user"
-        :event-date-time="createdAt">
+        :event-date-time="createdAt"
+        >
         <div v-for="(log, index) in logs"
             :key="index">
             <lead-status-event
@@ -62,6 +65,14 @@
 
             <LeadContactEvent
                 v-else-if="log.event_type == 'contact-create' || log.event_type == 'contact-update' || log.event_type == 'contact-delete'"
+                :log="log" />
+
+            <EstimatedValueEvent
+                v-else-if="log.event_type == 'estimated-value'"
+                :log="log" />
+
+            <MessageEvent
+                v-else-if="log.event_type == 'message'"
                 :log="log" />
 
         </div>

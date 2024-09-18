@@ -4,14 +4,14 @@
   import RightSidebarContacts from './RightSidebarContacts.vue';
   import RightSidebarAddress from './RightSidebarAddress.vue';
   import RightSidebarProperties from "./RightSidebarProperties.vue";
-  // import LeadUploadedFiles from "./LeadUploadedFiles.vue";
+  import LeadFilesSection from "./LeadFilesSection.vue";
   import LeadNotes from './LeadNotes.vue';
   const toggleRightDetailsSidebar = ref(false);
 
 
 </script>
 <template>
-  <div class="col-right"
+  <div id="timelineRightSidebar" class="col-right"
     :class="{ show: toggleRightDetailsSidebar }">
     <CustomScrollbar>
 
@@ -194,7 +194,7 @@
 
         <lead-notes></lead-notes>
 
-        <!-- <lead-uploaded-files></lead-uploaded-files> -->
+        <lead-files-section></lead-files-section>
 
         <div style="height: 10rem"></div>
       </div>

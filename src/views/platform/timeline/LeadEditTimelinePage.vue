@@ -9,15 +9,18 @@
   import { useRoute } from 'vue-router';
   const leadStore = useLeadStore();
   const route = useRoute();
+  const $leadId = route.params.id;
   const isPipelineLead = computed(() => leadStore.getIsPipelineLead);
 
   onMounted(() => {
-    leadStore.setIsFirstLoading(true);
-    leadStore.callFetchNewLead(route.params.id, true);
-    leadStore.callFetchLeadContacts(route.params.id);
-    leadStore.callFetchProperties(route.params.id);
-    leadStore.callFetchLeadStages(route.params.id);
     leadStore.callFetchStatuses();
+    leadStore.setIsFirstLoading(true);
+    leadStore.callFetchNewLead($leadId, true);
+    leadStore.callFetchLeadContacts($leadId);
+    leadStore.callFetchProperties($leadId);
+    leadStore.callFetchLeadStages($leadId);
+    // leadStore.callFetchFiles($leadId);
+
   });
 
   onUnmounted(() => {

@@ -26,16 +26,18 @@ export const useLeadStore = defineStore('timeline', {
       leadSubscribers: [],
       pipelineProperties: [],
       leadFiles: [],
-      timelines: [],
       leadContacts: [],
       leadSources: [],
       leadProperties: [],
       leadStages: [],
-      pipelines: [], // ok
+      pipelines: [],
       statuses: [],
       users: [],
+      sources: [],
       // 
       leadEditModal: null,
+      //
+      timelinesRef:()=>{},
     }
   },
   getters: {
@@ -116,6 +118,9 @@ export const useLeadStore = defineStore('timeline', {
     },
     getUsers(stage) {
       return stage.users;
+    },
+    getSources(stage) {
+      return stage.sources;
     }
   },
   actions: {
@@ -196,6 +201,11 @@ export const useLeadStore = defineStore('timeline', {
         this.leadContacts = payload;
       }
     },
+    setLeadFiles(payload) {
+      if (Array.isArray(payload)) {
+        this.leadFiles = payload;
+      }
+    },
     setPipelines(payload) {
       if (Array.isArray(payload)) {
         this.pipelines = payload;
@@ -221,6 +231,12 @@ export const useLeadStore = defineStore('timeline', {
         this.pipelineProperties = payload;
       }
     },
+    setSources(payload) {
+      if (Array.isArray(payload)) {
+        this.sources = payload;
+      }
+    },
+
     // 
     setLeadEditModal(payload) {
       this.leadEditModal = payload;
@@ -245,10 +261,14 @@ export const useLeadStore = defineStore('timeline', {
       this.setLeadStage({});
       this.setLeadContacts([]);
       this.setLeadStages([]);
+      this.setLeadFiles([]);
+      this.setLeadSubscribers([]);
       if (all) {
+        this.setLeadProperties([]);
         this.setPipelines([]);
         this.setStatuses([]);
         this.setUsers([]);
+        this.setSources([]);
       }
     },
     callFetchNewLead($leadId, $isNew = false) {
@@ -393,6 +413,44 @@ export const useLeadStore = defineStore('timeline', {
       }).catch(error => {
         $callback({ loading: false });
       });
+    },
+    callFetchSources($callback = () => { }) {
+      $callback({ loading: true });
+      useApiRequest({
+        url: `/platform/sources`,
+      }).then(res => {
+        const { success, sources } = res;
+        if (success) {
+          this.setSources(sources);
+          $callback({ loading: false, sources });
+        } else {
+          $callback({ loading: false });
+        }
+      }).catch(error => {
+        $callback({ loading: false });
+      });
+    },
+    callFetchFiles($leadId, $callback = () => { }) {
+      $callback({ loading: true });
+      useApiRequest({
+        url: `/platform/${$leadId}/files`,
+      }).then(res => {
+        const { success, files } = res;
+        if (success) {
+          this.setLeadFiles(files);
+          $callback({ loading: false, files });
+        } else {
+          $callback({ loading: false });
+        }
+      }).catch(error => {
+        $callback({ loading: false });
+      });
+    },
+    setFetchTimelineLogs(payload) {
+      this.timelinesRef = payload;
+    },
+    callFetchTimelineLogs(...args) {
+      this.timelinesRef(...args);
     },
 
   }

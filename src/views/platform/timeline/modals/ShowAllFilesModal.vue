@@ -8,14 +8,14 @@
         getVSIFileIcon,
         getVSIFolderIcon,
     } from "file-extension-icon-js";
-    import { ref, defineProps, defineExpose, onMounted, defineEmits } from 'vue';
+    import { ref, defineProps, defineExpose, onMounted, defineEmits, computed } from 'vue';
     import { useApiRequest } from '@actions/api';
     import { $toast } from '@config';
-    import { useRoute } from 'vue-router';
+    import { useLeadStore } from '@stores';
     const props = defineProps({
         files: { type: Array, default: [] }
     });
-    const route = useRoute();
+    const leadStore = useLeadStore();
     const emits = defineEmits(['close']);
     const allFilesShowRef = ref(null);
     const activeTab = ref('all');
@@ -23,6 +23,13 @@
     const showFiles = ref([]);
     const previewFile = ref(null);
     const isLoading = ref(false);
+    const $leadId = computed(() => leadStore.getEditLeadId);
+    const $nextPage = ref(1);
+    const $limit = ref(50);
+    const infiniteOvserverRef = ref(null);
+    const infiniteLoading = ref(false);
+    const hideDeletedFiles = ref([]);
+
     var modalInstance = null;
 
     onMounted(() => {
@@ -33,37 +40,75 @@
     });
 
     async function showModalHandler(load = false) {
-        modalInstance.show();
+        activeTab.value = 'all';
+        $nextPage.value = 1;
+        infiniteLoading.value = false;
+        originalFiles.value = [];
         if (load) {
             isLoading.value = true;
-            await useApiRequest({
-                url: '/leads/dependencies',
-                method: 'get',
-                payload: {
-                    lead_id: route.params.id,
-                    files: true,
-                    take_files: 'all',
-                }
-            }).then(res => {
-                const { success, message, files } = res;
-                if (success) {
-                    showFiles.value = originalFiles.value = files;
-                }
-                isLoading.value = false;
-            }).catch(error => {
-                isLoading.value = false;
-                $toast.error("Oops, something went wrong");
-            });
+            fetchLeadFiles();
         } else {
-            activeTab.value = 'all';
             showFiles.value = originalFiles.value = props.files;
         }
+        modalInstance.show();
     }
 
     function hideModalHandler() {
         modalInstance.hide();
         emits('close', {});
     }
+
+    async function fetchLeadFiles() {
+        if (!$nextPage.value) {
+            return;
+        }
+        await useApiRequest({
+            url: `/platform/${$leadId.value}/files`,
+            payload: {
+                page: $nextPage.value,
+                limit: $limit.value,
+            }
+        }).then(res => {
+            const { success, message, files } = res;
+            if (success && files) {
+                const { data, from } = files;
+                if (!from || data.length < $limit.value) {
+                    $nextPage.value = null;
+                } else {
+                    $nextPage.value += 1;
+                }
+                startObserver();
+                originalFiles.value = originalFiles.value.concat(data);
+                if (activeTab.value == 'all') {
+                    showFiles.value = originalFiles.value;
+                } else {
+                    selectFileTypeHandler(activeTab.value);
+                }
+            }
+            infiniteLoading.value = false;
+            isLoading.value = false;
+        }).catch(error => {
+            infiniteLoading.value = false;
+            isLoading.value = false;
+            $toast.error("Oops, something went wrong");
+        });
+    }
+
+    function startObserver() {
+        if (!$nextPage.value) {
+            return;
+        }
+        var observer = new IntersectionObserver((entries) => {
+            const entry = entries[0];
+            if (entry.isIntersecting && !infiniteLoading.value) {
+                infiniteLoading.value = true;
+                fetchLeadFiles();
+            }
+        }, { root: allFilesShowRef.value, rootMargin: `0px 0px 0px 0px` });
+        observer.observe(infiniteOvserverRef.value);
+    }
+
+
 
     function selectFileTypeHandler(fileType) {
         activeTab.value = fileType;
@@ -97,6 +142,10 @@
     function toggleImagePreview() {
         previewFile.value = null;
         modalInstance.show();
+    }
+
+    function removePreviewFile(file) {
+        hideDeletedFiles.value.push(file.file_id);
     }
 
     defineExpose({
@@ -141,6 +190,7 @@
                         <div class="file-item"
                             v-for="(item, index) in showFiles"
                             :key="index"
+                            v-show="!hideDeletedFiles.includes(item.file_id)"
                             @click="handlePreviewFile(item)">
                             <div class="file">
                                 <img v-lazy="getFileIcon(item, item?.filepath)">
@@ -171,6 +221,11 @@
                             alt="">
                         <span class="fs-16px text-soft">File not found.</span>
                     </div>
+                    <div ref="infiniteOvserverRef"
+                        class="d-flex justify-content-center align-items-center">
+                        <div class="py-5"
+                            v-if="infiniteLoading && $nextPage"><svg-custom-icon icon="SpinnerIcon" /> Loading...</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -178,7 +233,8 @@
     <ImagePreviewModal v-if="previewFile"
         :files="showFiles"
         :preview="previewFile"
-        @toggle="toggleImagePreview"></ImagePreviewModal>
+        @toggle="toggleImagePreview"
+        @deleteRefresh="removePreviewFile"></ImagePreviewModal>
 </template>
 
 <style lang="scss"

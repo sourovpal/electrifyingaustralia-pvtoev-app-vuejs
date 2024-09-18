@@ -8,7 +8,7 @@
     import { defineProps, onMounted, ref, defineEmits } from 'vue';
     import api from "@actions/api";
     import { shortenFileName } from '@helpers';
-    import { useLeadStore } from '@stores/lead';
+    import { useLeadStore } from '@stores';
 
     const leadStore = useLeadStore();
 
@@ -47,7 +47,7 @@
     const uploadFile = async (file) => {
         if (!file) return;
         const formData = new FormData();
-        formData.append("lead_id", leadStore.getCurrentLead.lead_id);
+        formData.append("lead_id", leadStore.getEditLeadId);
         formData.append("files[]", file);
         await api.post('/leads/upload/files', formData,
             {
@@ -86,7 +86,8 @@
 </script>
 
 <template>
-    <div v-if="!isUploadComplete" class="file-details d-flex justify-content-start align-items-center flex-row mb-3">
+    <div v-if="!isUploadComplete"
+        class="file-details d-flex justify-content-start align-items-center flex-row mb-3">
         <div class="file-icons">
             <img width="30"
                 :src="getMaterialFileIcon(fileName)"

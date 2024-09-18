@@ -23,9 +23,10 @@
   const modalInstance = ref(null);
   const isSubmitEditLead = ref(false);
   const leadEditModalRef = ref(null);
+  const sourcesIsLoading = ref(false);
   const errors = ref({});
 
-  const leadFormData = shallowReactive({});
+  const leadFormData = shallowReactive({ estimated_value: 0.0 });
   const editLead = computed(() => leadStore.getEditLead);
   const editLeadId = computed(() => leadStore.getEditLeadId);
   const leadProperties = computed(() => leadStore.getLeadProperties);
@@ -33,6 +34,7 @@
   const leadSources = computed(() => leadStore.getLeadSources);
   const isPipelineLead = computed(() => leadStore.getIsPipelineLead);
   const propertiesValues = computed(() => leadStore.getLeadPropertiesValues);
+  const sources = computed(() => leadStore.getSources);
 
   onMounted(() => {
     modalInstance.value = new Modal(leadEditModalRef.value);
@@ -44,7 +46,7 @@
 
   watch(editLead, (n) => {
     leadFormData.lead_title = n.lead_title;
-    leadFormData.estimated_value = n.estimated_value;
+    leadFormData.estimated_value = n.estimated_value ?? 0.00;
     leadFormData.lead_source = n.source?.title;
     leadFormData.lead_source_id = n.lead_source_id;
     leadFormData.address_line_one = n.address_line_one;
@@ -57,6 +59,11 @@
 
   function showModalHandler() {
     errors.value = {};
+    if (!sources.value?.length) {
+      leadStore.callFetchSources(function ({ loading }) {
+        sourcesIsLoading.value = loading;
+      });
+    }
     modalInstance.value.show();
   }
 
@@ -114,7 +121,10 @@
             <span class="text-hard fw-bold fs-16px">Edit properties</span>
           </div>
           <div>
-            <button class="btn btn-light btn-sm btn-floating d-lg-none"
+            <svg-custom-icon v-if="sourcesIsLoading"
+              icon="SpinnerIcon" />
+            <button v-else
+              class="btn btn-light btn-sm btn-floating d-lg-none"
               @click="hideModalHandler()">
               <svg class="svg-5"
                 xmlns="http://www.w3.org/2000/svg"
@@ -164,10 +174,16 @@
             <div class="mb-3 position-relative">
               <label class="form-label-title"
                 for="">Estimated value</label>
-              <input @click="delete errors?.estimated_value"
-                v-model="leadFormData['estimated_value']"
+              <vue-number @click="delete errors?.estimated_value"
                 class="form-control"
-                type="text" />
+                v-model="leadFormData['estimated_value']"
+                v-bind="{
+                    decimal: '.',
+                    separator: ',',
+                    prefix: '$',
+                    precision: 2,
+                    masked: false,
+                  }"></vue-number>
               <span class="fs-14px text-danger py-1 w-100 d-block"
                 v-if="errors?.estimated_value?.length">{{ errors?.estimated_value[0] }}</span>
             </div>
@@ -177,9 +193,9 @@
                 <div class="mb-3 position-relative">
                   <label class="form-label-title"
                     for="">Lead source</label>
-                  <!-- <SelectLeadSource :options="leadSources"
+                  <SelectLeadSource :options="sources"
                     v-model="leadFormData['lead_source']"
-                    :input="true" /> -->
+                    :input="true" />
                   <span class="fs-14px text-danger py-1 w-100 d-block"
                     v-if="errors?.lead_source?.length">
                     {{ errors?.lead_source[0] }}

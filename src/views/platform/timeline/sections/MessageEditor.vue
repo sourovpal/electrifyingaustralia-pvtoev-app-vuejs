@@ -1,26 +1,29 @@
 <script setup>
     import Quill from 'quill';
     import { reactive, ref, onMounted, onUnmounted, computed } from 'vue';
-    import { useAppStore } from '@stores/app';
+    import { useLeadStore } from '@stores';
     import "quill-mention/autoregister";
     import "quill/dist/quill.core.css";
     import "quill-mention/dist/quill.mention.css";
     import { leadImageTypes, fileNameToExtension } from '@helpers';
+    import { useApiRequest } from '@actions';
     import {
         getMaterialFileIcon,
         getMaterialFolderIcon,
         getVSIFileIcon,
         getVSIFolderIcon,
     } from "file-extension-icon-js";
+    import { $toast } from '@config';
 
-    const appStore = useAppStore();
+    const leadStore = useLeadStore();
     const quillEditorRef = ref();
     const quillEditor = ref();
     const quillDraftId = 'quill_local_draft_history_message';
     const selectedUsers = ref([]);
-    const users = computed(() => appStore.getUsers);
+    const users = computed(() => leadStore.getUsers);
     const mentions = ref([]);
     const clipboardFiles = ref([]);
+    const $leadId = computed(() => leadStore.getEditLeadId);
 
     const quillOptions = {
         theme: 'bubble',
@@ -30,7 +33,7 @@
                 allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
                 mentionDenotationChars: ["@", "#"],
                 source: function (searchTerm, renderList, mentionChar) {
-                    var mentionUsers = users.value.map((user) => ({ id: user.id, value: user.name, profile_avatar: user.profile_avatar }))
+                    var mentionUsers = users.value.map((user) => ({ id: user.user_id, value: user.name, profile_avatar: user.profile_avatar }))
 
                     if (searchTerm.length === 0) {
                         renderList(mentionUsers, searchTerm);
@@ -58,7 +61,7 @@
                 },
                 onSelect: (item, insertItem) => {
                     insertItem(item);
-                    selected()
+                    selectedMentions()
                 },
             },
         },
@@ -67,32 +70,15 @@
 
     onMounted(() => {
         quillEditor.value = new Quill(quillEditorRef.value, quillOptions);
-        loadDraft();
-        quillEditor.value.on('text-change', saveDraft);
-        window.addEventListener("paste", function (event) {
-            console.log(Array.from(event.clipboardData.files))
-            clipboardFiles.value = Array.from(event.clipboardData.files);
-        });
     });
 
-    onUnmounted(() => {
-        removeDraft();
-    });
-
-    function getFileIcon(file) {
-        var ext = fileNameToExtension(file.name);
-        if (leadImageTypes.includes(ext)) {
-            return URL.createObjectURL(file);
+    function handleFetchUsers() {
+        if (!users.value?.length) {
+            leadStore.callFetchUsers(() => { });
         }
-        return getMaterialFileIcon(file.name);
     }
 
-    function removeClipboardFile(index) {
-        clipboardFiles.value.splice(index, 1);
-    }
-
-
-    function selected() {
+    function selectedMentions() {
         mentions.value = [];
         quillEditor.value.getContents().ops.forEach(op => {
             if (op.insert && typeof op.insert === 'object' && op.insert.mention) {
@@ -101,46 +87,38 @@
         });
     }
 
+    async function handleSubmitMessage() {
+        await useApiRequest({
+            url: `/platform/${$leadId.value}/message`,
+            method: 'POST',
+            payload: {
+                mentions: mentions.value,
+                message: quillEditor.value.root.innerHTML,
+            }
+        }).then(res => {
+            const { success, message, errors } = res;
+            if (success) {
+                mentions.value = [];
+                quillEditor.value.root.innerHTML = '';
+                leadStore.callFetchTimelineLogs();
+                return;
+            }
+            $toast[message.type](message.text);
+        }).catch(error => {
 
-    function saveDraft() {
-        const content = quillEditor.value.root.innerHTML;
-        window.localStorage.setItem(quillDraftId, JSON.stringify(content));
-    }
-
-    function loadDraft() {
-        const savedContent = localStorage.getItem(quillDraftId);
-        if (savedContent && quillEditor.value) {
-            quillEditor.value.root.innerHTML = JSON.parse(savedContent);
-        }
-    }
-
-    function removeDraft() {
-        localStorage.removeItem(quillDraftId);
+        });
     }
 
 </script>
 
 
 <template>
-    <div v-if="clipboardFiles.length"
-        class="clipboard-files pb-2 px-3 d-flex justify-content-start align-items-center">
-        <div class="files-item me-1"
-            v-for="(file, index) in clipboardFiles"
-            :key="index">
-            <img :src="getFileIcon(file)"
-                :alt="file.name">
-            <span @click="removeClipboardFile(index)"
-                class="remove-file">
-                <font-awesome-icon icon="fas fa-close"
-                    class="fs-12px"></font-awesome-icon>
-            </span>
-        </div>
-    </div>
     <div class="tab-content flex-grow-1 d-flex flex-column">
         <div ref="quillEditorRef"
+            @click="handleFetchUsers"
             class="flex-grow-1"></div>
         <div class="d-flex px-2 py-2">
-            <button @click="selected"
+            <button @click="handleSubmitMessage"
                 class="ms-auto btn btn-sm btn-primary">Send Message</button>
         </div>
     </div>
@@ -148,8 +126,6 @@
 
 <style lang="scss"
     scoped>
-    .clipboard-files {}
-
     .files-item {
         width: 50px;
         overflow: hidden;
@@ -181,7 +157,8 @@
             opacity: 0;
             transition: all 0.3s ease-in-out;
         }
-        &:hover .remove-file{
+
+        &:hover .remove-file {
             opacity: 1;
         }
 

@@ -1,13 +1,15 @@
 <script setup>
     import { Modal } from "mdb-ui-kit";
     import { defineProps, defineEmits, ref, defineExpose, onMounted } from 'vue';
-    import { leadImageTypes } from '@helpers';
+    import { leadImageTypes, handleDownloadFile } from '@helpers';
+    import { useApiRequest } from '@actions';
     import {
         getMaterialFileIcon,
         getMaterialFolderIcon,
         getVSIFileIcon,
         getVSIFolderIcon,
     } from "file-extension-icon-js";
+    import CustomModal from '@components/modals/CustomModal.vue';
 
     const props = defineProps({
         files: {
@@ -24,13 +26,16 @@
             }
         }
     });
-    const emits = defineEmits(['toggle']);
+
+    const emits = defineEmits(['toggle', 'deleteRefresh']);
 
     const imagePreviewModalRef = ref(null);
+    const deleteFileModalRef = ref(null);
     const currentPreviewFile = ref(null);
     const prevPreviewImage = ref(null);
     const nextPreviewImage = ref(null);
     const currentFileType = ref('image');
+    const deleteIsLoading = ref(false);
     let modalInstance = null;
 
     onMounted(() => {
@@ -54,7 +59,7 @@
 
     function handlePreviewFile(file = null) {
         if (!file) return;
-        var findIndex = props.files.findIndex(item => item.id == file.id);
+        var findIndex = props.files.findIndex(item => item.file_id == file.file_id);
         if (findIndex <= -1) {
             emits('toggle', null);
             return;
@@ -89,6 +94,44 @@
         }
     }
 
+
+    async function handleDelegeFile() {
+        if (!currentPreviewFile.value) return;
+        deleteIsLoading.value = true;
+        await useApiRequest({
+            url: `/platform/delete/${currentPreviewFile.value.file_id}/files/${currentPreviewFile.value.filename}`
+        }).then(res => {
+            const { success } = res;
+            deleteIsLoading.value = false;
+            if (success) {
+                emits('deleteRefresh', currentPreviewFile.value);
+                deleteFileModalRef.value.modalHide();
+                var file = nextPreviewImage.value ?? prevPreviewImage.value ?? null;
+                if(file){
+                    handlePreviewFile(file);
+                    modalInstance.show();
+                }else{
+                    currentPreviewFile.value = null;
+                    hideModal();
+                }
+            }
+        }).catch(error => {
+            deleteIsLoading.value = false;
+            modalInstance.show();
+            deleteFileModalRef.value.modalHide();
+        });
+    }
+
+    function handleDeleteConfirmation() {
+        modalInstance.hide();
+        deleteFileModalRef.value.modalShow();
+    }
+
+    function handleCancelConfirmation() {
+        modalInstance.show();
+        deleteFileModalRef.value.modalHide();
+    }
+
     defineExpose({
         showModal,
         hideModal
@@ -101,12 +144,9 @@
         @keyup.right="handlePreviewFile(nextPreviewImage)"
         class="modal fade"
         id="imagePreviewModalRef"
-        ref="imagePreviewModalRef"
-        aria-hidden="true"
-        aria-labelledby="imagePreviewModalRef"
-        tabindex="-1">
+        ref="imagePreviewModalRef">
         <div class="modal-dialog modal-dialog-centered modal-xl position-relative">
-            <div class="modal-content">
+            <div class="modal-content preview-contact">
                 <div class="modal-left">
                     <div>
                         <button :disabled="!prevPreviewImage"
@@ -158,11 +198,14 @@
                         </button>
                     </div>
                     <div class="d-flex flex-column">
-                        <button class="btn btn-white btn-lg btn-floating mb-3">
+                        <button @click="handleDeleteConfirmation"
+                            class="btn btn-white btn-lg btn-floating mb-3">
                             <font-awesome-icon icon="fas fa-trash"
                                 class="text-soft fs-18px mt-1"></font-awesome-icon>
                         </button>
-                        <button class="btn btn-white btn-lg btn-floating">
+                        <button
+                            @click="handleDownloadFile(`/platform/download/${currentPreviewFile?.file_id}/files/${currentPreviewFile?.filename}`, currentPreviewFile?.filename)"
+                            class="btn btn-white btn-lg btn-floating">
                             <font-awesome-icon icon="fas fa-download"
                                 class="text-soft fs-18px mt-1"></font-awesome-icon>
                         </button>
@@ -173,6 +216,26 @@
         </div>
     </div>
 
+    <CustomModal ref="deleteFileModalRef"
+        size="sm">
+        <h5 class="text-head text-center fw-bold">Delete this file?</h5>
+        <p class="fs-12px text-center text-danger">
+            This action cannot be undone! To confirm your intent, please click
+            delete button.
+        </p>
+        <div class="d-flex justify-content-between align-items-center">
+            <button @click="handleCancelConfirmation"
+                class="btn btn-primary btn-sm"
+                data-mdb-dismiss="modal">
+                Cancel
+            </button>
+            <loading-button class="btn btn-danger btn-sm"
+                :is-loading="deleteIsLoading"
+                @click="handleDelegeFile">
+                Delete
+            </loading-button>
+        </div>
+    </CustomModal>
 </template>
 
 <style scoped
@@ -185,7 +248,7 @@
         }
     }
 
-    .modal-content {
+    .modal-content.preview-contact {
         position: absolute;
         height: 100%;
         display: flex;

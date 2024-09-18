@@ -15,6 +15,8 @@ import { FontAwesomeIcon } from './plugins/font-awesome';
 import { ProgressBar, ProgressBarOptions } from './plugins/progress-bar';
 import { CONFIG } from './config';
 
+import VueNumberFormat from '@coders-tm/vue-number-format';
+
 import 'mdb-ui-kit/css/mdb.min.css';
 import 'custom-vue-scrollbar/dist/style.css';
 import 'tippy.js/dist/tippy.css'
@@ -35,6 +37,7 @@ app.component('custom-checkbox', CustomCheckbox);
 app.component('font-awesome-icon', FontAwesomeIcon);
 app.component('svg-custom-icon', SvgCustomIcon);
 app.component('InfiniteLoading', InfiniteLoading);
+app.use(VueNumberFormat, { precision: 4 });
 app.use(ProgressBar, ProgressBarOptions);
 app.use(pinia);
 app.use(router);

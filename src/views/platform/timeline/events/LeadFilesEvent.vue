@@ -8,8 +8,8 @@
     import { defineProps, ref, nextTick } from 'vue';
     import ImagePreviewModal from '../modals/ImagePreviewModal.vue';
     import ShowAllFilesModal from '../modals/ShowAllFilesModal.vue';
+    import { shortenFileName, leadImageTypes } from '@helpers';
 
-    import { shortenFileName } from '@helpers';
     const previewFile = ref(null);
     const showAllFilesModalRef = ref(null);
     const toggleAllFileShowModal = ref(false);
@@ -43,9 +43,8 @@
     });
 
     function getFileIcons(file) {
-        var extensions = ['jpg', 'png', 'jpeg', 'gif', 'webp'];
         var ext = file.filename.split('.').pop();
-        if (extensions.includes(ext)) {
+        if (leadImageTypes.includes(ext)) {
             return file.filepath;
         }
         return getMaterialFileIcon(ext);
@@ -61,10 +60,6 @@
         }
         previewFile.value = file;
     }
-
-
-
-
 </script>
 <template>
     <div class="d-block">
@@ -100,7 +95,8 @@
 
 </template>
 
-<style scoped lang="scss">
+<style scoped
+    lang="scss">
     .grid-container {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -147,6 +143,7 @@
             object-fit: cover;
         }
     }
+
     .grid-item img {
         width: 100%;
         height: auto;

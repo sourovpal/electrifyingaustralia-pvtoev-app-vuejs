@@ -14,44 +14,44 @@
     import ScrollBottomPosition from '@components/ScrollBottomPosition.vue';
 
     const leadStore = useLeadStore();
-    const timelineLogs = ref({});
+    const timelineLogs = ref([]);
     const route = useRoute();
-    const startId = ref(0);
+    const nextId = ref(0);
     const lastId = ref(0);
     const leadId = ref(null);
-    const maxId = ref(null);
+    const latestId = ref(null);
 
     const scrollBottomPositionRef = ref(null);
     async function fetchTimelineLogsHandler($state = null) {
         var payload = {
             lead_id: leadId.value ?? route.params.id,
-            start_id: startId.value,
-            limit: 30
+            next_id: nextId.value,
+            limit: 20
         };
 
-        if (!$state.isReset) {
-            $state.loading();
+        if (!$state?.isReset) {
+            $state?.loading();
         } else {
-            payload['max_id'] = maxId.value;
+            payload['latest_id'] = latestId.value;
         }
         useApiRequest({
             url: '/timelines',
             method: 'get',
             payload
         }).then(async res => {
-            const { success, message, timeline_logs, start_id, last_id, max_id } = res;
+            const { success, message, timeline_logs, next_id, latest_id } = res;
             if (success) {
-                startId.value = start_id;
-                lastId.value = last_id;
-                maxId.value = max_id;
+                nextId.value = next_id;
+                latestId.value = latest_id;
                 timelineLogs.value = await mergeTimelineLogs(timelineLogs.value, timeline_logs, $state.isReset);
                 await nextTick();
-                await $state.loaded();
-                if (!startId.value) $state.complete();
+                await $state?.loaded();
+                if (!nextId.value) $state?.complete();
                 return;
             }
             $toast[message.type](message.text);
         }).catch(error => {
+            console.log(error)
             $toast.error("Oops, something went wrong");
         });
     }
@@ -59,9 +59,9 @@
     async function resetTimelineLogs(isNew = false, $leadId = null) {
         if (isNew && $leadId) {
             lastId.value = 0;
-            startId.value = 0;
+            nextId.value = 0;
             leadId.value = $leadId;
-            timelineLogs.value = {};
+            timelineLogs.value = [];
             await nextTick();
             scrollBottomPositionRef.value.firstload();
             return;
@@ -80,15 +80,15 @@
         :class="{'is-pipeline-lead':leadStore.isPipelineLead}">
         <scroll-bottom-position ref="scrollBottomPositionRef"
             @infinite="fetchTimelineLogsHandler">
-            <template v-for="(groupLogs, log_date) in timelineLogs"
-                :key="log_date">
+            <template v-for="(groupLogs, createdDate) in timelineLogs"
+                :key="createdDate">
                 <div class="text-center mb-1 mt-2 feed-updated-date">
-                    <span class="text-head updated-date">{{ moment(log_date).format('DD MMM, yyyy') }}</span>
+                    <span class="text-head updated-date">{{ moment(createdDate).format('DD MMM, yyyy') }}</span>
                 </div>
-                <log-message v-for="(logs, groupId) in groupLogs"
-                    :logs="logs"
-                    :key="groupId">
-                </log-message>
+
+                <log-message v-for="(message, index) in groupLogs"
+                    :key="message.timeline_id"
+                    :message="message"></log-message>
             </template>
         </scroll-bottom-position>
         <message-box />

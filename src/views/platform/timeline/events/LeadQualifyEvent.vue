@@ -1,7 +1,7 @@
 <script setup>
     import { defineProps } from 'vue';
     const props = defineProps({
-        events: {
+        message: {
             type: Object,
             default: {},
         },
@@ -10,14 +10,14 @@
 <template>
     <div class="d-block">
         <div class="fs-14px fw-bold feed-wrap mb-1">
-            Confirm qualified this lead's {{ events.message }} &nbsp;
-            <strong class="fw-bold" v-if="events.event_attributes?.pipeline">{{ events.event_attributes?.pipeline?.title }}</strong>
+            Confirm qualified this lead's {{ message.message }} &nbsp;
+            <strong class="fw-bold" v-if="message.event_attributes?.pipeline">{{ message.event_attributes?.pipeline?.title }}</strong>
             <b> > </b>
-            <strong v-if="events.event_attributes?.stage">{{ events.event_attributes?.stage?.name }}</strong>
+            <strong v-if="message.event_attributes?.stage">{{ message.event_attributes?.stage?.name }}</strong>
             Assign By  &nbsp;
-            <a v-if="events.event_attributes?.owner"
+            <a v-if="message.event_attributes?.owner"
                 class="feed-badge mx-0"
-                href=""><b>@</b>{{ events.event_attributes?.owner?.name }}</a>
+                href=""><b>@</b>{{ message.event_attributes?.owner?.name }}</a>
         </div>
     </div>
 </template>

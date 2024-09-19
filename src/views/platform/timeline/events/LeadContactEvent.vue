@@ -3,7 +3,7 @@
     import 'vue-json-viewer/style.css';
     import { defineProps } from 'vue';
     const props = defineProps({
-        log: {
+        message: {
             type: Object,
             default: {},
         },
@@ -13,9 +13,9 @@
 <template>
     <div class="d-block">
         <div class="fs-14px fw-bold feed-wrap mb-1">
-            {{ log.message }} &nbsp;
+            {{ message.message }} &nbsp;
             <div class="json-data">
-                <JsonViewer v-if="log.event_attributes" :value="log.event_attributes"
+                <JsonViewer v-if="message.event_attributes" :value="message.event_attributes"
                     :expand-depth="0" />
             </div>
         </div>

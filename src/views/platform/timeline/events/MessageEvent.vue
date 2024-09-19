@@ -1,13 +1,13 @@
 <script setup>
     import { defineProps } from 'vue';
     const props = defineProps({
-        log: {
+        message: {
             type: Object,
             default: {},
         },
         attributes: {
-            default({ log }) {
-                return log.event_attributes;
+            default({ message }) {
+                return message.event_attributes;
             }
         },
         message: {
@@ -21,7 +21,7 @@
     <div class="d-block editor-message">
         <div class="fs-14px fw-bold feed-wrap mb-1">
             <div class="message"
-                v-html="log.message"></div>
+                v-html="message.message"></div>
         </div>
     </div>
 </template>

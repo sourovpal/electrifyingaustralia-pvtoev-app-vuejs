@@ -1,7 +1,7 @@
 <script setup>
     import { defineProps } from 'vue';
     const props = defineProps({
-        events: {
+        message: {
             type: Object,
             default: {},
         },
@@ -10,16 +10,16 @@
 <template>
     <div class="d-block">
         <div class="fs-14px fw-bold feed-wrap mb-1">
-            {{ events.message }} &nbsp;
-            <a v-if="events.event_attributes?.prev_owner"
+            {{ message.message }} &nbsp;
+            <a v-if="message.event_attributes?.prev_owner"
                 class="feed-badge mx-0"
-                href=""><b>@</b>{{ events.event_attributes?.prev_owner?.name }}</a>
+                href=""><b>@</b>{{ message.event_attributes?.prev_owner?.name }}</a>
 
-            <span v-if="events.event_attributes?.prev_owner && events.event_attributes?.new_owner">&nbsp; to &nbsp;</span>
+            <span v-if="message.event_attributes?.prev_owner && message.event_attributes?.new_owner">&nbsp; to &nbsp;</span>
 
-            <a v-if="events.event_attributes?.new_owner"
+            <a v-if="message.event_attributes?.new_owner"
                 class="feed-badge mx-0"
-                href=""><b>@</b>{{ events.event_attributes?.new_owner?.name }}</a>
+                href=""><b>@</b>{{ message.event_attributes?.new_owner?.name }}</a>
 
         </div>
     </div>

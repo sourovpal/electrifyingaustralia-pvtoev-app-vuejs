@@ -2,18 +2,18 @@
     import StarRating from "vue-star-rating";
     import { defineProps } from 'vue';
     const props = defineProps({
-        log: {
+        message: {
             type: Object,
             default: {},
         },
         starRating: {
-            default({ log }) {
-                return log.event_attributes?.attributes?.new_rating ?? 0
+            default({ message }) {
+                return message.event_attributes?.attributes?.new_rating ?? 0
             }
         },
         attributes: {
-            default({ log }) {
-                return log.event_attributes ?? {}
+            default({ message }) {
+                return message.event_attributes ?? {}
             }
         },
         user: {
@@ -25,7 +25,7 @@
 <template>
     <div class="d-block">
         <div class="fs-14px fw-bold feed-wrap mb-1">
-            {{ log.message }}
+            {{ message.message }}
             <star-rating style="line-height: 20px"
                 :star-size="12"
                 :rounded-corners="true"

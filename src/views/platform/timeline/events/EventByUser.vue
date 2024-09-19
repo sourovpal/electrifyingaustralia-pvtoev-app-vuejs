@@ -1,20 +1,20 @@
 <script setup>
     import { defineProps, computed } from 'vue';
     import moment from 'moment';
-    import {useAuthStore} from '@stores/auth';
+    import { useAuthStore } from '@stores/auth';
     const authStore = useAuthStore()
     const props = defineProps({
         user: {
             type: Object,
-            default:{},
+            default: {},
         },
-        eventDateTime:{
-            type:String,
+        eventDateTime: {
+            type: String,
             default: new Date(),
-        }
+        },
     });
-    const userName = computed(()=>{
-        if(authStore.getUser?.email === props.user.email){
+    const userName = computed(() => {
+        if (authStore.getUser?.email === props.user.email) {
             return "You";
         }
         return props.user?.name;

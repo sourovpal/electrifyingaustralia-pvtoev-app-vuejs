@@ -1,13 +1,13 @@
 <script setup>
     import { defineProps } from 'vue';
     const props = defineProps({
-        log: {
+        message: {
             type: Object,
             default: {},
         },
         attributes: {
-            default({ log }) {
-                return log.event_attributes;
+            default({ message }) {
+                return message.event_attributes;
             }
         }
     });
@@ -15,7 +15,7 @@
 <template>
     <div class="d-block">
         <div class="fs-14px fw-bold feed-wrap mb-1">
-            {{ log.message }} &nbsp;
+            {{ message.message }} &nbsp;
             <span>${{ attributes.estimated_value }}</span>
         </div>
     </div>

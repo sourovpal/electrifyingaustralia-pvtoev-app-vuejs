@@ -1,30 +1,22 @@
 import api from "@actions/api";
 
 export async function mergeTimelineLogs(oldData, newData, latest = false) {
+
     for (let date in newData) {
         if (!oldData[date]) {
-            oldData = { ...oldData, [date]: newData[date] };
+            oldData = { ...oldData, [date]: [...newData[date]] };
         } else {
-            for (let key in newData[date]) {
-                if (!oldData[date][key]) {
-                    if (latest) {
-                        oldData[date] = { ...oldData[date], [key]: newData[date][key] };
+            if (latest) {
+                newData[date].map((item) => {
+                    var index = oldData[date].findIndex(o => o.timeline_id == item.timeline_id);
+                    if (index > -1) {
+                        oldData[date][index] = item;
                     } else {
-                        oldData[date] = { [key]: newData[date][key], ...oldData[date] };
+                        oldData[date].push(item);
                     }
-                } else {
-                    if (latest) {
-                        var endEvent = oldData[date][key].pop();
-                        var newEndEvent = newData[date][key].pop();
-                        if (endEvent && endEvent.event_type === 'files' && newEndEvent && newEndEvent.event_type === 'files') {
-                            oldData[date][key] = [...oldData[date][key], ...newData[date][key], newEndEvent];
-                        } else {
-                            oldData[date][key] = [...oldData[date][key], endEvent, ...newData[date][key], newEndEvent];
-                        }
-                    } else {
-                        oldData[date][key] = [...oldData[date][key], ...newData[date][key]];
-                    }
-                }
+                });
+            } else {
+                oldData = { ...oldData, [date]: newData[date].concat(oldData[date]) }
             }
         }
     }
@@ -60,7 +52,7 @@ export const fileNameToExtension = (fileName) => {
 }
 
 
-export const handleDownloadFile = async(url, $filename) => {
+export const handleDownloadFile = async (url, $filename) => {
     await api({
         url,
         method: 'GET',

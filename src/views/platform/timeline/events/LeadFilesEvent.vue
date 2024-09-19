@@ -15,13 +15,13 @@
     const toggleAllFileShowModal = ref(false);
 
     const props = defineProps({
-        log: {
+        message: {
             type: Object,
             default: {},
         },
         files: {
-            default({ log }) {
-                return log.files ? log.files.reverse() : [];
+            default({ message }) {
+                return message.files ? message.files.reverse() : [];
             }
         },
         totalFiles: {
@@ -99,3 +99,56 @@
         ref="showAllFilesModalRef"></ShowAllFilesModal>
 
 </template>
+
+<style scoped lang="scss">
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .grid-item {
+        width: 100px;
+        overflow: hidden;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #ffffff;
+        border-radius: 8px;
+        background-position: 0px 0px, 10px 10px;
+        background-size: 20px 20px;
+        background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%), linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);
+        border: 1px solid #b9c1c7;
+        position: relative;
+        cursor: pointer;
+
+        &.overlay::before {
+            content: attr(data-other-files);
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(31, 41, 59, 0.41);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 45px;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+    .grid-item img {
+        width: 100%;
+        height: auto;
+    }
+</style>

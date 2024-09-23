@@ -6,12 +6,14 @@
   import RightSidebarProperties from "./RightSidebarProperties.vue";
   import LeadFilesSection from "./LeadFilesSection.vue";
   import LeadNotes from './LeadNotes.vue';
+  import LeadTasks from './LeadTasks.vue';
   const toggleRightDetailsSidebar = ref(false);
 
 
 </script>
 <template>
-  <div id="timelineRightSidebar" class="col-right"
+  <div id="timelineRightSidebar"
+    class="col-right"
     :class="{ show: toggleRightDetailsSidebar }">
     <CustomScrollbar>
 
@@ -46,158 +48,111 @@
         <right-sidebar-address></right-sidebar-address>
         <right-sidebar-properties></right-sidebar-properties>
       </div>
-      
-      <div class="">
-        <div class="dropdown-box border-bottom">
-          <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center">
-            <span class="fw-bold fs-14px text-uppercase text-head d-block">Tasks</span>
-            <div class="">
-              <button class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
-                <svg class="svg-3"
-                  height="18px"
-                  viewBox="0 0 24 24"
-                  width="18px"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path>
-                </svg>
-              </button>
-            </div>
+
+      <lead-tasks></lead-tasks>
+
+      <div class="dropdown-box border-bottom">
+        <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center">
+          <span class="fw-bold fs-14px text-uppercase text-head d-block">Tags</span>
+          <div class="">
+            <button class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
+              <svg class="svg-3"
+                height="18px"
+                viewBox="0 0 24 24"
+                width="18px"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path>
+              </svg>
+            </button>
           </div>
-          <div class="dropdown-body"
-            style="height: 0px">
-            <div class="px-3 py-1 pb-2 fs-12px">
-              <div class="lead-files">
-                <div class="empty-state">
-                  <div class="icon icon--36">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                      height="36px"
-                      viewBox="0 0 24 24"
-                      width="36px"
-                      fill="currentColor">
-                      <path d="M0 0h24v24H0V0z"
-                        fill="none"></path>
-                      <path
-                        d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm0 12H4V6h5.17l2 2H20v10zm-8-4h2v2h2v-2h2v-2h-2v-2h-2v2h-2z">
-                      </path>
-                    </svg>
-                  </div>
-                  <div class="empty-state__body">
-                    <strong>Start a new project</strong>
-                    <br />
-                    or link with an existing project
-                  </div>
-                  <button class="btn btn-sm btn-primary">Add Project</button>
+        </div>
+        <div class="dropdown-body"
+          style="height: 0px">
+          <div class="px-3 py-1 pb-2 fs-12px">
+            <div class="lead-files">
+              <div class="empty-state">
+                <div class="icon icon--36">
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                    height="36px"
+                    viewBox="0 0 24 24"
+                    width="36px"
+                    fill="currentColor">
+                    <path d="M0 0h24v24H0V0z"
+                      fill="none"></path>
+                    <path
+                      d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm0 12H4V6h5.17l2 2H20v10zm-8-4h2v2h2v-2h2v-2h-2v-2h-2v2h-2z">
+                    </path>
+                  </svg>
                 </div>
-                <input accept=".xlsx,.xls,.csv,.png,.jpeg,.jpg,.pdf,.doc,.docx,.pages,.svg"
-                  type="file"
-                  multiple="multiple"
-                  style="display: none" />
+                <div class="empty-state__body">
+                  <strong>Start a new project</strong>
+                  <br />
+                  or link with an existing project
+                </div>
+                <button class="btn btn-sm btn-primary">Add Project</button>
               </div>
+              <input accept=".xlsx,.xls,.csv,.png,.jpeg,.jpg,.pdf,.doc,.docx,.pages,.svg"
+                type="file"
+                multiple="multiple"
+                style="display: none" />
             </div>
           </div>
         </div>
-        <div class="dropdown-box border-bottom">
-          <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center">
-            <span class="fw-bold fs-14px text-uppercase text-head d-block">Tags</span>
-            <div class="">
-              <button class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
-                <svg class="svg-3"
-                  height="18px"
-                  viewBox="0 0 24 24"
-                  width="18px"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path>
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div class="dropdown-body"
-            style="height: 0px">
-            <div class="px-3 py-1 pb-2 fs-12px">
-              <div class="lead-files">
-                <div class="empty-state">
-                  <div class="icon icon--36">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                      height="36px"
-                      viewBox="0 0 24 24"
-                      width="36px"
-                      fill="currentColor">
-                      <path d="M0 0h24v24H0V0z"
-                        fill="none"></path>
-                      <path
-                        d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm0 12H4V6h5.17l2 2H20v10zm-8-4h2v2h2v-2h2v-2h-2v-2h-2v2h-2z">
-                      </path>
-                    </svg>
-                  </div>
-                  <div class="empty-state__body">
-                    <strong>Start a new project</strong>
-                    <br />
-                    or link with an existing project
-                  </div>
-                  <button class="btn btn-sm btn-primary">Add Project</button>
-                </div>
-                <input accept=".xlsx,.xls,.csv,.png,.jpeg,.jpg,.pdf,.doc,.docx,.pages,.svg"
-                  type="file"
-                  multiple="multiple"
-                  style="display: none" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="dropdown-box border-bottom">
-          <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center show">
-            <span class="fw-bold fs-14px text-uppercase text-head d-block">Project Designs</span>
-            <div class="">
-              <button class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
-                <svg class="svg-3"
-                  height="18px"
-                  viewBox="0 0 24 24"
-                  width="18px"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path>
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div class="dropdown-body">
-            <div class="px-3 py-1 pb-2 fs-12px">
-              <div class="lead-files">
-                <div class="empty-state">
-                  <div class="icon icon--36">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                      height="36px"
-                      viewBox="0 0 24 24"
-                      width="36px"
-                      fill="currentColor">
-                      <path d="M0 0h24v24H0V0z"
-                        fill="none"></path>
-                      <path
-                        d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm0 12H4V6h5.17l2 2H20v10zm-8-4h2v2h2v-2h2v-2h-2v-2h-2v2h-2z">
-                      </path>
-                    </svg>
-                  </div>
-                  <div class="empty-state__body">
-                    <strong>Start a new project</strong>
-                    <br />
-                    or link with an existing project
-                  </div>
-                  <button class="btn btn-sm btn-primary">Add Project</button>
-                </div>
-                <input accept=".xlsx,.xls,.csv,.png,.jpeg,.jpg,.pdf,.doc,.docx,.pages,.svg"
-                  type="file"
-                  multiple="multiple"
-                  style="display: none" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <lead-notes></lead-notes>
-
-        <lead-files-section></lead-files-section>
-
-        <div style="height: 10rem"></div>
       </div>
+
+      <div class="dropdown-box border-bottom">
+        <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center show">
+          <span class="fw-bold fs-14px text-uppercase text-head d-block">Project Designs</span>
+          <div class="">
+            <button class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
+              <svg class="svg-3"
+                height="18px"
+                viewBox="0 0 24 24"
+                width="18px"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="dropdown-body">
+          <div class="px-3 py-1 pb-2 fs-12px">
+            <div class="lead-files">
+              <div class="empty-state">
+                <div class="icon icon--36">
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                    height="36px"
+                    viewBox="0 0 24 24"
+                    width="36px"
+                    fill="currentColor">
+                    <path d="M0 0h24v24H0V0z"
+                      fill="none"></path>
+                    <path
+                      d="M20 6h-8l-2-2H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm0 12H4V6h5.17l2 2H20v10zm-8-4h2v2h2v-2h2v-2h-2v-2h-2v2h-2z">
+                    </path>
+                  </svg>
+                </div>
+                <div class="empty-state__body">
+                  <strong>Start a new project</strong>
+                  <br />
+                  or link with an existing project
+                </div>
+                <button class="btn btn-sm btn-primary">Add Project</button>
+              </div>
+              <input accept=".xlsx,.xls,.csv,.png,.jpeg,.jpg,.pdf,.doc,.docx,.pages,.svg"
+                type="file"
+                multiple="multiple"
+                style="display: none" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <lead-notes></lead-notes>
+
+      <lead-files-section></lead-files-section>
+
+      <div style="height: 10rem"></div>
     </CustomScrollbar>
 
   </div>

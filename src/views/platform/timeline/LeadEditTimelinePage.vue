@@ -19,8 +19,7 @@
     leadStore.callFetchLeadContacts($leadId);
     leadStore.callFetchProperties($leadId);
     leadStore.callFetchLeadStages($leadId);
-    // leadStore.callFetchFiles($leadId);
-
+    leadStore.callFetchLeadTasks($leadId);
   });
 
   onUnmounted(() => {

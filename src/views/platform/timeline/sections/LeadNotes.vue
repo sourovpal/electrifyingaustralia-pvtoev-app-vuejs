@@ -7,12 +7,14 @@
     import { $toast } from '@config';
 
     const leadStore = useLeadStore();
-    const toggle = ref(true);
+    const toggle = ref(false);
     const editLead = computed(() => leadStore.getEditLead);
     const editLeadId = computed(() => leadStore.getEditLeadId);
     const leadNotes = computed({
         get() {
-            return leadStore.getEditLead.notes;
+            var notes = leadStore.getEditLead.notes;
+            toggle.value = !!notes;
+            return notes;
         },
         set(notes) {
             return leadStore.getEditLead.notes = notes;

@@ -100,6 +100,9 @@ const iconsToUse = [
     fa.faArrowUpRightFromSquare,
     fa.faUserPlus,
     fa.faUserCheck,
+    fa.faStopwatch,
+    fa.faClock,
+    fa.faListCheck,
     // Regular
     far.faSquare,
     far.faSquareMinus,

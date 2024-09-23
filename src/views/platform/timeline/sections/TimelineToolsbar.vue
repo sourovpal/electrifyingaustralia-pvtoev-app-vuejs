@@ -46,6 +46,7 @@
         leadStore.callFetchLeadContacts($leadId);
         leadStore.callFetchFiles($leadId);
         leadStore.callFetchTimelineLogs(true, $leadId);
+        leadStore.callFetchLeadTasks($leadId);
     }
 
     function handleLoadUsers() {

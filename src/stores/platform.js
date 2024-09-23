@@ -21,6 +21,7 @@ export const useLeadStore = defineStore('timeline', {
       isPipelineLead: leadHasPipeline.get() ?? false,
       leadSource: {},
       leadStatus: {},
+      leadTasks: [],
       // 
       leadPipelineProperties: [],
       leadSubscribers: [],
@@ -37,7 +38,7 @@ export const useLeadStore = defineStore('timeline', {
       // 
       leadEditModal: null,
       //
-      timelinesRef:()=>{},
+      timelinesRef: () => { },
     }
   },
   getters: {
@@ -94,6 +95,9 @@ export const useLeadStore = defineStore('timeline', {
     },
     getLeadContacts(state) {
       return state.leadContacts;
+    },
+    getLeadTasks(stage) {
+      return stage.leadTasks;
     },
     getPipelineProperties(state) {
       return state.pipelineProperties;
@@ -206,6 +210,11 @@ export const useLeadStore = defineStore('timeline', {
         this.leadFiles = payload;
       }
     },
+    setLeadTasks(payload) {
+      if (Array.isArray(payload)) {
+        this.leadTasks = payload;
+      }
+    },
     setPipelines(payload) {
       if (Array.isArray(payload)) {
         this.pipelines = payload;
@@ -263,6 +272,7 @@ export const useLeadStore = defineStore('timeline', {
       this.setLeadStages([]);
       this.setLeadFiles([]);
       this.setLeadSubscribers([]);
+      this.setLeadTasks([]);
       if (all) {
         this.setLeadProperties([]);
         this.setPipelines([]);
@@ -446,12 +456,29 @@ export const useLeadStore = defineStore('timeline', {
         $callback({ loading: false });
       });
     },
+    callFetchLeadTasks($leadId, $callback = () => { }) {
+      $callback({ loading: true });
+      useApiRequest({
+        url: `/platform/${$leadId}/tasks`,
+      }).then(res => {
+        const { success, tasks } = res;
+        if (success) {
+          this.setLeadTasks(tasks);
+          $callback({ loading: false, tasks });
+        } else {
+          $callback({ loading: false });
+        }
+      }).catch(error => {
+        $callback({ loading: false });
+      });
+    },
     setFetchTimelineLogs(payload) {
       this.timelinesRef = payload;
     },
     callFetchTimelineLogs(...args) {
       this.timelinesRef(...args);
     },
+
 
   }
 });

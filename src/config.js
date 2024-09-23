@@ -12,7 +12,7 @@ export const CONFIG = {
         component: 'tippy',
         componentSingleton: 'tippy-singleton',
         defaultProps: {
-            placement: 'auto-end',
+            placement: 'top',
             allowHTML: true,
         },
     }

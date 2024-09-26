@@ -1,6 +1,6 @@
 <script setup>
     import { reactive, ref, onMounted } from 'vue';
-    import MessageEditor from './MessageEditor.vue';
+    import MessageEditor from './components/MessageEditor.vue';
     const activeTab = ref('message');
 
     function handleToggleTab(tab) {

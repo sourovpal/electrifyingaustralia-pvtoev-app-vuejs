@@ -23,8 +23,8 @@
 
     const scrollBottomPositionRef = ref(null);
     async function fetchTimelineLogsHandler($state = null) {
+        var $leadId = leadId.value ?? route.params.id;
         var payload = {
-            lead_id: leadId.value ?? route.params.id,
             next_id: nextId.value,
             limit: 20
         };
@@ -34,8 +34,9 @@
         } else {
             payload['latest_id'] = latestId.value;
         }
-        useApiRequest({
-            url: '/timelines',
+        
+        await useApiRequest({
+            url: `/platform/${$leadId}/timelines`,
             method: 'get',
             payload
         }).then(async res => {

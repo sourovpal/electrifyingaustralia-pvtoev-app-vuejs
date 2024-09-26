@@ -285,7 +285,7 @@ export const useLeadStore = defineStore('timeline', {
       this.setIsLoading($isNew);
       this.setEditLeadId($leadId);
       useApiRequest({
-        url: `/platform/leads/${$leadId}`,
+        url: `/platform/${$leadId}/leads`,
       }).then(res => {
         const { success, lead, next_lead, prev_lead, is_pipeline } = res;
         if (success && lead) {

@@ -26,10 +26,9 @@
         propertie: {
           [uniqueId]: value,
         },
-        lead: editLeadId.value,
       };
       const res = await useApiRequest({
-        url: "/leads/propertie/update",
+        url: `/leads/${editLeadId.value}/propertie`,
         method: 'post',
         payload: data
       }).then(res => {

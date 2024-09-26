@@ -48,10 +48,9 @@
 
   const onSubmitSubscribers = useDebounceFn(async () => {
     await useApiRequest({
-      url: '/leads/subscribers',
+      url: `/leads/${editLeadId.value}/subscribers`,
       method: 'POST',
       payload: {
-        lead_id: editLeadId.value,
         subscribers: leadSubscribers.value
       },
     }).then(res => {

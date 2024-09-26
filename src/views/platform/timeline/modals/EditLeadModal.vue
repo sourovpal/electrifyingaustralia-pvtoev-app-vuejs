@@ -78,10 +78,9 @@
     var data = {
       ...leadFormData,
       properties_values: { ...propertiesValues.value },
-      lead_id: editLeadId.value,
     };
     const res = await useApiRequest({
-      url: '/leads/update',
+      url: `/leads/${editLeadId.value}/update`,
       method: 'post',
       payload: data,
     }).then(res => {

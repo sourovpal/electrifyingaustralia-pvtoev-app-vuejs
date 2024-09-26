@@ -13,6 +13,7 @@
   const isPipelineLead = computed(() => leadStore.getIsPipelineLead);
 
   onMounted(() => {
+    leadStore.setEditLeadId($leadId);
     leadStore.callFetchStatuses();
     leadStore.setIsFirstLoading(true);
     leadStore.callFetchNewLead($leadId, true);

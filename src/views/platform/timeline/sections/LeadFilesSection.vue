@@ -2,7 +2,7 @@
   import SlideUpDown from "vue-slide-up-down";
   import { useApiRequest } from "@actions";
   import UploadFileWithProgressBar from './UploadFileWithProgressBar.vue';
-  import UploadedFilesList from './UploadedFilesList.vue';
+  import UploadedFilesList from './components/UploadedFilesList.vue';
   import ShowAllFilesModal from '../modals/ShowAllFilesModal.vue';
   import ImagePreviewModal from '../modals/ImagePreviewModal.vue';
   import { useLeadStore } from '@stores';
@@ -63,6 +63,7 @@
     selectedFiles.value = Array.from(event.dataTransfer.files);
     isLoading.value = true;
   }
+
   function handlePreviewFile(file) {
     previewFile.value = file;
   }
@@ -78,8 +79,12 @@
       const entry = entries[0];
       if (entry.isIntersecting && !isLoading.value && !uploadedFiles.value.length) {
         fetchLeadFiles();
+        observer.unobserve(loadLeadFilesObserverRef.value);
       }
-    }, { root: document.querySelector('#timelineRightSidebar'), rootMargin: `0px 0px 0px 0px` });
+    }, {
+      root: null,
+      threshold: 0.1,
+    });
     observer.observe(loadLeadFilesObserverRef.value);
   }
 
@@ -151,8 +156,9 @@
               </div>
               <div class="">
                 <UploadedFilesList v-for="(file, index) in uploadedFiles"
+                  v-memo="file"
                   @click="handlePreviewFile(file)"
-                  :key="index+Math.random()"
+                  :key="file.file_id"
                   :file="file">
                 </UploadedFilesList>
                 <div ref="loadLeadFilesObserverRef"

@@ -73,8 +73,10 @@
                     <div class="grid-item"
                         :data-other-files="index === 3 ? otherTotalFiles+'+' : ''"
                         :class="{overlay:(totalFiles > 4 && index == 3), 'w-100':((index == 0 && totalFiles == 1) || (index == 2 && totalFiles == 3)), 'h-100':((index == 0 && totalFiles == 1) || (index == 2 && totalFiles == 3))}">
-                        <img :src="getFileIcons(file)"
-                            :alt="file.filename">
+                        <FetchImage :src="file.filepath"
+                            :filename="file.filename"
+                            :alt="file.filename"
+                            loader />
                     </div>
                     <span class="text-center d-block fs-12px text-head">{{ shortenFileName(file.filename, ((index == 0
                         && totalFiles == 1) || (index == 2 && totalFiles == 3))?25:12) }}</span>
@@ -103,7 +105,7 @@
         gap: 10px;
     }
 
-    .grid-item {
+    :deep(.grid-item) {
         width: 100px;
         overflow: hidden;
         height: 100px;

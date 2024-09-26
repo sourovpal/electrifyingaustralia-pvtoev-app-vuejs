@@ -69,3 +69,21 @@ export const handleDownloadFile = async (url, $filename) => {
         console.error('File download failed', error);
     });
 }
+
+export const fetchImage = async (url, callback = null) => {
+    return await api({
+        url,
+        method: 'GET',
+        responseType: 'blob'
+    }).then(async response => {
+        let url = await URL.createObjectURL(response.data);
+        if (callback) {
+            return callback(url);
+        }
+        return url;
+    }).catch((error) => {
+        console.log(error)
+        return callback(false, error);
+    });
+}
+

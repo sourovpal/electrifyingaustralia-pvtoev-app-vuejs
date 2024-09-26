@@ -74,10 +74,9 @@
             editEstimatedValue.value = 0.00;
         }
         useApiRequest({
-            url: '/leads/estimated-value',
+            url: `/leads/${editLeadId.value}/estimated-value`,
             method: 'post',
             payload: {
-                lead_id: editLeadId.value,
                 estimated_value: editEstimatedValue.value,
             }
         }).then(res => {

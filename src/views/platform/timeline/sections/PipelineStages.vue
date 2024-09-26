@@ -22,13 +22,12 @@
         isLoadingStageId.value = stage.stage_id;
         $toast.clear();
         var data = {
-            lead: editLeadId.value,
             pipeline: leadPipeline.value?.pipeline_id,
             pipeline_stage: stage.stage_id,
         };
 
         const res = useApiRequest({
-            url: '/leads/move-lead',
+            url: `/leads/${editLeadId.value}/move-lead`,
             method: 'post',
             payload: data,
         }).then(res => {

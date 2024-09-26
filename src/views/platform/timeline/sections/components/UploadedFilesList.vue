@@ -7,7 +7,7 @@
     } from "file-extension-icon-js";
     import { defineProps, onMounted, ref, defineEmits, computed } from 'vue';
     import api from "@actions/api";
-    import { shortenFileName, leadImageTypes, fileNameToExtension, handleDownloadFile } from '@helpers';
+    import { shortenFileName, leadImageTypes, fileNameToExtension, handleDownloadFile, fetchImage } from '@helpers';
     import { useLeadStore } from '@stores';
     const leadStore = useLeadStore();
     const $leadId = computed(() => leadStore.getEditLeadId);
@@ -18,25 +18,17 @@
         shortFileName: { default({ file }) { return shortenFileName(file.filename, 35); } }
     });
 
-    function getFileIcon(file, fileName) {
-        if (leadImageTypes.includes(fileNameToExtension(fileName))) {
-            return file.filepath;
-        }
-        return getMaterialFileIcon(fileName);
-    }
-
     const emits = defineEmits(['click']);
 </script>
 
 <template>
-    <div @mouseover="toggleDownloadBtn=true"
-        @mouseleave="toggleDownloadBtn=false"
-        class="file-details d-flex justify-content-start align-items-center flex-row py-1 cursor-pointer">
+    <div class="file-details d-flex justify-content-start align-items-center flex-row py-1 cursor-pointer">
         <div @click="emits('click', {})"
             class="file-item">
-            <img width="30"
-                :src="getFileIcon(file, fileName)"
-                :alt="fileName">
+            <FetchImage :src="file.filepath"
+                :filename="fileName"
+                :alt="fileName"
+                loader />
         </div>
         <div class="d-flex flex-row ms-2 w-100">
             <span @click="emits('click', {})"
@@ -68,7 +60,7 @@
         margin-top: -2px;
     }
 
-    .file-item {
+    :deep(.file-item) {
         width: 30px;
         overflow: hidden;
         height: 30px;

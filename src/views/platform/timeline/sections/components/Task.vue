@@ -7,6 +7,7 @@
     import { $toast } from '@config';
     import CustomModal from '@components/modals/CustomModal.vue';
     import DropdownOwnerList from '../../../components/dropdowns/DropdownOwnerList.vue';
+    import moment from 'moment';
     const attrs = useAttrs();
     const leadStore = useLeadStore();
     const props = defineProps({
@@ -21,7 +22,7 @@
     const isLoading = ref(false);
     const users = computed(() => leadStore.getUsers);
     const editLeadId = computed(() => leadStore.getEditLeadId);
-    const leadTask = computed(() => props.task);
+    const leadTask = ref({});
     const toggleTaskDelete = ref(false);
     const tempTitle = ref(null);
     const tempDuration = ref(null);
@@ -34,13 +35,16 @@
             return handleUpdateTask();
         }
         isLoading.value = true;
+        if (tempDuration.value) {
+            tempDuration.value = moment(tempDuration.value).format("YYYY-MM-DD HH:mm:ss");
+        }
         await useApiRequest({
             url: `/platform/${editLeadId.value}/tasks`,
             method: 'post',
             payload: {
                 title: leadTask.value.title,
                 owner_id: leadTask.value.owner?.user_id,
-                duration: leadTask.value.duration,
+                duration: tempDuration.value,
                 is_complete: leadTask.value.is_complete,
             }
         }).then(res => {
@@ -85,10 +89,13 @@
     }
 
     async function handleUpdateTask() {
-        $toast.clear();
+        if (tempDuration.value) {
+            tempDuration.value = moment(tempDuration.value).format("YYYY-MM-DD HH:mm:ss");
+        }
         if (props.isNew || (tempTitle.value === leadTask.value.title && tempDuration.value === leadTask.value.duration)) {
             return;
         }
+
 
         isLoading.value = true;
         await useApiRequest({
@@ -96,13 +103,13 @@
             method: 'post',
             payload: {
                 title: leadTask.value.title,
-                duration: leadTask.value.duration,
+                duration: tempDuration.value,
             }
         }).then(res => {
             const { success, message, task } = res;
             if (success) {
                 tempTitle.value = task.title;
-                tempDuration.value = task.duration;
+                leadTask.value['duration'] = task.duration;
                 isEdit.value = false;
                 return;
             }
@@ -116,20 +123,24 @@
 
     async function handleUpdateOwner(owner = {}) {
         $toast.clear();
-        if (owner) { leadTask.value['owner'] = { ...owner }; }
-        if (props.isNew) return;
+        if (props.isNew) {
+            leadTask.value['owner'] = { ...owner };
+            return;
+        }
         isLoading.value = true;
         await useApiRequest({
             url: `/platform/${editLeadId.value}/tasks/${leadTask.value.task_id}/owner`,
             method: 'post',
             payload: {
-                owner_id: leadTask.value.owner?.user_id ?? null
+                owner_id: owner?.user_id ?? null
             }
         }).then(res => {
             const { success, message } = res;
-            if (!success) {
-                $toast.error(message.text);
+            if (success) {
+                leadTask.value['owner'] = { ...owner };
+                return;
             }
+            $toast.error(message.text);
         }).catch(error => {
             $toast.error("Oops, something went wrong");
         }).finally(() => {
@@ -147,8 +158,9 @@
         }).then(res => {
             const { success, message } = res;
             if (success) {
-                taskItemRef.value.remove();
                 toggleTaskDeleteConfirmModal(false);
+                leadStore.callFetchLeadTasks(editLeadId.value, function ({ loading }) {
+                });
                 return;
             }
             $toast.error(message.text);
@@ -194,6 +206,7 @@
     });
 
     onMounted(() => {
+        leadTask.value = props.task;
         tempTitle.value = props.task?.title ?? null;
         tempDuration.value = props.task?.duration ?? null;
         isEdit.value = props.isNew;
@@ -223,20 +236,18 @@
             </div>
             <div class="action ms-auto d-flex justify-content-between align-items-center">
                 <div class="stop-watch me-1">
-                    <VDatePicker v-model="leadTask.duration"
-                        @click="handleUpdateTask"
-                        mode="date">
-                        <template #default="{togglePopover}">
+                    <VueDatePicker v-model="tempDuration"
+                        @closed="handleUpdateTask">
+                        <template #trigger>
                             <button v-tippy="leadTask.duration"
-                                :class="{visible:leadTask.duration}"
-                                @click="togglePopover"
+                                :class="{visible:tempDuration}"
                                 class="toolbar-btn btn btn-light btn-sm btn-floating d-flex justify-content-center align-items-center">
                                 <font-awesome-icon icon="far fa-clock"
-                                    :class="{'clock-active':leadTask.duration}"
+                                    :class="{'clock-active':tempDuration}"
                                     class="text-soft fs-16px"></font-awesome-icon>
                             </button>
                         </template>
-                    </VDatePicker>
+                    </VueDatePicker>
                 </div>
                 <div class=""
                     v-tippy="leadTask.owner?.name??'Change Owner'">
@@ -246,7 +257,7 @@
                         <img :src="leadTask.owner?.profile_avatar??AvatarIcon"
                             alt="" />
                     </div>
-                    <DropdownOwnerList :leadOwner="leadTask.owner"
+                    <DropdownOwnerList :leadOwner="leadTask?.owner"
                         :loading="isUserLoading"
                         @change="handleUpdateOwner"></DropdownOwnerList>
                 </div>
@@ -308,7 +319,6 @@
     }
 
     .task-item {
-        overflow: hidden;
         padding: 0px 6px 0px 0px;
         border-radius: 3px;
         transition: all 0.3s ease-in-out;
@@ -350,13 +360,13 @@
 
         .action {
             width: 5.5rem;
-            margin-right: -36px;
+            /* margin-right: -36px; */
             transition: all 0.2s ease-in;
 
             .dot-menu,
             .stop-watch {
                 transition: all 0.2s ease-in;
-                visibility: hidden;
+                /* visibility: hidden; */
             }
         }
 

@@ -7,21 +7,19 @@
     import { useRoute } from 'vue-router';
     import { $toast } from '@config';
     import { useApiRequest } from '@actions';
+    import WorkflowModal from '../modals/WorkflowModal.vue';
 
     const leadStore = useLeadStore();
     const router = useRoute();
-    const toggleDropdownBox = ref(false);
+    const workflowModalRef = ref(null);
+    const toggleDropdownBox = ref(true);
     const isCreateNew = ref(false);
     const editLeadId = computed(() => leadStore.getEditLeadId);
-    const leadTasks = computed(() => {
-        const tasks = leadStore.getLeadTasks;
-        toggleDropdownBox.value = !!tasks.length;
-        return tasks;
-    });
+    const leadTasks = computed(() => leadStore.getLeadTasks);
 
     async function handleTaskPositionUpdate() {
         $toast.clear();
-        var $tasks = leadTasks.value.map(obj => obj.task_id);
+        var $tasks = leadTasks.value?.map(obj => obj.task_id);
         await useApiRequest({
             url: `/platform/${editLeadId.value}/tasks/position`,
             method: 'post',
@@ -63,7 +61,7 @@
                         @change="handleTaskPositionUpdate"
                         handle=".task-item">
                         <Task v-for="(task, index) in leadTasks"
-                            :key="index"
+                            :key="Math.random()"
                             :task="task"></Task>
                     </vue-draggable-next>
 
@@ -82,7 +80,8 @@
                         </button>
                     </div>
                     <div class="ms-n2">
-                        <button class="task-action-btn add-new">
+                        <button @click="workflowModalRef.showModalHandler()"
+                            class="task-action-btn add-new">
                             <font-awesome-icon icon="fas fa-list-check"
                                 class="text-primary fs-16px btn-icon"></font-awesome-icon>
                             <span class="ms-2 fw-bold text-primary fs-14px">Begin a workflow</span>
@@ -93,6 +92,7 @@
             </div>
         </slide-up-down>
     </div>
+    <workflow-modal ref="workflowModalRef"></workflow-modal>
 </template>
 
 <style lang="scss"
@@ -113,7 +113,6 @@
         .dropdown-body {
             transition: height 0.3s ease-in-out;
             position: relative;
-
             .task-action-btn {
                 border: none;
                 outline: none;

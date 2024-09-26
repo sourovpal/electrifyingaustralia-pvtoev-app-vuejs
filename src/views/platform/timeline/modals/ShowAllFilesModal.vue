@@ -189,11 +189,14 @@
                         class="file-box">
                         <div class="file-item"
                             v-for="(item, index) in showFiles"
-                            :key="index"
+                            :key="item.file_id"
                             v-show="!hideDeletedFiles.includes(item.file_id)"
                             @click="handlePreviewFile(item)">
                             <div class="file">
-                                <img v-lazy="getFileIcon(item, item?.filepath)">
+                                <FetchImage :src="item.filepath"
+                                    :filename="item.filename"
+                                    :alt="item.filename"
+                                    loader />
                             </div>
                             <span class="file-title fs-12px text-head text-center">
                                 {{ shortenFileName(item?.filename, 20) }}
@@ -257,8 +260,7 @@
                 width: 6rem;
                 display: flex;
                 flex-direction: column;
-
-                .file {
+                :deep(.file) {
                     width: 6rem;
                     height: 8rem;
                     background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%), linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%);

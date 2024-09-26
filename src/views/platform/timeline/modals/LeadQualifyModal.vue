@@ -90,10 +90,9 @@
 
   function confirmQualifyHandler() {
     useApiRequest({
-      url: 'leads/confirm-qualify',
+      url: `leads/${editLeadId.value}/confirm-qualify`,
       method: 'POST',
       payload: {
-        lead: editLeadId.value,
         pipeline: selectedPipeline.value?.pipeline_id,
         pipeline_stage: selectedStage.value?.stage_id,
         owner: selectedOwner.value?.user_id,
@@ -156,14 +155,8 @@
           <div>
             <button class="btn btn-light btn-sm btn-floating d-lg-none"
               @click="hideModalHandler()">
-              <svg class="svg-5"
-                xmlns="http://www.w3.org/2000/svg"
-                height="22"
-                viewBox="0 -960 960 960"
-                width="22">
-                <path
-                  d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-              </svg>
+              <font-awesome-icon icon="fas fa-close"
+                class="text-soft fs-14px"></font-awesome-icon>
             </button>
           </div>
         </div>

@@ -39,6 +39,7 @@
     }
 
     function handleFetchNewLead($leadId) {
+        leadStore.setEditLeadId($leadId);
         leadStore.setIsFirstLoading(true);
         leadStore.resetLeadEditTimeline();
         leadStore.callFetchNewLead($leadId, true);
@@ -59,7 +60,7 @@
     async function updateLeadOwnerHandler(owner = null) {
         $toast.clear();
         await useApiRequest({
-            url: '/leads/owner',
+            url: `/leads/${editLeadId.value}/owner`,
             method: 'POST',
             payload: {
                 owner: owner?.user_id,
@@ -81,7 +82,7 @@
     async function updateLeadStatusHandler(status) {
         $toast.clear();
         await useApiRequest({
-            url: '/leads/status',
+            url: `/leads/${editLeadId.value}/status`,
             method: 'POST',
             payload: {
                 status: status?.status_id,

@@ -14,7 +14,7 @@ const props = defineProps({
 
 
 <template>
-  <label class="custom-form-checkbox btn btn-floating btn-light">
+  <button class="custom-form-checkbox btn btn-floating btn-light">
     <svg
       v-if="!checked && !reset"
       class="unchecked"
@@ -29,7 +29,7 @@ const props = defineProps({
       />
     </svg>
     <svg
-      v-else-if="checked && !reset"
+      v-else-if="checked"
       class="checked"
       xmlns="http://www.w3.org/2000/svg"
       fill="currentColor"
@@ -42,7 +42,7 @@ const props = defineProps({
       ></path>
     </svg>
     <svg
-      v-if="reset && !checked"
+      v-else-if="reset"
       fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
       width="24"
@@ -60,5 +60,5 @@ const props = defineProps({
         clip-path="url(#b)"
       ></path>
     </svg>
-  </label>
+  </button>
 </template>

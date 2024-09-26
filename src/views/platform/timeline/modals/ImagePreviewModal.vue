@@ -1,7 +1,7 @@
 <script setup>
     import { Modal } from "mdb-ui-kit";
     import { defineProps, defineEmits, ref, defineExpose, onMounted } from 'vue';
-    import { leadImageTypes, handleDownloadFile } from '@helpers';
+    import { leadImageTypes, handleDownloadFile, fetchImage } from '@helpers';
     import { useApiRequest } from '@actions';
     import {
         getMaterialFileIcon,
@@ -57,7 +57,7 @@
         emits('toggle', null);
     }
 
-    function handlePreviewFile(file = null) {
+    async function handlePreviewFile(file = null) {
         if (!file) return;
         var findIndex = props.files.findIndex(item => item.file_id == file.file_id);
         if (findIndex <= -1) {
@@ -66,11 +66,19 @@
         }
         currentFileType.value = null;
         var fileExt = file.filename.split('.').pop().toLowerCase();
+        currentPreviewFile.value = {};
         currentPreviewFile.value = file;
         if (leadImageTypes.includes(fileExt)) {
             currentFileType.value = 'image';
         } else if (fileExt == 'pdf') {
             currentFileType.value = 'pdf';
+            fetchImage(file.filepath, (url) => {
+                if (url) {
+                    currentPreviewFile.value.pdf_filepath = url;
+                } else {
+                    currentPreviewFile.value.pdf_filepath = getMaterialFileIcon('pdf');
+                }
+            })
         } else {
             currentFileType.value = 'other';
         }
@@ -107,10 +115,10 @@
                 emits('deleteRefresh', currentPreviewFile.value);
                 deleteFileModalRef.value.modalHide();
                 var file = nextPreviewImage.value ?? prevPreviewImage.value ?? null;
-                if(file){
+                if (file) {
                     handlePreviewFile(file);
                     modalInstance.show();
-                }else{
+                } else {
                     currentPreviewFile.value = null;
                     hideModal();
                 }
@@ -159,13 +167,16 @@
                 </div>
                 <div class="modal-body px-0 py-0"
                     :class="{'image-preview':currentFileType=='image' || currentFileType == 'other'}">
-                    <img v-if="currentPreviewFile && currentFileType == 'image' "
+                    <FetchImage v-if="currentPreviewFile && currentFileType == 'image' "
                         :src="currentPreviewFile?.filepath"
-                        :alt="currentPreviewFile?.filename" />
+                        :filename="currentPreviewFile?.filename"
+                        :alt="currentPreviewFile?.filename"
+                        :key="currentPreviewFile?.filename"
+                        loader />
                     <div v-else-if="currentPreviewFile && currentFileType == 'pdf'"
                         class="w-100 h-100">
                         <iframe class="w-100 h-100"
-                            :src="currentPreviewFile?.filepath"
+                            :src="currentPreviewFile?.pdf_filepath"
                             frameborder="0"></iframe>
                     </div>
                     <div v-else-if="currentPreviewFile && (currentFileType != 'pdf' || currentFileType != 'image')">
@@ -177,7 +188,9 @@
                         <div class="fs-18px text-head text-center">
                             Sorry, you cannot preview this file at the moment.
                             <br>
-                            Please <a href="">click here</a> to download.
+                            Please <a
+                                @click.prevent="handleDownloadFile(`/platform/download/${currentPreviewFile?.file_id}/files/${currentPreviewFile?.filename}`, currentPreviewFile?.filename)"
+                                :href="currentPreviewFile?.filename">click here</a> to download.
                         </div>
                     </div>
                 </div>
@@ -290,7 +303,7 @@
             flex-direction: column;
         }
 
-        .modal-body {
+        :deep(.modal-body) {
             display: flex;
             justify-content: center;
             align-items: center;

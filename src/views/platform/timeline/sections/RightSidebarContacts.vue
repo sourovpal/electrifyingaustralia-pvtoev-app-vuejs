@@ -19,7 +19,7 @@
 
     async function deleteLeadContactHandler(id) {
         await useApiRequest({
-            url: `/contacts/${id}`,
+            url: `/contacts/${id}/delete`,
             method: 'delete',
         }).then(res => {
             const { success, message } = res;
@@ -107,7 +107,7 @@
         <div>
             <table v-if="isFirstLoading"
                 class="tbl-contact-info w-100">
-                <tr v-for="(item, index) in [55, 70, 45]"
+                <tr v-for="(item, index) in [55, 70]"
                     :key="index">
                     <td class="d-flex justify-content-between align-items-center mb-2"
                         width="100%">

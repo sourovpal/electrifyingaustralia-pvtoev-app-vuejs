@@ -98,14 +98,13 @@
     var leadId = leadStore.getEditLeadId;
     isSubmitMovePipelineOrStatus.value = true;
     var data = {
-      lead: leadId,
       status: selectedStatus.value?.status_id ?? null,
       pipeline: selectedPipeline.value?.pipeline_id ?? null,
       pipeline_stage: selectedStage.value?.stage_id ?? null,
     };
 
     await useApiRequest({
-      url: '/leads/move-lead',
+      url: `/leads/${leadId}/move-lead`,
       method: 'post',
       payload: data,
     }).then(res => {

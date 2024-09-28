@@ -75,11 +75,13 @@
                     :icon="`fas fa-angle-down`" />
             </span>
         </router-link>
-        <slide-up-down :active="isActiveMenu">
+        <slide-up-down v-if="isActiveMenu"
+            :active="isActiveMenu">
             <div class="nav-item"
                 v-for="(childMenu, index) in children"
                 :key="index">
                 <router-link class="nav-link mb-1"
+                    exact
                     :class="{'is-active':isActiveChildRoute(childMenu.path, childMenu.query)}"
                     :to="{path:childMenu.path, query:childMenu.query??{}}">
                     <span class="nav-icon">

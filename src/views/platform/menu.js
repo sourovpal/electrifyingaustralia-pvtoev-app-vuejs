@@ -4,7 +4,7 @@ import { useAppStore } from '../../stores/app';
 export const menus = async () => {
 
     const appStore = useAppStore();
-    
+
     const getLeadStatus = appStore.getLeadStatuses.map((item) => {
         return {
             label: item.name,
@@ -22,11 +22,11 @@ export const menus = async () => {
         };
     });
 
-    const getFirstPipelineStage = ()=>{
-        if(appStore.getPipelines?.length){
+    const getFirstPipelineStage = () => {
+        if (appStore.getPipelines?.length) {
             var stage = appStore.getPipelines[0];
-            if(stage){
-                return {pipeline:btoa(stage.title)}
+            if (stage) {
+                return { pipeline: btoa(stage.title) }
             }
         }
         return {}
@@ -42,12 +42,48 @@ export const menus = async () => {
                 icon: 'fas fa-list-check',
                 children: [
                     {
-                        label: 'All',
+                        label: 'Today',
                         path: 'tasks',
                         query: {},
                         icon: '',
                     },
-                ].concat([])
+                    {
+                        label: 'Complete',
+                        path: 'tasks',
+                        query: {stage: 'complete'},
+                        icon: '',
+                    },
+                    {
+                        label: 'In Complete',
+                        path: 'tasks',
+                        query: {stage: 'in-complete'},
+                        icon: '',
+                    },
+                    {
+                        label: 'Upcoming',
+                        path: 'tasks',
+                        query: { stage: 'upcoming' },
+                        icon: '',
+                    },
+                    {
+                        label: 'Overdue',
+                        path: 'tasks',
+                        query: { stage: 'overdue' },
+                        icon: '',
+                    },
+                    {
+                        label: 'Unassigned',
+                        path: 'tasks',
+                        query: { stage: 'unassigned' },
+                        icon: '',
+                    },
+                    {
+                        label: 'Unscheduled',
+                        path: 'tasks',
+                        query: { stage: 'unscheduled' },
+                        icon: '',
+                    },
+                ]
             },
             {
                 label: 'Leads',
@@ -66,7 +102,7 @@ export const menus = async () => {
             {
                 label: 'Pipelines',
                 path: '/platform/deals',
-                query: {...getFirstPipelineStage()},
+                query: { ...getFirstPipelineStage() },
                 icon: 'fas fa-sliders',
                 children: [].concat(getPipelineStages)
             },

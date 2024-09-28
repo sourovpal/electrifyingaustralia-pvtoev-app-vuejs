@@ -1,0 +1,35 @@
+<script>
+    import { Skeletor } from 'vue-skeletor';
+    export default {
+        components: {
+            Skeletor
+        }
+    }
+</script>
+
+<template>
+    <div class="tbl-tr full-width"
+        v-for="(_, index) in Array.from(Array(20).keys())"
+        :key="index">
+
+        <div style="width:4rem;margin-left: -7px;"
+            class="tbl-td full-width">
+            <label class="custom-form-checkbox btn btn-floating btn-light">
+                <Skeletor style="width:20px;height:20px;border-radius:3px;" />
+            </label>
+        </div>
+
+        <div v-for="(_, index) in 4"
+            :key="index"
+            style="width:10rem;flex-grow: 1;"
+            class="tbl-td full-width">
+            <Skeletor width="65%" />
+        </div>
+
+        <div style="width:10rem;flex-grow: 1;"
+            class="tbl-td full-width">
+            <Skeletor width="30px" height="30px" style="border-radius:50%;" />
+        </div>
+
+    </div>
+</template>

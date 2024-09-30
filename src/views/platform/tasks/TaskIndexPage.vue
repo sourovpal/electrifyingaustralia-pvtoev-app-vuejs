@@ -12,6 +12,8 @@
     import { useRoute } from 'vue-router';
     import { $toast } from '@config';
     import { useDebounceFn } from '@vueuse/core';
+    import EmptyPage from '@errors/EmptyPage.vue';
+    import ErrorPage from '@errors/ErrorPage.vue';
 
     const route = useRoute();
     const isFirstLoading = ref(false);
@@ -28,6 +30,7 @@
     });
     const leadTasks = ref([]);
     const searchTasks = ref();
+    const isError = ref(false);
 
     watch(route, () => {
         handleFetchTasks({ page: 1 });
@@ -57,6 +60,8 @@
     }, 2000);
 
     async function handleFetchTasks(payload = {}) {
+        $toast.clear();
+        isError.value = false;
         const stage = route.query?.stage;
         if (!stages.value.includes(stage) && stage) return;
         payload['stage'] = stage;
@@ -76,6 +81,7 @@
             }
             $toast.error(message.text);
         }).catch(error => {
+            isError.value = true;
             $toast.error("Oops, something went wrong");
         }).finally(() => {
             isLoading.value = false;
@@ -118,7 +124,11 @@
             :is-loading="isLoading"
             @pagination:fetch="handleFetchTasks"
             @search:update="handleSearchTasks"></TaskToolsBar>
-        <Datatable>
+        <error-page v-if="isError"
+            :css="{icon:{width:'30%'}}"></error-page>
+        <empty-page v-else-if="!isLoading && !leadTasks.length"
+            :css="{icon:{width:'30%'}}"></empty-page>
+        <Datatable v-else>
             <DatatableHeader>
                 <div class="tbl-th"
                     style="width: 3.5rem;">

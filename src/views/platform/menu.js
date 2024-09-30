@@ -112,12 +112,6 @@ export const menus = async () => {
                 query: {},
                 icon: 'fas fa-id-badge',
                 children: [
-                    {
-                        label: 'All',
-                        path: '/platform/contacts',
-                        query: {},
-                        icon: '',
-                    },
                 ]
             },
         ];

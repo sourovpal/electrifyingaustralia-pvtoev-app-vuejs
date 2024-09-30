@@ -1,231 +1,253 @@
-<script>
+<script setup>
+  import { ref, computed, watch, onMounted, defineExpose, defineEmits } from 'vue';
   import { Modal } from "mdb-ui-kit";
+  import { CreateContact, UpdateContact } from "@actions/ContactAction";
+  import { useLeadStore, useAppStore } from "@stores";
+  import { $toast } from '@config';
+  import { useRoute } from 'vue-router';
+  import { useApiRequest } from '@actions';
+  import { useDebounceFn } from '@vueuse/core';
 
-  import {
-    CreateContact,
-    UpdateContact
-  } from "@actions/ContactAction";
+  // Props
+  const props = defineProps({
+    showLead: { type: Boolean, default: false }
+  });
+  const emits = defineEmits(['close']);
 
-  import { useLeadStore } from "@stores";
-  import { useAppStore } from "@stores";
-  import { ref, computed } from 'vue';
+  // Stores
+  const leadStore = useLeadStore();
+  const appStore = useAppStore();
 
-  export default {
-    setup(props) {
-      const leadStore = useLeadStore();
-      const appStore = useAppStore();
-      const leadQualifyModalRef = ref();
-      const contacts = computed(() => leadStore.getLeadContacts);
-      return { leadStore, appStore, contacts, leadQualifyModalRef };
-    },
-    data() {
-      return {
-        modalInstance: null,
-        errors: {},
-        contact: {},
-        another_phones: [],
-        another_emails: [],
-        intendedUse: ["Home", "Office", "Work", "Personal", "Mobile"],
-        searchContacts: [],
-        debounceSearchContact: null,
-        isSearchStart: false,
-        isCreateNewContact: false,
-        isSubmitCreateNewContact: false,
-      };
-    },
-    watch: {
-      "contact.first_name"(val) {
-        this.searchLeadContactHandler(val, ["first_name", "last_name"]);
-      },
-      "contact.last_name"(val) {
-        this.searchLeadContactHandler(val, ["first_name", "last_name"]);
-      },
-      "contact.email"(val) {
-        this.searchLeadContactHandler(val, ["email", "another_emails"]);
-      },
-      "contact.phone_number"(val) {
-        this.searchLeadContactHandler(val, ["phone_number", "another_phones"]);
-      },
-    },
-    methods: {
-      showModalHandler(contact = null) {
-        this.selectContactHandler(contact);
-        this.modalInstance.show();
-      },
-      hideModalHandler() {
-        this.modalInstance.hide();
-      },
-      selectSearchContactHandler(contact = null) {
-        if (contact) {
-          this.isSearchStart = false;
-          this.another_emails = [];
-          this.another_phones = [];
-          var attributes = {
-            title: contact.title,
-            first_name: contact.first_name,
-            last_name: contact.last_name,
-            email: contact.email,
-            phone_number: contact.phone_number,
-            email_use: contact.email_use,
-            phone_use: contact.phone_use,
-          }
-          this.contact = attributes;
-          if (Array.isArray(contact.another_phones)) {
-            this.another_phones = contact.another_phones;
-          }
-          if (Array.isArray(contact.another_emails)) {
-            this.another_emails = contact.another_emails;
-          }
-        }
-      },
-      selectContactHandler(contact = null) {
-        this.isSearchStart = false;
-        this.errors = {};
-        this.another_emails = [];
-        this.another_phones = [];
-        this.searchContacts = [];
-        if (contact) {
-          this.isCreateNewContact = false;
-          this.contact = { ...contact };
-          if (Array.isArray(this.contact?.another_phones)) {
-            this.another_phones = this.contact.another_phones;
-          }
-          if (Array.isArray(this.contact?.another_emails)) {
-            this.another_emails = this.contact.another_emails;
-          }
+  // Refs and computed properties
+  const leadQualifyModalRef = ref(null);
+  const leadContacts = computed(() => leadStore.getLeadContacts);
+  const editLead = computed(() => leadStore.getEditLead);
+  const editLeadId = computed(() => leadStore.getEditLeadId);
+  const address = ref('');
+  const modalInstance = ref(null);
+
+  // Reactive data
+  const errors = ref({});
+  const editContact = ref({});
+  const another_phones = ref([]);
+  const another_emails = ref([]);
+  const intendedUse = ["Home", "Office", "Work", "Personal", "Mobile"];
+  const searchContacts = ref([]);
+  const isSearchStart = ref(false);
+  const isCreateNewContact = ref(false);
+  const isSubmitCreateNewContact = ref(false);
+
+  // Watchers
+  watch(() => editContact.value.first_name, (val) => {
+    searchLeadContactHandler(val, ["first_name", "last_name"]);
+  });
+  watch(() => editContact.value.last_name, (val) => {
+    searchLeadContactHandler(val, ["first_name", "last_name"]);
+  });
+  watch(() => editContact.value.email, (val) => {
+    searchLeadContactHandler(val, ["email", "another_emails"]);
+  });
+  watch(() => editContact.value.phone_number, (val) => {
+    searchLeadContactHandler(val, ["phone_number", "another_phones"]);
+  });
+  // Address formatting logic
+  watch(() => editLead.value, (val) => {
+    if (Object.keys(editLead.value).length) {
+      const { address_line_one, address_line_two, city, state, post_code } = editLead.value;
+      let temp = "";
+      if (address_line_two) {
+        temp += address_line_two;
+        if (address_line_one) { temp += "/" + address_line_one; }
+      } else if (address_line_one) { temp += address_line_one; }
+      if (city || state || post_code) { temp += ", "; }
+      if (city) { temp += city + " "; }
+      if (state) { temp += state + " "; }
+      if (post_code) { temp += post_code; }
+      if (temp != "") { address.value = temp; }
+    }
+  });
+
+  // Methods
+  function showModalHandler(contact = null) {
+    selectContactHandler(contact);
+    modalInstance.value.show();
+  }
+
+  function hideModalHandler() {
+    modalInstance.value.hide();
+    emits('close', true);
+  }
+
+  function selectSearchContactHandler(contact = null) {
+    if (contact) {
+      isSearchStart.value = false;
+      another_emails.value = [];
+      another_phones.value = [];
+      const attributes = {
+        title: contact.title,
+        first_name: contact.first_name,
+        last_name: contact.last_name,
+        email: contact.email,
+        phone_number: contact.phone_number,
+        email_use: contact.email_use,
+        phone_use: contact.phone_use,
+      }
+      editContact.value = attributes;
+      if (Array.isArray(contact.another_phones)) {
+        another_phones.value = contact.another_phones;
+      }
+      if (Array.isArray(contact.another_emails)) {
+        another_emails.value = contact.another_emails;
+      }
+    }
+  }
+
+  function selectContactHandler(contact = null) {
+    isSearchStart.value = false;
+    errors.value = {};
+    another_emails.value = [];
+    another_phones.value = [];
+    searchContacts.value = [];
+    if (contact) {
+      isCreateNewContact.value = false;
+      editContact.value = { ...contact };
+      if (Array.isArray(contact?.another_phones)) {
+        another_phones.value = contact.another_phones;
+      }
+      if (Array.isArray(contact?.another_emails)) {
+        another_emails.value = contact.another_emails;
+      }
+    } else {
+      isSearchStart.value = true;
+      isCreateNewContact.value = true;
+      editContact.value = {};
+    }
+  }
+
+  function addedAnotherPhoneHandler() {
+    if (!editContact.value?.phone_number) {
+      errors.value["phone_number"] = ["This phone number field is required."];
+      return;
+    }
+    if (another_phones.value.length > 0) {
+      const last = another_phones.value[another_phones.value.length - 1];
+      if (!last.phone_number) {
+        errors.value["phone_number"] = ["This phone number field is required."];
+        return;
+      }
+    }
+    delete errors.value["phone_number"];
+    another_phones.value.push({ phone_number: "", phone_use: "" });
+  }
+
+  function addedAnotherEmailHandler() {
+    if (!editContact.value?.email) {
+      errors.value["email"] = ["This email address field is required."];
+      return;
+    }
+    if (another_emails.value.length > 0) {
+      const last = another_emails.value[another_emails.value.length - 1];
+      if (!last.email) {
+        errors.value["email"] = ["This email address field is required."];
+        return;
+      }
+    }
+    delete errors.value["email"];
+    another_emails.value.push({ email: "", email_use: "" });
+  }
+
+  const searchLeadContactHandler = useDebounceFn(async (search, fields) => {
+    if (!isCreateNewContact.value || !search || !isSearchStart.value) {
+      searchContacts.value = [];
+      return;
+    }
+    await useApiRequest({
+      url: '/contacts/search',
+      method: 'POST',
+      payload: { lead_id: editLeadId.value, search, fields }
+    }).then((res) => {
+      const { success, contacts, message } = res;
+      if (success) {
+        searchContacts.value = contacts;
+      } else {
+        $toast[message.type](message.text);
+      }
+    }).catch(() => {
+      $toast.error("Oops, something went wrong");
+    });
+  }, 1000);
+
+  async function createLeadContactHandler(copyContact = null) {
+    try {
+      $toast.clear();
+      errors.value = {};
+      let res = {};
+      const leadId = leadStore.getEditLeadId;
+
+      if (copyContact) {
+        const payload = {
+          lead_id: leadId,
+          contact_id: copyContact.contact_id,
+        };
+        // Send request using payload...
+      } else {
+        isSubmitCreateNewContact.value = true;
+        const phones = another_phones.value.filter(item => item.phone_number);
+        const emails = another_emails.value.filter(item => item.email);
+
+        const payload = {
+          ...editContact.value,
+          another_phones: phones,
+          another_emails: emails,
+          lead_id: leadId,
+        };
+
+        if (isCreateNewContact.value) {
+          res = await CreateContact(payload);
         } else {
-          this.isSearchStart = true;
-          this.isCreateNewContact = true;
-          this.contact = {};
+          res = await UpdateContact(payload);
         }
-      },
-      addedAnatherPhoneHandler() {
-        if (this.contact?.phone_number == null || this.contact?.phone_number == "") {
-          this.errors["phone_number"] = ["This phone number field is required."];
-          return;
-        }
-        if (this.another_phones?.length > 0) {
-          var last = this.another_phones[this.another_phones.length - 1];
-          if (last) {
-            if (last.phone_number == null || last.phone_number == "") {
-              this.errors["phone_number"] = [
-                "This phone number field is required.",
-              ];
-              return;
-            }
-          }
-        }
-        delete this.errors["phone_number"];
-        this.another_phones.push({ phone_number: "", phone_use: "" });
-      },
-      addedAnatherEmailHandler() {
-        if (this.contact?.email == null || this.contact?.email == "") {
-          this.errors["email"] = ["This email address field is required."];
-          return;
-        }
+      }
 
-        if (this.another_emails?.length > 0) {
-          var last = this.another_emails[this.another_emails.length - 1];
-          if (last) {
-            if (last.email == null || last.email == "") {
-              this.errors["email"] = ["This email address field is required."];
-              return;
+      isSubmitCreateNewContact.value = false;
+      const { success, message, errors: resErrors } = res;
+      if (!success && resErrors) {
+        errors.value = resErrors;
+      } else if (success) {
+        if (!props.showLead) {
+          leadStore.callFetchTimelineLogs();
+          leadStore.callFetchLeadContacts(leadId, ({ contacts }) => {
+            if (!isCreateNewContact.value && contacts) {
+              const contact = contacts.find(item => item.contact_id === payload.contact_id);
+              if (contact) {
+                leadStore.setPrimaryContact(contact);
+              }
             }
-          }
-        }
-        delete this.errors["email"];
-        this.another_emails.push({ email: "", email_use: "" });
-      },
-      async searchLeadContactHandler(search, fields) {
-        if (!this.isCreateNewContact || !search || !this.isSearchStart) { this.searchContacts = []; return; }
-        clearInterval(this.debounceSearchContact);
-        var leadId = this.$route.params?.id ?? null;
-        var payload = { lead_id: leadId, search: search, fields: fields };
-        this.debounceSearchContact = setTimeout(() => {
-          this.$apiRequest({
-            url: '/contacts/search',
-            method: 'POST',
-            payload
-          }).then((res) => {
-            const { success, contacts, message } = res;
-            if (success) {
-              return this.searchContacts = contacts;
-            }
-            this.$toast[message.type](message.text);
-          }).catch(error => {
-            this.$toast.error("Oops, something went wrong");
           });
-        }, 1000);
-      },
-      async createLeadContactHandler(copyContact = null) {
-        try {
-          this.$toast.clear();
-          this.errors = {};
-          var res = {};
-          var leadId = this.leadStore.getEditLeadId;
-          if (copyContact) {
-            var payload = {
-              lead_id: leadId,
-              contact_id: copyContact.contact_id,
-            };
-          } else {
-            this.isSubmitCreateNewContact = true;
-            var phones = this.another_phones.filter((item) => {
-              if (item.phone_number != '' && item.phone_number != null) {
-                return item;
-              }
-            });
-
-            var emails = this.another_emails.filter((item) => {
-              if (item.email != '' && item.email != null) {
-                return item;
-              }
-            });
-
-            var payload = {
-              ...this.contact,
-              another_phones: phones,
-              another_emails: emails,
-              lead_id: leadId,
-            };
-
-            if (this.isCreateNewContact) {
-              res = await CreateContact(payload);
-            } else {
-              res = await UpdateContact(payload);
-            }
-          }
-
-          this.isSubmitCreateNewContact = false;
-          var { success, message, errors } = res;
-          if (!success && errors) {
-            return this.errors = errors;
-          } else if (success) {
-            this.leadStore.callFetchTimelineLogs();
-            this.leadStore.callFetchLeadContacts(this.leadStore.editLeadId, ({ loading, contacts }) => {
-              if (!this.isCreateNewContact && contacts) {
-                var contact = contacts.find(item => item.contact_id == payload.contact_id);
-                if (contact) {
-                  this.leadStore.setPrimaryContact(contact);
-                }
-              }
-            });
-            this.isCreateNewContact = false;
-            this.hideModalHandler();
-          }
-          this.$toast[message.type](message.text);
-        } catch (error) {
-          console.log(error)
-          this.$toast.error("Oops, something went wrong");
-        } finally {
-          this.isSubmitCreateNewContact = false;
         }
-      },
-    },
-    mounted() {
-      this.modalInstance = new Modal(this.leadQualifyModalRef);
-    },
-  };
+        isCreateNewContact.value = false;
+        hideModalHandler();
+      }
+      $toast[message.type](message.text);
+    } catch (error) {
+      $toast.error("Oops, something went wrong");
+    } finally {
+      isSubmitCreateNewContact.value = false;
+    }
+  }
+
+  // Lifecycle
+  onMounted(() => {
+    modalInstance.value = new Modal(leadQualifyModalRef.value, {
+      keyboard: false,
+      backdrop: 'static',
+    });
+  });
+  // Export functions
+  defineExpose({
+    showModalHandler,
+    hideModalHandler
+  });
 </script>
 
 <template>
@@ -249,67 +271,78 @@
                   <path
                     d="M480-40q-33 0-56.5-23.5T400-120q0-33 23.5-56.5T480-200q33 0 56.5 23.5T560-120q0 33-23.5 56.5T480-40ZM240-760q-33 0-56.5-23.5T160-840q0-33 23.5-56.5T240-920q33 0 56.5 23.5T320-840q0 33-23.5 56.5T240-760Zm0 240q-33 0-56.5-23.5T160-600q0-33 23.5-56.5T240-680q33 0 56.5 23.5T320-600q0 33-23.5 56.5T240-520Zm0 240q-33 0-56.5-23.5T160-360q0-33 23.5-56.5T240-440q33 0 56.5 23.5T320-360q0 33-23.5 56.5T240-280Zm480-480q-33 0-56.5-23.5T640-840q0-33 23.5-56.5T720-920q33 0 56.5 23.5T800-840q0 33-23.5 56.5T720-760ZM480-280q-33 0-56.5-23.5T400-360q0-33 23.5-56.5T480-440q33 0 56.5 23.5T560-360q0 33-23.5 56.5T480-280Zm240 0q-33 0-56.5-23.5T640-360q0-33 23.5-56.5T720-440q33 0 56.5 23.5T800-360q0 33-23.5 56.5T720-280Zm0-240q-33 0-56.5-23.5T640-600q0-33 23.5-56.5T720-680q33 0 56.5 23.5T800-600q0 33-23.5 56.5T720-520Zm-240 0q-33 0-56.5-23.5T400-600q0-33 23.5-56.5T480-680q33 0 56.5 23.5T560-600q0 33-23.5 56.5T480-520Zm0-240q-33 0-56.5-23.5T400-840q0-33 23.5-56.5T480-920q33 0 56.5 23.5T560-840q0 33-23.5 56.5T480-760Z" />
                 </svg>
-                <span class="text-hard fw-bold fs-16px">Contacts</span>
+                <span v-if="showLead"
+                  class="text-hard fw-bold fs-16px">Related Deals</span>
+                <span v-else
+                  class="text-hard fw-bold fs-16px">Contacts</span>
               </div>
               <div>
                 <button class="btn btn-light btn-sm btn-floating d-lg-none"
                   @click="hideModalHandler()">
-                  <svg class="svg-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="22"
-                    viewBox="0 -960 960 960"
-                    width="22">
-                    <path
-                      d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                  </svg>
+                  <font-awesome-icon icon="fas fa-close"
+                    class="fs-14px text-soft" />
                 </button>
               </div>
             </div>
             <div class="modal-body px-0">
-              <ul class="contacts-list list-unstyled">
-                <li v-for="(item, index) in contacts"
-                  :key="index"
-                  @click="selectContactHandler(item)"
-                  :class="item.contact_id == contact?.contact_id ? 'active' : ''"
-                  class="list-item d-flex justify-content-start align-items-center">
-                  <div class="circle-avatar me-2 cursor-pointer"
-                    style="width: 40px; height: 40px; min-width: 40px">
-                    <img class="rounded-circle border"
-                      alt="avatar1"
-                      :src="item.avatar" />
-                  </div>
-                  <div class="contact-details">
-                    <span class="details-text text-head fs-16px d-block fw-bold">{{ item.full_name }}</span>
-                    <span class="details-text text-soft fs-14px d-block">{{
-                      item.email ?? item.phone_number ?? "example@gmail.com"
-                      }}</span>
-                  </div>
-                </li>
-                <li v-if="searchContacts.length"
-                  class="pb-2 text-soft">Existing Contacts</li>
-                <li v-for="(item, index) in searchContacts"
-                  :key="index"
-                  @click="selectSearchContactHandler(item)"
-                  class="list-item d-flex justify-content-start align-items-center">
-                  <div class="circle-avatar me-2 cursor-pointer"
-                    style="width: 40px; height: 40px; min-width: 40px">
-                    <img class="rounded-circle border"
-                      alt="avatar1"
-                      :src="item.avatar" />
-                  </div>
-                  <div class="contact-details">
-                    <span class="details-text text-head fs-16px d-block fw-bold">{{ item.full_name }}</span>
-                    <span class="details-text text-soft fs-14px d-block">{{
-                      item.email ?? item.phone_number ?? "example@gmail.com"
-                      }}</span>
-                  </div>
-                </li>
-              </ul>
-              <button v-if="!isCreateNewContact"
-                @click="selectContactHandler()"
-                class="btn btn-primary w-100">
-                Add New
-              </button>
+              <div v-if="showLead"
+                class="lead-details p-2 bg-white">
+                <router-link @click="hideModalHandler"
+                  :to="`/platform/leads/${editLead.lead_id}`">
+                  <ul class="m-0 p-0 list-unstyled">
+                    <li v-if="address"
+                      class="fw-bold text-head fs-14px">{{ address }}</li>
+                    <li class="fw-bold text-soft fs-12px">{{ editLead.lead_title??'Untitled lead\'s' }}</li>
+                    <li class="fw-bold text-soft fs-12px">${{ editLead.estimated_value }}</li>
+                  </ul>
+                </router-link>
+              </div>
+              <div v-else>
+                <ul class="contacts-list list-unstyled">
+                  <li v-for="(item, index) in leadContacts"
+                    :key="index"
+                    @click="selectContactHandler(item)"
+                    :class="item.contact_id == editContact.contact_id ? 'active' : ''"
+                    class="list-item d-flex justify-content-start align-items-center">
+                    <div class="circle-avatar me-2 cursor-pointer"
+                      style="width: 40px; height: 40px; min-width: 40px">
+                      <img class="rounded-circle border"
+                        alt="avatar1"
+                        :src="item.avatar" />
+                    </div>
+                    <div class="contact-details">
+                      <span class="details-text text-head fs-16px d-block fw-bold">{{ item.full_name }}</span>
+                      <span class="details-text text-soft fs-14px d-block">{{
+                        item.email ?? item.phone_number ?? "example@gmail.com"
+                        }}</span>
+                    </div>
+                  </li>
+                  <li v-if="searchContacts.length"
+                    class="pb-2 text-soft">Existing Contacts</li>
+                  <li v-for="(item, index) in searchContacts"
+                    :key="index"
+                    @click="selectSearchContactHandler(item)"
+                    class="list-item d-flex justify-content-start align-items-center">
+                    <div class="circle-avatar me-2 cursor-pointer"
+                      style="width: 40px; height: 40px; min-width: 40px">
+                      <img class="rounded-circle border"
+                        alt="avatar1"
+                        :src="item.avatar" />
+                    </div>
+                    <div class="contact-details">
+                      <span class="details-text text-head fs-16px d-block fw-bold">{{ item.full_name }}</span>
+                      <span class="details-text text-soft fs-14px d-block">{{
+                        item.email ?? item.phone_number ?? "example@gmail.com"
+                        }}</span>
+                    </div>
+                  </li>
+                </ul>
+                <button v-if="!isCreateNewContact"
+                  @click="selectContactHandler()"
+                  class="btn btn-primary w-100">
+                  Add New
+                </button>
+              </div>
             </div>
           </div>
           <div class="col-lg-8">
@@ -327,7 +360,7 @@
                   class="text-hard fw-bold fs-16px">Edit Contact</span>
                 <span v-else
                   class="text-hard fw-bold fs-16px">Add Contact</span>
-                <svg v-if="contact?.is_primary"
+                <svg v-if="editContact?.is_primary"
                   :class="`ms-2 text-success `"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="currentColor"
@@ -343,7 +376,7 @@
               <div class="mb-3">
                 <label class="form-label-title">Title</label>
                 <input @click="delete errors?.title"
-                  v-model="contact.title"
+                  v-model="editContact.title"
                   type="text"
                   class="form-control" />
                 <span class="fs-14px text-danger py-1 w-100 d-block"
@@ -354,7 +387,7 @@
                   <div class="mb-3">
                     <label class="form-label-title">First name</label>
                     <input @click="delete errors?.first_name"
-                      v-model="contact.first_name"
+                      v-model="editContact.first_name"
                       type="text"
                       class="form-control" />
                     <span class="fs-14px text-danger py-1 w-100 d-block"
@@ -365,7 +398,7 @@
                   <div class="mb-3">
                     <label class="form-label-title">Last name</label>
                     <input @click="delete errors?.last_name"
-                      v-model="contact.last_name"
+                      v-model="editContact.last_name"
                       type="text"
                       class="form-control" />
                     <span class="fs-14px text-danger py-1 w-100 d-block"
@@ -380,9 +413,9 @@
                     <label class="form-label-title">Phone number</label>
                     <input @click="delete errors?.phone_number"
                       :class="{
-                        'border-error': errors?.phone_number && !contact.phone_number,
+                        'border-error': errors?.phone_number && !editContact.phone_number,
                       }"
-                      v-model="contact.phone_number"
+                      v-model="editContact.phone_number"
                       type="text"
                       class="form-control" />
                   </div>
@@ -390,12 +423,12 @@
                 <div class="col-lg-4 mb-3 mb-lg-0">
                   <div class="">
                     <label class="form-label-title">Intended use</label>
-                    <select v-model="contact.phone_use"
+                    <select v-model="editContact.phone_use"
                       class="form-control">
                       <option value=""></option>
                       <option v-for="(item, index) in intendedUse"
                         :key="index"
-                        :selected="contact.phone_use == item"
+                        :selected="editContact.phone_use == item"
                         :value="item">
                         {{ item }}
                       </option>
@@ -454,8 +487,8 @@
                   <div class="">
                     <label class="form-label-title">Email address</label>
                     <input @click="delete errors?.email"
-                      :class="{ 'border-error': errors?.email && !contact.email }"
-                      v-model="contact.email"
+                      :class="{ 'border-error': errors?.email && !editContact.email }"
+                      v-model="editContact.email"
                       type="email"
                       class="form-control" />
                   </div>
@@ -463,12 +496,12 @@
                 <div class="col-lg-4 mb-3 mb-lg-0">
                   <div class="">
                     <label class="form-label-title">Intended use</label>
-                    <select v-model="contact.email_use"
+                    <select v-model="editContact.email_use"
                       class="form-control">
                       <option value=""></option>
                       <option v-for="(item, index) in intendedUse"
                         :key="index"
-                        :selected="contact.email_use == item"
+                        :selected="editContact.email_use == item"
                         :value="item">
                         {{ item }}
                       </option>
@@ -522,7 +555,7 @@
                 <label class="form-label-title">Notes
                   <span class="text-soft fs-12px ms-1">(Optional)</span></label>
                 <textarea @click="delete errors?.notes"
-                  v-model="contact.notes"
+                  v-model="editContact.notes"
                   type="text"
                   class="form-control"
                   rows="3"></textarea>
@@ -534,7 +567,7 @@
                   class="btn btn-danger">
                   Close
                 </button>
-                <loading-button :disabled="!(contact.first_name && contact.last_name)"
+                <loading-button :disabled="!(editContact.first_name && editContact.last_name)"
                   :isLoading="isSubmitCreateNewContact"
                   @click="createLeadContactHandler()">
                   {{ isCreateNewContact?'Create New':'Update Contact' }}
@@ -549,6 +582,11 @@
 </template>
 <style lang="scss"
   scoped>
+  .lead-details {
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    border-radius: 3px;
+  }
+
   .search-contacts {
     .list-item {
       padding: 6px 15px;

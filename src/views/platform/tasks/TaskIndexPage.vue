@@ -53,8 +53,8 @@
 
     const handleSearchTasks = useDebounceFn((search) => {
         var payload = { search, page: 1 };
-        if (pagination.value?.page && pagination.value?.page > 1) {
-            payload['page'] = pagination.value.page;
+        if (pagination.value?.current_page && pagination.value?.current_page > 1) {
+            payload['page'] = pagination.value.current_page;
         }
         handleFetchTasks(payload);
     }, 2000);
@@ -113,17 +113,15 @@
             isLoading.value = false;
         });
     }
-
-
 </script>
 
 <template>
     <section class="content">
-        <SearchBar />
-        <TaskToolsBar :pagination="pagination"
+        <search-bar />
+        <task-tools-bar :pagination="pagination"
             :is-loading="isLoading"
             @pagination:fetch="handleFetchTasks"
-            @search:update="handleSearchTasks"></TaskToolsBar>
+            @search:update="handleSearchTasks"></task-tools-bar>
         <error-page v-if="isError"
             :css="{icon:{width:'30%'}}"></error-page>
         <empty-page v-else-if="!isLoading && !leadTasks.length"

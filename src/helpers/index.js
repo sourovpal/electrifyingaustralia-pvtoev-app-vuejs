@@ -1,4 +1,5 @@
 import api from "@actions/api";
+import moment from 'moment';
 
 export async function mergeTimelineLogs(oldData, newData, latest = false) {
 
@@ -87,3 +88,8 @@ export const fetchImage = async (url, callback = null) => {
     });
 }
 
+
+export function handleDateTimeFormat(timestamp, format = 'YYYY-MM-DD HH:mm:ss') {
+    if (!timestamp) return;
+    return moment(timestamp).format(format);
+}

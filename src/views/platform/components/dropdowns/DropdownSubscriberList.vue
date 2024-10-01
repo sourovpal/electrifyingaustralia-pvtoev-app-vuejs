@@ -1,5 +1,5 @@
 <script setup>
-  import { useLeadStore } from "@stores";
+  import { usePlatformStore } from "@stores";
   import { useAuthStore } from "@stores";
   import { UpdateSubscribers } from "@actions/LeadAction";
   import { AvatarIcon } from "@assets/icons";
@@ -13,21 +13,21 @@
     loading: { type: Boolean, default: false }
   });
 
-  const leadStore = useLeadStore();
+  const platformStore = usePlatformStore();
   const authStore = useAuthStore();
   const search = ref(null);
 
-  const leadOwner = computed(() => leadStore.getLeadOwner);
-  const users = computed(() => leadStore.getUsers);
-  const editLeadId = computed(() => leadStore.getEditLeadId);
+  const leadOwner = computed(() => platformStore.getLeadOwner);
+  const users = computed(() => platformStore.getUsers);
+  const editLeadId = computed(() => platformStore.getEditLeadId);
   const authUser = computed(() => authStore.getUser);
 
   const leadSubscribers = computed({
     get() {
-      return leadStore.getLeadSubscribers;
+      return platformStore.getLeadSubscribers;
     },
     set(users) {
-      leadStore.setLeadSubscribers(users);
+      platformStore.setLeadSubscribers(users);
     }
   });
 
@@ -59,7 +59,7 @@
         $toast.error(message.text);
         return;
       }
-      leadStore.callFetchTimelineLogs();
+      platformStore.callFetchTimelineLogs();
     }).catch(error => {
       $toast.error("Oops, something went wrong");
     });

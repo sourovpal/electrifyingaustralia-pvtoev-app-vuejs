@@ -1,8 +1,7 @@
 <script setup>
   import { ref, computed, watch, onMounted, defineExpose, defineEmits } from 'vue';
   import { Modal } from "mdb-ui-kit";
-  import { CreateContact, UpdateContact } from "@actions/ContactAction";
-  import { useLeadStore, useAppStore } from "@stores";
+  import { usePlatformStore, useAppStore } from "@stores";
   import { $toast } from '@config';
   import { useRoute } from 'vue-router';
   import { useApiRequest } from '@actions';
@@ -12,17 +11,17 @@
   const props = defineProps({
     showLead: { type: Boolean, default: false }
   });
-  const emits = defineEmits(['close']);
+  const emits = defineEmits(['close', 'update']);
 
   // Stores
-  const leadStore = useLeadStore();
+  const platformStore = usePlatformStore();
   const appStore = useAppStore();
 
   // Refs and computed properties
   const leadQualifyModalRef = ref(null);
-  const leadContacts = computed(() => leadStore.getLeadContacts);
-  const editLead = computed(() => leadStore.getEditLead);
-  const editLeadId = computed(() => leadStore.getEditLeadId);
+  const leadContacts = computed(() => platformStore.getLeadContacts);
+  const editLead = computed(() => platformStore.getEditLead);
+  const editLeadId = computed(() => platformStore.getEditLeadId);
   const address = ref('');
   const modalInstance = ref(null);
 
@@ -182,7 +181,7 @@
       $toast.clear();
       errors.value = {};
       let res = {};
-      const leadId = leadStore.getEditLeadId;
+      const leadId = platformStore.getEditLeadId;
 
       if (copyContact) {
         const payload = {
@@ -203,24 +202,34 @@
         };
 
         if (isCreateNewContact.value) {
-          res = await CreateContact(payload);
+          res = await useApiRequest({
+            url: '/contacts',
+            method: 'POST',
+            payload: payload
+          });
         } else {
-          res = await UpdateContact(payload);
+          res = await useApiRequest({
+            url: '/contacts/update',
+            method: 'POST',
+            payload: payload
+          });
         }
       }
 
-      isSubmitCreateNewContact.value = false;
       const { success, message, errors: resErrors } = res;
+      isSubmitCreateNewContact.value = false;
+
       if (!success && resErrors) {
         errors.value = resErrors;
       } else if (success) {
+        emits('update', true);
         if (!props.showLead) {
-          leadStore.callFetchTimelineLogs();
-          leadStore.callFetchLeadContacts(leadId, ({ contacts }) => {
+          platformStore.callFetchTimelineLogs();
+          platformStore.callFetchLeadContacts(leadId, ({ contacts }) => {
             if (!isCreateNewContact.value && contacts) {
               const contact = contacts.find(item => item.contact_id === payload.contact_id);
               if (contact) {
-                leadStore.setPrimaryContact(contact);
+                platformStore.setPrimaryContact(contact);
               }
             }
           });

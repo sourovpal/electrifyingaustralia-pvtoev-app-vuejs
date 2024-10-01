@@ -11,11 +11,11 @@
     import { ref, defineProps, defineExpose, onMounted, defineEmits, computed } from 'vue';
     import { useApiRequest } from '@actions/api';
     import { $toast } from '@config';
-    import { useLeadStore } from '@stores';
+    import { usePlatformStore } from '@stores';
     const props = defineProps({
         files: { type: Array, default: [] }
     });
-    const leadStore = useLeadStore();
+    const platformStore = usePlatformStore();
     const emits = defineEmits(['close']);
     const allFilesShowRef = ref(null);
     const activeTab = ref('all');
@@ -23,7 +23,7 @@
     const showFiles = ref([]);
     const previewFile = ref(null);
     const isLoading = ref(false);
-    const $leadId = computed(() => leadStore.getEditLeadId);
+    const $leadId = computed(() => platformStore.getEditLeadId);
     const $nextPage = ref(1);
     const $limit = ref(50);
     const infiniteOvserverRef = ref(null);

@@ -1,5 +1,5 @@
 <script setup>
-  import { useLeadStore } from "@stores";
+  import { usePlatformStore } from "@stores";
   import { useAuthStore } from "@stores";
   import { UpdateSubscribers } from "@actions/LeadAction";
   import { AvatarIcon } from "@assets/icons";
@@ -15,12 +15,12 @@
   });
   const emits = defineEmits(['change']);
 
-  const leadStore = useLeadStore();
+  const platformStore = usePlatformStore();
   const authStore = useAuthStore();
   const search = ref(null);
 
-  const users = computed(() => leadStore.getUsers);
-  const editLeadId = computed(() => leadStore.getEditLeadId);
+  const users = computed(() => platformStore.getUsers);
+  const editLeadId = computed(() => platformStore.getEditLeadId);
   const authUser = computed(() => authStore.getUser);
 
   const filterUsers = computed(() => {

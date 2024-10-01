@@ -2,20 +2,20 @@
     import ActionBar from "@components/ActionBar/ActionBar.vue";
     import LeftActionBar from "@components/ActionBar/LeftActionBar.vue";
     import RightActionBar from "@components/ActionBar/RightActionBar.vue";
-    import { useLeadStore } from '@stores';
+    import { usePlatformStore } from '@stores';
     import { ref, computed } from 'vue';
     import { Skeletor } from "vue-skeletor";
     import { $toast } from '@config';
     import { useApiRequest } from '@actions/api';
 
-    const leadStore = useLeadStore();
-    const editLead = computed(() => leadStore.getEditLead);
-    const editLeadId = computed(() => leadStore.getEditLeadId);
-    const isFirstLoading = computed(() => leadStore.getIsFirstLoading);
-    const isPipelineLead = computed(() => leadStore.getIsPipelineLead);
-    const leadStages = computed(() => leadStore.getLeadStages);
-    const leadStage = computed(() => leadStore.getLeadStage);
-    const leadPipeline = computed(() => leadStore.getLeadPipeline);
+    const platformStore = usePlatformStore();
+    const editLead = computed(() => platformStore.getEditLead);
+    const editLeadId = computed(() => platformStore.getEditLeadId);
+    const isFirstLoading = computed(() => platformStore.getIsFirstLoading);
+    const isPipelineLead = computed(() => platformStore.getIsPipelineLead);
+    const leadStages = computed(() => platformStore.getLeadStages);
+    const leadStage = computed(() => platformStore.getLeadStage);
+    const leadPipeline = computed(() => platformStore.getLeadPipeline);
     const isLoadingStageId = ref(null);
 
     function handlePipelineStageUpdate(stage) {
@@ -36,8 +36,8 @@
                 $toast.error("Oops, something went wrong");
                 return;
             }
-            leadStore.setLeadStage(stage);
-            leadStore.callFetchLeadStages(leadStore.getEditLeadId, ({ loading }) => {
+            platformStore.setLeadStage(stage);
+            platformStore.callFetchLeadStages(platformStore.getEditLeadId, ({ loading }) => {
                 if (!loading) {
                     isLoadingStageId.value = null;
                 }

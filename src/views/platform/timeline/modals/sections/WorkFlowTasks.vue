@@ -1,11 +1,11 @@
 <script setup>
     import { defineProps, ref, nextTick, computed } from 'vue';
     import SlideUpDown from "vue-slide-up-down";
-    import { useLeadStore } from "@stores";
+    import { usePlatformStore } from "@stores";
     import { $toast } from '@config';
     import { useApiRequest } from '@actions';
 
-    const leadStore = useLeadStore();
+    const platformStore = usePlatformStore();
     const isLoading = ref(false);
     const props = defineProps({
         workflow: { type: Object, default: {} }
@@ -16,7 +16,7 @@
     const toggleTaskList = ref(false);
     const workflowTasks = ref([]);
     const fetchComplete = ref(false);
-    const $leadId = computed(() => leadStore.getEditLeadId);
+    const $leadId = computed(() => platformStore.getEditLeadId);
 
     function handleSelectAllTasks() {
         var total = [...assignTasks.value, ...selectedTasks.value].length;
@@ -82,7 +82,7 @@
             if (success) {
                 assignTasks.value = [...assignTasks.value, ...selectedTasks.value];
                 selectedTasks.value = [];
-                leadStore.callFetchLeadTasks($leadId.value);
+                platformStore.callFetchLeadTasks($leadId.value);
                 return;
             }
             $toast.error(message.text);

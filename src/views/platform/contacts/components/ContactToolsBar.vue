@@ -3,9 +3,9 @@
     import ActionBar from '@components/ActionBar/ActionBar.vue';
     import LeftActionBar from '@components/ActionBar/LeftActionBar.vue';
     import RightActionBar from '@components/ActionBar/RightActionBar.vue';
-    import { useLeadStore } from "@stores";
+    import { usePlatformStore } from "@stores";
 
-    const leadStore = useLeadStore();
+    const platformStore = usePlatformStore();
     const props = defineProps({
         pagination: { type: Object },
         isLoading: { type: Boolean, default: false }

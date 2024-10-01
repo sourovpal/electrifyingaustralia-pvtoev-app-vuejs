@@ -8,15 +8,15 @@
   import Storage from "../helpers/Storage";
   import { CONFIG } from "@config";
   import { useAppStore } from "@stores";
-  import { useLeadStore } from "@stores";
+  import { usePlatformStore } from "@stores";
   const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
   const appStorage = new Storage(CONFIG.VITE_AUTH_APP);
   const securityStorage = new Storage(CONFIG.VITE_AUTH_TOKEN);
 
-  const leadStore = useLeadStore();
+  const platformStore = usePlatformStore();
   const appStore = useAppStore();
 
-  const { getLeadPrevUrl } = storeToRefs(leadStore);
+  const { getLeadPrevUrl } = storeToRefs(platformStore);
 
   const $toast = useToast(CONFIG.TOAST);
 

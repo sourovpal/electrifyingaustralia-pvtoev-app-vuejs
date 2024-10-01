@@ -1,7 +1,7 @@
 <script setup>
     import { ref, computed } from 'vue';
     import { Skeletor } from "vue-skeletor";
-    import { useLeadStore } from '@stores';
+    import { usePlatformStore } from '@stores';
     import ActionBar from "@components/ActionBar/ActionBar.vue";
     import LeftActionBar from "@components/ActionBar/LeftActionBar.vue";
     import RightActionBar from "@components/ActionBar/RightActionBar.vue";
@@ -16,20 +16,20 @@
     import { useClipboard } from '@vueuse/core';
 
     const isLoadingFetchUsers = ref(false);
-    const leadStore = useLeadStore();
-    const editLead = computed(() => leadStore.getEditLead);
-    const editLeadId = computed(() => leadStore.getEditLeadId);
-    const isPipelineLead = computed(() => leadStore.getIsPipelineLead);
-    const isFirstLoading = computed(() => leadStore.getIsFirstLoading);
-    const isLoading = computed(() => leadStore.getIsLoading);
-    const leadOwner = computed(() => leadStore.getLeadOwner);
-    const leadSource = computed(() => leadStore.getLeadSource);
-    const leadStatus = computed(() => leadStore.getLeadStatus);
-    const statuses = computed(() => leadStore.getStatuses);
-    const prevLeadId = computed(() => leadStore.getPrevLeadId);
-    const nextLeadId = computed(() => leadStore.getNextLeadId);
-    const primaryContact = computed(() => leadStore.getPrimaryContact);
-    const users = computed(() => leadStore.getUsers);
+    const platformStore = usePlatformStore();
+    const editLead = computed(() => platformStore.getEditLead);
+    const editLeadId = computed(() => platformStore.getEditLeadId);
+    const isPipelineLead = computed(() => platformStore.getIsPipelineLead);
+    const isFirstLoading = computed(() => platformStore.getIsFirstLoading);
+    const isLoading = computed(() => platformStore.getIsLoading);
+    const leadOwner = computed(() => platformStore.getLeadOwner);
+    const leadSource = computed(() => platformStore.getLeadSource);
+    const leadStatus = computed(() => platformStore.getLeadStatus);
+    const statuses = computed(() => platformStore.getStatuses);
+    const prevLeadId = computed(() => platformStore.getPrevLeadId);
+    const nextLeadId = computed(() => platformStore.getNextLeadId);
+    const primaryContact = computed(() => platformStore.getPrimaryContact);
+    const users = computed(() => platformStore.getUsers);
 
     function copyClipboardHandler() {
         var source = ` Title : ${editLead.value.lead_title ?? null}\n Owner : ${leadOwner.value.name ?? null}\n Value : ${"$" + editLead.value.estimated_value}\n Status : ${leadStatus.value.name ?? null}\n Person : ${primaryContact.value.full_name ?? null}\n Email : ${primaryContact.value.email ?? null}\n Phone : ${primaryContact.value.phone_number ?? null}\n Link : ${window.location.href}`;
@@ -39,20 +39,20 @@
     }
 
     function handleFetchNewLead($leadId) {
-        leadStore.setEditLeadId($leadId);
-        leadStore.setIsFirstLoading(true);
-        leadStore.resetLeadEditTimeline();
-        leadStore.callFetchNewLead($leadId, true);
-        leadStore.callFetchLeadStages($leadId);
-        leadStore.callFetchLeadContacts($leadId);
-        leadStore.callFetchFiles($leadId);
-        leadStore.callFetchTimelineLogs(true, $leadId);
-        leadStore.callFetchLeadTasks($leadId);
+        platformStore.setEditLeadId($leadId);
+        platformStore.setIsFirstLoading(true);
+        platformStore.resetLeadEditTimeline();
+        platformStore.callFetchNewLead($leadId, true);
+        platformStore.callFetchLeadStages($leadId);
+        platformStore.callFetchLeadContacts($leadId);
+        platformStore.callFetchFiles($leadId);
+        platformStore.callFetchTimelineLogs(true, $leadId);
+        platformStore.callFetchLeadTasks($leadId);
     }
 
     function handleLoadUsers() {
         if (users.value?.length) return;
-        leadStore.callFetchUsers(function ({ loading, users }) {
+        platformStore.callFetchUsers(function ({ loading, users }) {
             isLoadingFetchUsers.value = loading;
         });
     }
@@ -69,8 +69,8 @@
         }).then(res => {
             const { success, errors, message } = res;
             if (success) {
-                leadStore.setLeadOwner(owner);
-                leadStore.callFetchTimelineLogs();
+                platformStore.setLeadOwner(owner);
+                platformStore.callFetchTimelineLogs();
                 return;
             }
             $toast.error(message.text);
@@ -91,8 +91,8 @@
         }).then(res => {
             const { success, errors, message } = res;
             if (success) {
-                leadStore.setLeadStatus(status);
-                leadStore.callFetchTimelineLogs();
+                platformStore.setLeadStatus(status);
+                platformStore.callFetchTimelineLogs();
                 return;
             }
             $toast.error('Oops, the lead\'s status hasn\'t changed.');

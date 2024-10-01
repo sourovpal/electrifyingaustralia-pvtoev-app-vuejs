@@ -1,13 +1,11 @@
-import { useLeadStore } from "./platform";
+import { usePlatformStore } from "./platform";
+import { useLeadsStore } from "./leads";
 import { useAuthStore } from "./auth";
 import { useAppStore } from "./app";
 
-const leadStore = useLeadStore();
-const authStore = useAuthStore();
-const appStore = useAppStore();
-
 export {
-    useLeadStore,
+    useLeadsStore,
+    usePlatformStore,
     useAuthStore,
     useAppStore,
 }

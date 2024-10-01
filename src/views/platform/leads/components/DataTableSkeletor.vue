@@ -28,10 +28,10 @@
 
         <div style="width:10rem;flex-grow: 1;"
             class="tbl-td full-width">
-            <Skeletor width="70%" />
+            <Skeletor width="60%" />
         </div>
 
-        <div style="width:12rem;flex-grow: 1;"
+        <div style="width:13rem;flex-grow: 1;"
             class="tbl-td full-width">
             <Skeletor width="100%"
                 style="height:28px;border-radius:3px;" />

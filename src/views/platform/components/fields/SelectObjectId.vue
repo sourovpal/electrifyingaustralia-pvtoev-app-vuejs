@@ -15,7 +15,7 @@
         <input ref="customInutRef"
           type="text"
           :readonly="true"
-          @click="isOpen = true"
+          @click="isOpen = !isOpen"
           :placeholder="placeholder"
           :value="fetchValue(selectedOption)" />
       </span>
@@ -270,7 +270,7 @@
       width: 100%;
       height: 100%;
       background-color: #e9ebee !important;
-      border-radius:3px;
+      border-radius: 3px;
     }
   }
 

@@ -54,6 +54,8 @@ export default{
       height: 30px;
       text-overflow: inherit;
       white-space: normal;
+      line-height:18px;
+      overflow-x: hidden;
     }
   }
   .dropdown{

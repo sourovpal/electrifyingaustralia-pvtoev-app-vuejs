@@ -5,14 +5,14 @@
     import CustomModal from '@components/modals/CustomModal.vue';
     import { useApiRequest } from '@actions';
     import { useClipboard } from '@vueuse/core';
-    import { useLeadStore } from "@stores";
+    import { usePlatformStore } from "@stores";
     import { $toast } from '@config';
     import { onClickOutside } from '@vueuse/core';
 
-    const leadStore = useLeadStore();
-    const isFirstLoading = computed(() => leadStore.getIsFirstLoading);
-    const editLead = computed(() => leadStore.getEditLead);
-    const editLeadId = computed(() => leadStore.getEditLeadId);
+    const platformStore = usePlatformStore();
+    const isFirstLoading = computed(() => platformStore.getIsFirstLoading);
+    const editLead = computed(() => platformStore.getEditLead);
+    const editLeadId = computed(() => platformStore.getEditLeadId);
     const address = ref(null);
     const leadStarRating = ref(0);
     const isEditEstimatedValue = ref(false);
@@ -38,10 +38,9 @@
 
     function confidenceUpdateHandler() {
         useApiRequest({
-            url: '/leads/confidence',
+            url: `/leads/${editLeadId.value}/confidence`,
             method: 'post',
             payload: {
-                lead_id: editLeadId.value,
                 confidence: leadStarRating.value,
             }
         }).then(res => {
@@ -51,7 +50,7 @@
                 leadStarRating.value = editLead.value.confidence;
                 return;
             }
-            leadStore.callFetchTimelineLogs();
+            platformStore.callFetchTimelineLogs();
         }).catch(error => {
             $toast.error("Oops, something went wrong");
         });
@@ -83,7 +82,7 @@
             const { success, message, estimated_value } = res;
             if (success) {
                 editLead.value.estimated_value = estimated_value;
-                leadStore.callFetchTimelineLogs();
+                platformStore.callFetchTimelineLogs();
                 return;
             }
             $toast.error(message.text);
@@ -101,7 +100,7 @@
             <div class="fs-14px fw-bold text-head mb-0 text-uppercase">
                 lead Properties
             </div>
-            <button @click="leadStore.toggleLeadEditModal(true)"
+            <button @click="platformStore.toggleLeadEditModal(true)"
                 class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
                 <font-awesome-icon icon="fas fa-pen"
                     class="text-soft fs-14px" />

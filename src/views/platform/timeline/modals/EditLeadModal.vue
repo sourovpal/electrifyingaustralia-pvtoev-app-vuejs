@@ -9,13 +9,13 @@
   } from "vue";
   import { Modal } from "mdb-ui-kit";
   import { useApiRequest } from "@actions/api";
-  import { useLeadStore } from "@stores";
+  import { usePlatformStore } from "@stores";
   import LeadCustomProperties from "./sections/LeadCustomProperties.vue";
   import { useToast } from "vue-toast-notification";
   import { $toast } from "@config";
-  import SelectLeadSource from "./fields/SelectLeadSource.vue";
+  import SelectLeadSource from "../../components/fields/SelectLeadSource.vue";
 
-  const leadStore = useLeadStore();
+  const platformStore = usePlatformStore();
   const tabShowAll = ref("show-all");
   const tabLeadProperties = ref("lead-properties");
   const tabPipelineProperties = ref("pipeline-properties");
@@ -27,18 +27,18 @@
   const errors = ref({});
 
   const leadFormData = shallowReactive({ estimated_value: 0.0 });
-  const editLead = computed(() => leadStore.getEditLead);
-  const editLeadId = computed(() => leadStore.getEditLeadId);
-  const leadProperties = computed(() => leadStore.getLeadProperties);
-  const pipelineProperties = computed(() => leadStore.getPipelineProperties);
-  const leadSources = computed(() => leadStore.getLeadSources);
-  const isPipelineLead = computed(() => leadStore.getIsPipelineLead);
-  const propertiesValues = computed(() => leadStore.getLeadPropertiesValues);
-  const sources = computed(() => leadStore.getSources);
+  const editLead = computed(() => platformStore.getEditLead);
+  const editLeadId = computed(() => platformStore.getEditLeadId);
+  const leadProperties = computed(() => platformStore.getLeadProperties);
+  const pipelineProperties = computed(() => platformStore.getPipelineProperties);
+  const leadSources = computed(() => platformStore.getLeadSources);
+  const isPipelineLead = computed(() => platformStore.getIsPipelineLead);
+  const propertiesValues = computed(() => platformStore.getLeadPropertiesValues);
+  const sources = computed(() => platformStore.getSources);
 
   onMounted(() => {
     modalInstance.value = new Modal(leadEditModalRef.value);
-    leadStore.setLeadEditModal({
+    platformStore.setLeadEditModal({
       showModalHandler,
       hideModalHandler
     });
@@ -60,7 +60,7 @@
   function showModalHandler() {
     errors.value = {};
     if (!sources.value?.length) {
-      leadStore.callFetchSources(function ({ loading }) {
+      platformStore.callFetchSources(function ({ loading }) {
         sourcesIsLoading.value = loading;
       });
     }
@@ -90,7 +90,7 @@
         errors.value = args.errors;
         return;
       }
-      leadStore.callFetchNewLead(leadStore.getEditLeadId);
+      platformStore.callFetchNewLead(platformStore.getEditLeadId);
       $toast[message.type](message.text);
     }).catch(error => {
       isSubmitEditLead.value = false;

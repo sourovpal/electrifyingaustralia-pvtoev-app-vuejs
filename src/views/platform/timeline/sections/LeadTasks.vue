@@ -3,19 +3,19 @@
     import SlideUpDown from "vue-slide-up-down";
     import Task from './components/Task.vue';
     import { VueDraggableNext } from 'vue-draggable-next';
-    import { useLeadStore } from '@stores';
+    import { usePlatformStore } from '@stores';
     import { useRoute } from 'vue-router';
     import { $toast } from '@config';
     import { useApiRequest } from '@actions';
     import WorkflowModal from '../modals/WorkflowModal.vue';
 
-    const leadStore = useLeadStore();
+    const platformStore = usePlatformStore();
     const router = useRoute();
     const workflowModalRef = ref(null);
     const toggleDropdownBox = ref(true);
     const isCreateNew = ref(false);
-    const editLeadId = computed(() => leadStore.getEditLeadId);
-    const leadTasks = computed(() => leadStore.getLeadTasks);
+    const editLeadId = computed(() => platformStore.getEditLeadId);
+    const leadTasks = computed(() => platformStore.getLeadTasks);
 
     async function handleTaskPositionUpdate() {
         $toast.clear();

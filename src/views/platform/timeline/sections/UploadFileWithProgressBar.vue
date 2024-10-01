@@ -8,9 +8,9 @@
     import { defineProps, onMounted, ref, defineEmits } from 'vue';
     import api from "@actions/api";
     import { shortenFileName } from '@helpers';
-    import { useLeadStore } from '@stores';
+    import { usePlatformStore } from '@stores';
 
-    const leadStore = useLeadStore();
+    const platformStore = usePlatformStore();
 
     const props = defineProps({
         index: {
@@ -48,7 +48,7 @@
         if (!file) return;
         const formData = new FormData();
         formData.append("files[]", file);
-        await api.post(`/leads/${leadStore.getEditLeadId}/upload/files`, formData,
+        await api.post(`/leads/${platformStore.getEditLeadId}/upload/files`, formData,
             {
                 headers: {
                     "Content-Type": "multipart/form-data",

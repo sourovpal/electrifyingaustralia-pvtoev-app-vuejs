@@ -1,16 +1,16 @@
 <script setup>
   import { Modal } from "mdb-ui-kit";
   import { ConfirmQualify, MoveLeadStatusToPipeline } from "@actions/LeadAction";
-  import { useLeadStore } from "@stores";
+  import { usePlatformStore } from "@stores";
   import { useAppStore } from "@stores";
-  import SelectObjectId from "./fields/SelectObjectId.vue";
+  import SelectObjectId from "../../components/fields/SelectObjectId.vue";
   import { ref, onMounted, watch, computed, defineExpose } from 'vue';
   import { $toast } from '@config';
   import { useApiRequest } from '@actions/api';
 
-  const leadStore = useLeadStore();
+  const platformStore = usePlatformStore();
   const appStore = useAppStore();
-  const isPipelineLead = computed(() => leadStore.getIsPipelineLead);
+  const isPipelineLead = computed(() => platformStore.getIsPipelineLead);
   const errors = ref({});
   const leadStatus = ref([]);
   const leadQualifyModalRef = ref(null);
@@ -29,20 +29,20 @@
     modalInstance.value = new Modal(leadQualifyModalRef.value);
   });
 
-  const pipelines = computed(() => leadStore.getPipelines);
-  const statuses = computed(() => leadStore.getStatuses);
+  const pipelines = computed(() => platformStore.getPipelines);
+  const statuses = computed(() => platformStore.getStatuses);
   const pipelineStages = ref([]);
 
   function showModalHandler() {
     $toast.clear();
     if (!pipelines.value.length) {
-      leadStore.callFetchPipeline(function ({ loading, pipelines }) {
+      platformStore.callFetchPipeline(function ({ loading, pipelines }) {
         pipelineIsLoading.value = loading;
       });
     }
 
     if (!statuses.value.length) {
-      leadStore.callFetchStatuses(function ({ loading }) {
+      platformStore.callFetchStatuses(function ({ loading }) {
         statusesIsLoading.value = loading;
       });
     }
@@ -64,7 +64,7 @@
     selectedStatus.value = null;
     selectedStage.value = null;
     selectedPipeline.value = pipelineOption;
-    leadStore.callFetchPipelineStages(pipelineOption.pipeline_id, function ({ loading, stages, message }) {
+    platformStore.callFetchPipelineStages(pipelineOption.pipeline_id, function ({ loading, stages, message }) {
       stagesIsLoading.value = loading;
       if (!loading && stages) {
         pipelineStages.value = stages;
@@ -95,7 +95,7 @@
   async function leadMovePipelineOrStatus() {
     $toast.clear();
     errors.value = {};
-    var leadId = leadStore.getEditLeadId;
+    var leadId = platformStore.getEditLeadId;
     isSubmitMovePipelineOrStatus.value = true;
     var data = {
       status: selectedStatus.value?.status_id ?? null,
@@ -114,20 +114,20 @@
         errors.value = args.errors;
         return;
       }
-      this.leadStore.callFetchTimelineLogs();
+      this.platformStore.callFetchTimelineLogs();
       if (data.status) {
-        leadStore.setLeadStatus(selectedStatus.value);
-        leadStore.setLeadPipeline({});
-        leadStore.setLeadStage({});
-        leadStore.setIsPipelineLead(false);
-        leadStore.callFetchProperties(leadStore.getEditLeadId);
+        platformStore.setLeadStatus(selectedStatus.value);
+        platformStore.setLeadPipeline({});
+        platformStore.setLeadStage({});
+        platformStore.setIsPipelineLead(false);
+        platformStore.callFetchProperties(platformStore.getEditLeadId);
       } else {
-        leadStore.setLeadStatus({});
-        leadStore.setLeadPipeline(selectedPipeline.value);
-        leadStore.setLeadStage(selectedStage.value);
-        leadStore.callFetchLeadStages(leadStore.getEditLeadId);
-        leadStore.callFetchProperties(leadStore.getEditLeadId);
-        leadStore.setIsPipelineLead(true);
+        platformStore.setLeadStatus({});
+        platformStore.setLeadPipeline(selectedPipeline.value);
+        platformStore.setLeadStage(selectedStage.value);
+        platformStore.callFetchLeadStages(platformStore.getEditLeadId);
+        platformStore.callFetchProperties(platformStore.getEditLeadId);
+        platformStore.setIsPipelineLead(true);
       }
       isSubmitMovePipelineOrStatus.value = false;
       selectedStatus.value = null;

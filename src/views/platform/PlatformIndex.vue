@@ -4,9 +4,9 @@
   import Menu from '@components/Menu/Menu.vue';
   import { FetchLeadStatus } from '@actions/CrmLeads';
   import { title, menus } from './menu';
-  import { useLeadStore } from '@stores';
+  import { usePlatformStore } from '@stores';
   import { useAppStore } from '@stores';
-  
+
   export default {
     name: 'PlatformIndex',
     components: {
@@ -14,9 +14,9 @@
       Menu,
     },
     setup(props) {
-      const leadStore = useLeadStore();
+      const platformStore = usePlatformStore();
       const appStore = useAppStore();
-      return { leadStore, appStore };
+      return { platformStore, appStore };
     },
     data() {
       return {
@@ -38,7 +38,7 @@
 
 <template>
   <MobileHeader />
-  <section class="d-flex flex-row">
+  <section class="d-flex flex-row platform">
     <Menu :menus="menus"
       :title="title" />
     <router-view></router-view>
@@ -46,6 +46,9 @@
 
 </template>
 
-<style>
-
+<style scoped
+  lang="scss">
+  .platform {
+    height: 100vh;
+  }
 </style>

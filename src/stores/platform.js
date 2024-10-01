@@ -3,7 +3,7 @@ import { useApiRequest } from '@actions';
 import Storage from '@helpers/Storage';
 const leadHasPipeline = new Storage('is_pipeline_lead');
 
-export const useLeadStore = defineStore('timeline', {
+export const usePlatformStore = defineStore('platform', {
   state: () => {
     return {
       isLoading: false,
@@ -407,10 +407,10 @@ export const useLeadStore = defineStore('timeline', {
         $callback({ loading: false });
       });
     },
-    callFetchProperties($leadId, $callback = () => { }) {
+    callFetchProperties($leadId = null, $callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
-        url: `/platform/leads/${$leadId}/properties`,
+        url: `/platform/leads/${$leadId ? $leadId + '/' : ''}properties`,
       }).then(res => {
         const { success, lead_properties, pipeline_properties } = res;
         if (success) {

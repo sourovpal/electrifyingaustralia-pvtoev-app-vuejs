@@ -2,7 +2,7 @@
   import FreeTextInput from "./fields/FreeTextInput.vue";
   import DateAndTimeInput from "./fields/DateAndTimeInput.vue";
   import MultipleChooseInput from "./fields/MultipleChooseInput.vue";
-  import { useLeadStore } from "@stores";
+  import { usePlatformStore } from "@stores";
   import { computed, ref, watchEffect, defineProps } from "vue";
   import YesOrNoInput from "./fields/YesOrNoInput.vue";
   import { useApiRequest } from "@actions/api";
@@ -11,14 +11,14 @@
   import { $toast } from '@config';
 
   const route = useRoute();
-  const leadStore = useLeadStore();
+  const platformStore = usePlatformStore();
 
   const leadProperties = computed(() => {
-    return leadStore.getLeadProperties.concat(leadStore.getPipelineProperties);
+    return platformStore.getLeadProperties.concat(platformStore.getPipelineProperties);
   });
-  const propertiesValues = computed(() => leadStore.getLeadPropertiesValues);
-  const isFirstLoading = computed(() => leadStore.getIsFirstLoading);
-  const editLeadId = computed(() => leadStore.getEditLeadId);
+  const propertiesValues = computed(() => platformStore.getLeadPropertiesValues);
+  const isFirstLoading = computed(() => platformStore.getIsFirstLoading);
+  const editLeadId = computed(() => platformStore.getEditLeadId);
 
   async function onChangeHandler(value, uniqueId) {
     if (Object.keys(propertiesValues.value).includes(uniqueId)) {
@@ -34,7 +34,7 @@
       }).then(res => {
         const { success, message } = res;
         if (success) {
-          leadStore.callFetchTimelineLogs();
+          platformStore.callFetchTimelineLogs();
         } else {
           $toast.error(message.text);
         }

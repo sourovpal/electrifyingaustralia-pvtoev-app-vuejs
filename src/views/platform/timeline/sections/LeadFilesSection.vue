@@ -5,21 +5,21 @@
   import UploadedFilesList from './components/UploadedFilesList.vue';
   import ShowAllFilesModal from '../modals/ShowAllFilesModal.vue';
   import ImagePreviewModal from '../modals/ImagePreviewModal.vue';
-  import { useLeadStore } from '@stores';
+  import { usePlatformStore } from '@stores';
   import { ref, onMounted, computed } from "vue";
 
-  const leadStore = useLeadStore();
+  const platformStore = usePlatformStore();
   const selectedFiles = ref([]);
   const isDragOver = ref(false);
   const isLoading = ref(false);
-  const $leadId = computed(() => leadStore.getEditLeadId);
+  const $leadId = computed(() => platformStore.getEditLeadId);
 
   const uploadedFiles = computed({
     get() {
-      return leadStore.getLeadFiles;
+      return platformStore.getLeadFiles;
     },
     set(files) {
-      leadStore.setLeadFiles(files);
+      platformStore.setLeadFiles(files);
     }
   });
 
@@ -44,8 +44,8 @@
   function fetchTimelineLogs() {
     clearInterval(debounceTimer.value);
     debounceTimer.value = setTimeout(() => {
-      leadStore.callFetchTimelineLogs();
-      leadStore.callFetchFiles($leadId.value, ({ loading }) => {
+      platformStore.callFetchTimelineLogs();
+      platformStore.callFetchFiles($leadId.value, ({ loading }) => {
         isLoading.value = loading;
       });
     }, 2000);
@@ -69,7 +69,7 @@
   }
 
   function fetchLeadFiles() {
-    leadStore.callFetchFiles($leadId.value, ({ loading, files }) => {
+    platformStore.callFetchFiles($leadId.value, ({ loading, files }) => {
       isLoading.value = loading;
     });
   }

@@ -8,9 +8,9 @@
     import { defineProps, onMounted, ref, defineEmits, computed } from 'vue';
     import api from "@actions/api";
     import { shortenFileName, leadImageTypes, fileNameToExtension, handleDownloadFile, fetchImage } from '@helpers';
-    import { useLeadStore } from '@stores';
-    const leadStore = useLeadStore();
-    const $leadId = computed(() => leadStore.getEditLeadId);
+    import { usePlatformStore } from '@stores';
+    const platformStore = usePlatformStore();
+    const $leadId = computed(() => platformStore.getEditLeadId);
     const toggleDownloadBtn = ref(false);
     const props = defineProps({
         file: { type: Object, default: null },

@@ -18,9 +18,9 @@ onMounted(()=>{
 </script>
 
 <template>
+    <vue-progress-bar></vue-progress-bar>
     <SidebarNav></SidebarNav>
     <router-view></router-view>
-    <vue-progress-bar></vue-progress-bar>
 </template>
 
 <style>

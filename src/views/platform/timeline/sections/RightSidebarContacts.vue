@@ -1,7 +1,7 @@
 <script setup>
     import { defineProps, computed, watchEffect, ref } from 'vue';
     import { Skeletor } from "vue-skeletor";
-    import { useLeadStore } from "@stores";
+    import { usePlatformStore } from "@stores";
     import { useAppStore } from "@stores";
     import ContactEditModal from "../modals/ContactEditModal.vue";
     import CustomModal from '@components/modals/CustomModal.vue';
@@ -9,12 +9,12 @@
     import { useClipboard } from '@vueuse/core';
     import { $toast } from '@config';
 
-    const leadStore = useLeadStore();
-    const isFirstLoading = computed(() => leadStore.getIsFirstLoading);
-    const contacts = computed(() => leadStore.getLeadContacts);
+    const platformStore = usePlatformStore();
+    const isFirstLoading = computed(() => platformStore.getIsFirstLoading);
+    const contacts = computed(() => platformStore.getLeadContacts);
     const primaryContact = computed({
-        get() { return leadStore.getPrimaryContact; },
-        set(contact) { leadStore.setPrimaryContact(contact); }
+        get() { return platformStore.getPrimaryContact; },
+        set(contact) { platformStore.setPrimaryContact(contact); }
     });
 
     async function deleteLeadContactHandler(id) {
@@ -24,10 +24,10 @@
         }).then(res => {
             const { success, message } = res;
             if (success) {
-                leadStore.callFetchLeadContacts(leadStore.editLeadId, ({ loading, contacts }) => {
+                platformStore.callFetchLeadContacts(platformStore.editLeadId, ({ loading, contacts }) => {
                     if (!loading && contacts) {
                         if (typeof contacts[0] != 'undefined') {
-                            leadStore.setPrimaryContact(contacts[0]);
+                            platformStore.setPrimaryContact(contacts[0]);
                         }
                     }
                 });

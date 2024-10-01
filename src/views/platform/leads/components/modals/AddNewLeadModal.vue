@@ -1,186 +1,99 @@
-<script>
+<script setup>
   import { Modal } from "mdb-ui-kit";
-  import { CreateNewLead } from "@actions/LeadAction";
-  import DropdownOwnerList from "../dropdowns/DropdownOwnerList.vue";
-  import Storage from "@helpers/Storage";
-  import { useAppStore } from "@stores/app";
-  import { CONFIG } from "@config";
-  import SelectObjectId from "./fields/SelectObjectId.vue";
-  import SelectLeadSource from "./fields/SelectLeadSource.vue";
+  import { ref, reactive, watch, computed, onMounted, defineEmits } from 'vue';
+  import SelectLeadSource from '../../../components/fields/SelectLeadSource.vue';
+  import SelectObjectId from '../../../components/fields/SelectObjectId.vue';
+  import DropdownOwnerList from '../../../components/dropdowns/DropdownOwnerList.vue';
+  import { useLeadsStore, usePlatformStore } from '@stores';
+  import { useApiRequest } from '@actions';
+  import { $toast } from '@config';
+  import { AvatarIcon } from "@assets/icons";
 
-  export default {
-    components: {
-      DropdownOwnerList,
-      SelectObjectId,
-      SelectLeadSource,
-    },
-    props: ["leadSources", "leadStatus", "fetchAllLeadsHandler"],
-    setup(props) {
-      const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
-      const appStore = useAppStore();
-      return { userStorage, appStore };
-    },
-    data() {
-      return {
-        modalInstance: null,
-        errors: {},
-        name: null,
-        lead_title: null,
-        lead_status: null,
-        lead_source: null,
-        phone_or_email: null,
-        owner: null,
-        address: null,
-        tags: [],
-        currentStatus: null,
-        isSubmitCreateLeadForm: false,
-      };
-    },
-    watch: {
-      leadStatus(status) {
-        try {
-          if (status?.length && status[0]) {
-            this.currentStatus = status[0];
-          }
-        } catch (error) { }
-      },
-    },
-    computed: {
-      owners() {
-        return this.appStore.getUsers;
-      },
-      currentOwner() {
-        try {
-          const { email } = this.userStorage.get();
-          this.owner = this.owners.find((item) => item.email == email);
-          return this.owner;
-        } catch (error) { }
-      },
-    },
-    methods: {
-      resetLeadForm() {
-        try {
-          this.error = {};
-          this.name = null;
-          this.address = null;
-          this.phone_or_email = null;
-          this.lead_title = null;
-          this.lead_source = null;
-          this.owner = this.currentOwner;
-        } catch (error) { }
-      },
-      showModalHandler() {
-        this.resetLeadForm();
-        this.modalInstance.show();
-      },
-      hideModalHandler() {
-        this.resetLeadForm();
-        this.modalInstance.hide();
-      },
-      selectOwnerHandler(owner) {
-        this.owner = owner;
-      },
-      addNewTagHandler(event) {
-        try {
-          delete this.errors?.tags;
-          event.preventDefault();
-          let val = event.target.value.trim();
-          if (val.length > 0) {
-            var index = this.tags.indexOf(val);
-            if (index > -1) {
-              return (this.errors["tags"] = [`${val} already added.`]);
-            } else {
-              this.tags.push(val);
-            }
-          }
-          event.target.value = "";
-        } catch (error) { }
-      },
-      removeTagHandler(tag = null) {
-        try {
-          var index = -1;
-          if (tag) {
-            index = this.tags.indexOf(tag);
-          } else if (this.tags.length > 0) {
-            index = this.tags.length - 1;
-          }
-          if (index > -1) {
-            this.deleteCountry = this.tags[index];
-            this.tags.splice(index, 1);
-          }
-        } catch (error) { }
-      },
-      async createNewLeadHandler() {
-        try {
-          this.$toast.clear();
-          this.isSubmitCreateLeadForm = true;
-          var data = {
-            name: this.name,
-            phone_or_email: this.phone_or_email,
-            address: this.address,
-            lead_title: this.lead_title,
-            lead_source: this.lead_source,
-            lead_status: this.lead_status,
-            lead_owner: this.owner?.user_id,
-            tags: this.tags,
-          };
-          const res = await CreateNewLead(data);
-          var { success, message, errors } = res;
-          if (success) {
-            this.$toast[message.type](message.text);
-            this.resetLeadForm();
-            this.fetchAllLeadsHandler({ page: 1 });
-          } else {
-            this.errors = errors;
-          }
-          this.isSubmitCreateLeadForm = false;
-        } catch (error) {
-          this.$toast.error("Oops, something went wrong");
-          this.isSubmitCreateLeadForm = false;
-        }
-      },
-    },
-    mounted() {
-      this.modalInstance = new Modal(this.$refs.addNewLeadModal);
-    },
-  };
+
+  const emits = defineEmits(['refresh', 'close']);
+  const leadsStore = useLeadsStore();
+  const platformStore = usePlatformStore();
+
+  const modalInstance = computed(() => leadsStore.getAddNewLeadModal);
+  const selectedLeads = computed(() => leadsStore.getSelectedLeads);
+  const leadSources = computed(() => platformStore.getSources);
+  const leadStatuses = computed(() => platformStore.getStatuses);
+
+  const attributes = reactive({
+    name: null,
+    address: null,
+    phone_or_email: null,
+    lead_source: null,
+    lead_title: null,
+    lead_status: null,
+    lead_owner: null,
+  });
+  const errors = ref({});
+  const isLoading = ref(false);
+  const addNewLeadModalRef = ref(null);
+  const isLoadingUsers = ref(false);
+  const leadOwner = ref(null);
+
+  function hideModal() {
+    modalInstance.value?.hide();
+    emits('close', true);
+  }
+
+  function fetchUsers() {
+    if (platformStore.getUsers.length) return;
+    platformStore.callFetchUsers(({ loading }) => {
+      isLoadingUsers.value = loading;
+    });
+  }
+
+  async function handleCreateNewLead() {
+    errors.value = {};
+    isLoading.value = true;
+    attributes['lead_owner'] = leadOwner.value?.user_id;
+    await useApiRequest({
+      url: '/leads',
+      method: 'POST',
+      payload: attributes
+    }).then(res => {
+      const { success, message, errors: isErrors } = res;
+      if (success) {
+        $toast[message.type](message.text);
+        hideModal();
+        return emits('refresh', true);
+      }
+      errors.value = isErrors;
+    }).catch(error => {
+      $toast.error("Oops, something went wrong");
+    }).finally(() => {
+      isLoading.value = false;
+    });
+  }
+
+  onMounted(() => {
+    leadsStore.setAddNewLeadModal(new Modal(addNewLeadModalRef.value));
+  });
+
+
 </script>
 
 <template>
   <div class="modal fade add-new-lead-modal"
-    id="addNewLeadModal"
-    ref="addNewLeadModal"
-    aria-hidden="true"
-    aria-labelledby="addNewLeadModal"
-    tabindex="-1">
+    ref="addNewLeadModalRef">
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="row m-0">
           <div class="col-lg-8">
             <div class="modal-header py-lg-2 px-0">
               <div class="d-flex justify-content-center align-items-center">
-                <svg class="me-2 svg-5"
-                  width="24"
-                  height="24"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24">
-                  <path
-                    d="M15,14C12.33,14 7,15.33 7,18V20H23V18C23,15.33 17.67,14 15,14M6,10V7H4V10H1V12H4V15H6V12H9V10M15,12A4,4 0 0,0 19,8A4,4 0 0,0 15,4A4,4 0 0,0 11,8A4,4 0 0,0 15,12Z">
-                  </path>
-                </svg>
-                <span class="text-hard fw-bold fs-16px">New Lead</span>
+                <font-awesome-icon icon="fas fa-user-plus"
+                  class="fs-14px text-head me-2"></font-awesome-icon>
+                <span class="text-hard fw-bold fs-16px">Add New</span>
               </div>
               <div>
                 <button class="btn btn-light btn-sm btn-floating d-lg-none"
-                  @click="hideModalHandler()">
-                  <svg class="svg-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="22"
-                    viewBox="0 -960 960 960"
-                    width="22">
-                    <path
-                      d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                  </svg>
+                  @click="hideModal()">
+                  <font-awesome-icon icon="fas fa-close"
+                    class="fs-14px text-soft"></font-awesome-icon>
                 </button>
               </div>
             </div>
@@ -191,7 +104,7 @@
                   <span class="text-soft fs-12px ms-1">(Required)</span>
                 </label>
                 <input @click="delete errors?.name"
-                  v-model="name"
+                  v-model="attributes.name"
                   class="form-control"
                   type="text" />
                 <span class="fs-14px text-danger py-1 w-100 d-block"
@@ -204,7 +117,7 @@
                   <span class="text-soft fs-12px ms-1">(Optional)</span>
                 </label>
                 <input @click="delete errors?.address"
-                  v-model="address"
+                  v-model="attributes.address"
                   class="form-control"
                   type="text" />
                 <span class="fs-14px text-danger py-1 w-100 d-block"
@@ -217,7 +130,7 @@
                   <span class="text-soft fs-12px ms-1">(Optional)</span>
                 </label>
                 <input @click="delete errors?.phone_or_email"
-                  v-model="phone_or_email"
+                  v-model="attributes.phone_or_email"
                   class="form-control"
                   type="text" />
                 <span class="fs-14px text-danger py-1 w-100 d-block"
@@ -229,7 +142,7 @@
                   for="">Lead source
                   <span class="text-soft fs-12px ms-1">(Optional)</span>
                 </label>
-                <select-lead-source v-model="lead_source"
+                <select-lead-source v-model="attributes.lead_source"
                   :options="leadSources"
                   @click="delete errors?.lead_source" />
                 <span class="fs-14px text-danger py-1 w-100 d-block"
@@ -244,6 +157,7 @@
               <br />
             </div>
           </div>
+
           <div class="col-lg-4 lead-details-right">
             <div class="modal-header py-lg-2 px-0">
               <div class="d-flex justify-content-center align-items-center">
@@ -259,14 +173,16 @@
                 <span class="text-hard fw-bold fs-16px">Details</span>
               </div>
             </div>
+
             <div class="modal-body p-0 pt-3">
+
               <div class="mb-3">
                 <label class="form-label-title"
                   for="">Lead title
                   <span class="text-soft fs-12px ms-1">(Optional)</span>
                 </label>
                 <input @click="delete errors?.lead_title"
-                  v-model="lead_title"
+                  v-model="attributes.lead_title"
                   class="form-control"
                   type="text"
                   name=""
@@ -274,64 +190,62 @@
                 <span class="fs-14px text-danger py-1 w-100 d-block"
                   v-if="errors?.lead_title?.length">{{ errors?.lead_title[0] }}</span>
               </div>
+
               <div class="mb-3 position-relative">
                 <label class="form-label-title"
                   for="">Lead status
                   <span class="text-soft fs-12px ms-1">(Optional)</span>
                 </label>
-                <select-object-id :options="leadStatus"
+                <select-object-id :options="leadStatuses"
                   returnValue="status_id"
                   label="name"
-                  :selected="currentStatus"
-                  v-model="lead_status" />
+                  v-model="attributes.lead_status" />
                 <span class="fs-14px text-danger py-1 w-100 d-block"
                   v-if="errors?.lead_status?.length">{{ errors?.lead_status[0] }}</span>
               </div>
+
               <div class="mb-3 add-new-lead-owner-list-dropdown">
                 <label class="form-label-title"
                   for="">Owner
                   <span class="text-soft fs-12px ms-1">(Optional)</span></label>
                 <div @mouseover="delete errors?.lead_owner"
-                  @click="$refs['dropdownOwnerListRef']?.resetSearchOwner()"
+                  @click="fetchUsers"
                   class="form-control cursor-pointer owner-form-control"
                   data-mdb-toggle="dropdown">
                   <div class="owner-info">
                     <div class="circle-avatar me-2">
                       <img class="avatar"
-                        :src="owner?.profile_avatar"
+                        :src="leadOwner?.profile_avatar??AvatarIcon"
                         alt="" />
                     </div>
                     <div class="owner-name fs-16px fw--bold text-hard">
-                      {{ owner?.name }}
+                      {{ leadOwner?.name??'No Owner' }}
                     </div>
                   </div>
                 </div>
-                <dropdown-owner-list ref="dropdownOwnerListRef"
-                  :select-owner-handler="selectOwnerHandler"
-                  :owners="owners"
-                  :owner="owner" />
+                <dropdown-owner-list :loading="isLoadingUsers"
+                  :lead-owner="leadOwner"
+                  @change="(owner)=> leadOwner = owner" />
                 <span class="fs-14px text-danger py-1 w-100 d-block"
                   v-if="errors?.lead_owner?.length">{{ errors?.lead_owner[0] }}</span>
               </div>
-              <div class="mb-3">
+
+              <!-- <div class="mb-3">
                 <label class="form-label-title"
                   for="">Tags <span class="text-soft fs-12px ms-1">(Optional)</span>
                 </label>
                 <div class="form-control tags-list-form-control">
-                  <span v-for="(tag, index) in tags"
+                  <span v-for="(tag, index) in []"
                     :key="index"
                     class="tag-item">
                     <span class="text text-hard">{{ tag }}</span>
-                    <span @click="removeTagHandler(tag)"
-                      class="close">&times;</span>
+                    <span class="close">&times;</span>
                   </span>
                   <input @click="delete errors?.tags"
                     @keydown.enter="addNewTagHandler"
                     @blur="addNewTagHandler"
                     @keydown.delete="
-                      (e) =>
-                        e.target.value.length === 0 && removeTagHandler(null)
-                    "
+                      (e) => e.target.value.length === 0 && removeTagHandler(null)"
                     class="tags-form-control"
                     type="text"
                     placeholder="Type here"
@@ -339,10 +253,11 @@
                 </div>
                 <span class="fs-14px text-danger py-1 w-100 d-block"
                   v-if="errors?.tags?.length">{{ errors?.tags[0] }}</span>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
+
         <div class="row m-0">
           <div class="col-lg-8 pb-2">
             <div class="d-flex justify-content-between align-items-center">
@@ -353,8 +268,8 @@
                 </button>
               </div>
               <div>
-                <loading-button :is-loading="isSubmitCreateLeadForm"
-                  @submit="createNewLeadHandler">Save Change</loading-button>
+                <loading-button :is-loading="isLoading"
+                  @submit="handleCreateNewLead">Save Change</loading-button>
               </div>
             </div>
           </div>

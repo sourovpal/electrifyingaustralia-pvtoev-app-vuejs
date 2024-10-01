@@ -1,7 +1,7 @@
 <script setup>
     import Quill from 'quill';
     import { reactive, ref, onMounted, onUnmounted, computed } from 'vue';
-    import { useLeadStore } from '@stores';
+    import { usePlatformStore } from '@stores';
     import "quill-mention/autoregister";
     import "quill/dist/quill.core.css";
     import "quill-mention/dist/quill.mention.css";
@@ -15,15 +15,15 @@
     } from "file-extension-icon-js";
     import { $toast } from '@config';
 
-    const leadStore = useLeadStore();
+    const platformStore = usePlatformStore();
     const quillEditorRef = ref();
     const quillEditor = ref();
     const quillDraftId = 'quill_local_draft_history_message';
     const selectedUsers = ref([]);
-    const users = computed(() => leadStore.getUsers);
+    const users = computed(() => platformStore.getUsers);
     const mentions = ref([]);
     const clipboardFiles = ref([]);
-    const $leadId = computed(() => leadStore.getEditLeadId);
+    const $leadId = computed(() => platformStore.getEditLeadId);
 
     const quillOptions = {
         theme: 'bubble',
@@ -74,7 +74,7 @@
 
     function handleFetchUsers() {
         if (!users.value?.length) {
-            leadStore.callFetchUsers(() => { });
+            platformStore.callFetchUsers(() => { });
         }
     }
 
@@ -100,7 +100,7 @@
             if (success) {
                 mentions.value = [];
                 quillEditor.value.root.innerHTML = '';
-                leadStore.callFetchTimelineLogs();
+                platformStore.callFetchTimelineLogs();
                 return;
             }
             $toast[message.type](message.text);

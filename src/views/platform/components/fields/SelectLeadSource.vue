@@ -2,9 +2,7 @@
   <div class="custom-select"
     ref="selectLeadSourceRef">
     <div class="dropdown px-0 position-relative"
-      :class="{
-        open: isOpen && filterOptions.length,
-        'small-size':small
+      :class="{open: isOpen && filterOptions.length, 'small-size':small
       }">
       <input class="form-control"
         :class="{ 'form-control-sm': small }"
@@ -14,7 +12,7 @@
         :placeholder="placeholder"
         v-model="selectedOption" />
 
-      <div v-if="isOpen && filterOptions.length"
+      <div v-show="isOpen && filterOptions.length"
         class="assign-options position-absolute">
         <ul class="item-list">
           <li class="item px-3 py-1"
@@ -73,7 +71,7 @@
     },
     mounted() {
       onClickOutside(this.$refs["selectLeadSourceRef"], (event) => {
-        if(this.isOpen){
+        if (this.isOpen) {
           this.$emit("update:modelValue", this.selectedOption);
           this.$emit("change", this.selectedOption);
         }
@@ -93,16 +91,6 @@
 
 <style lang="scss"
   scoped>
-  .v-enter-active,
-  .v-leave-active {
-    transition: opacity 0.5s ease;
-  }
-
-  .v-enter-from,
-  .v-leave-to {
-    opacity: 0;
-  }
-
   .form-control {
     box-shadow: none !important;
     outline: none !important;
@@ -153,7 +141,7 @@
   .dropdown {
     &.open {
       .form-control {
-        border-bottom: none !important;
+        border-bottom-color: transparent !important;
         border-bottom-left-radius: 0px;
         border-bottom-right-radius: 0px;
       }

@@ -2,18 +2,18 @@
   import { Modal } from "mdb-ui-kit";
   import DropdownOwnerList from "../../components/dropdowns/DropdownOwnerList.vue";
   import { ConfirmQualify } from "@actions/LeadAction";
-  import { useLeadStore } from "@stores";
-  import SelectObjectId from './fields/SelectObjectId.vue';
+  import { usePlatformStore } from "@stores";
+  import SelectObjectId from '../../components/fields/SelectObjectId.vue';
   import { AvatarIcon } from "@assets/icons";
   import { ref, onMounted, watch, computed, defineExpose } from 'vue';
   import { $toast } from '@config';
   import { useApiRequest } from '@actions';
 
-  const leadStore = useLeadStore();
-  const editLeadId = computed(() => leadStore.getEditLeadId);
-  const leadOwner = computed(() => leadStore.getLeadOwner);
-  const users = computed(() => leadStore.getUsers);
-  const pipelines = computed(() => leadStore.getPipelines);
+  const platformStore = usePlatformStore();
+  const editLeadId = computed(() => platformStore.getEditLeadId);
+  const leadOwner = computed(() => platformStore.getLeadOwner);
+  const users = computed(() => platformStore.getUsers);
+  const pipelines = computed(() => platformStore.getPipelines);
 
   const errors = ref({});
   const commant = ref(null);
@@ -36,13 +36,13 @@
   function showModalHandler() {
     $toast.clear();
     if (!pipelines.value.length) {
-      leadStore.callFetchPipeline(function ({ loading, pipelines }) {
+      platformStore.callFetchPipeline(function ({ loading, pipelines }) {
         pipelineIsLoading.value = loading;
       });
     }
 
     if (!users.value?.length) {
-      leadStore.callFetchUsers(function ({ loading, users }) {
+      platformStore.callFetchUsers(function ({ loading, users }) {
         usersIsLoading.value = loading;
       });
     }
@@ -64,7 +64,7 @@
     errors.value = {};
     selectedStage.value = null;
     selectedPipeline.value = pipelineOption;
-    leadStore.callFetchPipelineStages(pipelineOption.pipeline_id, function ({ loading, stages, message }) {
+    platformStore.callFetchPipelineStages(pipelineOption.pipeline_id, function ({ loading, stages, message }) {
       stagesIsLoading.value = loading;
       if (!loading && stages) {
         pipelineStages.value = stages;
@@ -88,11 +88,12 @@
     selectedOwner.value = owner;
   }
 
-  function confirmQualifyHandler() {
-    useApiRequest({
+  async function confirmQualifyHandler() {
+    await useApiRequest({
       url: `leads/${editLeadId.value}/confirm-qualify`,
       method: 'POST',
       payload: {
+        lead_id: editLeadId.value,
         pipeline: selectedPipeline.value?.pipeline_id,
         pipeline_stage: selectedStage.value?.stage_id,
         owner: selectedOwner.value?.user_id,
@@ -104,13 +105,13 @@
         errors.value = args.errors;
         return;
       }
-      leadStore.callFetchTimelineLogs();
-      leadStore.setLeadPipeline(selectedPipeline.value);
-      leadStore.setLeadStage(selectedStage.value);
-      leadStore.callFetchLeadStages(leadStore.getEditLeadId);
-      leadStore.callFetchProperties(leadStore.getEditLeadId);
+      platformStore.callFetchTimelineLogs();
+      platformStore.setLeadPipeline(selectedPipeline.value);
+      platformStore.setLeadStage(selectedStage.value);
+      platformStore.callFetchLeadStages(platformStore.getEditLeadId);
+      platformStore.callFetchProperties(platformStore.getEditLeadId);
       hideModalHandler();
-      leadStore.setIsPipelineLead(true);
+      platformStore.setIsPipelineLead(true);
       $toast[message.type](message.text);
     }).catch(error => {
       $toast.error("Oops, something went wrong");

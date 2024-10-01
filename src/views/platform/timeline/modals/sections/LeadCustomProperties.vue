@@ -1,10 +1,10 @@
 <script setup>
   import { defineProps, computed } from 'vue';
-  import MultipleSelectVue from "../fields/MultipleSelect.vue";
-  import { useLeadStore } from '@stores';
+  import MultipleSelectVue from "../../../components/fields/MultipleSelect.vue";
+  import { usePlatformStore } from '@stores';
   // import YesOrNoInput from "../fields/YesOrNoInput.vue";
-  const leadStore = useLeadStore();
-  const propertiesValues = computed(() => leadStore.getLeadPropertiesValues);
+  const platformStore = usePlatformStore();
+  const propertiesValues = computed(() => platformStore.getLeadPropertiesValues);
   const props = defineProps({
     properties: { type: Array, default: [] }
   });

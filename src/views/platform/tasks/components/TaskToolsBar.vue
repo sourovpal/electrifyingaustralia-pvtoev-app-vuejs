@@ -5,9 +5,9 @@
     import RightActionBar from '@components/ActionBar/RightActionBar.vue';
     import DropdownOwnerList from '../../components/dropdowns/DropdownOwnerList.vue';
     import { AvatarIcon } from "@assets/icons";
-    import { useLeadStore } from "@stores";
+    import { usePlatformStore } from "@stores";
 
-    const leadStore = useLeadStore();
+    const platformStore = usePlatformStore();
     const props = defineProps({
         pagination: { type: Object },
         isLoading: { type: Boolean, default: false }
@@ -18,8 +18,8 @@
     const owner = ref(null);
 
     async function getUsers() {
-        if(!leadStore.getUsers?.length){
-            leadStore.callFetchUsers(function ({ loading }) {
+        if(!platformStore.getUsers?.length){
+            platformStore.callFetchUsers(function ({ loading }) {
                 userIsLoading.value = loading;
             });
         }

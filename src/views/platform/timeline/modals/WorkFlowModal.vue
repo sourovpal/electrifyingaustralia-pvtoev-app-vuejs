@@ -1,12 +1,12 @@
 <script setup>
     import { Modal } from "mdb-ui-kit";
     import { ref, onMounted, watch, computed, defineExpose } from 'vue';
-    import { useLeadStore } from "@stores";
+    import { usePlatformStore } from "@stores";
     import { $toast } from '@config';
     import { useApiRequest } from '@actions';
     import WorkflowTasks from './sections/WorkflowTasks.vue';
 
-    const leadStore = useLeadStore();
+    const platformStore = usePlatformStore();
     const workflowModalRef = ref(null);
     const modalInstance = ref(null);
     const taskWorkflows = ref([]);
@@ -21,7 +21,7 @@
         isLoading.value = true;
         modalInstance.value.show();
         await useApiRequest({
-            url: `/platform/${leadStore.getEditLeadId}/workflows`,
+            url: `/platform/${platformStore.getEditLeadId}/workflows`,
         }).then(res => {
             const { success, workflows, message } = res;
             if (success) {

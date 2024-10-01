@@ -5,7 +5,7 @@
     import { ref, watch, onMounted, nextTick, onUnmounted, watchEffect } from 'vue';
     import LogMessage from '../events/LogMessage.vue';
     import MessageBox from './MessageBox.vue';
-    import { useLeadStore } from "@stores";
+    import { usePlatformStore } from "@stores";
     import { useApiRequest } from "@actions/api";
     import { useRoute } from 'vue-router';
     import moment from 'moment';
@@ -13,7 +13,7 @@
     import { mergeTimelineLogs } from '@helpers';
     import ScrollBottomPosition from '@components/ScrollBottomPosition.vue';
 
-    const leadStore = useLeadStore();
+    const platformStore = usePlatformStore();
     const timelineLogs = ref([]);
     const route = useRoute();
     const nextId = ref(0);
@@ -71,14 +71,14 @@
     }
 
     onMounted(() => {
-        leadStore.setFetchTimelineLogs(resetTimelineLogs);
+        platformStore.setFetchTimelineLogs(resetTimelineLogs);
     });
 
 </script>
 
 <template>
     <div class="col-left"
-        :class="{'is-pipeline-lead':leadStore.isPipelineLead}">
+        :class="{'is-pipeline-lead':platformStore.isPipelineLead}">
         <scroll-bottom-position ref="scrollBottomPositionRef"
             @infinite="fetchTimelineLogsHandler">
             <template v-for="(groupLogs, createdDate) in timelineLogs"

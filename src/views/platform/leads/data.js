@@ -1,4 +1,4 @@
-const headers = [
+export const headers = [
     {
         unique_id:'lead',
         title:'Lead',
@@ -56,7 +56,3 @@ const headers = [
         title:'Owner',
     },
 ];
-
-export {
-    headers
-}

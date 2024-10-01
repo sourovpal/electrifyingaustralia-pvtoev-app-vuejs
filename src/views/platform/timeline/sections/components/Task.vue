@@ -2,14 +2,14 @@
     import { AvatarIcon } from "@assets/icons";
     import { ref, defineProps, onMounted, defineEmits, computed, watch, nextTick, useAttrs } from 'vue';
     import { onClickOutside } from '@vueuse/core';
-    import { useLeadStore } from '@stores';
+    import { usePlatformStore } from '@stores';
     import { useApiRequest } from '@actions';
     import { $toast } from '@config';
     import CustomModal from '@components/modals/CustomModal.vue';
     import DropdownOwnerList from '../../../components/dropdowns/DropdownOwnerList.vue';
     import moment from 'moment';
     const attrs = useAttrs();
-    const leadStore = useLeadStore();
+    const platformStore = usePlatformStore();
     const props = defineProps({
         task: { type: Object, default: {} },
         isNew: { type: Boolean, default: false },
@@ -20,8 +20,8 @@
     const deleteConfirmModalRef = ref(null);
     const isUserLoading = ref(false);
     const isLoading = ref(false);
-    const users = computed(() => leadStore.getUsers);
-    const editLeadId = computed(() => leadStore.getEditLeadId);
+    const users = computed(() => platformStore.getUsers);
+    const editLeadId = computed(() => platformStore.getEditLeadId);
     const leadTask = ref({});
     const toggleTaskDelete = ref(false);
     const tempTitle = ref(null);
@@ -50,7 +50,7 @@
         }).then(res => {
             const { success, message } = res;
             if (success) {
-                leadStore.callFetchLeadTasks(editLeadId.value, function ({ loading }) {
+                platformStore.callFetchLeadTasks(editLeadId.value, function ({ loading }) {
                     if (!loading) {
                         emits('toggleNewTask', false);
                     }
@@ -159,7 +159,7 @@
             const { success, message } = res;
             if (success) {
                 toggleTaskDeleteConfirmModal(false);
-                leadStore.callFetchLeadTasks(editLeadId.value, function ({ loading }) {
+                platformStore.callFetchLeadTasks(editLeadId.value, function ({ loading }) {
                 });
                 return;
             }
@@ -184,7 +184,7 @@
 
     function fetchUsers() {
         if (!users.value.length) {
-            leadStore.callFetchUsers(function ({ loading }) {
+            platformStore.callFetchUsers(function ({ loading }) {
                 isUserLoading.value = loading;
             });
         }

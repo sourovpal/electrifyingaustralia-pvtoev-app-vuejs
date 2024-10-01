@@ -46,6 +46,10 @@ html::-webkit-scrollbar {
   width: 0
 }
 
+#app {
+  height: 100vh;
+}
+
 .content {
   padding-left: 0rem;
   width: var(--content-body-width);

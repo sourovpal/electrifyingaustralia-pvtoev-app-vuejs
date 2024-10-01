@@ -5,26 +5,26 @@
   import PipelineStages from './sections/PipelineStages.vue';
   import TimelineHistory from "./sections/TimelineHistory.vue";
   import RightSidebarTimeline from "./sections/RightSidebarTimeline.vue";
-  import { useLeadStore } from '@stores';
+  import { usePlatformStore } from '@stores';
   import { useRoute } from 'vue-router';
-  const leadStore = useLeadStore();
+  const platformStore = usePlatformStore();
   const route = useRoute();
   const $leadId = route.params.id;
-  const isPipelineLead = computed(() => leadStore.getIsPipelineLead);
+  const isPipelineLead = computed(() => platformStore.getIsPipelineLead);
 
   onMounted(() => {
-    leadStore.setEditLeadId($leadId);
-    leadStore.callFetchStatuses();
-    leadStore.setIsFirstLoading(true);
-    leadStore.callFetchNewLead($leadId, true);
-    leadStore.callFetchLeadContacts($leadId);
-    leadStore.callFetchProperties($leadId);
-    leadStore.callFetchLeadStages($leadId);
-    leadStore.callFetchLeadTasks($leadId);
+    platformStore.setEditLeadId($leadId);
+    platformStore.callFetchStatuses();
+    platformStore.setIsFirstLoading(true);
+    platformStore.callFetchNewLead($leadId, true);
+    platformStore.callFetchLeadContacts($leadId);
+    platformStore.callFetchProperties($leadId);
+    platformStore.callFetchLeadStages($leadId);
+    platformStore.callFetchLeadTasks($leadId);
   });
 
   onUnmounted(() => {
-    leadStore.resetLeadEditTimeline();
+    platformStore.resetLeadEditTimeline();
   });
 
 

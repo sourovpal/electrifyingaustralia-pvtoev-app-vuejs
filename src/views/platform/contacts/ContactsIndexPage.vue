@@ -12,10 +12,10 @@
     import { $toast } from '@config';
     import { useDebounceFn } from '@vueuse/core';
     import ContactEditModal from '../timeline/modals/ContactEditModal.vue'
-    import { useLeadStore } from '@stores';
+    import { usePlatformStore } from '@stores';
     import { handleDateTimeFormat } from '@helpers';
 
-    const leadStore = useLeadStore();
+    const platformStore = usePlatformStore();
     const contactEditModalRef = ref(null);
     const isFirstLoading = ref(true);
     const isLoading = ref(true);
@@ -71,12 +71,10 @@
     }, 2000);
 
     function selectEditContact(contact) {
-        leadStore.setLeadContacts([]);
-        leadStore.setEditLead({});
+        platformStore.setEditLead({});
         if (contact.lead) {
-            leadStore.callFetchLeadContacts(contact.lead.lead_id);
-            leadStore.setEditLead(contact.lead);
-            contactEditModalRef.value.showModalHandler(contact);
+            platformStore.setEditLead(contact.lead);
+            contactEditModalRef.value?.showModalHandler(contact);
         }
     }
 
@@ -151,7 +149,7 @@
         </Datatable>
     </section>
     <ContactEditModal ref="contactEditModalRef"
-        @close="getContacts({page:1})"
+        @update="getContacts({page:1})"
         show-lead />
 </template>
 <style>

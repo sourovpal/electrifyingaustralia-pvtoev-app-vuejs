@@ -1,21 +1,21 @@
 <script setup>
     import { ref, computed } from 'vue';
     import SlideUpDown from "vue-slide-up-down";
-    import { useLeadStore } from '@stores';
+    import { usePlatformStore } from '@stores';
     import { useApiRequest } from '@actions/api';
     import { useDebounceFn } from '@vueuse/core';
     import { $toast } from '@config';
 
-    const leadStore = useLeadStore();
+    const platformStore = usePlatformStore();
     const toggle = ref(true);
-    const editLead = computed(() => leadStore.getEditLead);
-    const editLeadId = computed(() => leadStore.getEditLeadId);
+    const editLead = computed(() => platformStore.getEditLead);
+    const editLeadId = computed(() => platformStore.getEditLeadId);
     const leadNotes = computed({
         get() {
-            return leadStore.getEditLead.notes;
+            return platformStore.getEditLead.notes;
         },
         set(notes) {
-            return leadStore.getEditLead.notes = notes;
+            return platformStore.getEditLead.notes = notes;
         }
     });
 

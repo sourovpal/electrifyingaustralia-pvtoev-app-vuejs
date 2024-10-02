@@ -111,7 +111,6 @@
         const { message } = res;
         this.$toast[message.type](message.text);
       } catch (error) {
-        console.log(error);
       }
       setTimeout(() => {
         if (res) {

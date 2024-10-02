@@ -33,7 +33,6 @@ function handleWorkflowDeleteConfirm() {
         })
         .catch(e => {
             $toast.error('Something went wrong');
-            console.log(e);
         })
         .finally(() => {
             openWorkflowDeleteConfirmationModal.value = false;

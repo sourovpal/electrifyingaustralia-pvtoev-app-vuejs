@@ -82,7 +82,6 @@ export const useAppStore = defineStore('app', {
         await api.get(`/app`).then((res) => {
           this.setLocalStorageData(res.data);
         }).catch((error) => {
-          console.log(error);
         });
       } catch (error) { }
     },

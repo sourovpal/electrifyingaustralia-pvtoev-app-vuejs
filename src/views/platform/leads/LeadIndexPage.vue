@@ -5,12 +5,15 @@
   import LeadDataTable from './components/LeadDataTable.vue';
   import { useLeadsStore, usePlatformStore } from '@stores';
   import { useRoute } from 'vue-router';
-  import AddNewLeadModal from './components/modals/AddNewLeadModal.vue'
-  import MultipleLeadDeleteModal from './components/modals/MultipleLeadDeleteModal.vue'
+  import AddNewLeadModal from './components/modals/AddNewLeadModal.vue';
+  import MultipleLeadDeleteModal from './components/modals/MultipleLeadDeleteModal.vue';
+  import UploadSpreadsheetModal from './components/modals/UploadSpreadsheetModal.vue';
+  import FilterRightSidebar from './components/FilterRightSidebar.vue';
 
   const route = useRoute();
   const leadsStore = useLeadsStore();
   const platformStore = usePlatformStore();
+  const toggleFilter = computed(() => leadsStore.getToggleFilter);
 
 
   function handleFetchLeads(payload, fetch = false, reset = false) {
@@ -24,7 +27,6 @@
 
   watch(route, () => {
     let payload = route.query;
-    payload['page'] = 1;
     handleFetchLeads(payload, true, true);
   }, { deep: true });
 
@@ -41,11 +43,12 @@
   <section class="content">
     <search-bar></search-bar>
     <lead-tools-bar></lead-tools-bar>
+    <filter-right-sidebar v-if="!(toggleFilter === 'render')"></filter-right-sidebar>
     <lead-data-table></lead-data-table>
   </section>
   <add-new-lead-modal @refresh="handleFetchLeads({page:1}, true, true)"></add-new-lead-modal>
   <multiple-lead-delete-modal @refresh="handleFetchLeads(route.query, true)"></multiple-lead-delete-modal>
-  <!-- <upload-spreadsheet-modal ref="UploadSpreadsheetModalRef" /> -->
+  <upload-spreadsheet-modal></upload-spreadsheet-modal>
 </template>
 <style>
   .tbl-lead-owner-list .dropdown-menu {

@@ -8,7 +8,7 @@
     import DataTableSkeletor from './DataTableSkeletor.vue';
     import { AvatarIcon } from "@assets/icons";
     import { useLeadsStore, usePlatformStore } from '@stores';
-    import { handleDateTimeFormat } from '@helpers';
+    import { handleDateTimeFormat, formatTimeAgo } from '@helpers';
     import EmptyPage from '@components/Errors/EmptyPage.vue';
     import ErrorPage from '@components/Errors/ErrorPage.vue';
     import { $toast } from '@config';
@@ -18,7 +18,6 @@
 
     const leadsStore = useLeadsStore();
     const platformStore = usePlatformStore();
-    const disabledHeaderColumns = ref([]);
     // Computed
     const leads = computed(() => leadsStore.getLeads);
     const isFirstLoading = computed(() => leadsStore.getIsFirstLoading);
@@ -27,6 +26,8 @@
     const isLoading = computed(() => leadsStore.getIsLoading);
     const leadProperties = computed(() => platformStore.getLeadProperties);
     const statuses = computed(() => platformStore.getStatuses);
+    const headerAttributes = computed(() => leadsStore.getHeaders);
+
     const isStatusUpdating = ref(null);
     const isOwnerUpdating = ref(null);
     const isLoadingUsers = ref(false);
@@ -146,13 +147,13 @@
                 style="width: 3.6rem; flex-grow: 1">
             </div>
 
-            <div v-show="!disabledHeaderColumns.includes('lead')"
+            <div v-show="!headerAttributes.includes('lead')"
                 class="tbl-th"
                 style="width: 20rem; flex-grow: 1">
                 Lead
             </div>
 
-            <div v-show="!disabledHeaderColumns.includes('source')"
+            <div v-show="!headerAttributes.includes('source')"
                 @click="leadSortedHandler('source')"
                 class="tbl-th cursor-pointer"
                 style="width: 10rem; flex-grow: 1">
@@ -162,7 +163,7 @@
                     :order="'order'" />
             </div>
 
-            <div v-show="!disabledHeaderColumns.includes('status')"
+            <div v-show="!headerAttributes.includes('status')"
                 @click="leadSortedHandler('status')"
                 class="tbl-th cursor-pointer pe-0"
                 style="width: 12rem; flex-grow: 1">
@@ -172,43 +173,43 @@
                     :order="'order'" />
             </div>
 
-            <div v-show="!disabledHeaderColumns.includes('phone_number')"
+            <div v-show="!headerAttributes.includes('phone_number')"
                 class="tbl-th text-end"
                 style="width: 13rem; flex-grow: 1">
                 Phone Number
             </div>
 
-            <div v-show="!disabledHeaderColumns.includes('email_address')"
+            <div v-show="!headerAttributes.includes('email_address')"
                 class="tbl-th"
                 style="width: 15rem; flex-grow: 1">
                 Email Address
             </div>
 
-            <div v-show="!disabledHeaderColumns.includes('address_line_one')"
+            <div v-show="!headerAttributes.includes('address_line_one')"
                 class="tbl-th"
                 style="width: 10rem; flex-grow: 1">
                 Address One
             </div>
 
-            <div v-show="!disabledHeaderColumns.includes('address_line_two')"
+            <div v-show="!headerAttributes.includes('address_line_two')"
                 class="tbl-th"
                 style="width: 10rem; flex-grow: 1">
                 Address Two
             </div>
 
-            <div v-show="!disabledHeaderColumns.includes('city')"
+            <div v-show="!headerAttributes.includes('city')"
                 class="tbl-th"
                 style="width: 10rem; flex-grow: 1">
                 City
             </div>
 
-            <div v-show="!disabledHeaderColumns.includes('state')"
+            <div v-show="!headerAttributes.includes('state')"
                 class="tbl-th"
                 style="width: 10rem; flex-grow: 1">
                 State
             </div>
 
-            <div v-show="!disabledHeaderColumns.includes('post_code')"
+            <div v-show="!headerAttributes.includes('post_code')"
                 @click="leadSortedHandler('post_code')"
                 class="tbl-th cursor-pointer"
                 style="width: 10rem; flex-grow: 1">
@@ -218,7 +219,7 @@
                     :order="'order'" />
             </div>
 
-            <div v-show="!disabledHeaderColumns.includes('country')"
+            <div v-show="!headerAttributes.includes('country')"
                 class="tbl-th"
                 style="width: 10rem; flex-grow: 1">
                 Country
@@ -229,12 +230,12 @@
             <div v-for="(propertie, index) in leadProperties"
                 :key="index"
                 class="tbl-th"
-                v-show="!disabledHeaderColumns.includes(propertie.unique_id)"
+                v-show="!headerAttributes.includes(propertie.unique_id)"
                 style="width: 12rem; flex-grow: 1">
                 <span class="text-overflow-ellipsis w-100">{{ propertie.label }}</span>
             </div>
 
-            <div v-show="!disabledHeaderColumns.includes('last_update')"
+            <div v-show="!headerAttributes.includes('last_update')"
                 @click="leadSortedHandler('updated_at')"
                 class="tbl-th cursor-pointer"
                 style="width: 10rem; flex-grow: 1">
@@ -243,7 +244,7 @@
                     :column="'column'"
                     :order="'order'" />
             </div>
-            <div v-show="!disabledHeaderColumns.includes('first_create')"
+            <div v-show="!headerAttributes.includes('first_create')"
                 @click="leadSortedHandler('created_at')"
                 class="tbl-th cursor-pointer"
                 style="width: 10rem; flex-grow: 1">
@@ -253,7 +254,7 @@
                     :order="'order'" />
             </div>
 
-            <div v-show="!disabledHeaderColumns.includes('owner')"
+            <div v-show="!headerAttributes.includes('owner')"
                 class="tbl-th"
                 style="width: 10rem; flex-grow: 1">
                 Owner
@@ -273,7 +274,7 @@
                         :checked="!!selectedLeads.includes(lead.lead_id)" />
                 </div>
 
-                <div v-show="!disabledHeaderColumns.includes('lead')"
+                <div v-show="!headerAttributes.includes('lead')"
                     style="width: 20rem; flex-grow: 1"
                     class="tbl-td full-width">
                     <router-link class="text-overflow-ellipsis"
@@ -282,13 +283,13 @@
                     </router-link>
                 </div>
 
-                <div v-show="!disabledHeaderColumns.includes('source')"
+                <div v-show="!headerAttributes.includes('source')"
                     style="width: 10rem; flex-grow: 1"
                     class="tbl-td">
                     <span class="text-overflow-ellipsis">{{ lead.source?.title }}</span>
                 </div>
 
-                <div v-show="!disabledHeaderColumns.includes('status')"
+                <div v-show="!headerAttributes.includes('status')"
                     style="width: 12rem; flex-grow: 1"
                     class="tbl-td  pe-0">
                     <div class="dropdown w-100">
@@ -330,7 +331,7 @@
                     </div>
                 </div>
 
-                <div v-show="!disabledHeaderColumns.includes('phone_number')"
+                <div v-show="!headerAttributes.includes('phone_number')"
                     style="width: 13rem; flex-grow: 1"
                     class="tbl-td">
                     <div class="d-flex justify-content-between align-items-center w-100">
@@ -358,7 +359,7 @@
                     </div>
                 </div>
 
-                <div v-show="!disabledHeaderColumns.includes('email_address')"
+                <div v-show="!headerAttributes.includes('email_address')"
                     style="width: 15rem; flex-grow: 1"
                     class="tbl-td">
                     <a class="text-overflow-ellipsis">
@@ -366,37 +367,37 @@
                     </a>
                 </div>
 
-                <div v-show="!disabledHeaderColumns.includes('address_line_one')"
+                <div v-show="!headerAttributes.includes('address_line_one')"
                     style="width: 10rem; flex-grow: 1"
                     class="tbl-td">
                     <span class="text-overflow-ellipsis">{{ lead.address_line_one }}</span>
                 </div>
 
-                <div v-show="!disabledHeaderColumns.includes('address_line_two')"
+                <div v-show="!headerAttributes.includes('address_line_two')"
                     style="width: 10rem; flex-grow: 1"
                     class="tbl-td">
                     <span class="text-overflow-ellipsis">{{ lead.address_line_two }}</span>
                 </div>
 
-                <div v-show="!disabledHeaderColumns.includes('city')"
+                <div v-show="!headerAttributes.includes('city')"
                     style="width: 10rem; flex-grow: 1"
                     class="tbl-td">
                     {{ lead.city }}
                 </div>
 
-                <div v-show="!disabledHeaderColumns.includes('state')"
+                <div v-show="!headerAttributes.includes('state')"
                     style="width: 10rem; flex-grow: 1"
                     class="tbl-td">
                     {{ lead.state }}
                 </div>
 
-                <div v-show="!disabledHeaderColumns.includes('post_code')"
+                <div v-show="!headerAttributes.includes('post_code')"
                     style="width: 10rem; flex-grow: 1"
                     class="tbl-td">
                     {{ lead.post_code }}
                 </div>
 
-                <div v-show="!disabledHeaderColumns.includes('country')"
+                <div v-show="!headerAttributes.includes('country')"
                     style="width: 10rem; flex-grow: 1"
                     class="tbl-td">
                     {{ lead.country }}
@@ -407,25 +408,25 @@
                 <div v-for="(propertie, index) in leadProperties"
                     :key="index"
                     :id="propertie?.unique_id"
-                    v-show="!disabledHeaderColumns.includes(propertie.unique_id)"
+                    v-show="!headerAttributes.includes(propertie.unique_id)"
                     class="tbl-td"
                     style="width: 12rem; flex-grow: 1"
                     v-html="getPropertieValue(propertie, lead)">
                 </div>
 
-                <div v-show="!disabledHeaderColumns.includes('last_update')"
+                <div v-show="!headerAttributes.includes('last_update')"
                     style="width: 10rem; flex-grow: 1"
                     class="tbl-td">
-                    {{ handleDateTimeFormat(lead.updated_at) }}
+                    {{ formatTimeAgo(lead.updated_at, 30, 'Do MMMM, YYYY') }}
                 </div>
 
-                <div v-show="!disabledHeaderColumns.includes('first_create')"
+                <div v-show="!headerAttributes.includes('first_create')"
                     style="width: 10rem; flex-grow: 1"
                     class="tbl-td">
-                    {{ handleDateTimeFormat(lead.created_at) }}
+                    {{ formatTimeAgo(lead.created_at, 30, 'Do MMMM, YYYY') }}
                 </div>
 
-                <div v-show="!disabledHeaderColumns.includes('owner')"
+                <div v-show="!headerAttributes.includes('owner')"
                     style="width: 10rem; flex-grow: 1"
                     class="tbl-td">
                     <div class="settings-group-item owner-list-dropdown position-relative">

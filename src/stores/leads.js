@@ -1,5 +1,17 @@
 import { defineStore } from 'pinia';
 import { useApiRequest } from '@actions';
+import Storage from "@helpers/Storage";
+
+const leadHeaderStore = new Storage('header_properties');
+
+let initialHeaders = leadHeaderStore.get();
+
+if (Array.isArray(initialHeaders)) {
+    initialHeaders = initialHeaders;
+} else {
+    initialHeaders = [];
+}
+
 
 function validateObject(payload) {
     if (typeof payload == 'object' && payload != null && !Array.isArray(payload)) {
@@ -14,6 +26,7 @@ export const useLeadsStore = defineStore('leads', {
         return {
             isError: false,
             fetchQuery: {},
+            filterQuerys: {},
             leads: [],
             leadPagination: {
                 prev_page: null,
@@ -32,6 +45,9 @@ export const useLeadsStore = defineStore('leads', {
             isSomeLeadsSelected: false,
             multipleDeleteModal: null,
             addNewLeadModal: null,
+            uploadSpreadsheetModal: null,
+            headers: initialHeaders,
+            toggleFilter: false,
         }
     },
     getters: {
@@ -67,20 +83,53 @@ export const useLeadsStore = defineStore('leads', {
         },
         getAddNewLeadModal(stage) {
             return stage.addNewLeadModal;
-        }
+        },
+        getUploadSpreadsheetModal(stage) {
+            return stage.uploadSpreadsheetModal;
+        },
+        getHeaders(stage) {
+            return stage.headers;
+        },
+        getToggleFilter(stage) {
+            return stage.toggleFilter;
+        },
+        getFilterQuerys(stage) {
+            return stage.filterQuerys;
+        },
     },
     actions: {
         setError(payload) {
             return this.isError = payload;
         },
-        setFetchQuery(payload = {}, fetch = false) {
+        setFetchQuery(payload = {}, isFetch = false) {
+
             if (validateObject(payload)) {
                 this.fetchQuery = { ...this.fetchQuery, ...payload };
             } else {
                 this.fetchQuery = {};
             }
-            if (fetch) {
+
+            if (Object.keys(this.filterQuerys).length) {
+                this.fetchQuery['filters'] = JSON.stringify(this.filterQuerys);
+            } else {
+                delete this.fetchQuery['filters'];
+            }
+
+            if (isFetch) {
                 this.callFetchLeads();
+            }
+        },
+        setFilterQuerys(payload = {}, isNew = false, isReset = false) {
+            if (validateObject(payload) && !isNew && !isReset) {
+                this.filterQuerys = { ...this.filterQuerys, payload };
+            }
+
+            if (validateObject(payload) && isNew && !isReset) {
+                this.filterQuerys = payload;
+            }
+
+            if (isReset) {
+                this.filterQuerys = {};
             }
         },
         setLeads(payload = []) {
@@ -136,16 +185,30 @@ export const useLeadsStore = defineStore('leads', {
         setAddNewLeadModal(payload) {
             this.addNewLeadModal = payload;
         },
+        setUploadSpreadsheetModal(payload) {
+            this.uploadSpreadsheetModal = payload;
+        },
+        setHeaders(payload) {
+            if (Array.isArray(payload)) {
+                this.headers = payload;
+                leadHeaderStore.set(payload);
+            }
+        },
+        setToggleFilter(payload) {
+            this.toggleFilter = payload;
+        },
         // 
         callFetchLeads($callback = () => { }) {
             this.setSelectedLeads([]);
             this.setIsLoading(true);
             this.setError(false);
+            this.fetchQuery;
             useApiRequest({
                 url: '/leads',
                 payload: this.fetchQuery,
             }).then(res => {
                 const { success, message, leads, pagination } = res;
+                this.setIsLoading(false);
                 if (success) {
                     this.setLeads(leads);
                     this.setLeadPagination(pagination);
@@ -158,7 +221,7 @@ export const useLeadsStore = defineStore('leads', {
                 this.setIsFirstLoading(false);
                 this.setIsLoading(false);
             });
-        }
+        },
     }
 
 });

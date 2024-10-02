@@ -1,40 +1,44 @@
 <script setup>
+  import { ref, defineProps, defineEmits, watch, computed, watchEffect } from 'vue';
   import SlideUpDown from "vue-slide-up-down";
-  import SelectLeadSource from "../modals/fields/SelectLeadSource.vue";
-  import FilterCustomProperties from "./FilterCustomProperties.vue";
-  import SelectMultipleOwner from "./SelectMultipleOwner.vue";
-  import MakeDropdown from "./MakeDropdown.vue";
-  import SelectDateRenge from "./SelectDateRenge.vue";
-  import { defineProps, defineEmits, watch } from 'vue';
-  const props = defineProps({
-    leadProperties: {
-      type: Array,
-      default: [],
-    },
-    owners: {
-      type: Array,
-      default: [],
-    },
-    leadSources: {
-      type: Array,
-      default: [],
-    },
-    customFormData: {
-      type: Object,
-      default: {},
-    },
-    toggle: {
-      type: String,
-      default: 'close',
-    },
-  });
+  import SelectLeadSource from "../../components/fields/SelectLeadSource.vue";
+  import FilterProperties from "./filters/FilterProperties.vue";
+  import SelectMultipleOwner from "./filters/SelectMultipleOwner.vue";
+  import MakeDropdown from "./filters/MakeDropdown.vue";
+  import SelectDateRenge from "./filters/SelectDateRenge.vue";
+  import { usePlatformStore, useLeadsStore } from "@stores";
+  import { useDebounceFn } from '@vueuse/core';
+  import { useRouter, useRoute } from 'vue-router';
 
-  const emits = defineEmits(['toggleFilterSidebarHandler'])
+  const router = useRouter();
+  const route = useRoute();
+  const leadsStore = useLeadsStore();
+  const platformStore = usePlatformStore();
+  const toggleFilter = computed(() => leadsStore.getToggleFilter);
+  const filterQuerys = computed(() => leadsStore.getFilterQuerys);
+  const leadSources = computed(() => platformStore.getSources);
+
+  function handleToggleHandle() {
+    leadsStore.setToggleFilter(!toggleFilter.value);
+  }
+
+  const handleFetchLeads = useDebounceFn(() => {
+    if (toggleFilter.value) {
+      leadsStore.setFetchQuery(false);
+      leadsStore.setFetchQuery({ ...route.query, page: 1 }, true);
+    }
+  }, 1000);
+
+  watch(filterQuerys.value, () => {
+    handleFetchLeads();
+  }, { deep: true });
+
+
 </script>
 
 <template>
   <div id="right-filter-bar"
-    :class="{ show: toggle == 'show' }">
+    :class="{ show: toggleFilter }">
     <div class="header d-flex justify-content-between align-items-center">
       <div class="d-flex justify-content-start align-items-center">
         <font-awesome-icon style="width: 20px; height: 20px"
@@ -43,7 +47,7 @@
         <h1 class="title fw-bold text-hard">Filter</h1>
       </div>
       <div class="close"
-        @click="emits('toggleFilterSidebarHandler', 'hide')">
+        @click="handleToggleHandle">
         <font-awesome-icon class="text-head"
           icon="fas fa-angle-right" />
       </div>
@@ -51,28 +55,26 @@
     <div class="filter slim-scrollbar">
       <div class="filter-options">
         <!-- Owner -->
-
-        <select-multiple-owner :owners="owners"
-          @toggle="delete customFormData['owners']"
-          @change="(val)=>val?.length?'':delete customFormData['owners']"
-          v-model="customFormData['owners']" />
+        <select-multiple-owner @toggle="delete filterQuerys['owners']"
+          @change="(val)=>val?.length?'':delete filterQuerys['owners']"
+          v-model="filterQuerys['owners']" />
 
         <make-dropdown title="Source"
-          @toggle="delete customFormData['source']"
+          @toggle="delete filterQuerys['source']"
           icon="fas fa-handshake">
           <select-lead-source :options="leadSources"
             :small="true"
-            @change="(val)=>val?.length?'':delete customFormData['source']"
-            v-model="customFormData['source']" />
+            @change="(val)=>val?.length?'':delete filterQuerys['source']"
+            v-model="filterQuerys['source']" />
         </make-dropdown>
 
         <select-date-renge title="Create Date Range"
-          @toggle="delete customFormData['created_range']"
-          v-model="customFormData['created_range']" />
+          @toggle="delete filterQuerys['created_range']"
+          v-model="filterQuerys['created_range']" />
 
         <select-date-renge title="Update Date Range"
-          @toggle="delete customFormData['updated_range']"
-          v-model="customFormData['updated_range']" />
+          @toggle="delete filterQuerys['updated_range']"
+          v-model="filterQuerys['updated_range']" />
 
         <div>
           <h6 class="fs-14px mb-0 py-3 px-3 text-head bg-light fw-bold">
@@ -80,8 +82,8 @@
           </h6>
         </div>
 
-        <filter-custom-properties :lead-properties="leadProperties"
-          :custom-form-data="customFormData" />
+        <filter-properties></filter-properties>
+
       </div>
     </div>
   </div>

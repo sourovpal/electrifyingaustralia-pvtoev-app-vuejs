@@ -1,69 +1,39 @@
-<script>
+<script setup>
     import { Modal } from "mdb-ui-kit";
+    import { ref, watch, computed, onMounted, defineEmits } from 'vue';
+    import { useLeadsStore } from '@stores';
+    import { useApiRequest } from '@actions';
+    import { $toast } from '@config';
 
-    import {
-        ConfirmQualify
-    } from '@actions/LeadAction';
+    const leadsStore = useLeadsStore();
+    const uploadSpreadsheetModalRef = ref(null);
+    const emits = defineEmits(['refresh', 'close']);
+    const modalInstance = computed(() => leadsStore.getUploadSpreadsheetModal);
+    const errors = ref({});
+    const isLoading = ref(false);
 
-    export default {
-        data() {
-            return {
-                modalInstance: null,
-                errors: {},
-            }
-        },
-        methods: {
-            showModalHandler() {
-                this.errors = {};
-                this.modalInstance.show();
-            },
-            hideModalHandler() {
-                this.modalInstance.hide();
-            },
-            selectLeadSvgFileHandler() {
-                var input = document.createElement('input');
-                input.type = 'file';
-                input.onchange = e => {
-                    var file = e.target.files[0];
-                    var reader = new FileReader();
-                    reader.readAsText(file, 'UTF-8');
-                    reader.onload = readerEvent => {
-                        var content = readerEvent.target.result;
-                        console.log(content);
-                    }
-                }
-                input.click();
-            }
-        },
-        mounted() {
-            this.modalInstance = new Modal(this.$refs.leadQualifyModalRef);
-        },
+    function hideModal() {
+        modalInstance.value?.hide();
+        emits('close', true);
     }
+
+    onMounted(() => {
+        leadsStore.setUploadSpreadsheetModal(new Modal(uploadSpreadsheetModalRef.value));
+    });
 </script>
 
 <template>
 
-    <div class="modal fade add-new-lead-modal"
-        id="leadQualifyModalRef"
-        ref="leadQualifyModalRef"
-        aria-hidden="true"
-        aria-labelledby="leadQualifyModalRef"
-        tabindex="-1">
+    <div class="modal fade"
+        ref="uploadSpreadsheetModalRef">
         <div class="modal-dialog modal-dialog-centered modal-lg mx-auto">
             <div class="modal-content">
                 <div class="modal-header py-2 border-bottom-0">
                     <div class=""></div>
                     <div>
                         <button class="btn btn-light btn-sm btn-floating"
-                            @click="hideModalHandler()">
-                            <svg class="svg-5"
-                                xmlns="http://www.w3.org/2000/svg"
-                                height="22"
-                                viewBox="0 -960 960 960"
-                                width="22">
-                                <path
-                                    d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
-                            </svg>
+                            @click="hideModal">
+                            <font-awesome-icon icon="fas fa-close" class="fs-14px text-soft"></font-awesome-icon>
                         </button>
                     </div>
                 </div>

@@ -93,3 +93,17 @@ export function handleDateTimeFormat(timestamp, format = 'YYYY-MM-DD HH:mm:ss') 
     if (!timestamp) return;
     return moment(timestamp).format(format);
 }
+
+export function formatTimeAgo(dateInput, showDate = 30, format = 'Do MMMM, YYYY HH:mm a') {
+    if (!dateInput) return;
+    let date = moment(dateInput);
+    if (moment().diff(date, 'days') > showDate && showDate) {
+        return date.format(format);
+    } else {
+        return date.fromNow();
+    }
+}
+
+export async function delay(interval = 100) {
+    await new Promise(m => setTimeout(m, interval));
+}

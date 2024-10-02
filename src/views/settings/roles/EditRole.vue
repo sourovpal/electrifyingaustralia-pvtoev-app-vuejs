@@ -51,7 +51,6 @@ export default {
                     this.permissions = [{name:'All Access', name_slug:'all-access', children:tempArray}];
                     this.checkedAllSelectedPermissionsHandler();
                 }catch(error){
-                    console.log(error);
                     throw new Error(error.message);
                 }
                 

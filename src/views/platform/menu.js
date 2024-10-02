@@ -116,7 +116,6 @@ export const menus = async () => {
             },
         ];
     } catch (error) {
-        console.log(error)
     }
 
 }

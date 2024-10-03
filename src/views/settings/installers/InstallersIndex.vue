@@ -143,7 +143,7 @@
                         <button :disabled="isLoading"
                             @click="fetchInstallerDataHandler()"
                             class="toolbar-btn btn btn-light btn-floating me-3 ms-3">
-                            <svg class="svg-5"
+                            <svg  
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="24"
                                 height="24"
@@ -222,7 +222,7 @@
                     <button :disabled="!pagination.prev_page"
                         @click="pagination.prev_page && fetchInstallerDataHandler(pagination.prev_page)"
                         class="toolbar-btn btn btn-light btn-floating me-3">
-                        <svg class="svg-5"
+                        <svg  
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
                             height="24"
@@ -234,7 +234,7 @@
                     <button :disabled="!pagination.next_page"
                         @click="pagination.next_page && fetchInstallerDataHandler(pagination.next_page)"
                         class="toolbar-btn btn btn-light btn-floating me-3">
-                        <svg class="svg-5"
+                        <svg  
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
                             height="24"

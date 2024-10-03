@@ -202,7 +202,6 @@ export const useLeadsStore = defineStore('leads', {
             this.setSelectedLeads([]);
             this.setIsLoading(true);
             this.setError(false);
-            this.fetchQuery;
             useApiRequest({
                 url: '/leads',
                 payload: this.fetchQuery,

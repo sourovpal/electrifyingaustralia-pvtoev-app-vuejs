@@ -188,7 +188,7 @@ export default {
                     <h1 class="mb-0 text-base">Role & Access</h1>
                 </router-link>
                 <div class="mx-2 d-flex justify-content-center align-items-center">
-                    <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path><path fill="none" d="M0 0h24v24H0V0z"></path></svg>
+                    <svg   xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path><path fill="none" d="M0 0h24v24H0V0z"></path></svg>
                 </div>
                 <h1 class="mb-0 text-soft">{{ role?.name??'Role Name' }}</h1>
             </div>

@@ -1,7 +1,7 @@
 <script setup></script>
 <template>
     <svg
-        class="svg-5"
+         
         xmlns="http://www.w3.org/2000/svg"
         height="18"
         viewBox="0 0 24 24"

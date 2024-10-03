@@ -103,6 +103,9 @@ const iconsToUse = [
     fa.faStopwatch,
     fa.faClock,
     fa.faListCheck,
+    fa.faColumns,
+    fa.faBars,
+    fa.faBarsStaggered,
     // Regular
     far.faSquare,
     far.faSquareMinus,

@@ -107,3 +107,37 @@ export function formatTimeAgo(dateInput, showDate = 30, format = 'Do MMMM, YYYY 
 export async function delay(interval = 100) {
     await new Promise(m => setTimeout(m, interval));
 }
+
+export const getCustomPropertieIcon = (type) => {
+    if (type == 'free_text') {
+        return 'far fa-pen-to-square';
+    } else if (type == 'multiline_free_text') {
+        return 'fas fa-bars';
+    } else if (type == 'yes_or_no') {
+        return 'far fa-thumbs-up';
+    } else if (type == 'date') {
+        return 'far fa-calendar-check';
+    } else if (type == 'date_and_time') {
+        return 'far fa-clock';
+    } else if (type == 'single_choice') {
+        return 'fas fa-list-check';
+    } else if (type == 'multiple_choice') {
+        return 'fas fa-list';
+    } else if (type == 'real_number') {
+        return 'fas fa-plus-minus';
+    } else if (type == 'read_only') {
+        return 'fas fa-book-open-reader';
+    }
+    return '';
+}
+
+
+export function generateSlug(text = '', separator = '-') {
+    return text
+        .toLowerCase()                     // Convert to lowercase
+        .trim()                            // Remove whitespace from both ends
+        .replace(/[^a-z0-9\s]/g, '')      // Remove special characters
+        .replace(/\s+/g, separator)        // Replace spaces with separator
+        .replace(new RegExp(`\\${separator}+`, 'g'), separator) // Remove duplicate separators
+        .replace(/^-+|-+$/g, '');          // Remove leading and trailing separators
+}

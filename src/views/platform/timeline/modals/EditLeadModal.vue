@@ -125,7 +125,7 @@
             <button v-else
               class="btn btn-light btn-sm btn-floating d-lg-none"
               @click="hideModalHandler()">
-              <svg class="svg-5"
+              <svg  
                 xmlns="http://www.w3.org/2000/svg"
                 height="22"
                 viewBox="0 -960 960 960"

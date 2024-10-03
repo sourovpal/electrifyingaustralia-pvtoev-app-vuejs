@@ -81,7 +81,7 @@ const handleWorkflowUpdate = () => {
 			</router-link>
 			<div class="mx-2">
 				<svg
-					class="svg-5"
+					 
 					xmlns="http://www.w3.org/2000/svg"
 					width="24"
 					height="24"

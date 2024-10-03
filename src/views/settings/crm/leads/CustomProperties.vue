@@ -1,15 +1,15 @@
 <script>
-    import ActionBar from '../../../../components/ActionBar/ActionBar.vue';
-    import LeftActionBar from '../../../../components/ActionBar/LeftActionBar.vue';
-    import RightActionBar from '../../../../components/ActionBar/RightActionBar.vue';
-    import Datatable from '../../../../components/Datatable/Datatable.vue';
-    import DatatableHeader from '../../../../components/Datatable/DatatableHeader.vue';
-    import DatatableBody from '../../../../components/Datatable/DatatableBody.vue';
+    import ActionBar from '@components/ActionBar/ActionBar.vue';
+    import LeftActionBar from '@components/ActionBar/LeftActionBar.vue';
+    import RightActionBar from '@components/ActionBar/RightActionBar.vue';
+    import Datatable from '@components/Datatable/Datatable.vue';
+    import DatatableHeader from '@components/Datatable/DatatableHeader.vue';
+    import DatatableBody from '@components/Datatable/DatatableBody.vue';
     import PropetiesSkeletor from './components/PropetiesSkeletor.vue';
     import DataNotFound from './components/DataNotFound.vue';
-    import { FetchLeadProperties } from '../../../../actions/CrmLeads';
+    import { FetchLeadProperties } from '@actions/CrmLeads';
     import CreateCustomPropertieModal from './components/CreateCustomPropertieModal.vue';
-    import { getCustomPropertieIcon } from "../../../../helpers/formats";
+    import { getCustomPropertieIcon } from "@helpers";
 
     export default {
         components: {
@@ -145,7 +145,7 @@
                 <h1 class="mb-0 text-soft">Pipelines</h1>
             </router-link>
             <div class="mx-2 d-flex justify-content-center align-items-center">
-                <svg class="svg-5"
+                <svg  
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
@@ -159,7 +159,7 @@
                 <h1 class="mb-0 text-soft">{{ pipeline_title }}</h1>
             </router-link>
             <div class="mx-2 d-flex justify-content-center align-items-center">
-                <svg class="svg-5"
+                <svg  
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
@@ -178,7 +178,7 @@
                 <h1 class="mb-0 text-soft">Leads</h1>
             </router-link>
             <div class="mx-2 d-flex justify-content-center align-items-center">
-                <svg class="svg-5"
+                <svg  
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
@@ -206,7 +206,7 @@
                         <button :disabled="isLoading"
                             @click="fetchPropertieDataHandler()"
                             class="toolbar-btn btn btn-light btn-floating me-3 ms-3">
-                            <svg class="svg-5"
+                            <svg  
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="24"
                                 height="24"
@@ -283,7 +283,7 @@
                     <button :disabled="!pagination.prev_page"
                         @click="pagination.prev_page && fetchPropertieDataHandler(pagination.prev_page)"
                         class="toolbar-btn btn btn-light btn-floating me-3">
-                        <svg class="svg-5"
+                        <svg  
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
                             height="24"
@@ -295,7 +295,7 @@
                     <button :disabled="!pagination.next_page"
                         @click="pagination.next_page && fetchPropertieDataHandler(pagination.next_page)"
                         class="toolbar-btn btn btn-light btn-floating me-3">
-                        <svg class="svg-5"
+                        <svg  
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
                             height="24"
@@ -368,7 +368,7 @@
                             class="tbl-td d-none d-lg-flex">
                             <span class="text-overflow-ellipsis">
                                 <svg v-if="propertie.visibility"
-                                    class="svg-5"
+                                     
                                     xmlns="http://www.w3.org/2000/svg"
                                     height="24"
                                     viewBox="0 -960 960 960"
@@ -377,7 +377,7 @@
                                         d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z" />
                                 </svg>
                                 <svg v-if="!propertie.visibility"
-                                    class="svg-5"
+                                     
                                     xmlns="http://www.w3.org/2000/svg"
                                     height="24"
                                     viewBox="0 -960 960 960"

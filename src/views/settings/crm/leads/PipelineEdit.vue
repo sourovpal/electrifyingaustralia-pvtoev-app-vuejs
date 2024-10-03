@@ -111,7 +111,7 @@
                 <h1 class="mb-0 text-base">Pipelines</h1>
             </router-link>
             <div class="mx-2 d-flex justify-content-center align-items-center">
-                <svg class="svg-5"
+                <svg  
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"

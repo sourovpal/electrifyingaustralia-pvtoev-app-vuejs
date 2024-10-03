@@ -6,7 +6,7 @@
       type: String,
       default: "Submit",
     },
-    submittingTitle: {
+    loadingText: {
       type: String,
       default: "Submitting...",
     },
@@ -69,7 +69,7 @@
           fill="none"
           stroke-width="5"></circle>
       </svg>
-      <span class="text-white">{{ submittingTitle }}</span>
+      <span class="text-white">{{ loadingText }}</span>
     </div>
     <slot v-else>
       <span class="text-white">{{ title }}</span>

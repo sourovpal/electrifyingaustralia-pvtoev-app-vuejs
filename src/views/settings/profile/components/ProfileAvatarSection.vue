@@ -189,7 +189,7 @@
                 class="btn btn-light btn-sm btn-floating"
                 data-mdb-dismiss="modal"
                 aria-label="Close">
-                <svg class="svg-5"
+                <svg  
                     xmlns="http://www.w3.org/2000/svg"
                     height="22"
                     viewBox="0 -960 960 960"

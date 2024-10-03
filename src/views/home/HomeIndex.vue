@@ -103,7 +103,7 @@
                                         type="text"
                                         placeholder="Search for an address or existing projects">
                                     <button class="search-icon">
-                                        <svg class="svg-5"
+                                        <svg  
                                             fill="#000000"
                                             height="24"
                                             viewBox="0 0 24 24"
@@ -133,7 +133,7 @@
                                                         <span>New South Wales</span>
                                                         <span>2568</span>
                                                         <div class="icon">
-                                                            <svg class="svg-5"
+                                                            <svg  
                                                                 fill="#000000"
                                                                 height="24"
                                                                 viewBox="0 0 24 24"
@@ -169,7 +169,7 @@
                                                     <div class="search-item text-base">
                                                         <span>{{ item.place_name }}</span>
                                                         <div class="icon map-icon">
-                                                            <svg class="svg-5"
+                                                            <svg  
                                                                 fill="#000000"
                                                                 height="24"
                                                                 viewBox="0 0 24 24"

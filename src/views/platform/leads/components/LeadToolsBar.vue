@@ -37,7 +37,6 @@
     const toggleFilter = computed(() => leadsStore.getToggleFilter);
     const filterQuerys = computed(() => leadsStore.getFilterQuerys);
 
-
     function showMultipleModal() {
         deleteModalInstance.value?.show();
     }
@@ -55,7 +54,6 @@
         }
         addNewModalInstance.value?.show();
     }
-
 
     function selectAllOrNotLeads() {
         if (isAllLeadSelected.value || isSomeLeadSelected.value) {
@@ -81,7 +79,6 @@
         leadsStore.setFilterQuerys(false, false, true);
         leadsStore.setFetchQuery(false, true);
     }, 500);
-
 
     async function handleToggleFilter() {
         if (!platformStore.getSources?.length) {

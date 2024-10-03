@@ -1,7 +1,6 @@
 <script setup>
   import { Modal } from "mdb-ui-kit";
   import DropdownOwnerList from "../../components/dropdowns/DropdownOwnerList.vue";
-  import { ConfirmQualify } from "@actions/LeadAction";
   import { usePlatformStore } from "@stores";
   import SelectObjectId from '../../components/fields/SelectObjectId.vue';
   import { AvatarIcon } from "@assets/icons";

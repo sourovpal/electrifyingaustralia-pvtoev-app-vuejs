@@ -1,7 +1,6 @@
 <script setup>
   import { usePlatformStore } from "@stores";
   import { useAuthStore } from "@stores";
-  import { UpdateSubscribers } from "@actions/LeadAction";
   import { AvatarIcon } from "@assets/icons";
   import { computed, ref, defineProps } from "vue";
   import { useDebounceFn } from '@vueuse/core';

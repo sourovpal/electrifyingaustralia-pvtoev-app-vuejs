@@ -20,6 +20,7 @@
     const pipelineId = computed(() => pipelineStore.getPipelineId);
     const orderBy = computed(() => pipelineStore.getOrderBy);
     const orderColumn = computed(() => pipelineStore.getOrderColumn);
+    const filterQuerys = computed(() => pipelineStore.getFilterQuerys);
     const stageLeads = ref([]);
     const infiniteLoadedLeadRef = ref(null);
     const page = ref(1);
@@ -35,6 +36,11 @@
         if (searchQuery.value) {
             payload['search'] = searchQuery.value;
         }
+        
+        if (Object.keys(filterQuerys.value).length) {
+            payload['filters'] = JSON.stringify(filterQuerys.value);
+        }
+
         await useApiRequest({
             url: `/leads/${pipelineId.value}/stage/${pipelineStage.value.stage_id}/${generateSlug(pipelineStage.value.name)}`,
             payload
@@ -61,6 +67,16 @@
         fetchStageLeads({ isReset: false });
     }
 
+    const handleFetchLeads = useDebounceFn(() => {
+        page.value = 1;
+        fetchStageLeads({ isReset: true });
+    }, 2000);
+
+
+    watch(filterQuerys.value, (search) => {
+        handleFetchLeads();
+    });
+
     watch(searchQuery, (search) => {
         page.value = 1;
         fetchStageLeads({ isReset: true });
@@ -84,9 +100,9 @@
             <div class="row mb-2">
                 <div class="col-6 ps-0">
                     <span class=" px-3 btn shadow-none py-1 fs-14px"
-                        :class="{'btn-info':(stage.status==0), 
-                        'btn-danger':(stage.status==1), 
-                        'btn-success':(stage.status==2), }"
+                        :class="{'btn-info':(stage.status=='primary'), 
+                        'btn-danger':(stage.status=='lost'), 
+                        'btn-success':(stage.status=='success'), }"
                         style="border-radius:3px;">
                         {{ stage.name }}
                     </span>
@@ -135,7 +151,7 @@
                 </div>
             </div>
         </router-link>
-        <div v-if="!isFirstLoading"
+        <div v-if="!isFirstLoadingLeads"
             class="d-flex justify-content-center align-items-center mt-4">
             <loading-button @click="handleLoadmore"
                 class="btn-sm"

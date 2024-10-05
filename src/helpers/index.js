@@ -134,10 +134,44 @@ export const getCustomPropertieIcon = (type) => {
 
 export function generateSlug(text = '', separator = '-') {
     return text
-        .toLowerCase()                     // Convert to lowercase
-        .trim()                            // Remove whitespace from both ends
-        .replace(/[^a-z0-9\s]/g, '')      // Remove special characters
-        .replace(/\s+/g, separator)        // Replace spaces with separator
-        .replace(new RegExp(`\\${separator}+`, 'g'), separator) // Remove duplicate separators
-        .replace(/^-+|-+$/g, '');          // Remove leading and trailing separators
+        .toLowerCase()              
+        .trim()                     
+        .replace(/[^a-z0-9\s]/g, '')
+        .replace(/\s+/g, separator) 
+        .replace(new RegExp(`\\${separator}+`, 'g'), separator)
+        .replace(/^-+|-+$/g, '');
+}
+
+export function formatLeadAddress($lead, defaultTitle = null) {
+    if (!$lead) return;
+    let output = '';
+    const {
+        address_line_one,
+        address_line_two,
+        city,
+        state,
+        post_code,
+    } = $lead;
+
+    if (address_line_one && !address_line_two) {
+        output += address_line_one;
+    } else if (!address_line_one && address_line_two) {
+        output += address_line_two;
+    } else if (address_line_one && address_line_two) {
+        output += address_line_one + '/' + address_line_two;
+    }
+
+    if (output != '' && (city || state || post_code)) {
+        output += ', ';
+    }
+
+    output += `${city ?? ''} ${state ?? ''} ${post_code ?? ''}`;
+    output = output?.trim();
+    if (output != '') {
+        return output;
+    } else if (defaultTitle) {
+        return defaultTitle;
+    } else {
+        return null;
+    }
 }

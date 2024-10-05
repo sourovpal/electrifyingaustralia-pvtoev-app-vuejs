@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
     import DealPipelinesSkeletor from './DealPipelinesSkeletor.vue';
     import {
         ChangePipelinePosition,
@@ -69,7 +69,83 @@
             this.fetchAllPipeline();
         },
     }
+</script> -->
+
+
+<script setup>
+    import { ref, onMounted } from 'vue';
+    import DealPipelinesSkeletor from './DealPipelinesSkeletor.vue';
+    import { useApiRequest } from '@actions';
+    import { $toast } from '@config';
+
+    // Reactive state
+    const pipelines = ref([{ id: null, title: 'Example Pipeline', total_stages: 0, created_ago: '1 seconds ago', total_properties: 1 }]);
+    const isLoading = ref(false);
+    const isFirstLoading = ref(false);
+    const isSubmitPipelineUpdate = ref(false);
+
+    // Function to sort pipelines
+    const sortedAction = (action, index, item) => {
+        let i;
+        if (action === 'up') {
+            i = index - 1;
+        } else {
+            i = index + 1;
+        }
+
+        const prev = pipelines.value[i];
+        if (prev) {
+            pipelines.value[i] = item;
+            pipelines.value[index] = prev;
+            updateOrCreatePipelinesHandler();
+        }
+    };
+
+    // Function to update pipeline positions
+    const updateOrCreatePipelinesHandler = async () => {
+        try {
+            // Clear any existing toast messages
+            $toast.clear();
+            const data = {
+                pipelines: pipelines.value,
+            };
+            isSubmitPipelineUpdate.value = true;
+            await ChangePipelinePosition(data);
+        } finally {
+            isSubmitPipelineUpdate.value = false;
+        }
+    };
+
+    // Function to fetch all pipelines
+    const fetchAllPipeline = async () => {
+        $toast.clear();
+        isLoading.value = true;
+        const res = await useApiRequest({
+            url: 'pipelines',
+        }).then(res => {
+            const { success, message, pipelines: fetchedPipelines } = res;
+            isFirstLoading.value = false;
+            isLoading.value = false;
+            if (success) {
+                pipelines.value = fetchedPipelines;
+            } else {
+                $toast.error(message.text);
+            }
+        }).catch(error => {
+            $toast.error('Oops, something went wrong');
+        }).finally(() => {
+        });
+    };
+
+    // Lifecycle hook
+    onMounted(() => {
+        isFirstLoading.value = true;
+        fetchAllPipeline();
+    });
 </script>
+
+
+
 
 <template>
 

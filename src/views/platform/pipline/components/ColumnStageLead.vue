@@ -1,5 +1,6 @@
 <script setup>
     import { defineProps, defineOptions } from 'vue';
+    import { formatLeadAddress } from '@helpers';
     defineOptions({
         inheritAttrs: false
     });
@@ -7,78 +8,28 @@
         lead: { type: Object, default: {} }
     });
 
-
-    function getLeadTitleFormat(lead) {
-        var temp = '';
-        if (lead?.address_line_two) {
-            temp += lead?.address_line_two;
-            if (lead?.address_line_one) {
-                temp += '/' + lead?.address_line_one;
-            }
-        } else if (lead?.address_line_one) {
-            temp += lead?.address_line_one;
-        }
-
-        if (lead?.city || lead?.state || lead?.post_code) {
-            temp += ", ";
-        }
-
-        if (lead?.city) {
-            temp += lead?.city + " ";
-        }
-
-        if (lead?.state) {
-            temp += lead?.state + " ";
-        }
-
-        if (lead?.post_code) {
-            temp += lead?.post_code;
-        }
-        if (temp != '') {
-            return temp;
-        }
-        if (lead?.lead_title) {
-            return lead?.lead_title;
-        }
-        return '<i class="text-secondary">Untitled deal</i>'
-    }
-    function getSubTitle(lead) {
-
-        var title = '';
-
-        if (lead?.primary_contact?.full_name) {
-            title += lead?.primary_contact?.full_name;
-        }
-
-        if (lead?.lead_title) {
-            title += " · " + lead?.primary_contact?.full_name;
-        }
-        return title;
-    }
-
 </script>
 
 <template>
     <router-link draggable="true"
-        :to="`/platform/leads/${lead.lead_id}`">
+        :to="`/platform/deals/${lead.lead_id}`">
         <div class="pip-item">
             <h5 class="pip-title"
-                v-html="getLeadTitleFormat(lead)"></h5>
-            <p class="pip-sub-title"
-                v-html="getSubTitle(lead)"></p>
+                v-html="formatLeadAddress(lead, `<i class='text-soft'>Address not added yet.</i>`)"></h5>
+            <p class="pip-sub-title">{{ lead.lead_title??lead.primary_contact?.full_name??'Title not added yet.' }}</p>
             <div class="pip-user d-flex justify-content-between align-items-center">
                 <div>
                     <img class="pip-user-avatar"
                         :src="lead?.owner?.profile_avatar">
                     <span class="pip-value">${{ lead?.estimated_value }}</span>
                 </div>
-                <div class="fs-16px star-value d-flex justify-content-start align-items-center">
+                <div class="fs-16px star-value d-flex justify-content-start align-items-center" :class="{'text-soft':!lead.confidence}">
                     <span class="me-1">{{ lead.confidence }}</span>
                     <svg xmlns="http://www.w3.org/2000/svg"
                         height="16px"
                         viewBox="0 0 24 24"
                         width="16px"
-                        fill="#de911d"
+                        :fill="`#${lead.confidence?'de911d':'8094ae'}`"
                         class="icon icon--star icon--inline">
                         <path d="M0 0h24v24H0z"
                             fill="none"></path>

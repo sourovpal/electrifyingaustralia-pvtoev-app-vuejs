@@ -1,13 +1,15 @@
 <script setup>
   import { Modal } from "mdb-ui-kit";
   import DropdownOwnerList from "../../components/dropdowns/DropdownOwnerList.vue";
-  import { usePlatformStore } from "@stores";
   import SelectObjectId from '../../components/fields/SelectObjectId.vue';
   import { AvatarIcon } from "@assets/icons";
   import { ref, onMounted, watch, computed, defineExpose } from 'vue';
   import { $toast } from '@config';
   import { useApiRequest } from '@actions';
+  import { usePlatformStore } from "@stores";
+  import { useRouter } from "vue-router";
 
+  const router = useRouter();
   const platformStore = usePlatformStore();
   const editLeadId = computed(() => platformStore.getEditLeadId);
   const leadOwner = computed(() => platformStore.getLeadOwner);
@@ -111,6 +113,7 @@
       platformStore.callFetchProperties(platformStore.getEditLeadId);
       hideModalHandler();
       platformStore.setIsPipelineLead(true);
+      router.push({path:`/platform/deals/${editLeadId.value}`});
       $toast[message.type](message.text);
     }).catch(error => {
       $toast.error("Oops, something went wrong");

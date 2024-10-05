@@ -4,6 +4,7 @@
     import StarRating from "vue-star-rating";
     import CustomModal from '@components/modals/CustomModal.vue';
     import { useApiRequest } from '@actions';
+    import { formatLeadAddress } from '@helpers';
     import { useClipboard } from '@vueuse/core';
     import { usePlatformStore } from "@stores";
     import { $toast } from '@config';
@@ -13,6 +14,7 @@
     const isFirstLoading = computed(() => platformStore.getIsFirstLoading);
     const editLead = computed(() => platformStore.getEditLead);
     const editLeadId = computed(() => platformStore.getEditLeadId);
+    const isPipelineLead = computed(() => platformStore.getIsPipelineLead);
     const address = ref(null);
     const leadStarRating = ref(0);
     const isEditEstimatedValue = ref(false);
@@ -20,20 +22,7 @@
     const targetEstimatedValueInput = ref(null);
 
     watchEffect(() => {
-        const { address_line_one, address_line_two, city, state, post_code, confidence } = editLead.value;
-        address.value = null;
-        leadStarRating.value = confidence;
-        var temp = "";
-        if (address_line_two) {
-            temp += address_line_two;
-            if (address_line_one) { temp += "/" + address_line_one; }
-        }
-        else if (address_line_one) { temp += address_line_one; }
-        if (city || state || post_code) { temp += ", "; }
-        if (city) { temp += city + " "; }
-        if (state) { temp += state + " "; }
-        if (post_code) { temp += post_code; }
-        if (temp != "") { address.value = temp; }
+        address.value = formatLeadAddress(editLead.value);
     });
 
     function confidenceUpdateHandler() {
@@ -98,7 +87,7 @@
     <div>
         <div class="d-flex justify-content-between align-items-center mb-1">
             <div class="fs-14px fw-bold text-head mb-0 text-uppercase">
-                lead Properties
+                lead Properties {{ isPipelineLead }}
             </div>
             <button @click="platformStore.toggleLeadEditModal(true)"
                 class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">

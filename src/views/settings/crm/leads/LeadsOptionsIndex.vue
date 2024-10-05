@@ -18,7 +18,6 @@
 
                 <LeadStatuses />
 
-
                 <hr class="mt-4 mb-5">
 
                 <div class="row">

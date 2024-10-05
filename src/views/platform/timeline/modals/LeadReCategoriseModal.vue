@@ -5,8 +5,10 @@
   import SelectObjectId from "../../components/fields/SelectObjectId.vue";
   import { ref, onMounted, watch, computed, defineExpose } from 'vue';
   import { $toast } from '@config';
-  import { useApiRequest } from '@actions/api';
+  import { useApiRequest } from '@actions';
+  import { useRouter } from "vue-router";
 
+  const router = useRouter();
   const platformStore = usePlatformStore();
   const appStore = useAppStore();
   const isPipelineLead = computed(() => platformStore.getIsPipelineLead);
@@ -120,6 +122,7 @@
         platformStore.setLeadStage({});
         platformStore.setIsPipelineLead(false);
         platformStore.callFetchProperties(platformStore.getEditLeadId);
+        router.push({path:`/platform/leads/${leadId}`});
       } else {
         platformStore.setLeadStatus({});
         platformStore.setLeadPipeline(selectedPipeline.value);
@@ -127,6 +130,7 @@
         platformStore.callFetchLeadStages(platformStore.getEditLeadId);
         platformStore.callFetchProperties(platformStore.getEditLeadId);
         platformStore.setIsPipelineLead(true);
+        router.push({path:`/platform/deals/${leadId}`});
       }
       isSubmitMovePipelineOrStatus.value = false;
       selectedStatus.value = null;

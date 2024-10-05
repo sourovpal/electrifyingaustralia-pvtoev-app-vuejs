@@ -6,39 +6,27 @@
   import SelectMultipleOwner from "./filters/SelectMultipleOwner.vue";
   import MakeDropdown from "./filters/MakeDropdown.vue";
   import SelectDateRenge from "./filters/SelectDateRenge.vue";
-  import { usePlatformStore, useLeadsStore } from "@stores";
+  import { usePlatformStore, usePipelineStore } from "@stores";
   import { useDebounceFn } from '@vueuse/core';
   import { useRouter, useRoute } from 'vue-router';
 
   const router = useRouter();
   const route = useRoute();
-  const leadsStore = useLeadsStore();
+  const pipelineStore = usePipelineStore();
   const platformStore = usePlatformStore();
-  const toggleFilter = computed(() => leadsStore.getToggleFilter);
-  const filterQuerys = computed(() => leadsStore.getFilterQuerys);
+  const toggleFilter = computed(() => pipelineStore.getToggleFilter);
+  const filterQuerys = computed(() => pipelineStore.getFilterQuerys);
   const leadSources = computed(() => platformStore.getSources);
 
   function handleToggleHandle() {
-    leadsStore.setToggleFilter(!toggleFilter.value);
+    pipelineStore.setToggleFilter(!toggleFilter.value);
   }
-
-  const handleFetchLeads = useDebounceFn(() => {
-    if (toggleFilter.value) {
-      leadsStore.setFetchQuery(false);
-      leadsStore.setFetchQuery({ ...route.query, page: 1 }, true);
-    }
-  }, 1000);
-
-  watch(filterQuerys.value, () => {
-    handleFetchLeads();
-  }, { deep: true });
-
 
 </script>
 
 <template>
   <div id="right-filter-bar"
-    :class="{ show: false }">
+    :class="{ show: toggleFilter }">
     <div class="header d-flex justify-content-between align-items-center">
       <div class="d-flex justify-content-start align-items-center">
         <font-awesome-icon style="width: 20px; height: 20px"
@@ -67,6 +55,15 @@
             @change="(val)=>val?.length?'':delete filterQuerys['source']"
             v-model="filterQuerys['source']" />
         </make-dropdown>
+
+        <make-dropdown title="Postcode"
+          @toggle="delete filterQuerys['postcode']"
+          icon="fas fa-location-dot">
+          <input class="form-control form-control-sm"
+            type="text"
+            @keyup="({target:{value}})=>(()=>{if(value){filterQuerys['postcode']=value;} else {delete filterQuerys['postcode'];}})()">
+        </make-dropdown>
+
 
         <select-date-renge title="Create Date Range"
           @toggle="delete filterQuerys['created_range']"

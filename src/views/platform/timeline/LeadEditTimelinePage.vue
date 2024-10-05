@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, onMounted, computed, onUnmounted } from "vue";
+  import { ref, onMounted, computed, onUnmounted, onBeforeMount, watch } from "vue";
   import SearchBar from "@components/SearchBar.vue";
   import TimelineToolsbar from './sections/TimelineToolsbar.vue';
   import PipelineStages from './sections/PipelineStages.vue';
@@ -13,6 +13,7 @@
   const isPipelineLead = computed(() => platformStore.getIsPipelineLead);
 
   onMounted(() => {
+    platformStore.setIsPipelineLead(!!(window.location.href.indexOf('deals') > -1));
     platformStore.setEditLeadId($leadId);
     platformStore.callFetchStatuses();
     platformStore.setIsFirstLoading(true);
@@ -24,6 +25,7 @@
   });
 
   onUnmounted(() => {
+    platformStore.setIsPipelineLead(false);
     platformStore.resetLeadEditTimeline();
   });
 
@@ -33,7 +35,7 @@
   <section class="content lead-edit">
     <search-bar></search-bar>
     <TimelineToolsbar></TimelineToolsbar>
-    <PipelineStages v-show="isPipelineLead"></PipelineStages>
+    <PipelineStages v-if="isPipelineLead"></PipelineStages>
     <section class="h-100">
       <div class="col-area">
         <timeline-history />

@@ -93,6 +93,7 @@
 
     const handleRefresh = useDebounceFn(() => {
         router.push({ path: '/platform/deals', query: { pipeline: pipelineStore.getPipelineId } });
+        pipelineStore.setFilterQuerys(false, false, true);
         pipelineStore.setIsFirstLoading(true);
         pipelineStore.setPipeline({});
         pipelineStore.setOrderBy();
@@ -112,7 +113,6 @@
         }
         if (toggleFilter.value && Object.keys(filterQuerys.value).length) {
             pipelineStore.setFilterQuerys(false, false, true);
-            pipelineStore.setFetchQuery({}, true);
             pipelineStore.setToggleFilter(false);
             await delay(500);
             pipelineStore.setToggleFilter('render')

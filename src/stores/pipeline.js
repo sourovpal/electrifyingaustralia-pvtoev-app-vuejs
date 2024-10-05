@@ -29,6 +29,9 @@ export const usePipelineStore = defineStore('pipeline', {
         }
     },
     getters: {
+        getError(payload) {
+            this.isError = payload;
+        },
         getPipelineView(stage) {
             return stage.pipelineView;
         },
@@ -143,16 +146,16 @@ export const usePipelineStore = defineStore('pipeline', {
                 const { success, message, pipeline } = res;
                 this.setIsLoading(false);
                 if (success && pipeline) {
-                    const { success_stages, active_stages, lost_stages } = pipeline;
+                    const { success_stages, primary_stages, lost_stages } = pipeline;
                     this.setPipelineId(pipeline.pipeline_id)
                     this.setPipeline(pipeline);
                     this.setPipelinePrimaryStages([])
-                    this.setPipelinePrimaryStages(active_stages)
+                    this.setPipelinePrimaryStages(primary_stages)
                     this.setPipelineSuccessStages([])
                     this.setPipelineSuccessStages(success_stages)
                     this.setPipelineLostStages([])
                     this.setPipelineLostStages(lost_stages)
-                } else {
+                } else if (!success) {
                     this.setError(true);
                 }
             }).catch(error => {

@@ -79,6 +79,16 @@ const routes = [
                         children: [],
                     },
                     {
+                        name: "DealsEdit",
+                        path: 'deals/:id',
+                        component: () => import('@views/platform/timeline/LeadEditTimelinePage.vue'),
+                        beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
+                        meta: {
+                            title: 'Home Page',
+                        },
+                        children: [],
+                    },
+                    {
                         name: "contacts",
                         path: 'contacts',
                         component: () => import('@views/platform/contacts/ContactsIndexPage.vue'),

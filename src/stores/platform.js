@@ -1,7 +1,5 @@
 import { defineStore } from 'pinia';
 import { useApiRequest } from '@actions';
-import Storage from '@helpers/Storage';
-const leadHasPipeline = new Storage('is_pipeline_lead');
 
 export const usePlatformStore = defineStore('platform', {
   state: () => {
@@ -18,7 +16,7 @@ export const usePlatformStore = defineStore('platform', {
       leadPipeline: {},
       leadStage: {},
       primaryContact: {},
-      isPipelineLead: leadHasPipeline.get() ?? false,
+      isPipelineLead: false,
       leadSource: {},
       leadStatus: {},
       leadTasks: [],
@@ -30,7 +28,9 @@ export const usePlatformStore = defineStore('platform', {
       leadContacts: [],
       leadSources: [],
       leadProperties: [],
-      leadStages: [],
+      leadPrimaryStages: [],
+      leadSuccessStages: [],
+      leadLostStages: [],
       pipelines: [],
       statuses: [],
       users: [],
@@ -81,9 +81,6 @@ export const usePlatformStore = defineStore('platform', {
     getLeadPipeline(state) {
       return state.leadPipeline;
     },
-    getLeadStages(state) {
-      return state.leadStages;
-    },
     getLeadStage(state) {
       return state.leadStage;
     },
@@ -125,7 +122,16 @@ export const usePlatformStore = defineStore('platform', {
     },
     getSources(stage) {
       return stage.sources;
-    }
+    },
+    getLeadPrimaryStages(stage) {
+      return stage.leadPrimaryStages;
+    },
+    getLeadSuccessStages(stage) {
+      return stage.leadSuccessStagesleadPrimaryStages;
+    },
+    getLeadLostStages(stage) {
+      return stage.leadLostStagesleadPrimaryStages;
+    },
   },
   actions: {
     setIsLoading(payload) {
@@ -176,18 +182,12 @@ export const usePlatformStore = defineStore('platform', {
         this.leadStatus = payload;
       }
     },
-    setLeadStages(payload) {
-      if (Array.isArray(payload)) {
-        this.leadStages = payload;
-      }
-    },
     setLeadSubscribers(payload) {
       if (Array.isArray(payload)) {
         this.leadSubscribers = payload;
       }
     },
     setIsPipelineLead(payload) {
-      leadHasPipeline.set(payload);
       this.isPipelineLead = payload;
     },
     setLeadPipeline(payload) {
@@ -245,7 +245,21 @@ export const usePlatformStore = defineStore('platform', {
         this.sources = payload;
       }
     },
-
+    setLeadPrimaryStages(payload) {
+      if (Array.isArray(payload)) {
+        this.leadPrimaryStages = payload;
+      }
+    },
+    setLeadSuccessStages(payload) {
+      if (Array.isArray(payload)) {
+        this.leadSuccessStages = payload;
+      }
+    },
+    setLeadLostStages(payload) {
+      if (Array.isArray(payload)) {
+        this.leadLostStages = payload;
+      }
+    },
     // 
     setLeadEditModal(payload) {
       this.leadEditModal = payload;
@@ -269,7 +283,9 @@ export const usePlatformStore = defineStore('platform', {
       this.setLeadPipeline({});
       this.setLeadStage({});
       this.setLeadContacts([]);
-      this.setLeadStages([]);
+      this.setLeadPrimaryStages([]);
+      this.setLeadSuccessStages([]);
+      this.setLeadLostStages([]);
       this.setLeadFiles([]);
       this.setLeadSubscribers([]);
       this.setLeadTasks([]);
@@ -333,9 +349,11 @@ export const usePlatformStore = defineStore('platform', {
       useApiRequest({
         url: `/platform/leads/${$leadId}/stages`,
       }).then(res => {
-        const { success, stages } = res;
-        if (success && stages) {
-          this.setLeadStages(stages);
+        const { success, primary_stages, success_stages, lost_stages } = res;
+        if (success) {
+          this.setLeadPrimaryStages(primary_stages);
+          this.setLeadSuccessStages(success_stages);
+          this.setLeadLostStages(lost_stages);
           $callback({ loading: false, stages });
         } else {
           $callback({ loading: false });

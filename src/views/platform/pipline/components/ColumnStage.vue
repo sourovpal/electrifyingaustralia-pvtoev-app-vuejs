@@ -15,11 +15,13 @@
     const pipelineStore = usePipelineStore();
     const pipelineStage = computed(() => props.stage);
     const searchQuery = computed(() => pipelineStore.getSearchQuery);
-    const isFirstLoadingLeads = ref(true);
-    const isLoadingLeads = ref(false);
     const pipelineId = computed(() => pipelineStore.getPipelineId);
     const orderBy = computed(() => pipelineStore.getOrderBy);
     const orderColumn = computed(() => pipelineStore.getOrderColumn);
+    const filterQuerys = computed(() => pipelineStore.getFilterQuerys);
+
+    const isFirstLoadingLeads = ref(true);
+    const isLoadingLeads = ref(false);
     const stageLeads = ref([]);
     const infiniteLoadedLeadRef = ref(null);
     const page = ref(1);
@@ -44,9 +46,15 @@
         }
         isLoadingLeads.value = true;
         let payload = { page: page.value, order: orderBy.value, column: orderColumn.value };
+
         if (searchQuery.value) {
             payload['search'] = searchQuery.value;
         }
+
+        if (Object.keys(filterQuerys.value).length) {
+            payload['filters'] = JSON.stringify(filterQuerys.value);
+        }
+
         await useApiRequest({
             url: `/leads/${pipelineId.value}/stage/${pipelineStage.value.stage_id}/${generateSlug(pipelineStage.value.name)}`,
             payload
@@ -71,9 +79,21 @@
         });
     }
 
+
+    const handlefetchStageLeads = useDebounceFn(() => {
+        page.value = 1;
+        handleObserver(fetchStageLeads, true);
+    }, 2000);
+
+
+
     watch(searchQuery, (search) => {
         page.value = 1;
         handleObserver(fetchStageLeads, true);
+    });
+
+    watch(filterQuerys.value, (search) => {
+        handlefetchStageLeads();
     });
 
     watch(() => [orderBy, orderColumn], (search) => {
@@ -89,7 +109,7 @@
 </script>
 <template>
     <div class="piplien-state"
-        :class="{won:pipelineStage?.status==2, lost:pipelineStage?.status==1}">
+        :class="{won:pipelineStage?.status=='success', lost:pipelineStage?.status=='lost'}">
         <div class="pip-header ps-3 pe-2 py-2 d-flex flex-column">
             <h3 class="fs-18px text-head fw-bold mb-0 fw-bold text-overflow-ellipsis">{{ pipelineStage.name }}
             </h3>

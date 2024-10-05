@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
     import CustomScrollbar from 'custom-vue-scrollbar';
     import { VueDraggableNext } from 'vue-draggable-next';
     import { FindPipeline, UpdateOrCreatePipelines } from '../../../../actions/PipelineAction';
@@ -16,7 +16,7 @@
                 title: null,
                 is_sales_pipeline: 0,
                 pipelineId: null,
-                activeStages: [{ id: 0, name: 'New', color: 'rgb(0, 126, 229)', status: 0, }],
+                primaryStages: [{ id: 0, name: 'New', color: 'rgb(0, 126, 229)', status: 0, }],
                 successStages: [{ id: 0, name: 'Sold', color: 'rgb(41, 153, 0)', status: 2, }],
                 lostStages: [{ id: 0, name: 'Lost', color: 'rgb(66, 66, 66)', status: 1, }],
                 isSubmitPipelineStage: false,
@@ -34,7 +34,7 @@
                             this.title = pipeline.title;
                             this.is_sales_pipeline = pipeline.is_sales_pipeline;
 
-                            this.activeStages = pipeline.active_stages;
+                            this.primaryStages = pipeline.active_stages;
                             this.successStages = pipeline.success_stages;
                             this.lostStages = pipeline.lost_stages;
                         }
@@ -66,7 +66,7 @@
                         title: this.title,
                         is_sales_pipeline: this.is_sales_pipeline,
                         stages: [
-                            ...this.activeStages,
+                            ...this.primaryStages,
                             ...this.successStages,
                             ...this.lostStages,
                         ]
@@ -102,6 +102,110 @@
         },
     }
 
+</script> -->
+
+<script setup>
+    import { ref, onMounted } from 'vue';
+    import CustomScrollbar from 'custom-vue-scrollbar';
+    import { VueDraggableNext } from 'vue-draggable-next';
+    import { useApiRequest } from '@actions';
+    import PipelineStages from './components/PipelineStages.vue';
+    import { $toast } from '@config';
+    import { useRoute } from 'vue-router';
+
+    // Define reactive variables
+    const $route = useRoute();
+    const errors = ref({});
+    const title = ref(null);
+    const is_sales_pipeline = ref(0);
+    const pipelineId = ref(null);
+
+    const primaryStages = ref([]);
+    const successStages = ref([]);
+    const lostStages = ref([]);
+
+    const demoPrimaryStages = ref([{ id: 0, name: 'New', color: 'rgb(0, 126, 229)', status: 'promary' }]);
+    const demoSuccessStages = ref([{ id: 0, name: 'Sold', color: 'rgb(41, 153, 0)', status: 'success' }]);
+    const demoLostStages = ref([{ id: 0, name: 'Lost', color: 'rgb(66, 66, 66)', status: 'lost' }]);
+
+    const isSubmitPipelineStage = ref(false);
+
+    // Fetch pipeline data by ID
+    const fetchPipelineDataById = async () => {
+        try {
+            $toast.clear();
+            if (pipelineId.value) {
+                await useApiRequest({
+                    url: `pipelines/${pipelineId.value}`,
+                }).then(res => {
+                    const { success, pipeline, message } = res;
+                    if (success && pipeline) {
+                        pipelineId.value = pipeline.pipeline_id;
+                        title.value = pipeline.title;
+                        is_sales_pipeline.value = pipeline.is_sales_pipeline;
+                        primaryStages.value = pipeline.primary_stages;
+                        successStages.value = pipeline.success_stages;
+                        lostStages.value = pipeline.lost_stages;
+                    } else {
+                        $toast.error(message.text);
+                    }
+                });
+            }
+        } catch (error) {
+            $toast.error("Oops, something went wrong");
+        }
+    };
+
+    // Update or create pipeline handler
+    const updateOrCreatePipelineHandler = async () => {
+        $toast.clear();
+        if (!title.value) {
+            errors.value = { title: ['The title field is required.'] };
+            return;
+        }
+        isSubmitPipelineStage.value = true;
+        const payload = {
+            title: title.value,
+            is_sales_pipeline: is_sales_pipeline.value,
+            stages: [
+                ...primaryStages.value,
+                ...successStages.value,
+                ...lostStages.value,
+            ]
+        };
+        let url = '/pipelines';
+        if (pipelineId.value) { url += `/${pipelineId.value}` }
+        await useApiRequest({
+            url,
+            method: 'post',
+            payload,
+        }).then(res => {
+            const { success, message, errors: apiErrors, pipeline_id } = res;
+            if (success) {
+                $toast.success(message.text);
+                if (!pipelineId.value) {
+                    pipelineId.value = pipeline_id;
+                    fetchPipelineDataById();
+                    $router.push({ path: `/settings/crm/pipeline/${pipeline_id}` });
+                }
+            } else {
+                $toast.error(message.text);
+                errors.value = apiErrors ?? {};
+            }
+        }).catch(error => {
+            $toast.error('Oops, something went wrong');
+        }).finally(() => {
+            isSubmitPipelineStage.value = false;
+        });
+    };
+    // On mounted lifecycle hook
+    onMounted(() => {
+        const params = $route.params;
+        if (params.id) {
+            pipelineId.value = params.id;
+            fetchPipelineDataById();
+        }
+    });
 </script>
 
 <template>
@@ -111,8 +215,7 @@
                 <h1 class="mb-0 text-base">Pipelines</h1>
             </router-link>
             <div class="mx-2 d-flex justify-content-center align-items-center">
-                <svg  
-                    xmlns="http://www.w3.org/2000/svg"
+                <svg xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
                     viewBox="0 0 24 24">
@@ -191,23 +294,29 @@
                     </div>
                 </div>
 
-                <PipelineStages title="Active stages"
+                <PipelineStages title="Primary stages"
                     description='Active stages represent the part of the pipeline that is "in progress".
                     This will probably be most of the pipeline.'
-                    :stages="activeStages" />
+                    :stages="primaryStages"
+                    :demo="demoPrimaryStages"
+                    :add-new="{name:`New Primary Stage`, id:null, status:'primary', color:'white'}" />
                 <br>
 
                 <PipelineStages title="Successful stages"
                     description='Active stages represent the part of the pipeline that is "in progress".
                 This will probably be most of the pipeline.'
-                    :stages="successStages" />
+                    :stages="successStages"
+                    :demo="demoSuccessStages"
+                    :add-new="{name:`New Success Stage`, id:null, status:'success', color:'white'}" />
                 <br>
 
                 <PipelineStages title="Unsuccessful stages"
                     description='Unsuccessful stages are ways that things might fail or go wrong. While
                     you might only have one failure type, you can add multiple unsuccessful stages to track
                     different types of failure.'
-                    :stages="lostStages" />
+                    :stages="lostStages"
+                    :demo="demoLostStages"
+                    :add-new="{name:`New Lost Stage`, id:null, status:'lost', color:'white'}" />
 
                 <div class="row">
                     <div class="col-lg-12 mt-3">

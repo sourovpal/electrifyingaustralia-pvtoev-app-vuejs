@@ -21,6 +21,14 @@
         stages: {
             type: Array,
             default: [],
+        },
+        demo: {
+            type: Array,
+            default: [],
+        },
+        addNew: {
+            type: Object,
+            default: {},
         }
     })
 </script>
@@ -40,7 +48,7 @@
                     :list="stages"
                     handle=".handle">
                     <div class=""
-                        v-for="(item, index) in stages"
+                        v-for="(item, index) in stages.length?stages:demo"
                         :key="index">
                         <div class="list-group-item py-0 border-bottom-0 border-top">
                             <div class="box-info d-flex justify-content-start align-items-center">
@@ -94,7 +102,8 @@
                     </div>
                 </vue-draggable-next>
                 <div class="list-group-item bg-light text-center add-new-lead-status"
-                    @click="stages.push({name:`New Stage`, id:stages.length+1, status:2, color:'white'})">
+                    @click="stages.push(addNew)">
+
                     Add New Stage
                 </div>
             </div>

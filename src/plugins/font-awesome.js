@@ -106,6 +106,7 @@ const iconsToUse = [
     fa.faColumns,
     fa.faBars,
     fa.faBarsStaggered,
+    fa.faLocationDot,
     // Regular
     far.faSquare,
     far.faSquareMinus,

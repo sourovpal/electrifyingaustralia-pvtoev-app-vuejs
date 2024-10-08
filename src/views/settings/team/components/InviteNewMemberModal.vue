@@ -1,86 +1,95 @@
-<script>
-  import { Modal } from "mdb-ui-kit";
-  import { SendInviteMail } from '../../../../actions/UserAction';
-  import { FetchRoles } from '../../../../actions/RoleAction';
+<script setup>
+  import { ref, onMounted, defineExpose, reactive, defineEmits } from 'vue';
+  import { Modal } from 'mdb-ui-kit';
   import CustomScrollbar from 'custom-vue-scrollbar';
-  export default {
-    props: ['fetchMemberDataHandler'],
-    data() {
-      return {
-        errors: {},
-        modalInstance: null,
-        email: null,
-        access_roles: null,
-        isSubmitInviteMember: false,
-        isLoading: false,
-        roles: [],
+  import SelectObject from '@views/platform/components/fields/SelectObject.vue';
+  import { useApiRequest } from '@actions';
+  import { $toast } from '@config';
+
+  const emits = defineEmits(['handleRefresh']);
+  const modalRef = ref(null);
+  const errors = ref({});
+  let attributes = reactive({
+    email: null,
+    role: null,
+    reset: 1,
+  });
+  const roles = ref([]);
+  const isLoading = ref(false);
+  let modalInstance = null;
+
+  async function getRoles() {
+    await useApiRequest({
+      url: '/roles?limit=100',
+    }).then(res => {
+      const { success, message, roles: rolesData } = res;
+      if (success) {
+        roles.value = rolesData;
+        return;
       }
-    },
-    components: {
-      CustomScrollbar
-    },
-    mounted() {
-      this.modalInstance = new Modal(this.$refs.InviteNewMemberModal);
-    },
-    methods: {
-      showModalHandler() {
-        this.fetchAllRoles();
-        this.email = null;
-        this.access_roles = null;
-        this.errors = {};
-        this.modalInstance.show();
-      },
-      hideModalHandler() {
-        this.modalInstance.hide();
-      },
-      async fetchAllRoles() {
-        try {
-          this.isLoading = true;
-          const res = await FetchRoles();
-          const { success, roles } = res;
-          if (success) {
-            this.roles = roles;
-          }
-        } catch (error) {
-          this.$toast.error('Oops, something went wrong');
-        } finally {
-          this.isLoading = false;
-        }
-      },
-      async sendInviteMemberMail() {
-        try {
-          this.$toast.clear();
-          this.isSubmitInviteMember = true;
-          const data = {
-            email: this.email,
-            access_roles: this.access_roles,
-          };
-          const res = await SendInviteMail(data);
-          const { success, message, errors } = res;
-          this.$toast[message.type](message.text);
-          if (success) {
-            this.fetchMemberDataHandler();
-          } else {
-            this.errors = errors;
-          }
-        } catch (error) {
-          this.$toast.error('Oops, something went wrong');
-        } finally {
-          this.isSubmitInviteMember = false;
-        }
-      }
-    },
+      $toast.error(message.text);
+    }).catch(error => {
+      $toast.error("Oops, something went wrong");
+    }).finally(() => {
+    });
   }
+
+
+  function showModal() {
+    errors.value = {};
+    attributes.email = attributes.role = null;
+    modalInstance?.show();
+    attributes.reset = Math.random();
+    getRoles();
+  }
+  function hideModal() {
+    modalInstance?.hide();
+  }
+
+  async function handleInvited() {
+    $toast.clear();
+    errors.value = {};
+    isLoading.value = true;
+    delete attributes['reset'];
+    await useApiRequest({
+      url: '/users/invite',
+      method: 'post',
+      payload: attributes
+    }).then(res => {
+      const { success, message, errors: apiErrors } = res;
+      if (success) {
+        emits('handleRefresh', { page: 1 });
+        $toast.success(message.text);
+        attributes.email = attributes.role = null;
+        attributes.reset = Math.random();
+        hideModal();
+      } else if (!success && apiErrors) {
+        errors.value = apiErrors;
+      } else {
+        $toast.error(message.text);
+      }
+    }).catch(error => {
+      $toast.error("Oops, something went wrong.");
+    }).finally(() => {
+      isLoading.value = false;
+    });
+  }
+
+  onMounted(() => {
+    modalInstance = new Modal(modalRef.value);
+  });
+
+  defineExpose({
+    showModal,
+    hideModal
+  });
+
 </script>
 
 <template>
 
   <div class="modal fade"
-    ref="InviteNewMemberModal"
-    id="InviteNewMemberModal"
-    tabindex="-1"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+    ref="modalRef">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -88,15 +97,17 @@
         </div>
 
         <div class="modal-body">
-          <p class="form-subtitle">Invite team members by their email. Team members will be able to collaborate with
-            existing projects and share designs.</p>
+          <p class="form-subtitle fs-14px mb-3">
+            Invite team members by their email. Team members will be able to collaborate with
+            existing projects and share designs.
+          </p>
           <div class="row settings-group-item mb-3">
             <div class="col-2 ms-2 d-flex justify-content-end align-items-baseline">
               <label class="form-label-title mb-0">Email:</label>
             </div>
             <div class="col-8 me-auto d-flex justify-content-start align-items-center flex-direction-column">
               <input @click="delete errors?.email"
-                v-model="email"
+                v-model="attributes.email"
                 class="form-control"
                 type="text">
               <span class="fs-14px text-danger py-1 w-100 d-block"
@@ -107,61 +118,30 @@
             <div class="col-2 ms-2 d-flex justify-content-end align-items-baseline">
               <label class="form-label-title mb-0">Role:</label>
             </div>
-            <div
-              class="col-8 me-auto d-flex justify-content-start align-items-center flex-direction-column position-relative">
-              <div class="w-100 position-relative">
-                <input readonly="true"
-                  v-model="access_roles"
-                  class="form-control cursor-pointer"
-                  type="text"
-                  data-mdb-toggle="dropdown">
-                <div class="dropdown-menu custom-form-select roles overflow-auto"
-                  style="max-height:7.5rem;">
-                  <ul class="list-unstyled mb-0">
-                    <li @click="access_roles=item.name"
-                      v-for="(item, index) in roles"
-                      :key="index"
-                      v-show="access_roles != item.name"
-                      :class="`dropdown-item text-hard fw-bold fs-14px d-flex py-1`">
-                      {{ item.name }}
-                    </li>
-                  </ul>
-                </div>
-              </div>
+            <div class="col-8 me-auto">
+              <select-object :key="attributes.reset"
+                :options="roles"
+                label="name"
+                return-value="name"
+                v-model="attributes.role"></select-object>
               <span class="fs-14px text-danger py-1 w-100 d-block"
-                v-if="errors?.access_roles?.length">{{ errors?.access_roles[0] }}</span>
+                v-if="errors?.role?.length">{{ errors?.role[0] }}</span>
             </div>
           </div>
         </div>
 
         <div class="modal-footer flex-between-center border-top-0">
-          <div class="row settings-group-item mb-0 w-100">
-            <div class="col-6">
+          <div class="mb-0 w-100 d-flex justify-content-between align-items-center">
+            <div>
               <button type="button"
-                class="btn btn-danger fw-bold"
+                class="btn btn-danger fw-bold btn-sm"
                 data-mdb-dismiss="modal">Cancel</button>
             </div>
-            <div class="col-6">
-              <button :disabled="isSubmitInviteMember"
-                @click="sendInviteMemberMail"
-                type="submit"
-                class="ms-auto btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
-                <div v-if="isSubmitInviteMember">
-                  <svg class="spinner"
-                    viewBox="0 0 50 50"
-                    style="width:20px;height:20px;margin-left:0px;">
-                    <circle style="stroke: #ffffff;"
-                      class="path"
-                      cx="25"
-                      cy="25"
-                      r="20"
-                      fill="none"
-                      stroke-width="5"></circle>
-                  </svg>
-                  <span>Submitting...</span>
-                </div>
-                <span v-if="!isSubmitInviteMember">Invite member</span>
-              </button>
+            <div>
+              <loading-button :is-loading="isLoading"
+                :disabled="!attributes.email"
+                @click="handleInvited"
+                class="btn-sm">Send Invitation</loading-button>
             </div>
           </div>
         </div>
@@ -184,9 +164,9 @@
 
   .form-subtitle {
     line-height: 15px;
-    font-size: 12px;
     font-weight: 100;
     color: #abacb0;
     letter-spacing: 0.2px;
+    text-align: center;
   }
 </style>

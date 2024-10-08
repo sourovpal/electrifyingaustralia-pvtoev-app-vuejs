@@ -2,7 +2,7 @@
   import { Modal } from "mdb-ui-kit";
   import { ref, reactive, watch, computed, onMounted, defineEmits } from 'vue';
   import SelectLeadSource from '../../../components/fields/SelectLeadSource.vue';
-  import SelectObjectId from '../../../components/fields/SelectObjectId.vue';
+  import SelectObject from '../../../components/fields/SelectObject.vue';
   import DropdownOwnerList from '../../../components/dropdowns/DropdownOwnerList.vue';
   import { useLeadsStore, usePlatformStore } from '@stores';
   import { useApiRequest } from '@actions';
@@ -188,7 +188,7 @@
                   for="">Lead status
                   <span class="text-soft fs-12px ms-1">(Optional)</span>
                 </label>
-                <select-object-id :options="leadStatuses"
+                <select-object :options="leadStatuses"
                   returnValue="status_id"
                   label="name"
                   v-model="attributes.lead_status" />

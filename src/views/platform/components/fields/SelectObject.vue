@@ -3,8 +3,7 @@
     ref="selectObjectRef">
     <div class="dropdown form-control px-0"
       tabindex="0"
-      :class="{ open: isOpen, loading:(loading || disabled) }">
-
+      :class="{ open: isOpen, loading: (loading || disabled) }">
       <div v-if="loading"
         class="loader">
         <svg-custom-icon icon="SpinnerIcon" />
@@ -12,10 +11,10 @@
 
       <span v-else
         class="selected-option custom-input">
-        <input ref="customInutRef"
+        <input ref="customInputRef"
           type="text"
           :readonly="true"
-          @click="isOpen = !isOpen"
+          @click="toggleDropdown"
           :placeholder="placeholder"
           :value="fetchValue(selectedOption)" />
       </span>
@@ -32,6 +31,7 @@
             <li class="item px-3 py-1"
               v-for="(option, index) in filterOptions"
               :key="index"
+              v-show="fetchValue(option) != fetchValue(selectedOption)"
               @click="selectOptionHandler(option)">
               {{ fetchValue(option) }}
             </li>
@@ -46,88 +46,63 @@
   </div>
 </template>
 
-<script>
-  import { onClickOutside } from "@vueuse/core";
-  export default {
-    props: {
-      placeholder: {
-        type: String,
-        default: "",
-      },
-      options: {
-        type: Array,
-        required: true,
-      },
-      modelValue: {},
-      selected: {
-        default: null,
-      },
-      label: {
-        type: String,
-        default: "value",
-      },
-      returnValue: {
-        type: String,
-        default: null,
-      },
-      loading: { type: Boolean, default: false },
-      disabled: { type: Boolean, default: false },
-    },
-    data() {
-      return {
-        isOpen: false,
-        selectedOption: null,
-        searchOption: null,
-      };
-    },
-    watch: {
-      selectedObject(n) {
-        if (n === null) {
-          this.selectedOption = null;
-        }
-      },
-    },
-    computed: {
-      selectedObject() {
-        return this.selected;
-      },
-      filterOptions() {
-        return this.options.filter((item) => {
-          var search =
-            item[this.label]
-              ?.toLowerCase()
-              .search(this.searchOption?.toLowerCase()) > -1;
-          if (search) {
-            return item;
-          }
-        });
-      },
-    },
-    mounted() {
-      onClickOutside(this.$refs["selectObjectRef"], (event) => {
-        this.isOpen = false;
-      });
-    },
-    methods: {
-      selectOptionHandler(option) {
-        if (this.returnValue && option) {
-          this.$emit("update:modelValue", option[this.returnValue]);
-          this.$emit("change", option[this.returnValue]);
-        } else {
-          this.$emit("update:modelValue", option);
-          this.$emit("change", option);
-        }
-        this.selectedOption = option;
-        this.isOpen = false;
-      },
-      fetchValue(option) {
-        if (option) {
-          return option[this.label];
-        }
-        return null;
-      },
-    },
+<script setup>
+  import { ref, computed, watch, watchEffect } from 'vue';
+  import { onClickOutside } from '@vueuse/core';
+  import { defineProps, defineEmits } from 'vue';
+
+  const props = defineProps({
+    placeholder: { type: String, default: '' },
+    options: { type: Array, required: true },
+    modelValue: {},
+    selected: { type: Object, default: {} },
+    label: { type: String, default: 'value' },
+    returnValue: { type: String, default: null },
+    loading: { type: Boolean, default: false },
+    disabled: { type: Boolean, default: false },
+  });
+
+  const emit = defineEmits(['update:modelValue', 'change']);
+  const isOpen = ref(false);
+  const selectedOption = ref(null);
+  const searchOption = ref(null);
+  const selectObjectRef = ref(null);
+
+  watchEffect(() => {
+    selectedOption.value = props.selected ?? null;
+  });
+
+  const filterOptions = computed(() => {
+    return props.options?.filter((item) => {
+      if (!searchOption.value) return item;
+      return item[props.label]?.toLowerCase().includes(searchOption.value?.toLowerCase());
+    });
+  });
+
+  const fetchValue = (option) => {
+    return option ? option[props.label] : null;
   };
+
+  const toggleDropdown = () => {
+    isOpen.value = !isOpen.value;
+  };
+
+  const selectOptionHandler = (option) => {
+    if (props.returnValue && option) {
+      emit('update:modelValue', option[props.returnValue]);
+      emit('change', option[props.returnValue], option);
+    } else {
+      emit('update:modelValue', option);
+      emit('change', option);
+    }
+    selectedOption.value = option;
+    isOpen.value = false;
+  };
+
+  // Click outside to close dropdown
+  onClickOutside(selectObjectRef, () => {
+    isOpen.value = false;
+  });
 </script>
 
 <style lang="scss"

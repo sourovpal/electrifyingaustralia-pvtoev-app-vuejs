@@ -344,8 +344,8 @@ const routes = [
                     },
                     {
                         name: 'RoleEdit',
-                        path: 'roles/edit/:id',
-                        component: () => import('@views/settings/roles/EditRole.vue'),
+                        path: 'roles/:id/edit',
+                        component: () => import('@views/settings/roles/EditRoleAndPermission.vue'),
                         beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
                         meta: {
                             title: 'Home Page',

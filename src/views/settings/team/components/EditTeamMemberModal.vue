@@ -1,105 +1,94 @@
-<script>
-  import { Modal } from "mdb-ui-kit";
-  import { UpdateProfile } from '../../../../actions/UserAction';
-  import { FetchRoles } from '../../../../actions/RoleAction';
+<script setup>
+  import { ref, onMounted, defineExpose, reactive, defineEmits, defineProps } from 'vue';
+  import { Modal } from 'mdb-ui-kit';
   import CustomScrollbar from 'custom-vue-scrollbar';
-  export default {
-    props: ['fetchMemberDataHandler'],
-    data() {
-      return {
-        errors: {},
-        modalInstance: null,
-        userId: null,
-        name: null,
-        email: null,
-        phone_office: null,
-        phone_mobile: null,
-        access_roles: null,
-        company_name: null,
-        is_owner: null,
-        isSubmitUpdateMember: false,
-        isLoading: false,
-        roles: [],
-        member: {},
+  import SelectObject from '@views/platform/components/fields/SelectObject.vue';
+  import { useApiRequest } from '@actions';
+  import { $toast } from '@config';
+
+  const emits = defineEmits(['handleRefresh']);
+  const modalRef = ref(null);
+  const errors = ref({});
+  let attributes = reactive({
+    reset: 1,
+  });
+  const roles = ref([]);
+  const selectedRole = ref({});
+  const isLoading = ref(false);
+  let modalInstance = null;
+
+  async function getRoles() {
+    await useApiRequest({
+      url: '/roles?limit=100',
+    }).then(res => {
+      const { success, message, roles: rolesData } = res;
+      if (success) {
+        roles.value = rolesData;
+        return;
       }
-    },
-    components: {
-      CustomScrollbar
-    },
-    mounted() {
-      this.modalInstance = new Modal(this.$refs.EditTeamMemberModalRef);
-      this.company_name = 'company_name';
-    },
-    methods: {
-      async showModalHandler(member) {
-        this.fetchAllRoles();
-        this.member = member;
-        this.userId = member.user_id;
-        this.name = member.name;
-        this.email = member.email;
-        this.phone_office = member.phone_office;
-        this.phone_mobile = member.phone_mobile;
-        this.access_roles = member.user_role;
-        this.is_owner = member.is_owner ? 1 : 0;
-        this.errors = {};
-        this.modalInstance.show();
-      },
-      hideModalHandler() {
-        this.modalInstance.hide();
-      },
-      async fetchAllRoles() {
-        try {
-          this.isLoading = true;
-          const res = await FetchRoles();
-          const { success, roles } = res;
-          if (success) {
-            this.roles = roles;
-          }
-        } catch (error) {
-          this.$toast.error('Oops, something went wrong');
-        } finally {
-          this.isLoading = false;
-        }
-      },
-      async updateTeamMemberHandler() {
-        try {
-          this.$toast.clear();
-          this.isSubmitUpdateMember = true;
-          const data = {
-            name: this.name,
-            email: this.email,
-            phone_office: this.phone_office,
-            phone_mobile: this.phone_mobile,
-            access_roles: this.access_roles,
-          };
-          const res = await UpdateProfile(this.userId, data);
-          this.isSubmitUpdateMember = false;
-          var { success, message, errors } = res;
-          this.$toast[message.type](message.text);
-          if (success) {
-            this.fetchMemberDataHandler();
-          } else {
-            this.errors = errors;
-          }
-        } catch (error) {
-          console.log(error)
-          this.$toast.error('Oops, something went wrong');
-        } finally {
-          this.isSubmitUpdateMember = false;
-        }
-      }
-    },
+      $toast.error(message.text);
+    }).catch(error => {
+      $toast.error("Oops, something went wrong");
+    }).finally(() => {
+    });
   }
+
+
+  function showModal(user) {
+    selectedRole.value = {};
+    errors.value = {};
+    attributes = user;
+    if (user.roles?.length) selectedRole.value = user.roles[0];
+    modalInstance?.show();
+    attributes.reset = Math.random();
+    getRoles();
+  }
+  function hideModal() {
+    modalInstance?.hide();
+  }
+
+  async function handleUpdate() {
+    $toast.clear();
+    errors.value = {};
+    isLoading.value = true;
+    delete attributes['reset'];
+    await useApiRequest({
+      url: `/users/${attributes.user_id}/update`,
+      method: 'post',
+      payload: attributes
+    }).then(res => {
+      const { success, message, errors: apiErrors } = res;
+      if (success) {
+        emits('handleRefresh', { page: 1 });
+        $toast.success(message.text);
+        attributes.reset = Math.random();
+        hideModal();
+      } else if (!success && apiErrors) {
+        errors.value = apiErrors;
+      } else {
+        $toast.error(message.text);
+      }
+    }).catch(error => {
+      $toast.error("Oops, something went wrong.");
+    }).finally(() => {
+      isLoading.value = false;
+    });
+  }
+
+  onMounted(() => {
+    modalInstance = new Modal(modalRef.value);
+  });
+
+  defineExpose({
+    showModal,
+    hideModal
+  });
 </script>
 
 <template>
 
   <div class="modal fade"
-    ref="EditTeamMemberModalRef"
-    id="EditTeamMemberModal"
-    tabindex="-1"
-    aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+    ref="modalRef">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -114,7 +103,7 @@
             </div>
             <div class="col-7 me-auto d-flex justify-content-start align-items-center flex-direction-column">
               <input @click="delete errors?.name"
-                v-model="name"
+                v-model="attributes.name"
                 class="form-control"
                 type="text">
               <span class="fs-14px text-danger py-1 w-100 d-block"
@@ -126,7 +115,7 @@
               <label class="form-label-title mb-0">Email Address:</label>
             </div>
             <div class="col-7 me-auto d-flex justify-content-start align-items-center flex-direction-column">
-              <input v-model="email"
+              <input v-model="attributes.email"
                 class="form-control cursor-no-drop"
                 type="text"
                 readonly>
@@ -138,7 +127,7 @@
             </div>
             <div class="col-7 me-auto d-flex justify-content-start align-items-center flex-direction-column">
               <input @click="delete errors?.phone_office"
-                v-model="phone_office"
+                v-model="attributes.phone_office"
                 class="form-control"
                 type="text">
               <span class="fs-14px text-danger py-1 w-100 d-block"
@@ -151,7 +140,7 @@
             </div>
             <div class="col-7 me-auto d-flex justify-content-start align-items-center flex-direction-column">
               <input @click="delete errors?.phone_mobile"
-                v-model="phone_mobile"
+                v-model="attributes.phone_mobile"
                 class="form-control"
                 type="text">
               <span class="fs-14px text-danger py-1 w-100 d-block"
@@ -162,27 +151,14 @@
             <div class="col-3 ms-2 d-flex justify-content-end align-items-baseline">
               <label class="form-label-title mb-0">Role:</label>
             </div>
-            <div
-              class="col-7 me-auto d-flex justify-content-start align-items-center flex-direction-column position-relative">
-              <div class="position-relative w-100">
-                <input readonly
-                  v-model="access_roles"
-                  class="form-control cursor-pointer"
-                  type="text"
-                  data-mdb-toggle="dropdown">
-                <div class="dropdown-menu custom-form-select roles overflow-auto"
-                  style="max-height:7.5rem;">
-                  <ul class="list-unstyled mb-0">
-                    <li @click="access_roles=item.name"
-                      v-for="(item, index) in roles"
-                      :key="index"
-                      v-show="access_roles != item.name"
-                      :class="`dropdown-item text-hard fw-bold fs-14px d-flex py-1`">
-                      {{ item.name }}
-                    </li>
-                  </ul>
-                </div>
-              </div>
+            <div class="col-7 me-auto">
+              <select-object :key="attributes.reset"
+                :options="roles"
+                :selected="selectedRole"
+                label="name"
+                return-value="name"
+                v-model="attributes.role"
+                @change="(_, s_role) => selectedRole = s_role"></select-object>
               <span class="fs-14px text-danger py-1 w-100 d-block"
                 v-if="errors?.access_roles?.length">{{ errors?.access_roles[0] }}</span>
             </div>
@@ -198,9 +174,10 @@
               <div class="mb-4">
                 <h6 class="modal-title text-base">Reset user password</h6>
                 <p class="text-base fs-12px mb-3">
-                  This will log <span class="text-danger fw-bold">{{ name }}</span> out of all sessions, remove their
-                  current password and send a password reset email to <span class="text-danger fw-bold">{{ email
-                    }}</span> .
+                  This will log <span class="text-danger fw-bold">{{ attributes.display_name }}</span> out of all
+                  sessions, remove their
+                  current password and send a password reset email to <span class="text-danger fw-bold">
+                    {{ attributes.email }}</span> .
                 </p>
                 <div class="">
                   <a class="btn btn-outline-warning btn-sm reset-btn"
@@ -210,8 +187,9 @@
               <!--  -->
               <div class="">
                 <h6 class="modal-title text-base">Remove user from team</h6>
-                <p class="text-base fs-12px mb-3">This will remove <span class="text-danger fw-bold">{{ name }}</span>
-                  from {{ company_name }}. Their projects will remain in the team and can be reassigned to other users.
+                <p class="text-base fs-12px mb-3">This will remove <span class="text-danger fw-bold">{{
+                    attributes.display_name }}</span>
+                  from [companie_name]. Their projects will remain in the team and can be reassigned to other users.
                 </p>
                 <div class="">
                   <a class="btn btn-outline-danger btn-sm remove-btn"
@@ -220,39 +198,17 @@
               </div>
             </div>
           </div>
-
-
         </div>
 
         <div class="modal-footer flex-between-center border-top-0">
-          <div class="row settings-group-item mb-0 w-100">
-            <div class="col-6">
-              <button type="button"
-                class="btn btn-danger fw-bold"
-                data-mdb-dismiss="modal">Cancel</button>
-            </div>
-            <div class="col-6">
-              <button :disabled="isSubmitUpdateMember"
-                @click="updateTeamMemberHandler"
-                type="submit"
-                class="ms-auto btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
-                <div v-if="isSubmitUpdateMember">
-                  <svg class="spinner"
-                    viewBox="0 0 50 50"
-                    style="width:20px;height:20px;margin-left:0px;">
-                    <circle style="stroke: #ffffff;"
-                      class="path"
-                      cx="25"
-                      cy="25"
-                      r="20"
-                      fill="none"
-                      stroke-width="5"></circle>
-                  </svg>
-                  <span>Submitting...</span>
-                </div>
-                <span v-if="!isSubmitUpdateMember">Save Change</span>
-              </button>
-            </div>
+          <div class="d-flex justify-content-between align-items-center w-100">
+            <button type="button"
+              class="btn btn-danger fw-bold btn-sm"
+              data-mdb-dismiss="modal">Cancel</button>
+            <loading-button class="btn-sm"
+              :is-loading="isLoading"
+              :disabled="!attributes.email"
+              @click="handleUpdate">Save Change</loading-button>
           </div>
         </div>
       </div>

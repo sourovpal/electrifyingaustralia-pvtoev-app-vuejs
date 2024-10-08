@@ -7,6 +7,8 @@ import * as far from '@fortawesome/free-regular-svg-icons';
 const iconsToUse = [
     fa.faTrash,
     fa.faArrowLeft,
+    fa.faArrowUp,
+    fa.faArrowDown,
     fa.faArrowRight,
     fa.faChevronLeft,
     fa.faChevronRight,
@@ -107,6 +109,7 @@ const iconsToUse = [
     fa.faBars,
     fa.faBarsStaggered,
     fa.faLocationDot,
+    fa.faSackDollar,
     // Regular
     far.faSquare,
     far.faSquareMinus,

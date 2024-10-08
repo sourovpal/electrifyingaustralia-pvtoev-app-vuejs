@@ -1,7 +1,7 @@
 <script setup>
   import { Modal } from "mdb-ui-kit";
   import DropdownOwnerList from "../../components/dropdowns/DropdownOwnerList.vue";
-  import SelectObjectId from '../../components/fields/SelectObjectId.vue';
+  import SelectObject from '../../components/fields/SelectObject.vue';
   import { AvatarIcon } from "@assets/icons";
   import { ref, onMounted, watch, computed, defineExpose } from 'vue';
   import { $toast } from '@config';
@@ -169,7 +169,7 @@
               for="">Select a pipeline
               <span class="text-soft fs-12px ms-1">(Required)</span>
             </label>
-            <select-object-id :loading="pipelineIsLoading"
+            <select-object :loading="pipelineIsLoading"
               :options="pipelines"
               :selected="selectedPipeline"
               @change="selectPipelineHandler"
@@ -184,7 +184,7 @@
               for="">Select a stage
               <span class="text-soft fs-12px ms-1">(Required)</span>
             </label>
-            <select-object-id :disabled="!pipelineStages.length"
+            <select-object :disabled="!pipelineStages.length"
               :loading="stagesIsLoading"
               :options="pipelineStages"
               :selected="selectedStage"

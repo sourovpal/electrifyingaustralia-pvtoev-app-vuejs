@@ -2,7 +2,7 @@
   import { Modal } from "mdb-ui-kit";
   import { usePlatformStore } from "@stores";
   import { useAppStore } from "@stores";
-  import SelectObjectId from "../../components/fields/SelectObjectId.vue";
+  import SelectObject from "../../components/fields/SelectObject.vue";
   import { ref, onMounted, watch, computed, defineExpose } from 'vue';
   import { $toast } from '@config';
   import { useApiRequest } from '@actions';
@@ -195,7 +195,7 @@
               {{ isPipelineLead ? "back to lead status"
               : "to another lead status"
               }}</label>
-            <select-object-id :loading="statusesIsLoading"
+            <select-object :loading="statusesIsLoading"
               :options="statuses"
               :selected="selectedStatus"
               @change="selectStatusHandler"
@@ -213,7 +213,7 @@
               ? "another pipeline stage"
               : "lead to pipeline stage"
               }}</label>
-            <select-object-id :loading="pipelineIsLoading"
+            <select-object :loading="pipelineIsLoading"
               :options="pipelines"
               :selected="selectedPipeline"
               @change="selectPipelineHandler"
@@ -224,7 +224,7 @@
           </div>
           <!-- Pipeline Stage Input -->
           <div class="mb-4 position-relative">
-            <select-object-id :disabled="!pipelineStages.length"
+            <select-object :disabled="!pipelineStages.length"
               :loading="stagesIsLoading"
               :options="pipelineStages"
               :selected="selectedStage"

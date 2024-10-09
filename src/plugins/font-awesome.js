@@ -112,6 +112,7 @@ const iconsToUse = [
     fa.faSackDollar,
     fa.faToggleOn,
     fa.faToggleOff,
+    fa.faEyeSlash,
     // Regular
     far.faSquare,
     far.faSquareMinus,

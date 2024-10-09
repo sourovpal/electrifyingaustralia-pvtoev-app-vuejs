@@ -102,8 +102,7 @@
                     </div>
                 </vue-draggable-next>
                 <div class="list-group-item bg-light text-center add-new-lead-status"
-                    @click="stages.push(addNew)">
-
+                    @click="stages.push({...addNew})">
                     Add New Stage
                 </div>
             </div>

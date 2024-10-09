@@ -1,9 +1,9 @@
 <script setup>
-  import { FindLocalizationByCompany, UpdateLocalization } from '../../../actions/LocalizationAction';
-  import { FetchCountriesList } from '../../../actions/AppAction';
+  import { FindLocalizationByCompany, UpdateLocalization } from '@actions/LocalizationAction';
+  import { FetchCountriesList } from '@actions/AppAction';
   import { ref, reactive, onMounted, computed } from 'vue';
-  import MultipleSelect from '../../platform/lead/components/modals/fields/MultipleSelect.vue';
-  import { $toast } from '../../../config';
+  import MultipleSelect from '@views/platform/components/fields/MultipleSelect.vue';
+  import { $toast } from '@config';
 
   const state = reactive({
     errors: {},

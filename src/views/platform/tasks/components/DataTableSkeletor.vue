@@ -1,10 +1,5 @@
-<script>
+<script setup>
     import { Skeletor } from 'vue-skeletor';
-    export default {
-        components: {
-            Skeletor
-        }
-    }
 </script>
 
 <template>

@@ -1,18 +1,6 @@
-<script>
+<script setup>
 import CreateApiTokenModal from './components/CreateApiTokenModal.vue';
 import AddADestinationModal from './components/AddADestinationModal.vue';
-export default {
-  name:'AccountIndex',
-    data() {
-      return{
-      }
-    },
-    components:{
-        CreateApiTokenModal,
-        AddADestinationModal
-    }
-  }
-  
 </script>
 
 <template>

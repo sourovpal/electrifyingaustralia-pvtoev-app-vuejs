@@ -1,5 +1,5 @@
 <script setup>
-import {onBeforeUnmount, onMounted, ref} from 'vue';
+import {onBeforeUnmount, onMounted, ref, defineProps, defineEmits} from 'vue';
 import {Modal} from 'mdb-ui-kit';
 
 const props = defineProps({

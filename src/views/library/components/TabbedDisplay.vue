@@ -70,26 +70,7 @@
 </template>
 
 <script setup>
-import {computed, ref} from 'vue'
-
-/* *
-Example props
-
-components: {
-    name: <component>
-}
-
-tabs: [
-    {
-        label: 'string',
-        component: 'string' // pointing to the name key in the components object  
-        icon: { name: 'fa-pen', toRight: false } // will show next to he tab name
-    },
-    ...
-]
-
-component-class: 'bg-secondary'
-*/
+import {computed, ref, defineProps} from 'vue'
 
 const props = defineProps(['tabs', 'components', 'component-class'])
 

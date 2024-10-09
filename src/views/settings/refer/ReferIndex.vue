@@ -1,14 +1,4 @@
-<script>
-export default {
-  name:'AccountIndex',
-    data() {
-      return{
-      }
-    },
-    components:{
-    }
-  }
-  
+<script setup>
 </script>
 
 <template>

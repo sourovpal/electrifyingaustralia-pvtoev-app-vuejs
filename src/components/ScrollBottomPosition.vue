@@ -8,7 +8,6 @@
         defineProps,
         defineEmits,
         defineExpose,
-        defineOptions,
         useAttrs,
         watchEffect,
         watch,

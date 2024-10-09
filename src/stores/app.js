@@ -1,7 +1,7 @@
-import api from "../actions/api";
-import Storage from "../helpers/Storage";
+import api from "@actions/api";
+import Storage from "@helpers/Storage";
 import { defineStore } from 'pinia';
-import { CONFIG } from "../config";
+import { CONFIG } from "@config";
 
 var initialCompany = {};
 var initialLeadStatuses = [];

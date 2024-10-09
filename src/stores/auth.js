@@ -1,6 +1,6 @@
 import Storage from "../helpers/Storage";
 import { defineStore } from 'pinia';
-import { CONFIG } from "../config";
+import { CONFIG } from "@config";
 
 const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
 const securityStorage = new Storage(CONFIG.VITE_AUTH_TOKEN);

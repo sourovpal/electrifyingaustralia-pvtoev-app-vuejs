@@ -1,5 +1,5 @@
 <script setup>
-  import { defineProps, effect, ref, useAttrs } from "vue";
+  import { defineProps, effect, ref, useAttrs, defineEmits } from "vue";
 
   const props = defineProps({
     title: {
@@ -11,7 +11,7 @@
       default: "Submitting...",
     },
     isLoading: {
-      type: Boolean,
+      type: [Boolean, Number, String],
       default: false,
     },
     type: {
@@ -19,7 +19,7 @@
       default: "submit",
     },
     disabled: {
-      type: Boolean,
+      type: [Boolean, Number, String],
       default: false,
     },
     size: {

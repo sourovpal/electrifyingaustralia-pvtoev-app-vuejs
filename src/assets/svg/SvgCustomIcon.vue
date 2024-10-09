@@ -4,6 +4,7 @@ import TrashIcon from './TrashIcon.vue';
 import DownArrow from './DownArrow.vue';
 import LostIocn from './LostIocn.vue';
 import SpinnerIcon from './SpinnerIcon.vue';
+import {defineProps} from 'vue';
 export default {
     props:['icon'],
     components:{
@@ -14,7 +15,6 @@ export default {
         SpinnerIcon,
     }
 }
-
 </script>
 <template>
     <component :is="icon" />

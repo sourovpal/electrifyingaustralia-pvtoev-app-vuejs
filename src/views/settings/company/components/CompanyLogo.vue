@@ -163,7 +163,8 @@
 
         img {
             height: 100%;
-            width: auto !important;
+            object-fit: contain;
+            width: 100% !important;
         }
     }
 </style>

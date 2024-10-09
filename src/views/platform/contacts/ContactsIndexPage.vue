@@ -119,9 +119,9 @@
                     <div @click="selectEditContact(item)"
                         style="width:20rem;flex-grow: 1;"
                         class="tbl-td full-width cursor-pointer">
-                        <div data-v-2b4956d4=""
+                        <div
                             class="circle-avatar me-2">
-                            <img data-v-2b4956d4=""
+                            <img
                                 class="rounded-circle border"
                                 alt="avatar1"
                                 :src="item?.avatar">

@@ -15,6 +15,16 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
+  css: {
+    extract: true,
+    loaderOptions: {
+      postcss: {
+        plugins: [
+          require('postcss-nested')
+        ]
+      }
+    }
+  },
   resolve: {
     alias: [
       { find: '@', replacement: fileURLToPath(new URL('./src', import.meta.url)) },
@@ -32,13 +42,13 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
-        output:{
-            manualChunks(id) {
-                if (id.includes('node_modules')) {
-                    return id.toString().split('node_modules/')[1].split('/')[0].toString();
-                }
-            }
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return id.toString().split('node_modules/')[1].split('/')[0].toString();
+          }
         }
+      }
     }
   }
 })

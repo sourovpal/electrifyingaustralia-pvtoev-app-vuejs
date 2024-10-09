@@ -1,7 +1,6 @@
 <script setup>
     import { ref, onMounted } from 'vue';
     import CustomScrollbar from 'custom-vue-scrollbar';
-    import { FindRoleById, UpdateRoleHasPermissions } from '../../../actions/RoleAction';
     import { BaseTree, Draggable, pro, OpenIcon } from '@he-tree/vue';
     import '@he-tree/vue/style/default.css';
     import '@he-tree/vue/style/material-design.css';

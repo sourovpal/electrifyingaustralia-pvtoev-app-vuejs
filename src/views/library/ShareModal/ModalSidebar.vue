@@ -1,5 +1,5 @@
 <script setup>
-import {onMounted, ref} from 'vue'
+import {onMounted, ref, defineEmits} from 'vue'
 const tabs = [
 	{name: 'esignature-input', label: 'Send e-Signature request'},
 	{name: 'send-proposal', label: 'Send proposal'},

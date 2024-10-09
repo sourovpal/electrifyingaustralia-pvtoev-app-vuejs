@@ -1,6 +1,6 @@
 <script setup>
 import { onClickOutside } from "@vueuse/core";
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref, watchEffect, defineProps, defineEmits } from "vue";
 
 const props = defineProps({
   uniqueId: {

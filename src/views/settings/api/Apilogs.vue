@@ -1,23 +1,7 @@
-<script>
-import Datatable from '../../../components/Datatable/Datatable.vue';
-import DatatableHeader from '../../../components/Datatable/DatatableHeader.vue';
-import DatatableBody from '../../../components/Datatable/DatatableBody.vue';
-
-
-
-export default {
-  name:'AccountIndex',
-    data() {
-      return{
-      }
-    },
-    components:{
-        Datatable,
-        DatatableHeader,
-        DatatableBody,
-    }
-  }
-  
+<script setup>
+import Datatable from '@components/Datatable/Datatable.vue';
+import DatatableHeader from '@components/Datatable/DatatableHeader.vue';
+import DatatableBody from '@components/Datatable/DatatableBody.vue';
 </script>
 
 <template>

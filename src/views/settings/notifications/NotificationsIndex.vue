@@ -1,14 +1,4 @@
-<script>
-export default {
-  name:'ProfileIndex',
-    data() {
-      return{
-      }
-    },
-    components:{
-    }
-  }
-  
+<script setup>
 </script>
 
 <template>

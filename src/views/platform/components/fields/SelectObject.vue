@@ -49,7 +49,7 @@
 <script setup>
   import { ref, computed, watch, watchEffect } from 'vue';
   import { onClickOutside } from '@vueuse/core';
-  import { defineProps, defineEmits } from 'vue';
+  import {    } from 'vue';
 
   const props = defineProps({
     placeholder: { type: String, default: '' },

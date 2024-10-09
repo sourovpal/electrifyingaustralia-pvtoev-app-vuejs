@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import {defineProps} from 'vue';
+import {} from 'vue';
 const props = defineProps({
     active: {
         default: false,

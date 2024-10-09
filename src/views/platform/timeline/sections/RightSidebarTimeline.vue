@@ -1,5 +1,6 @@
 <script setup>
-  import { ref } from 'vue';
+  import { ref, computed } from 'vue';
+  import { usePlatformStore } from '@stores';
   import CustomScrollbar from "custom-vue-scrollbar";
   import RightSidebarContacts from './RightSidebarContacts.vue';
   import RightSidebarAddress from './RightSidebarAddress.vue';
@@ -7,14 +8,14 @@
   import LeadFilesSection from "./LeadFilesSection.vue";
   import LeadNotes from './LeadNotes.vue';
   import LeadTasks from './LeadTasks.vue';
-  const toggleRightDetailsSidebar = ref(false);
-
+  const platformStore = usePlatformStore();
+  const toggleRightSidebar = computed(() => platformStore.getToggleRightSidebar);
 
 </script>
 <template>
   <div id="timelineRightSidebar"
     class="col-right"
-    :class="{ show: toggleRightDetailsSidebar }">
+    :class="{ show: toggleRightSidebar }">
     <CustomScrollbar>
       <RightSidebarContacts></RightSidebarContacts>
       <div class="p-3 border-bottom">

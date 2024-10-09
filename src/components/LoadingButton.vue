@@ -1,5 +1,5 @@
 <script setup>
-  import { defineProps, effect, ref, useAttrs, defineEmits } from "vue";
+  import {   effect, ref, useAttrs,  } from "vue";
 
   const props = defineProps({
     title: {

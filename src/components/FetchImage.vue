@@ -1,5 +1,5 @@
 <script setup>
-    import { defineProps, defineEmits, ref, onMounted, useAttrs } from 'vue';
+    import {     ref, onMounted, useAttrs } from 'vue';
     import {
         getMaterialFileIcon,
         getMaterialFolderIcon,

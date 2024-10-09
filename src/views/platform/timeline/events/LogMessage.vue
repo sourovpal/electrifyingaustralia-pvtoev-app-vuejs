@@ -2,7 +2,7 @@
     import EventByUser from './EventByUser.vue';
     import Events from './Events.vue';
 
-    import { defineProps, computed } from 'vue';
+    import {   computed } from 'vue';
     const props = defineProps({
         message: {
             type: Object,

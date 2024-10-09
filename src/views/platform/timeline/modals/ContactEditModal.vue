@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, computed, watch, onMounted, defineExpose, defineEmits } from 'vue';
+  import { ref, computed, watch, onMounted, } from 'vue';
   import { Modal } from "mdb-ui-kit";
   import { usePlatformStore, useAppStore } from "@stores";
   import { $toast } from '@config';
@@ -226,12 +226,9 @@
         if (!props.showLead) {
           platformStore.callFetchTimelineLogs();
           platformStore.callFetchLeadContacts(leadId, ({ contacts }) => {
-            if (!isCreateNewContact.value && contacts) {
-              const contact = contacts.find(item => item.contact_id === payload.contact_id);
-              if (contact) {
-                platformStore.setPrimaryContact(contact);
-              }
-            }
+            if (isCreateNewContact.value || !Array.isArray(contacts)) return;
+            const contact = contacts.find(item => item.contact_id === editContact.value.contact_id);
+            if (contact) platformStore.setPrimaryContact(contact);
           });
         }
         isCreateNewContact.value = false;

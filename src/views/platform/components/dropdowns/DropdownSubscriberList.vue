@@ -2,7 +2,7 @@
   import { usePlatformStore } from "@stores";
   import { useAuthStore } from "@stores";
   import { AvatarIcon } from "@assets/icons";
-  import { computed, ref, defineProps } from "vue";
+  import { computed, ref,  } from "vue";
   import { useDebounceFn } from '@vueuse/core';
   import { useApiRequest } from '@actions';
   import { $toast } from '@config';

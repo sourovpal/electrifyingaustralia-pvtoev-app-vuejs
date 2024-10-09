@@ -1,5 +1,5 @@
 <script setup>
-  import { defineProps, ref, computed } from "vue";
+  import {   ref, computed } from "vue";
   import { getCustomPropertieIcon } from "@helpers";
   import SlideUpDown from "vue-slide-up-down";
   import FreeTextInput from "./FreeTextInput.vue";

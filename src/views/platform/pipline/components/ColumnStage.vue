@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, defineProps, onMounted, computed, watch } from 'vue';
+    import { ref,   onMounted, computed, watch } from 'vue';
     import CustomScrollbar from 'custom-vue-scrollbar';
     import LoadingStateLeads from './LoadingStateLeads.vue';
     import ColumnStageLead from './ColumnStageLead.vue';

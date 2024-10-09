@@ -1,6 +1,6 @@
 <script setup>
 import { VueDraggableNext } from 'vue-draggable-next';
-import {defineEmits} from 'vue';
+import {} from 'vue';
 const emit = defineEmits(['close']);
 
 const handleCloseClick = () => {

@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, defineProps, defineEmits, watch, computed, watchEffect } from 'vue';
+  import { ref,     watch, computed, watchEffect } from 'vue';
   import SlideUpDown from "vue-slide-up-down";
   import SelectLeadSource from "../../components/fields/SelectLeadSource.vue";
   import FilterProperties from "./filters/FilterProperties.vue";

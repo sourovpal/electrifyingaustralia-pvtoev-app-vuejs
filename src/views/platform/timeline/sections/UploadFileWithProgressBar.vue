@@ -5,7 +5,7 @@
         getVSIFileIcon,
         getVSIFolderIcon,
     } from "file-extension-icon-js";
-    import { defineProps, onMounted, ref, defineEmits } from 'vue';
+    import {   onMounted, ref,  } from 'vue';
     import api from "@actions/api";
     import { shortenFileName } from '@helpers';
     import { usePlatformStore } from '@stores';

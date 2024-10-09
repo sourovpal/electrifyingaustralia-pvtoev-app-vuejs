@@ -3,7 +3,7 @@
   import { usePlatformStore } from "@stores";
   import { useAppStore } from "@stores";
   import SelectObject from "../../components/fields/SelectObject.vue";
-  import { ref, onMounted, watch, computed, defineExpose } from 'vue';
+  import { ref, onMounted, watch, computed,  } from 'vue';
   import { $toast } from '@config';
   import { useApiRequest } from '@actions';
   import { useRouter } from "vue-router";

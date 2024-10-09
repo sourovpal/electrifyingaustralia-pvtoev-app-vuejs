@@ -1,6 +1,6 @@
 <script setup>
     import StarRating from "vue-star-rating";
-    import { defineProps } from 'vue';
+    import {  } from 'vue';
     const props = defineProps({
         message: {
             type: Object,

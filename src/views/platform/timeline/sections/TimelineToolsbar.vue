@@ -30,6 +30,7 @@
     const nextLeadId = computed(() => platformStore.getNextLeadId);
     const primaryContact = computed(() => platformStore.getPrimaryContact);
     const users = computed(() => platformStore.getUsers);
+    const toggleRightSidebar = computed(() => platformStore.getToggleRightSidebar);
 
     function copyClipboardHandler() {
         var source = ` Title : ${editLead.value.lead_title ?? null}\n Owner : ${leadOwner.value.name ?? null}\n Value : ${"$" + editLead.value.estimated_value}\n Status : ${leadStatus.value.name ?? null}\n Person : ${primaryContact.value.full_name ?? null}\n Email : ${primaryContact.value.email ?? null}\n Phone : ${primaryContact.value.phone_number ?? null}\n Link : ${window.location.href}`;
@@ -109,12 +110,12 @@
         :class="{ 'border-0': isPipelineLead }">
         <left-action-bar class="left-hover-action ms-3 ps-1">
 
-            <div class="">
+            <div class="lead-title">
                 <Skeletor v-if="isFirstLoading"
                     style="width: 150px" />
                 <span @click="$refs['editLeadModalRef']?.showModalHandler()"
                     v-else
-                    class="text-head mb-0 fs-16px fw-bold lead-title-text cursor-pointer">
+                    class="text-head mb-0 fs-16px fw-bold lead-title-text cursor-pointer text-overflow-ellipsis">
                     {{ editLead?.lead_title ?? primaryContact?.full_name}}
                 </span>
             </div>
@@ -160,10 +161,9 @@
                 </button>
             </router-link>
 
-            <button @click="toggleRightDetailsSidebarHandler()"
-                v-tippy="{ content: 'Lead Details', placement: 'top' }"
-                class="toolbar-btn btn btn-light btn-sm btn-floating me-3 d-inline d-lg-none">
-                <font-awesome-icon icon="fas fa-ellipsis-vertical"
+            <button @click="platformStore.setToggleRightSidebar()"
+                class="toolbar-btn btn btn-transparent shadow-0 btn-sm btn-floating me-3 d-flex justify-content-center align-items-center d-lg-none">
+                <font-awesome-icon icon="fas fa-sliders"
                     class="text-soft fs-16px"></font-awesome-icon>
             </button>
 
@@ -285,6 +285,14 @@
 
 <style scoped
     lang="scss">
+    .lead-title {
+        .lead-title-text {
+            max-width: 15rem;
+            display: block;
+            white-space: nowrap;
+        }
+    }
+
     .timeline-tools-bar {
         height: 2.5rem;
     }

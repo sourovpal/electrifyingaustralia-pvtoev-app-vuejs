@@ -1,5 +1,5 @@
 <script setup>
-import {onBeforeUnmount, onMounted, ref, defineEmits} from 'vue'
+import {onBeforeUnmount, onMounted, ref, } from 'vue'
 import {Modal} from 'mdb-ui-kit'
 import ModalSidebar from './ModalSidebar.vue';
 import ModalBody from './ModalBody.vue';

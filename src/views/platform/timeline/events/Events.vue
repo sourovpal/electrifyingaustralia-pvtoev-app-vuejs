@@ -11,7 +11,7 @@
     import EstimatedValueEvent from './EstimatedValueEvent.vue';
     import MessageEvent from './MessageEvent.vue';
 
-    import { defineProps, computed } from 'vue';
+    import {   computed } from 'vue';
     const props = defineProps({
         message: {
             type: Object,

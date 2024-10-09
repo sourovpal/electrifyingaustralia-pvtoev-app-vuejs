@@ -3,7 +3,7 @@
     ref,
     computed,
     onMounted,
-    defineExpose,
+     
     watch,
     shallowReactive,
   } from "vue";

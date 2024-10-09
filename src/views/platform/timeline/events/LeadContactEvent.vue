@@ -1,7 +1,7 @@
 <script setup>
     import JsonViewer from 'vue-json-viewer';
     import 'vue-json-viewer/style.css';
-    import { defineProps } from 'vue';
+    import {  } from 'vue';
     const props = defineProps({
         message: {
             type: Object,

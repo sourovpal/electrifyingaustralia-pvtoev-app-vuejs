@@ -39,9 +39,13 @@ export const usePlatformStore = defineStore('platform', {
       leadEditModal: null,
       //
       timelinesRef: () => { },
+      toggleTimelineRightSidebar: false,
     }
   },
   getters: {
+    getToggleRightSidebar(stage) {
+      return stage.toggleTimelineRightSidebar;
+    },
     getIsLoading(stage) {
       return stage.isLoading;
     },
@@ -134,6 +138,9 @@ export const usePlatformStore = defineStore('platform', {
     },
   },
   actions: {
+    setToggleRightSidebar() {
+      return this.toggleTimelineRightSidebar = !this.toggleTimelineRightSidebar;
+    },
     setIsLoading(payload) {
       this.isLoading = !!payload;
     },

@@ -1,6 +1,6 @@
 <script setup>
   import { Modal } from "mdb-ui-kit";
-  import { ref, reactive, watch, computed, onMounted, defineEmits } from 'vue';
+  import { ref, reactive, watch, computed, onMounted,  } from 'vue';
   import SelectLeadSource from '../../../components/fields/SelectLeadSource.vue';
   import SelectObject from '../../../components/fields/SelectObject.vue';
   import DropdownOwnerList from '../../../components/dropdowns/DropdownOwnerList.vue';

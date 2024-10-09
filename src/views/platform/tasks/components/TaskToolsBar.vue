@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, defineProps, defineEmits } from 'vue';
+    import { ref,    } from 'vue';
     import ActionBar from '@components/ActionBar/ActionBar.vue';
     import LeftActionBar from '@components/ActionBar/LeftActionBar.vue';
     import RightActionBar from '@components/ActionBar/RightActionBar.vue';

@@ -1,5 +1,5 @@
 <script setup>
-    import { defineProps, computed, watchEffect, ref, nextTick } from 'vue';
+    import {   computed, watchEffect, ref, nextTick } from 'vue';
     import { Skeletor } from "vue-skeletor";
     import StarRating from "vue-star-rating";
     import CustomModal from '@components/modals/CustomModal.vue';

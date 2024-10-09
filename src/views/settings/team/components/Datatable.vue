@@ -3,7 +3,7 @@
     import DatatableHeader from '@components/Datatable/DatatableHeader.vue';
     import DatatableBody from '@components/Datatable/DatatableBody.vue';
     import TeamMemberSkeletor from './TeamMemberSkeletor.vue';
-    import { ref, defineProps, defineEmits } from 'vue';
+    import { ref,    } from 'vue';
     import { formatTimeAgo, handleDateTimeFormat } from '@helpers';
 
     const props = defineProps({
@@ -76,21 +76,22 @@
                 <div style="width:10rem;flex-grow:1;"
                     class="tbl-td d-none d-sm-flex">
                     <span v-if="member.is_owner"
-                        class="text-overflow-ellipsis btn btn-sm btn-primary py-0 px-2">{{ "Owner" }}</span>
+                        class="text-overflow-ellipsis btn btn-sm btn-primary shadow-0 py-0 px-2">{{ "Owner" }}</span>
                     <span v-else-if="member.roles?.length"
-                        class="text-overflow-ellipsis btn btn-sm btn-success py-0 px-2">{{ member.roles[0].name
-                        }}</span>
+                        class="text-overflow-ellipsis btn btn-sm btn-success shadow-0 py-0 px-2 shadow-0">
+                        {{ member.roles[0].name }}
+                    </span>
                     <span v-else
-                        class="text-overflow-ellipsis btn btn-sm btn-danger py-0 px-2">{{ "Guest" }}</span>
+                        class="text-overflow-ellipsis btn btn-sm btn-danger py-0 px-2 shadow-0">{{ "Guest" }}</span>
                 </div>
 
                 <div style="width:10rem;flex-grow: 1;"
                     class="tbl-td d-none d-lg-flex">
                     <span v-if="!member.invited_at"
-                        class="text-overflow-ellipsis btn btn-sm btn-warning py-0 px-2">
+                        class="text-overflow-ellipsis btn btn-sm btn-warning py-0 px-2 shadow-0">
                         {{ 'Pending invitations' }}</span>
                     <span v-if="member.invited_at"
-                        class="text-overflow-ellipsis btn btn-sm btn-success py-0 px-2">
+                        class="text-overflow-ellipsis btn btn-sm btn-success py-0 px-2 shadow-0">
                         {{ formatTimeAgo(member.invited_at, 30, 'Do MMMM, YYYY') }}</span>
                 </div>
 

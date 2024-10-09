@@ -1,5 +1,5 @@
 <script setup>
-    import { defineEmits, defineProps, onMounted, ref } from 'vue';
+    import {     onMounted, ref } from 'vue';
     import { Modal } from 'mdb-ui-kit';
 
     const emits = defineEmits([]);

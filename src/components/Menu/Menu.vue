@@ -1,5 +1,5 @@
 <script setup>
-  import { defineProps, onMounted, computed } from 'vue';
+  import {   onMounted, computed } from 'vue';
   import CustomScrollbar from 'custom-vue-scrollbar';
   import MenuItem from './MenuItem.vue';
   const props = defineProps({

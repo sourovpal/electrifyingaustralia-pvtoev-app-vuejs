@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, reactive, defineProps, watch, computed } from 'vue';
+    import { ref, reactive,   watch, computed } from 'vue';
     import { UpdateContactInformation } from '@actions/CompanyAction';
     import { $toast } from '@config';
     const props = defineProps({

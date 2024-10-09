@@ -174,15 +174,7 @@
                         </button>
                     </div>
 
-                </left-action-bar>
-
-                <right-action-bar>
-                    <div v-if="isLoading"
-                        class="me-3">
-                        <svg-custom-icon class="spinner"
-                            icon="SpinnerIcon" />
-                    </div>
-
+                    
                     <div class="position-relative mx-3">
                         <div class="search-bar">
                             <input class="form-control"
@@ -191,9 +183,18 @@
                                 type="text">
                         </div>
                         <div class="search-bar-icon">
-                            <font-awesome-icon class="text-head"
+                            <font-awesome-icon class="text-soft"
                                 icon="fas fa-search" />
                         </div>
+                    </div>
+
+                </left-action-bar>
+
+                <right-action-bar>
+                    <div v-if="isLoading"
+                        class="me-3">
+                        <svg-custom-icon class="spinner"
+                            icon="SpinnerIcon" />
                     </div>
 
                     <div class="me-3">

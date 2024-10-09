@@ -1,5 +1,5 @@
 <script setup>
-    import { defineProps, computed, watchEffect, ref } from 'vue';
+    import {   computed, watchEffect, ref } from 'vue';
     import { Skeletor } from "vue-skeletor";
     import { usePlatformStore } from "@stores";
     import { useAppStore } from "@stores";

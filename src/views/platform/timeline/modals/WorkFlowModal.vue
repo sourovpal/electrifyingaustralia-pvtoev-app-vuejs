@@ -1,6 +1,6 @@
 <script setup>
     import { Modal } from "mdb-ui-kit";
-    import { ref, onMounted, watch, computed, defineExpose } from 'vue';
+    import { ref, onMounted, watch, computed,  } from 'vue';
     import { usePlatformStore } from "@stores";
     import { $toast } from '@config';
     import { useApiRequest } from '@actions';

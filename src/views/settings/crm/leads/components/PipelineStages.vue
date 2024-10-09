@@ -1,6 +1,6 @@
 <script setup>
     import { VueDraggableNext } from 'vue-draggable-next';
-    import { defineProps, ref } from 'vue';
+    import {   ref } from 'vue';
     const colors = ref([
         { name: 'No colour', code: 'white' },
         { name: 'Sunflower Gold', code: 'rgb(255, 204, 4)' },
@@ -82,6 +82,7 @@
                                 <input class="form-control form-control-lg ps-1"
                                     type="text"
                                     :value="item.name"
+                                    :readonly="!stages.length"
                                     @change="(input)=>{item.name=input.target.value}">
                                 <div class="action-dropdown">
                                     <div class="action"
@@ -112,6 +113,9 @@
 
 <style scoped
     lang="scss">
+    [readonly]{
+        cursor: no-drop;
+    }
     .lead-status-list {
         .list-group-item:first-child {
             border-top-left-radius: 3px;

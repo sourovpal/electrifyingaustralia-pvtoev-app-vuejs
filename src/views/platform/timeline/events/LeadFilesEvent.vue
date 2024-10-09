@@ -5,7 +5,7 @@
         getVSIFileIcon,
         getVSIFolderIcon,
     } from "file-extension-icon-js";
-    import { defineProps, ref, nextTick } from 'vue';
+    import {   ref, nextTick } from 'vue';
     import ImagePreviewModal from '../modals/ImagePreviewModal.vue';
     import ShowAllFilesModal from '../modals/ShowAllFilesModal.vue';
     import { shortenFileName, leadImageTypes } from '@helpers';

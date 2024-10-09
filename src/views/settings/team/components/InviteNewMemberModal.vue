@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, onMounted, defineExpose, reactive, defineEmits } from 'vue';
+  import { ref, onMounted,   reactive,  } from 'vue';
   import { Modal } from 'mdb-ui-kit';
   import CustomScrollbar from 'custom-vue-scrollbar';
   import SelectObject from '@views/platform/components/fields/SelectObject.vue';

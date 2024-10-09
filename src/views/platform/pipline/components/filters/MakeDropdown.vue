@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref } from "vue";
+import {   ref } from "vue";
 import SlideUpDown from "vue-slide-up-down";
 const props = defineProps({
   title: {

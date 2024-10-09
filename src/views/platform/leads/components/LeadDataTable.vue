@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, defineProps, defineEmits, computed } from 'vue';
+    import { ref,     computed } from 'vue';
     import DropdownOwnerList from '../../components/dropdowns/DropdownOwnerList.vue';
     import Datatable from '@components/Datatable/Datatable.vue';
     import DatatableHeader from '@components/Datatable/DatatableHeader.vue';

@@ -1,5 +1,5 @@
 <script setup>
-    import { defineOptions, defineProps } from 'vue';
+    import { defineOptions,  } from 'vue';
     const props = defineProps(['data', 'isRow'])
     defineOptions({
         inheritAttrs: false

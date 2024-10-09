@@ -1,6 +1,6 @@
 <script setup>
     import { AvatarIcon } from "@assets/icons";
-    import { ref, defineProps, onMounted, defineEmits, computed, watch, nextTick, useAttrs } from 'vue';
+    import { ref,   onMounted,   computed, watch, nextTick, useAttrs } from 'vue';
     import { onClickOutside } from '@vueuse/core';
     import { usePlatformStore } from '@stores';
     import { useApiRequest } from '@actions';

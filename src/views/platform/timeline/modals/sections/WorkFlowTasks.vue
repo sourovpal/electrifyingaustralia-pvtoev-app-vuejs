@@ -1,5 +1,5 @@
 <script setup>
-    import { defineProps, ref, nextTick, computed } from 'vue';
+    import {   ref, nextTick, computed } from 'vue';
     import SlideUpDown from "vue-slide-up-down";
     import { usePlatformStore } from "@stores";
     import { $toast } from '@config';

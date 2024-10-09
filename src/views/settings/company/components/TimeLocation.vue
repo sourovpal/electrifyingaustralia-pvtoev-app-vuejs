@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, reactive, defineProps, watch, computed, onMounted } from 'vue';
+    import { ref, reactive,   watch, computed, onMounted } from 'vue';
     import { UpdateTimezone } from '@actions/CompanyAction';
     import { FetchTimezoneList } from '@actions/AppAction';
 

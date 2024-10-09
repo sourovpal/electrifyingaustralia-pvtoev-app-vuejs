@@ -5,9 +5,9 @@
         nextTick,
         onMounted,
         onBeforeUnmount,
-        defineProps,
-        defineEmits,
-        defineExpose,
+         
+         
+         
         useAttrs,
         watchEffect,
         watch,

@@ -9,7 +9,7 @@
     import DataNotFound from './components/DataNotFound.vue';
     import { FetchLeadProperties } from '@actions/CrmLeads';
     import CreateCustomPropertieModal from './components/CreateCustomPropertieModal.vue';
-    import { getCustomPropertieIcon } from "@helpers";
+    import { getCustomPropertieIcon, handleDateTimeFormat } from "@helpers";
 
     export default {
         components: {
@@ -24,7 +24,7 @@
             CreateCustomPropertieModal,
         },
         setup() {
-            return { getCustomPropertieIcon };
+            return { getCustomPropertieIcon, handleDateTimeFormat };
         },
         data() {
             return {
@@ -145,8 +145,7 @@
                 <h1 class="mb-0 text-soft">Pipelines</h1>
             </router-link>
             <div class="mx-2 d-flex justify-content-center align-items-center">
-                <svg  
-                    xmlns="http://www.w3.org/2000/svg"
+                <svg xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
                     viewBox="0 0 24 24">
@@ -159,8 +158,7 @@
                 <h1 class="mb-0 text-soft">{{ pipeline_title }}</h1>
             </router-link>
             <div class="mx-2 d-flex justify-content-center align-items-center">
-                <svg  
-                    xmlns="http://www.w3.org/2000/svg"
+                <svg xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
                     viewBox="0 0 24 24">
@@ -178,8 +176,7 @@
                 <h1 class="mb-0 text-soft">Leads</h1>
             </router-link>
             <div class="mx-2 d-flex justify-content-center align-items-center">
-                <svg  
-                    xmlns="http://www.w3.org/2000/svg"
+                <svg xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
                     viewBox="0 0 24 24">
@@ -206,8 +203,7 @@
                         <button :disabled="isLoading"
                             @click="fetchPropertieDataHandler()"
                             class="toolbar-btn btn btn-light btn-floating me-3 ms-3">
-                            <svg  
-                                xmlns="http://www.w3.org/2000/svg"
+                            <svg xmlns="http://www.w3.org/2000/svg"
                                 width="24"
                                 height="24"
                                 viewBox="0 0 24 24">
@@ -283,8 +279,7 @@
                     <button :disabled="!pagination.prev_page"
                         @click="pagination.prev_page && fetchPropertieDataHandler(pagination.prev_page)"
                         class="toolbar-btn btn btn-light btn-floating me-3">
-                        <svg  
-                            xmlns="http://www.w3.org/2000/svg"
+                        <svg xmlns="http://www.w3.org/2000/svg"
                             width="24"
                             height="24"
                             viewBox="0 0 24 24">
@@ -295,8 +290,7 @@
                     <button :disabled="!pagination.next_page"
                         @click="pagination.next_page && fetchPropertieDataHandler(pagination.next_page)"
                         class="toolbar-btn btn btn-light btn-floating me-3">
-                        <svg  
-                            xmlns="http://www.w3.org/2000/svg"
+                        <svg xmlns="http://www.w3.org/2000/svg"
                             width="24"
                             height="24"
                             viewBox="0 0 24 24">
@@ -331,21 +325,21 @@
 
 
                     <div v-if="!isFirstLoading || fetchProperties.length"
-                        :class="selectedRows.includes(propertie.id)?'active':''"
+                        :class="selectedRows.includes(propertie.propertie_id)?'active':''"
                         class="tbl-tr full-width"
                         v-for="(propertie, index) in fetchProperties"
                         :key="index">
 
                         <div style="width:4rem;margin-left: -7px;"
                             class="tbl-td full-width">
-                            <custom-checkbox @click="singleRowSelectedHandler(propertie.id)"
-                                :checked="selectedRows.includes(propertie.id)" />
+                            <custom-checkbox @click="singleRowSelectedHandler(propertie.propertie_id)"
+                                :checked="selectedRows.includes(propertie.propertie_id)" />
                         </div>
 
                         <div style="width:15rem;"
                             class="tbl-td">
                             <a href="#"
-                                @click="$refs['createPropertieModal'].showModalHandler(true, pipeline_id, propertie.id)"
+                                @click="$refs['createPropertieModal'].showModalHandler(true, pipeline_id, propertie.propertie_id)"
                                 class="text-overflow-ellipsis"> {{ propertie.label }}</a>
                         </div>
 
@@ -368,7 +362,6 @@
                             class="tbl-td d-none d-lg-flex">
                             <span class="text-overflow-ellipsis">
                                 <svg v-if="propertie.visibility"
-                                     
                                     xmlns="http://www.w3.org/2000/svg"
                                     height="24"
                                     viewBox="0 -960 960 960"
@@ -377,7 +370,6 @@
                                         d="M480-320q75 0 127.5-52.5T660-500q0-75-52.5-127.5T480-680q-75 0-127.5 52.5T300-500q0 75 52.5 127.5T480-320Zm0-72q-45 0-76.5-31.5T372-500q0-45 31.5-76.5T480-608q45 0 76.5 31.5T588-500q0 45-31.5 76.5T480-392Zm0 192q-146 0-266-81.5T40-500q54-137 174-218.5T480-800q146 0 266 81.5T920-500q-54 137-174 218.5T480-200Zm0-300Zm0 220q113 0 207.5-59.5T832-500q-50-101-144.5-160.5T480-720q-113 0-207.5 59.5T128-500q50 101 144.5 160.5T480-280Z" />
                                 </svg>
                                 <svg v-if="!propertie.visibility"
-                                     
                                     xmlns="http://www.w3.org/2000/svg"
                                     height="24"
                                     viewBox="0 -960 960 960"
@@ -395,10 +387,10 @@
                         </div>
 
                         <div style="width:10rem;"
-                            class="tbl-td d-none d-lg-flex">{{ propertie.updated_at }}</div>
+                            class="tbl-td d-none d-lg-flex">{{ handleDateTimeFormat(propertie.updated_at) }}</div>
 
                         <div style="width:10rem;"
-                            class="tbl-td d-none d-lg-flex">{{ propertie.created_at }}</div>
+                            class="tbl-td d-none d-lg-flex">{{ handleDateTimeFormat(propertie.created_at) }}</div>
                     </div>
 
                     <PropetiesSkeletor v-if="isFirstLoading" />

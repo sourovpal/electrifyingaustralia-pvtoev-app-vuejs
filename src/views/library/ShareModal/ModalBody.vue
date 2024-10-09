@@ -1,5 +1,5 @@
 <script setup>
-import { computed, defineProps, defineEmits } from 'vue'
+import { computed,    } from 'vue'
 
 import ESignatureInput from './ESignatureInput.vue'
 import SendProposalInput from './SendProposalInput.vue'

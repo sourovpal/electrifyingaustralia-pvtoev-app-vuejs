@@ -1,5 +1,5 @@
 <script setup>
-  import { defineProps, ref, watchEffect, computed } from "vue";
+  import {   ref, watchEffect, computed } from "vue";
   import SlideUpDown from "vue-slide-up-down";
   import MakeDropdown from "./MakeDropdown.vue";
   import { usePlatformStore, useLeadsStore } from "@stores";

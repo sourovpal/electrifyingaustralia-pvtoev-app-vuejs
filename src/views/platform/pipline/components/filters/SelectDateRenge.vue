@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, watchEffect, defineProps, defineEmits, computed } from "vue";
+  import { ref, watchEffect,     computed } from "vue";
   import MakeDropdown from "./MakeDropdown.vue";
 
   const props = defineProps({

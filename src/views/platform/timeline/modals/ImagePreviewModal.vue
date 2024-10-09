@@ -1,6 +1,6 @@
 <script setup>
     import { Modal } from "mdb-ui-kit";
-    import { defineProps, defineEmits, ref, defineExpose, onMounted } from 'vue';
+    import {     ref,   onMounted } from 'vue';
     import { leadImageTypes, handleDownloadFile, fetchImage } from '@helpers';
     import { useApiRequest } from '@actions';
     import {

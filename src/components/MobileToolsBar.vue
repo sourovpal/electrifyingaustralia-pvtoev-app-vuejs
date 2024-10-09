@@ -1,5 +1,6 @@
 <script setup>
-    import { ref } from 'vue';
+    import { ref, computed, watchEffect } from 'vue';
+    import { useRoute, useRouter } from 'vue-router';
     import MobileToolsSubMenu from './MobileToolsSubMenu.vue';
     const tools = ref([
         { title: 'Projects', url: '/app', icon: 'fas fa-sitemap', is_active: false, },
@@ -16,6 +17,17 @@
         },
     ]);
 
+    const disabled = ['timeline-lead-edit'];
+    const route = useRoute();
+    const router = useRouter();
+    const isDisabled = ref(false);
+
+    watchEffect(()=>{
+        let routeName = route.name;
+        isDisabled.value = false;
+        if(routeName && disabled.includes(routeName)) isDisabled.value = true;
+    });
+
     function toggleActiveTool(tool) {
         tools.value.map(item => item.is_active = false);
         tool.is_active = true;
@@ -23,7 +35,7 @@
 
 </script>
 <template>
-    <nav>
+    <nav class="mobile-tools-bar" v-if="!isDisabled">
         <div class="nav-box">
             <ul class="nav-container p-0 m-0">
                 <li @click="toggleActiveTool(tool)"

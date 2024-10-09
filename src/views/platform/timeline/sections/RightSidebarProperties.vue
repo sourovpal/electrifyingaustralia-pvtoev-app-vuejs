@@ -3,7 +3,7 @@
   import DateAndTimeInput from "./fields/DateAndTimeInput.vue";
   import MultipleChooseInput from "./fields/MultipleChooseInput.vue";
   import { usePlatformStore } from "@stores";
-  import { computed, ref, watchEffect, defineProps } from "vue";
+  import { computed, ref, watchEffect,  } from "vue";
   import YesOrNoInput from "./fields/YesOrNoInput.vue";
   import { useApiRequest } from "@actions/api";
   import { useRoute } from "vue-router";

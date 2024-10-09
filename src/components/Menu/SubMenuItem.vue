@@ -1,5 +1,5 @@
 <script setup>
-    import { defineProps, onMounted, computed, ref } from 'vue';
+    import {   onMounted, computed, ref } from 'vue';
     import CustomScrollbar from 'custom-vue-scrollbar';
     import SlideUpDown from 'vue-slide-up-down';
     import { useRoute } from 'vue-router';

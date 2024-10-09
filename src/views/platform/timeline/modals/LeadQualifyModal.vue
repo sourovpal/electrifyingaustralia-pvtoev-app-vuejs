@@ -3,7 +3,7 @@
   import DropdownOwnerList from "../../components/dropdowns/DropdownOwnerList.vue";
   import SelectObject from '../../components/fields/SelectObject.vue';
   import { AvatarIcon } from "@assets/icons";
-  import { ref, onMounted, watch, computed, defineExpose } from 'vue';
+  import { ref, onMounted, watch, computed,  } from 'vue';
   import { $toast } from '@config';
   import { useApiRequest } from '@actions';
   import { usePlatformStore } from "@stores";

@@ -59,7 +59,7 @@ const routes = [
                         children: [],
                     },
                     {
-                        name: "leadsEdit",
+                        name: "timeline-lead-edit",
                         path: 'leads/:id',
                         component: () => import('@views/platform/timeline/LeadEditTimelinePage.vue'),
                         beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),

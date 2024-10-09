@@ -110,6 +110,8 @@ const iconsToUse = [
     fa.faBarsStaggered,
     fa.faLocationDot,
     fa.faSackDollar,
+    fa.faToggleOn,
+    fa.faToggleOff,
     // Regular
     far.faSquare,
     far.faSquareMinus,

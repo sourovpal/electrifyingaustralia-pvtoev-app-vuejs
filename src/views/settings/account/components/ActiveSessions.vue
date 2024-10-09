@@ -2,10 +2,14 @@
     import { LogoutAction, FetchSessions } from '@actions/UserAction';
     import CustomScrollbar from 'custom-vue-scrollbar';
     import { Skeletor } from 'vue-skeletor';
+    import { handleDateTimeFormat, formatTimeAgo } from '@helpers';
     export default {
         components: {
             CustomScrollbar,
             Skeletor,
+        },
+        setup(props) {
+            return { handleDateTimeFormat, formatTimeAgo };
         },
         data() {
             return {
@@ -103,9 +107,9 @@
                             <td scope="col"
                                 class="py-1 d-none d-lg-table-cell">{{ session.ip_address }}</td>
                             <td scope="col"
-                                class="py-1 d-none d-lg-table-cell">{{ session.created_at }}</td>
+                                class="py-1 d-none d-lg-table-cell">{{ handleDateTimeFormat(session.created_at) }}</td>
                             <td scope="col"
-                                class="py-1 d-none d-lg-table-cell">{{ session.updated_at }}</td>
+                                class="py-1 d-none d-lg-table-cell">{{ formatTimeAgo(session.updated_at) }}</td>
                             <td scope="col"
                                 class="py-1"><span
                                     :class="`btn btn-sm py-0 px-1 fs-12px btn-${(session.is_active==1)?'danger':'warning'}`">{{

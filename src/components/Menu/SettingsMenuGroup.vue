@@ -1,20 +1,13 @@
-<script>
+<script setup>
   import CustomScrollbar from 'custom-vue-scrollbar';
-
-  export default {
-    components: {
-      CustomScrollbar
-    },
-    data() {
-      return {
-      }
-    },
-    props: ['menus', 'title'],
-  }
+  const props = defineProps({
+    menus: { type: Array, default: [] },
+    title: { type: String, default: null },
+  });
 </script>
 
 <template>
-  <nav class="sidebar--submenu d-none d-md-block">
+  <nav class="sidebar-submenu d-none d-md-block">
     <CustomScrollbar thumbWidth="8">
       <div class="submenu-header d-none">
         <h1 class="text-soft mb-0">{{ title }}</h1>
@@ -47,7 +40,7 @@
 
 <style scoped
   lang="scss">
-  .sidebar--submenu {
+  .sidebar-submenu {
     top: 0;
     background-color: #f5f7fa;
     width: var(--child-left-navbar-width);
@@ -57,7 +50,7 @@
     overflow: hidden;
     border-right: 1px solid var(--layout-border-color);
     position: relative;
-    z-index: 99;
+    z-index: 9;
     padding-bottom: 40px;
 
     .submenu-header {
@@ -122,11 +115,11 @@
   }
 </style>
 <style>
-  .sidebar--submenu .scrollbar__wrapper {
+  .sidebar-submenu .scrollbar__wrapper {
     height: 100vh !important;
   }
 
-  .sidebar--submenu .scrollbar__wrapper .scrollbar__scroller {
+  .sidebar-submenu .scrollbar__wrapper .scrollbar__scroller {
     height: 100% !important;
   }
 </style>

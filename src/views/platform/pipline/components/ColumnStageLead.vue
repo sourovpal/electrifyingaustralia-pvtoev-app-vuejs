@@ -1,5 +1,4 @@
 <script setup>
-    import {   defineOptions } from 'vue';
     import { formatLeadAddress } from '@helpers';
     defineOptions({
         inheritAttrs: false

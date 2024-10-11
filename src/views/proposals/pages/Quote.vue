@@ -13,7 +13,7 @@
 
 		<div class="participant-details d-flex">
 			<div class="sender-details w-50">
-				<div class="row no-gutters">
+				<div class="row mb-2">
 					<p class="label mb-0 fw-bold col-6">To</p>
 					<div class="value col-6">
 						<small class="d-block">Test Proposal</small>
@@ -24,7 +24,7 @@
 				</div>
 
 				<div class="row">
-					<p class="label mb-0 fw-bold col-6">Address</p>
+					<p class="label mb-0 fw-bold col-6 ">Address</p>
 					<div class="value col-6">
 						{{address}}
 					</div>
@@ -32,7 +32,7 @@
 			</div>
 
 			<div class="recipient-details">
-				<div class="row no-gutters">
+				<div class="row gx-0">
 					<p class="label mb-0 fw-bold col-4">From</p>
 					<div class="value col-8">
 						<small class="d-block fw-bold"
@@ -44,17 +44,17 @@
 						</small>
 					</div>
 				</div>
-				<div class="row no-gutters">
+				<div class="row gx-0">
 					<p class="label mb-0 fw-bold col-4">Reference #</p>
 					<small class="value mb-0 col-8">
 						##-0000-0129-1
 					</small>
 				</div>
-				<div class="row no-gutters">
+				<div class="row gx-0">
 					<p class="label mb-0 fw-bold col-4">Prepared on #</p>
 					<small class="value mb-0 col-8">{{ preparedOn }}</small>
 				</div>
-				<div class="row no-gutters">
+				<div class="row gx-0">
 					<p class="label mb-0 fw-bold col-4">
 						Est. Install date
 					</p>
@@ -63,7 +63,7 @@
 						-
 					</small>
 				</div>
-				<div class="row no-gutters">
+				<div class="row gx-0">
 					<p class="label mb-0 fw-bold col-4">Expiry date</p>
 					<small class="value mb-0 col-8"> - </small>
 				</div>
@@ -72,32 +72,32 @@
 
 		<div class="project-items-display mt-5">
 			<!-- header -->
-			<div class="header row no-gutters text-black fw-bold py-2 mb-2">
-				<p class="mb-0 col-9">Description</p>
+			<div class="header row gx-0 text-black fw-bold py-2 mb-2">
+				<p class="mb-0 col-8">Description</p>
 				<p class="mb-0 col-1">Quantity</p>
 				<p class="mb-0 col-1">Price</p>
-				<p class="mb-0 col-1">Total</p>
+				<p class="mb-0 col-2 text-end">Total</p>
 			</div>
 
-			<div class="row project-item no-gutters py-1" v-for="pricing in pricings">
-				<p class="mb-0 col-9"> {{ pricing.description }} </p>
+			<div class="row project-item gx-0 py-1" v-for="pricing in pricings">
+				<p class="mb-0 col-8"> {{ pricing.description }} </p>
 				<p class="mb-0 col-1"> {{ pricing.quantity ?? '-' }} </p>
 				<p class="mb-0 col-1"> {{ pricing.unit_price ? '$ ' + Formatter.toIntlFormat(pricing.unit_price) : '-' }} </p>
-				<p class="mb-0 col-1"> {{ pricing.total ? '$ ' + Formatter.toIntlFormat(pricing.total) : '-' }} </p>
+				<p class="mb-0 col-2 text-end"> {{ pricing.total ? '$ ' + Formatter.toIntlFormat(pricing.total) : '-' }} </p>
 			</div>
 
-			<div class="row project-summary no-gutters py-1 mt-3 text-black fs-11px">
-				<div class="col-3 mb-2 offset-9 row no-gutters align-items-center">
+			<div class="row project-summary gx-0 py-1 mt-3 text-black fs-11px">
+				<div class="col-3 mb-2 offset-9 row gx-0 align-items-center">
 					<span class="col-8 fs-10px">Subtotal 
 			            <template v-if="activeTaxSlug !== 'no-tax'">
 			                {{activeTaxSlug === 'included' ? 'incl.GST' : 'excl.GST'}}
 			            </template>
 					</span>
-					<span class="col-4">$ {{ Formatter.toIntlFormat(total) }}</span>
+					<span class="col-4 text-end">$ {{ Formatter.toIntlFormat(total) }}</span>
 				</div>
 
 				<div
-					class="col-3 gst-figure-wrapper mb-2 offset-9 row no-gutters align-items-center"
+					class="col-3 gst-figure-wrapper mb-2 offset-9 row gx-0 align-items-center"
                     v-if="activeTaxSlug !== 'no-tax'"
 				>
 					<span class="col-8" :key="activeTaxSlug">
@@ -109,12 +109,12 @@
 				</div>
 
 				<div
-					class="col-3 total-figure-wrapper mb-2 fw-bold offset-9 row no-gutters align-items-center"
+					class="col-3 total-figure-wrapper mb-2 fw-bold offset-9 row gx-0 align-items-center"
 				>
 					<span class="col-8">Total incl. GST</span>
-					<span class="col-4"
-						>${{ Formatter.toIntlFormat(totalAmountAfterStcDiscount) }}</span
-					>
+					<span class="col-4 text-end">
+					    $ {{ Formatter.toIntlFormat(totalAmountAfterStcDiscount) }}
+					</span>
 				</div>
 			</div>
 		</div>

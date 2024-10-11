@@ -82,16 +82,25 @@ export const useProjectStore = defineStore('project', {
         getSystemGrandTotal(state) {
             return 8500; // this should not be a hardcoded value
         },
-        getUsedKWh: (state) => (state.selfConsumption / 100) * state.getAnnualProduction,
+        // getUsedKWh: (state) => (state.selfConsumption ?? state.project.load_profile.self_consumption_rate / 100) * state.getAnnualProduction,
+        getUsedKWh(state) {
+            if (!state.project) 
+                return 0;
+
+            const selfConsumption = 
+                state.selfConsumption ? state.selfConsumption : state.project?.load_profile.self_consumption_rate;
+
+            return (selfConsumption / 100) * state.getAnnualProduction
+        },
         getNetPresentValue(state) {
             // Take electricity price increase from term settings LATER
             // Take system efficiency from custom settings LATER
             // remove these comments when you do
-            const tariffFeed = state.currentBills.tariff_feed_per_kwh;
+            const tariffFeed = +state.currentBills.tariff_feed_per_kwh;
             const targetYears = +state.getTermSettings?.term_in_years ?? 20;
-            const annualProduction = state.getAnnualProduction;
-            const electricityRate = state.currentBills.electricity_charge_per_kwh;
-            const systemPrice = state.getSystemGrandTotal;
+            const annualProduction = +state.getAnnualProduction;
+            const electricityRate = +state.currentBills.electricity_charge_per_kwh;
+            const systemPrice = +state.getSystemGrandTotal;
 
             const remainingKWh = annualProduction - state.getUsedKWh;
             const value = (
@@ -115,7 +124,7 @@ export const useProjectStore = defineStore('project', {
             return discountedPayback.toFixed(2);
         },
         getReturnOfInvestment(state) {
-            const ROI = state.getNetPresentValue / state.getSystemGrandTotal * 100;
+            const ROI = +state.getNetPresentValue / +state.getSystemGrandTotal * 100;
             return ROI.toFixed(2);
         },
         getQuotationDetails: (state) => (key) => {

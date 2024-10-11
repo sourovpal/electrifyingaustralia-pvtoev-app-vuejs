@@ -250,6 +250,7 @@ const simulateApiCall = () => {
 					class="btn btn-sm btn-lg-large btn-primary py-xl-2"
 					style="flex-grow: 2"
 					:to="`/proposal/${projectStore.getProjectId}`"
+					target="_blank"
 				>
 					<font-awesome-icon
 					    class="d-none d-lg-inline"

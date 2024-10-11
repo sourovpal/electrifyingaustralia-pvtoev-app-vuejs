@@ -22,11 +22,13 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="small">7.48kW</td>
-                                <td class="small">20°</td>
-                                <td class="small">
-                                    98°
-                                </td>
+                                <!-- <td class="small">7.48kW</td> -->
+                                <!-- <td class="small">20°</td> -->
+                                <!-- <td class="small"> 98° </td> -->
+
+                                <td class="small">-</td>
+                                <td class="small">-</td>
+                                <td class="small">-</td>
                             </tr>
                         </tbody>
                     </table>

@@ -35,7 +35,7 @@
 	        </div>
 
 	        <div class="summary-card card text-white p-4">
-                <p class="fs-24px mb-0 fw-bold">601%</p> 
+                <p class="fs-24px mb-0 fw-bold">{{ Formatter.toIntlFormat(projectStore.getReturnOfInvestment) }}%</p> 
                 <p class="fs-20px mb-2">Total return on investment</p> 
 
                 <p class="mt-3 fs-11px lh-sm">

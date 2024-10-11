@@ -62,11 +62,11 @@ onMounted(() => {
                 @click="handleInverterDelete(inverter.id)"
 		    />
 
-			<font-awesome-icon
-			    :class="`text-secondary fs-14px cursor-pointer ${!collapsed ? '' : 'while-collapsed'}`"
-			    icon="fas fa-chevron-up"
-                @click="collapsed = !collapsed"
-			/>
+			<!-- <font-awesome-icon -->
+			<!--     :class="`text-secondary fs-14px cursor-pointer ${!collapsed ? '' : 'while-collapsed'}`" -->
+			<!--     icon="fas fa-chevron-up" -->
+   <!--              @click="collapsed = !collapsed" -->
+			<!-- /> -->
 		</div>
 
         <template v-if="!collapsed">

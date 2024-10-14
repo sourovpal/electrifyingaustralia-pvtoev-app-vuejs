@@ -2,7 +2,6 @@
     import {   computed, watchEffect, ref, nextTick } from 'vue';
     import { Skeletor } from "vue-skeletor";
     import StarRating from "vue-star-rating";
-    import CustomModal from '@components/modals/CustomModal.vue';
     import { useApiRequest } from '@actions';
     import { formatLeadAddress } from '@helpers';
     import { useClipboard } from '@vueuse/core';
@@ -44,8 +43,6 @@
             $toast.error("Oops, something went wrong");
         });
     }
-
-
 
     async function handleEditEstimatedValue() {
         isEditEstimatedValue.value = true;
@@ -89,7 +86,7 @@
             <div class="fs-14px fw-bold text-head mb-0 text-uppercase">
                 lead Properties {{ isPipelineLead }}
             </div>
-            <button @click="platformStore.toggleLeadEditModal(true)"
+            <button @click="platformStore.setToggleLeadEditModal(true)"
                 class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
                 <font-awesome-icon icon="fas fa-pen"
                     class="text-soft fs-14px" />

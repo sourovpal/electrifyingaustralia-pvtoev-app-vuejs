@@ -1,7 +1,8 @@
-import { defineStore } from 'pinia';
-import { useApiRequest } from '@actions';
+import { defineStore } from "pinia";
+import { useApiRequest } from "@actions";
+import { validateObject } from "@helpers";
 
-export const usePlatformStore = defineStore('platform', {
+export const usePlatformStore = defineStore("platform", {
   state: () => {
     return {
       isLoading: false,
@@ -20,7 +21,7 @@ export const usePlatformStore = defineStore('platform', {
       leadSource: {},
       leadStatus: {},
       leadTasks: [],
-      // 
+      //
       leadPipelineProperties: [],
       leadSubscribers: [],
       pipelineProperties: [],
@@ -32,15 +33,16 @@ export const usePlatformStore = defineStore('platform', {
       leadSuccessStages: [],
       leadLostStages: [],
       pipelines: [],
+      pipelineStages: [],
       statuses: [],
       users: [],
       sources: [],
-      // 
-      leadEditModal: null,
       //
-      timelinesRef: () => { },
+      toggleLeadEditModal: false,
+      //
+      timelinesRef: () => {},
       toggleTimelineRightSidebar: false,
-    }
+    };
   },
   getters: {
     getToggleRightSidebar(stage) {
@@ -116,7 +118,7 @@ export const usePlatformStore = defineStore('platform', {
       return stage.statuses;
     },
     getPipelineStage(stage) {
-      return stage.leadPipelineStage
+      return stage.leadPipelineStage;
     },
     getLeadFiles(stage) {
       return stage.leadFiles;
@@ -136,10 +138,17 @@ export const usePlatformStore = defineStore('platform', {
     getLeadLostStages(stage) {
       return stage.leadLostStagesleadPrimaryStages;
     },
+    getPipelineStages(stage) {
+      return stage.pipelineStages;
+    },
+    getLeadEditModal(stage) {
+      return stage.toggleLeadEditModal;
+    },
   },
   actions: {
     setToggleRightSidebar() {
-      return this.toggleTimelineRightSidebar = !this.toggleTimelineRightSidebar;
+      return (this.toggleTimelineRightSidebar =
+        !this.toggleTimelineRightSidebar);
     },
     setIsLoading(payload) {
       this.isLoading = !!payload;
@@ -154,7 +163,7 @@ export const usePlatformStore = defineStore('platform', {
       this.editLeadId = payload;
     },
     setEditLead(payload) {
-      if (typeof payload === 'object' && payload != null) {
+      if (typeof payload === "object" && payload != null) {
         this.editLead = payload;
       }
     },
@@ -165,27 +174,27 @@ export const usePlatformStore = defineStore('platform', {
       this.nextLeadId = payload;
     },
     setLeadPropertiesValues(payload) {
-      if (typeof payload === 'object' && payload != null) {
+      if (typeof payload === "object" && payload != null) {
         this.leadPropertiesValues = payload;
       }
     },
     setLeadOwner(payload) {
-      if (typeof payload === 'object' && payload != null) {
+      if (typeof payload === "object" && payload != null) {
         this.leadOwner = payload;
       }
     },
     setPrimaryContact(payload) {
-      if (typeof payload === 'object' && payload != null) {
+      if (typeof payload === "object" && payload != null) {
         this.primaryContact = payload;
       }
     },
     setLeadSource(payload) {
-      if (typeof payload === 'object' && payload != null) {
+      if (typeof payload === "object" && payload != null) {
         this.leadSource = payload;
       }
     },
     setLeadStatus(payload) {
-      if (typeof payload === 'object' && payload != null) {
+      if (typeof payload === "object" && payload != null) {
         this.leadStatus = payload;
       }
     },
@@ -198,12 +207,12 @@ export const usePlatformStore = defineStore('platform', {
       this.isPipelineLead = payload;
     },
     setLeadPipeline(payload) {
-      if (typeof payload === 'object' && payload != null) {
+      if (typeof payload === "object" && payload != null) {
         this.leadPipeline = payload;
       }
     },
     setLeadStage(payload) {
-      if (typeof payload === 'object' && payload != null) {
+      if (typeof payload === "object" && payload != null) {
         this.leadStage = payload;
       }
     },
@@ -267,15 +276,15 @@ export const usePlatformStore = defineStore('platform', {
         this.leadLostStages = payload;
       }
     },
-    // 
-    setLeadEditModal(payload) {
-      this.leadEditModal = payload;
+    //
+    setToggleLeadEditModal(status = false) {
+      this.toggleLeadEditModal = status;
     },
-    toggleLeadEditModal(status = false) {
-      if (status) return this.leadEditModal?.showModalHandler();
-      this.leadEditModal?.hideModalHandler();
+    setPipelineStages(payload) {
+      if (Array.isArray(payload)) {
+        this.pipelineStages = payload;
+      }
     },
-
     resetLeadEditTimeline(all = false) {
       this.setEditLead({});
       this.setEditLeadId(null);
@@ -309,193 +318,225 @@ export const usePlatformStore = defineStore('platform', {
       this.setEditLeadId($leadId);
       useApiRequest({
         url: `/platform/${$leadId}/leads`,
-      }).then(res => {
-        const { success, lead, next_lead, prev_lead, is_pipeline } = res;
-        if (success && lead) {
-          const { primary_contact, owner, properties_values, source, status, pipeline, pipeline_stage, lead_subscribers } = lead;
-          this.setEditLead(lead);
-          this.setNextLeadId(next_lead);
-          this.setPrevLeadId(prev_lead);
-          this.setPrimaryContact(primary_contact);
-          this.setLeadOwner(owner);
-          this.setIsPipelineLead(is_pipeline);
-          this.setLeadPropertiesValues(properties_values);
-          this.setLeadSource(source);
-          this.setLeadStatus(status);
-          this.setLeadPipeline(pipeline);
-          this.setLeadStage(pipeline_stage);
-          this.setLeadSubscribers(lead_subscribers);
-          // 
+      })
+        .then((res) => {
+          const { success, lead, next_lead, prev_lead, is_pipeline } = res;
+          if (success && lead) {
+            const {
+              primary_contact,
+              owner,
+              properties_values,
+              source,
+              status,
+              pipeline,
+              pipeline_stage,
+              lead_subscribers,
+            } = lead;
+            this.setEditLead(lead);
+            this.setNextLeadId(next_lead);
+            this.setPrevLeadId(prev_lead);
+            this.setPrimaryContact(primary_contact);
+            this.setLeadOwner(owner);
+            this.setIsPipelineLead(is_pipeline);
+            this.setLeadPropertiesValues(properties_values);
+            this.setLeadSource(source);
+            this.setLeadStatus(status);
+            this.setLeadPipeline(pipeline);
+            this.setLeadStage(pipeline_stage);
+            this.setLeadSubscribers(lead_subscribers);
+            //
+            this.setIsLoading(false);
+            this.setIsFirstLoading(false);
+            return;
+          }
+        })
+        .catch((error) => {
           this.setIsLoading(false);
           this.setIsFirstLoading(false);
-          return;
-        }
-      }).catch(error => {
-        this.setIsLoading(false);
-        this.setIsFirstLoading(false);
-      });
+        });
     },
-    callFetchLeadContacts($leadId, $callback = () => { }) {
+    callFetchLeadContacts($leadId, $callback = () => {}) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/${$leadId}/contacts`,
-      }).then(res => {
-        const { success, contacts } = res;
-        if (success && contacts) {
-          this.setLeadContacts(contacts);
-          $callback({ loading: false, contacts });
-        } else {
+      })
+        .then((res) => {
+          const { success, contacts } = res;
+          if (success && contacts) {
+            this.setLeadContacts(contacts);
+            $callback({ loading: false, contacts });
+          } else {
+            $callback({ loading: false });
+          }
+        })
+        .catch((error) => {
           $callback({ loading: false });
-        }
-      }).catch(error => {
-        $callback({ loading: false });
-      });
+        });
     },
-    callFetchLeadStages($leadId, $callback = () => { }) {
+    callFetchLeadStages($leadId, $callback = () => {}) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/leads/${$leadId}/stages`,
-      }).then(res => {
-        const { success, primary_stages, success_stages, lost_stages } = res;
-        if (success) {
-          this.setLeadPrimaryStages(primary_stages);
-          this.setLeadSuccessStages(success_stages);
-          this.setLeadLostStages(lost_stages);
-          $callback({ loading: false, stages });
-        } else {
+      })
+        .then((res) => {
+          const { success, primary_stages, success_stages, lost_stages } = res;
+          if (success) {
+            this.setLeadPrimaryStages(primary_stages);
+            this.setLeadSuccessStages(success_stages);
+            this.setLeadLostStages(lost_stages);
+            $callback({ loading: false, stages });
+          } else {
+            $callback({ loading: false });
+          }
+        })
+        .catch((error) => {
           $callback({ loading: false });
-        }
-      }).catch(error => {
-        $callback({ loading: false });
-      });
+        });
     },
-    callFetchPipeline($callback = () => { }) {
+    callFetchPipeline($callback = () => {}) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/pipelines`,
-      }).then(res => {
-        const { success, pipelines } = res;
-        if (success && pipelines) {
-          this.setPipelines(pipelines);
-          $callback({ loading: false, pipelines });
-        } else {
+      })
+        .then((res) => {
+          const { success, pipelines } = res;
+          if (success && pipelines) {
+            this.setPipelines(pipelines);
+            $callback({ loading: false, pipelines });
+          } else {
+            $callback({ loading: false });
+          }
+        })
+        .catch((error) => {
           $callback({ loading: false });
-        }
-      }).catch(error => {
-        $callback({ loading: false });
-      });
+        });
     },
-    callFetchPipelineStages($pieplineId, $callback = () => { }) {
+    callFetchPipelineStages($pieplineId, $callback = () => {}) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/${$pieplineId}/stages`,
-      }).then(res => {
-        const { success, stages, message } = res;
-        if (success && stages) {
-          $callback({ loading: false, stages });
-        } else {
-          $callback({ loading: false, message });
-        }
-      }).catch(error => {
-        $callback({ loading: false });
-      });
+      })
+        .then((res) => {
+          const { success, stages, message } = res;
+          if (success && stages) {
+            this.setPipelineStages(stages);
+            $callback({ loading: false, stages });
+          } else {
+            $callback({ loading: false, message });
+          }
+        })
+        .catch((error) => {
+          $callback({ loading: false });
+        });
     },
-    callFetchStatuses($callback = () => { }) {
+    callFetchStatuses($callback = () => {}) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/statuses`,
-      }).then(res => {
-        const { success, statuses } = res;
-        if (success && statuses) {
-          this.setStatuses(statuses);
-          $callback({ loading: false, statuses });
-        } else {
+      })
+        .then((res) => {
+          const { success, statuses } = res;
+          if (success && statuses) {
+            this.setStatuses(statuses);
+            $callback({ loading: false, statuses });
+          } else {
+            $callback({ loading: false });
+          }
+        })
+        .catch((error) => {
           $callback({ loading: false });
-        }
-      }).catch(error => {
-        $callback({ loading: false });
-      });
+        });
     },
-    callFetchUsers($callback = () => { }) {
+    callFetchUsers($callback = () => {}) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/users`,
-      }).then(res => {
-        const { success, users } = res;
-        if (success && users) {
-          this.setUsers(users);
-          $callback({ loading: false, users });
-        } else {
+      })
+        .then((res) => {
+          const { success, users } = res;
+          if (success && users) {
+            this.setUsers(users);
+            $callback({ loading: false, users });
+          } else {
+            $callback({ loading: false });
+          }
+        })
+        .catch((error) => {
           $callback({ loading: false });
-        }
-      }).catch(error => {
-        $callback({ loading: false });
-      });
+        });
     },
-    callFetchProperties($leadId = null, $callback = () => { }) {
+    callFetchProperties($leadId = null, $callback = () => {}) {
       $callback({ loading: true });
       useApiRequest({
-        url: `/platform/leads/${$leadId ? $leadId + '/' : ''}properties`,
-      }).then(res => {
-        const { success, lead_properties, pipeline_properties } = res;
-        if (success) {
-          this.setLeadProperties(lead_properties);
-          this.setPipelineProperties(pipeline_properties);
-          $callback({ loading: false, lead_properties, pipeline_properties });
-        } else {
+        url: `/platform/leads/${$leadId ? $leadId + "/" : ""}properties`,
+      })
+        .then((res) => {
+          const { success, lead_properties, pipeline_properties } = res;
+          if (success) {
+            this.setLeadProperties(lead_properties);
+            this.setPipelineProperties(pipeline_properties);
+            $callback({ loading: false, lead_properties, pipeline_properties });
+          } else {
+            $callback({ loading: false });
+          }
+        })
+        .catch((error) => {
           $callback({ loading: false });
-        }
-      }).catch(error => {
-        $callback({ loading: false });
-      });
+        });
     },
-    callFetchSources($callback = () => { }) {
+    callFetchSources($callback = () => {}) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/sources`,
-      }).then(res => {
-        const { success, sources } = res;
-        if (success) {
-          this.setSources(sources);
-          $callback({ loading: false, sources });
-        } else {
+      })
+        .then((res) => {
+          const { success, sources } = res;
+          if (success) {
+            this.setSources(sources);
+            $callback({ loading: false, sources });
+          } else {
+            $callback({ loading: false });
+          }
+        })
+        .catch((error) => {
           $callback({ loading: false });
-        }
-      }).catch(error => {
-        $callback({ loading: false });
-      });
+        });
     },
-    callFetchFiles($leadId, $callback = () => { }) {
+    callFetchFiles($leadId, $callback = () => {}) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/${$leadId}/files`,
-      }).then(res => {
-        const { success, files } = res;
-        if (success) {
-          this.setLeadFiles(files);
-          $callback({ loading: false, files });
-        } else {
+      })
+        .then((res) => {
+          const { success, files } = res;
+          if (success) {
+            this.setLeadFiles(files);
+            $callback({ loading: false, files });
+          } else {
+            $callback({ loading: false });
+          }
+        })
+        .catch((error) => {
           $callback({ loading: false });
-        }
-      }).catch(error => {
-        $callback({ loading: false });
-      });
+        });
     },
-    callFetchLeadTasks($leadId, $callback = () => { }) {
+    callFetchLeadTasks($leadId, $callback = () => {}) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/${$leadId}/tasks`,
-      }).then(res => {
-        const { success, tasks } = res;
-        if (success) {
-          this.setLeadTasks(tasks);
-          $callback({ loading: false, tasks });
-        } else {
+      })
+        .then((res) => {
+          const { success, tasks } = res;
+          if (success) {
+            this.setLeadTasks(tasks);
+            $callback({ loading: false, tasks });
+          } else {
+            $callback({ loading: false });
+          }
+        })
+        .catch((error) => {
           $callback({ loading: false });
-        }
-      }).catch(error => {
-        $callback({ loading: false });
-      });
+        });
     },
     setFetchTimelineLogs(payload) {
       this.timelinesRef = payload;
@@ -503,7 +544,5 @@ export const usePlatformStore = defineStore('platform', {
     callFetchTimelineLogs(...args) {
       this.timelinesRef(...args);
     },
-
-
-  }
+  },
 });

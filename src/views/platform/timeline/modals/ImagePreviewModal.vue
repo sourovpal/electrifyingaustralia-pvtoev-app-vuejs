@@ -9,7 +9,6 @@
         getVSIFileIcon,
         getVSIFolderIcon,
     } from "file-extension-icon-js";
-    import CustomModal from '@components/modals/CustomModal.vue';
 
     const props = defineProps({
         files: {
@@ -229,7 +228,7 @@
         </div>
     </div>
 
-    <CustomModal ref="deleteFileModalRef"
+    <BootstrapModal ref="deleteFileModalRef"
         size="sm">
         <h5 class="text-head text-center fw-bold">Delete this file?</h5>
         <p class="fs-12px text-center text-danger">
@@ -248,7 +247,7 @@
                 Delete
             </loading-button>
         </div>
-    </CustomModal>
+    </BootstrapModal>
 </template>
 
 <style scoped

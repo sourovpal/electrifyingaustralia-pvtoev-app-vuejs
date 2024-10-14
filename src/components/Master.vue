@@ -9,7 +9,7 @@ const appStore = useAppStore();
 const authStore = useAuthStore();
 
 onMounted(()=>{
-    appStore.fetchAppData();
+    appStore.callFetchAppData();
     authStore.setUser();
     authStore.setAccessToken();
     if(!isAuthorized()){

@@ -30,7 +30,6 @@
     const isAllLeadSelected = computed(() => leadsStore.getIsAllLeadSelected);
     const isSomeLeadSelected = computed(() => leadsStore.getIsSomeLeadSelected);
     const deleteModalInstance = computed(() => leadsStore.getMultipleDeleteModal);
-    const addNewModalInstance = computed(() => leadsStore.getAddNewLeadModal);
     const spreadsheetModalInstance = computed(() => leadsStore.getUploadSpreadsheetModal);
     const leadSources = computed(() => platformStore.getSources);
     const leadStatuses = computed(() => platformStore.getStatuses);
@@ -52,7 +51,7 @@
         if (!leadStatuses.value?.length) {
             platformStore.callFetchStatuses();
         }
-        addNewModalInstance.value?.show();
+        leadsStore.setAddNewLeadModal(true);
     }
 
     function selectAllOrNotLeads() {

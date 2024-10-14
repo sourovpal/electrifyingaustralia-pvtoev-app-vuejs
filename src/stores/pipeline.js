@@ -1,13 +1,6 @@
 import { defineStore } from 'pinia';
 import { useApiRequest } from '@actions';
-
-function validateObject(payload) {
-    if (typeof payload == 'object' && payload != null && !Array.isArray(payload)) {
-        return true;
-    }
-    return false;
-}
-
+import { validateObject } from "@helpers";
 
 export const usePipelineStore = defineStore('pipeline', {
     state: () => {

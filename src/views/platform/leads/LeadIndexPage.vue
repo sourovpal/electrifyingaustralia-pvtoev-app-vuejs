@@ -14,6 +14,8 @@
   const leadsStore = useLeadsStore();
   const platformStore = usePlatformStore();
   const toggleFilter = computed(() => leadsStore.getToggleFilter);
+  const toggleAddNewModal = computed(() => leadsStore.getAddNewLeadModal);
+
 
 
   function handleFetchLeads(payload, fetch = false, reset = false) {
@@ -46,7 +48,11 @@
     <filter-right-sidebar v-if="!(toggleFilter === 'render')"></filter-right-sidebar>
     <lead-data-table></lead-data-table>
   </section>
-  <add-new-lead-modal @refresh="handleFetchLeads({page:1}, true, true)"></add-new-lead-modal>
+  <add-new-lead-modal
+  v-if="toggleAddNewModal"
+  @close="()=>leadsStore.setAddNewLeadModal(false)"
+  @refresh="handleFetchLeads({page:1}, true, true)"
+  ></add-new-lead-modal>
   <multiple-lead-delete-modal @refresh="handleFetchLeads(route.query, true)"></multiple-lead-delete-modal>
   <upload-spreadsheet-modal></upload-spreadsheet-modal>
 </template>

@@ -2,13 +2,13 @@
     <div class="content content-y-100vh">
         <div class="proposal-display mt-3 d-flex justify-content-center gap-4">
             <div ref="content" class="pages-wrapper d-flex flex-column align-items-center">
-                <Cover :class="separatePages ? 'mb-5' : ''" />
-                <ProductionDetails  :page-number="1" :class="separatePages ? 'mb-5' : ''" />
-                <FinancialSummary   :page-number="2" :class="separatePages ? 'mb-5' : ''" />
-                <Quote              :page-number="3" :class="separatePages ? 'mb-5' : ''" />
-                <AssumedValues      :page-number="4" :class="separatePages ? 'mb-5' : ''" />
-                <Warranty           :page-number="5" :class="separatePages ? 'mb-5' : ''" />
-                <TermsAndConditions :page-number="6" :class="separatePages ? 'mb-5' : ''" />
+                <Cover :class="separatePages ? 'mb-5 shadow' : ''" />
+                <ProductionDetails  :page-number="1" :class="separatePages ? 'mb-5 shadow' : ''" />
+                <FinancialSummary   :page-number="2" :class="separatePages ? 'mb-5 shadow' : ''" />
+                <Quote              :page-number="3" :class="separatePages ? 'mb-5 shadow' : ''" />
+                <AssumedValues      :page-number="4" :class="separatePages ? 'mb-5 shadow' : ''" />
+                <Warranty           :page-number="5" :class="separatePages ? 'mb-5 shadow' : ''" />
+                <TermsAndConditions :page-number="6" :class="separatePages ? 'mb-5 shadow' : ''" />
             </div>
 
             <Menu @print="makePdf" />
@@ -18,7 +18,7 @@
 
 <script setup>
 import html2pdf from 'html2pdf.js';
-import { onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref } from 'vue';
 import Quote from './pages/Quote.vue';
 import FinancialSummary from './pages/FinancialSummary.vue';
 import Cover from './pages/Cover.vue';
@@ -44,7 +44,7 @@ const makePdf = () => {
     //   .outputPdf()
     //   .then(console.log)
     
-    separatePages.value = true;
+    nextTick(() => separatePages.value = true);
 }
 
 const route = useRoute();

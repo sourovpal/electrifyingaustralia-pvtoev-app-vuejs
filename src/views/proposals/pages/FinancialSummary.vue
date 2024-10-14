@@ -23,7 +23,7 @@
 	    </div>
 
 	    <div class="summary-card-display">
-	        <div class="summary-card card text-white p-4">
+	        <div class="summary-card text-white p-4">
                 <p class="fs-24px mb-0 fw-bold">${{ Formatter.toIntlFormat(projectStore.getNetPresentValue) }}</p> 
                 <p class="fs-20px mb-2">Net present value of investment</p> 
 
@@ -34,7 +34,7 @@
                 </p> 
 	        </div>
 
-	        <div class="summary-card card text-white p-4">
+	        <div class="summary-card text-white p-4">
                 <p class="fs-24px mb-0 fw-bold">{{ Formatter.toIntlFormat(projectStore.getReturnOfInvestment) }}%</p> 
                 <p class="fs-20px mb-2">Total return on investment</p> 
 
@@ -45,7 +45,7 @@
                 </p> 
 	        </div>
 
-	        <div class="summary-card card text-white p-4">
+	        <div class="summary-card text-white p-4">
                 <p class="fs-24px mb-0 fw-bold">{{ projectStore.getDiscountedPayback }} years</p> 
                 <p class="fs-20px mb-2"> Discounted payback period<sub>4</sub> </p> 
 
@@ -55,7 +55,7 @@
                 </p> 
 	        </div>
 	    </div>
-	    <div class="quote-wrapper bg-white border shadow mt-5">
+	    <div class="quote-wrapper bg-white border mt-5">
 	        <div class="heart-icon-wrapper">
                 <font-awesome-icon
 					class="text-white fs-24px"
@@ -90,7 +90,12 @@ const projectStore = useProjectStore();
 <style lang="scss" scoped>
 
 .heading { margin-top: 5rem; }
-.summary-card { background: #007ee5; }
+.summary-card { 
+    background: #007ee5;
+    border-radius: 1rem;
+}
+
+.page.shadow .page-content .quote-wrapper { box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important; }
 
 .quote-wrapper {
     padding: 2rem 3rem;

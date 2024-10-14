@@ -1,5 +1,5 @@
 <template>
-    <div class="cover-page shadow">
+    <div class="cover-page">
         <div class="logo-container">
 		    <img
 		        class="w-100"

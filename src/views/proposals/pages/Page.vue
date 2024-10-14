@@ -1,5 +1,5 @@
 <template>
-	<section class="page border p-5 shadow">
+	<section class="page border p-5">
 		<div class="page-number bg-primary text-white text-end pe-2 fw-bold">
 		    <span>{{ props.pageNumber }}</span>
 		</div>

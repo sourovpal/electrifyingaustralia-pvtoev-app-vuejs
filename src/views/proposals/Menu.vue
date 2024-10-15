@@ -14,7 +14,7 @@
             </div>
 
             <p class="mb-0 fs-14px d-flex justify-content-between">
-                <span v-if="activeTaxSlug !== 'no-tax'">Subtotal {{activeTaxSlug === 'included' ? 'incl.' : 'excl.'}} GST</span>
+                <span>Subtotal <template v-if="activeTaxSlug !== 'no-tax'">{{activeTaxSlug === 'included' ? 'incl.' : 'excl.'}} GST</template> </span>
                 <span class="text-end">$ {{ Formatter.toIntlFormat(total) }} </span>
             </p>
 

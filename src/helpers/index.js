@@ -125,6 +125,35 @@ export function formatTimeAgo(
   }
 }
 
+export function timeDifference(date1, date2) {
+  // Create moment objects
+  if (!date1 || !date2) return;
+  const moment1 = moment(date1);
+  const moment2 = moment(date2);
+
+  // Get differences
+  const years = moment2.diff(moment1, "years");
+  if (years > 0) return `${years} year${years > 1 ? "s" : ""}`;
+
+  const months = moment2.diff(moment1, "months");
+  if (months > 0) return `${months} month${months > 1 ? "s" : ""}`;
+
+  const weeks = moment2.diff(moment1, "weeks");
+  if (weeks > 0) return `${weeks} week${weeks > 1 ? "s" : ""}`;
+
+  const days = moment2.diff(moment1, "days");
+  if (days > 0) return `${days} day${days > 1 ? "s" : ""}`;
+
+  const hours = moment2.diff(moment1, "hours");
+  if (hours > 0) return `${hours} hour${hours > 1 ? "s" : ""}`;
+
+  const minutes = moment2.diff(moment1, "minutes");
+  if (minutes > 0) return `${minutes} minute${minutes > 1 ? "s" : ""}`;
+
+  const seconds = moment2.diff(moment1, "seconds");
+  return ` 1 ＜ min`;
+}
+
 export async function delay(interval = 100) {
   await new Promise((m) => setTimeout(m, interval));
 }

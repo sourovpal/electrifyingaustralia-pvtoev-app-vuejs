@@ -2,9 +2,8 @@
 import CustomScrollbar from "custom-vue-scrollbar";
 import ActionBar from "@components/ActionBar/ActionBar.vue";
 import LeftActionBar from "@components/ActionBar/LeftActionBar.vue";
-import RightActionBar from "@components/ActionBar/RightActionBar.vue";
 import { usePlatformStore } from "@stores";
-import { formatTimeAgo } from "@helpers";
+import { timeDifference } from "@helpers";
 import { ref, computed, watchEffect } from "vue";
 import { Skeletor } from "vue-skeletor";
 import { $toast } from "@config";
@@ -121,7 +120,12 @@ watchEffect(() => {
                 <span
                   class="text-lowercase text-overflow-ellipsis d-block"
                   v-else
-                  >{{ formatTimeAgo(stage?.lead_stage?.start_at, false) }}</span
+                  >{{
+                    timeDifference(
+                      stage?.lead_stage?.start_at,
+                      stage?.lead_stage?.completed_at
+                    )
+                  }}</span
                 >
               </button>
               <Skeletor

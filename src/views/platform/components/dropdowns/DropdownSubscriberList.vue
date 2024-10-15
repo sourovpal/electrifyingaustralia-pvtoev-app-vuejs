@@ -2,7 +2,7 @@
   import { usePlatformStore } from "@stores";
   import { useAuthStore } from "@stores";
   import { AvatarIcon } from "@assets/icons";
-  import { computed, ref,  } from "vue";
+  import { computed, ref, } from "vue";
   import { useDebounceFn } from '@vueuse/core';
   import { useApiRequest } from '@actions';
   import { $toast } from '@config';
@@ -89,7 +89,7 @@
               class="project-owner-filter form-control" />
           </div>
 
-          <div class="dropdown-header fs-12px text-soft">Primary Subscriber {{ leadOwner.user_id }}</div>
+          <div class="dropdown-header fs-12px text-soft">Primary Subscriber</div>
           <div v-if="leadOwner?.user_id"
             class="dropdown-item noselect px-2">
             <img :src="leadOwner?.profile_avatar"
@@ -148,6 +148,10 @@
                   {{ item.email }}
                 </div>
               </span>
+            </div>
+
+            <div class="px-2 fw-bold fs-14px py-2" v-if="!loading && filterUsers?.length">
+              Subscriber is not available. 
             </div>
 
           </div>

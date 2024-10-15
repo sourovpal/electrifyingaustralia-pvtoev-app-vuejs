@@ -1,11 +1,5 @@
-<script>
+<script setup>
     import { FetchErrorIcon } from '../assets/icons';
-    export default {
-        data() {
-            return {
-            }
-        },
-    }
 </script>
 
 <template>

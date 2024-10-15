@@ -133,10 +133,10 @@ export const usePlatformStore = defineStore("platform", {
       return stage.leadPrimaryStages;
     },
     getLeadSuccessStages(stage) {
-      return stage.leadSuccessStagesleadPrimaryStages;
+      return stage.leadSuccessStages;
     },
     getLeadLostStages(stage) {
-      return stage.leadLostStagesleadPrimaryStages;
+      return stage.leadLostStages;
     },
     getPipelineStages(stage) {
       return stage.pipelineStages;

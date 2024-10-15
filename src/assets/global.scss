@@ -11,8 +11,6 @@
 
   --content-body-width: calc(100% - calc(var(--main-left-navbar-width) + var(--child-left-navbar-width)));
   --layout-border-color: rgb(144 164 174 / 25%);
-
-
 }
 
 * {
@@ -48,6 +46,11 @@ html::-webkit-scrollbar {
 
 #app {
   height: 100vh;
+}
+
+.modal .modal-dialog {
+  margin-left:auto !important;
+  margin-right:auto !important;
 }
 
 .content {

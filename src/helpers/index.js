@@ -114,7 +114,7 @@ export function handleDateTimeFormat(
 export function formatTimeAgo(
   dateInput,
   showDate = 30,
-  format = "Do MMMM, YYYY HH:mm a"
+  format = "Do MMMM, YYYY HH:mm a",
 ) {
   if (!dateInput) return;
   let date = moment(dateInput);
@@ -151,7 +151,7 @@ export function timeDifference(date1, date2) {
   if (minutes > 0) return `${minutes} minute${minutes > 1 ? "s" : ""}`;
 
   const seconds = moment2.diff(moment1, "seconds");
-  return ` 1 ＜ min`;
+  return ` 1＜min`;
 }
 
 export async function delay(interval = 100) {

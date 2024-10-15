@@ -115,6 +115,7 @@ const iconsToUse = [
   fa.faSignOut,
   fa.faHome,
   fa.faUserLock,
+  fa.faUserEdit,
   // Regular
   far.faSquare,
   far.faSquareMinus,

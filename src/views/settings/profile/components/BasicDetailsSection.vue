@@ -1,74 +1,75 @@
-<script>
-    import { UpdateBasicDetails } from '../../../../actions/UserAction';
-    import { inject } from 'vue';
-    import Storage from '../../../../helpers/Storage';
-    import { CONFIG, $toast } from '../../../../config';
+<script setup>
+    import { ref, watch, computed, reactive } from 'vue';
+    import { useAppStore, useAuthStore } from '@stores';
+    import { $toast } from '@config';
+    import { defineProps, defineEmits } from 'vue';
+    import { useApiRequest } from '@actions';
 
-    export default {
-        props: {
-            profileData: Object,
-            company: Object,
-        },
-        data() {
-            return {
-                errors: {},
-                name: null,
-                display_name: null,
-                job_title: null,
-                username: null,
-                isSubmitBasicDetails: false,
-            }
-        },
-        watch: {
-            'profileData'(n) {
-                this.setData();
-            }
-        },
-        methods: {
-            setData() {
-                this.$toast.clear()
-                this.errors = {};
-                this.name = this.profileData.name;
-                this.display_name = this.profileData.display_name;
-                this.job_title = this.profileData.job_title;
-                this.username = this.profileData.username;
-            },
-            async formSubmitHandler(payload = null) {
-                this.$toast.clear();
-                this.errors = {};
-                this.isSubmitBasicDetails = true;
-                var data = {
-                    name: this.name,
-                    username: this.profileData.username,
-                    job_title: this.job_title,
-                    display_name: this.display_name,
-                };
-                try {
-                    const res = await UpdateBasicDetails(data);
-                    const { success, message, errors } = res;
-                    $toast[message.type](message.text);
-                    if (success) {
-                        this.$emit('fetch-profile');
-                    } else {
-                        this.errors = errors;
-                    }
-                } catch (error) {
-                    $toast.error('Oops, something went wrong');
-                } finally {
-                    this.isSubmitBasicDetails = false;
-                }
-            },
-        },
-        computed: {
-            isResetButtonActive() {
-                return !(this.name == this.profileData.name
-                    && this.display_name == this.profileData.display_name
-                    && this.job_title == this.profileData.job_title
-                    && this.username == this.profileData.username);
-            }
-        },
+    const emit = defineEmits(['fetch-profile']);
+    const appStore = useAppStore();
+    const errors = ref({});
+
+    let attributes = reactive({
+        name: null,
+        display_name: null,
+        job_title: null,
+        username: null,
+    });
+
+    const isSubmitBasicDetails = ref(false);
+    const authUser = computed(() => appStore.getUser);
+    const company = computed(() => appStore.getCompany);
+
+    watch(() => authUser, () => {
+        Object.assign(attributes, authUser.value);
+    }, { immediate: true, deep: true });
+
+    function resetFormDate() {
+        Object.assign(attributes, authUser.value);
     }
+
+    const formSubmitHandler = async () => {
+        $toast.clear();
+        errors.value = {};
+        isSubmitBasicDetails.value = true;
+        const payload = {
+            name: attributes.name,
+            username: attributes.username,
+            job_title: attributes.job_title,
+            display_name: attributes.display_name,
+        };
+        const res = useApiRequest({
+            url: '/users/basic-details',
+            method: 'post',
+            payload
+        }).then(res => {
+            const { success, message, errors: serverErrors } = res;
+            if (!success && serverErrors) {
+                errors.value = serverErrors;
+                return;
+            }
+            $toast[message.type](message.text);
+            appStore.callFetchAppData();
+        }).catch(error => {
+            $toast.error('Oops, something went wrong');
+        }).finally(() => {
+            isSubmitBasicDetails.value = false;
+        });
+
+    };
+
+    const isResetButtonActive = computed(() => {
+        return !(
+            attributes.name === authUser.value.name &&
+            attributes.display_name === authUser.value.display_name &&
+            attributes.job_title === authUser.value.job_title &&
+            attributes.username === authUser.value.username
+        );
+    });
+
 </script>
+
+
 <template>
     <div class="row">
         <div class="col-lg-2 col-12 mb-3 mb-lg-0">
@@ -82,7 +83,7 @@
                 <label class="form-label-title"
                     for="">Full Name</label>
                 <input @focus="delete errors?.name"
-                    v-model="name"
+                    v-model="attributes.name"
                     type="text"
                     class="form-control">
                 <span class="form-input-commant"
@@ -95,7 +96,7 @@
                 <label class="form-label-title"
                     for="">Job title at {{ company?.company_name }}</label>
                 <input @focus="delete errors?.job_title"
-                    v-model="job_title"
+                    v-model="attributes.job_title"
                     type="text"
                     class="form-control">
                 <span class="form-input-commant"
@@ -109,7 +110,7 @@
                 <label class="form-label-title"
                     for="">Display name</label>
                 <input @focus="delete errors?.display_name"
-                    v-model="display_name"
+                    v-model="attributes.display_name"
                     type="text"
                     class="form-control">
                 <span class="form-input-commant"
@@ -123,7 +124,7 @@
                     for="">Forum username</label>
                 <input @focus="delete errors?.username"
                     type="text"
-                    v-model="username"
+                    v-model="attributes.username"
                     class="form-control">
                 <span class="form-input-commant"
                     v-if="!errors?.username?.length">Visible to other Pylon Observer users, including those outside your
@@ -141,7 +142,7 @@
                 </div>
                 <div class="ms-auto">
                     <button v-if="isResetButtonActive"
-                        @click="setData()"
+                        @click="resetFormDate()"
                         class="btn btn-danger fw-bold ms-auto">
                         Reset
                     </button>

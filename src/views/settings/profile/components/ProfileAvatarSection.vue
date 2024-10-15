@@ -1,114 +1,112 @@
-<script>
-    import { ref } from 'vue';
-    import { Modal } from "mdb-ui-kit";
-    import { Cropper } from 'vue-advanced-cropper'
+<script setup>
+    import { computed, ref, watch } from 'vue';
+    import { Cropper } from 'vue-advanced-cropper';
     import 'vue-advanced-cropper/dist/style.css';
-    import { UploadProfilePicture, RemoveProfilePicture } from '../../../../actions/UserAction';
+    import { useApiRequest } from '@actions';
+    import { useAppStore, useAuthStore } from '@stores';
+    import { $toast } from '@config';
+
+    const appStore = useAppStore();
+    const authUser = computed(() => appStore.getUser);
+    const company = computed(() => appStore.getCompany);
+
+    const emit = defineEmits(['fetchProfile']);
+
+    const errors = ref({});
+    const cropperRef = ref(null);
+    const profile_avatar = ref(null);
+    const inputProfileImage = ref(null);
+    const profileImageFile = ref(null);
+    const isSubmitProfileImage = ref(false);
+    const isSubmitProfileImageRemove = ref(false);
+    const toggleConfirmDialog = ref(false);
+    const toggleRemoveConfirmModal = ref(false);
+    const toggleImageCroperModal = ref(false);
+
+    watch(() => authUser, (val) => {
+        profile_avatar.value = authUser.value.profile_avatar;
+    }, { immediate: true, deep: true });
 
 
-    export default {
-        setup(props) {
-            const removeProfileImageConfirmModal = ref(null);
-            const prifileImageCroperModel = ref(null);
-            return { removeProfileImageConfirmModal, prifileImageCroperModel };
-        },
-        emits: ['fetchProfile'],
-        props: {
-            profileData: Object,
-        },
-        components: {
-            Cropper,
-            BootstrapModal,
-        },
-        data() {
-            return {
-                errors: {},
-                profile_avatar: null,
-                inputProfileImage: null,
-                profileImageFile: null,
-                isSubmitProfileImage: false,
-                isSubmitProfileImageRemove: false,
-                toggleConfirmDialog: false,
+    const formSubmitHandler = async () => {
+        if (!profileImageFile.value) {
+            errors.value['profile_picture'] = ['Please select profile photo.'];
+            return;
+        }
+
+        const payload = new FormData();
+        payload.append('profile_picture', profileImageFile.value);
+        isSubmitProfileImage.value = true;
+
+        await useApiRequest({
+            url: `/users/upload/profile-pricure`,
+            method: 'post',
+            payload
+        }).then(res => {
+            const { success, errors: serverErrors, message } = res;
+            if (!success && serverErrors) {
+                errors.value = serverErrors;
+                return;
             }
-        },
-        watch: {
-            "profileData"(val) {
-                this.profile_avatar = val.profile_avatar;
+            $toast[message.type](message.text);
+            inputProfileImage.value = null;
+            profileImageFile.value = null;
+            appStore.callFetchAppData();
+        }).catch(error => {
+            $toast.error('Oops, something went wrong');
+        }).finally(() => {
+            isSubmitProfileImage.value = false;
+            isSubmitProfileImageRemove.value = false;
+        });
+    };
+
+    const removeProfilePictureHandler = async () => {
+        $toast.clear();
+        errors.value = {};
+        isSubmitProfileImageRemove.value = true;
+        await useApiRequest({
+            url: `/users/remove/profile-pricure`,
+            method: 'post',
+        }).then(res => {
+            const { success, errors: serverErrors, message } = res;
+            toggleConfirmDialog.value = false;
+            $toast[message.type](message.text);
+            if (success) {
+                toggleRemoveConfirmModal.value = false;
+                appStore.callFetchAppData();
+            } else {
+                errors.value = serverErrors;
             }
-        },
-        methods: {
-            async formSubmitHandler(payload = null) {
-                if (!this.profileImageFile) {
-                    this.errors['profile_picture'] = ['Please select profile photo.'];
-                    return;
-                }
-                var formData = new FormData();
-                formData.append('profile_picture', this.profileImageFile);
-                this.isSubmitProfileImage = true;
-                try {
-                    const res = await UploadProfilePicture(formData);
-                    const { success, errors, message } = res;
-                    this.$toast[message.type](message.text);
-                    if (success) {
-                        this.inputProfileImage = null;
-                        this.profileImageFile = null;
-                        this.toggleConfirmDialog = null;
-                        this.$emit('fetch-profile');
-                    } else {
-                        this.errors = errors;
-                    }
-                } catch (error) {
-                    this.$toast.error('Oops, something went wrong');
-                } finally {
-                    this.isSubmitProfileImage = false;
-                    this.isSubmitProfileImageRemove = false;
-                }
-            },
-            async removeProfilePictureHandler() {
-                try {
-                    this.$toast.clear();
-                    this.errors = {};
-                    this.isSubmitProfileImageRemove = true;
-                    const res = await RemoveProfilePicture();
-                    const { success, errors, message } = res;
-                    this.$toast[message.type](message.text);
-                    this.toggleConfirmDialog = false;
-                    if (success) {
-                        this.removeProfilePictureHandler.modalHide();
-                        this.$emit('fetch-profile');
-                    } else {
-                        this.errors = errors;
-                    }
-                } catch (error) {
-                    this.$toast.error('Oops, something went wrong');
-                } finally {
-                    this.isSubmitProfileImageRemove = false;
-                }
-            },
-            async selectProfileImage(e) {
-                if (e.target.files && e.target.files.length) {
-                    var file = e.target.files[0];
-                    if (file) {
-                        this.prifileImageCroperModel.modalShow();
-                        this.inputProfileImage = URL.createObjectURL(file);
-                        e.target.value = '';
-                    } else {
-                    }
-                }
-            },
-            async prifilePhotoCrop() {
-                const { coordinates, canvas, } = this.$refs.cropper.getResult();
-                this.coordinates = coordinates;
-                this.profile_avatar = canvas.toDataURL();
-                this.prifileImageCroperModel.modalHide();
-                this.inputProfileImage = null;
-                const response = await fetch(canvas.toDataURL());
-                const blob = await response.blob();
-                this.profileImageFile = await new File([blob], 'profile-image.png', { lastModified: Date.now() });
+        }).catch(error => {
+            $toast.error('Oops, something went wrong');
+        }).finally(() => {
+            isSubmitProfileImageRemove.value = false;
+        });
+    };
+
+    const selectProfileImage = async (e) => {
+        if (e.target.files && e.target.files.length) {
+            const file = e.target.files[0];
+            if (file) {
+                toggleImageCroperModal.value = true;
+                inputProfileImage.value = URL.createObjectURL(file);
+                e.target.value = '';
             }
-        },
-    }
+        }
+    };
+
+    const prifilePhotoCrop = async () => {
+        const { coordinates, canvas } = cropperRef.value.getResult();
+        profile_avatar.value = canvas.toDataURL();
+        toggleImageCroperModal.value = false;
+        inputProfileImage.value = null;
+        const response = await fetch(canvas.toDataURL());
+        const blob = await response.blob();
+        profileImageFile.value = new File([blob], 'profile-image.png', { lastModified: Date.now() });
+    };
+
 </script>
+
 <template>
     <div class="row">
 
@@ -140,7 +138,7 @@
                         </loading-button>
 
                         <loading-button class="ms-auto btn-danger"
-                            @click="removeProfileImageConfirmModal.modalShow()">
+                            @click="toggleRemoveConfirmModal = true">
                             Remove
                         </loading-button>
                     </div>
@@ -159,7 +157,8 @@
     </div>
 
     <!-- Confirm Modal -->
-    <custom-modal ref="removeProfileImageConfirmModal"
+    <bootstrap-modal @close="()=>toggleRemoveConfirmModal=false"
+        v-if="toggleRemoveConfirmModal"
         size="sm">
         <div class="">
             <div class="text-center">
@@ -167,7 +166,7 @@
                 <p class="text-soft fs-14px">Are you sure you want to remove profile picture?</p>
             </div>
             <div class="d-flex justify-content-between align-items-center">
-                <button @click="removeProfileImageConfirmModal.modalHide()"
+                <button data-mdb-dismiss="modal"
                     class="btn btn-sm btn-danger">Cancel</button>
                 <loading-button class="btn-sm"
                     :isLoading="isSubmitProfileImageRemove"
@@ -176,33 +175,25 @@
                 </loading-button>
             </div>
         </div>
-    </custom-modal>
+    </bootstrap-modal>
 
 
     <!-- Profile image cropper -->
-    <custom-modal ref="prifileImageCroperModel">
+    <bootstrap-modal v-if="toggleImageCroperModal"
+        @close="()=>toggleImageCroperModal = false">
         <div class="d-flex justify-content-between justify-content-start pb-2">
             <h5 class="modal-title text-soft fs-18px"
                 id="exampleModalLabel">Resize Image</h5>
-            <button type="button"
-                class="btn btn-light btn-sm btn-floating"
-                data-mdb-dismiss="modal"
-                aria-label="Close">
-                <svg  
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="22"
-                    viewBox="0 -960 960 960"
-                    width="22">
-                    <path
-                        d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z">
-                    </path>
-                </svg>
+            <button class="btn btn-light btn-sm btn-floating"
+                data-mdb-dismiss="modal">
+                <font-awesome-icon icon="fas fa-close"
+                    class="fs-14px text-soft"></font-awesome-icon>
             </button>
         </div>
         <div class="">
             <cropper class="cropper"
                 :src="inputProfileImage"
-                ref="cropper"
+                ref="cropperRef"
                 :stencil-size="{
                         width: 200,
                         height: 200
@@ -223,7 +214,7 @@
                     @click="prifilePhotoCrop()">Crop</button>
             </div>
         </div>
-    </custom-modal>
+    </bootstrap-modal>
 
 
 </template>

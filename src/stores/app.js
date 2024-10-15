@@ -37,6 +37,9 @@ export const useAppStore = defineStore("app", {
     getPipelines(state) {
       return state.pipelines;
     },
+    getUser(state) {
+      return state.user;
+    }
   },
   actions: {
     setUser(payload) {

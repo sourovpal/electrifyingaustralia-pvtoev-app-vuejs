@@ -21,7 +21,7 @@
       </span>
 
       <Transition>
-        <div v-if="isOpen" class="assign-options position-absolute pb-5">
+        <div v-if="isOpen" class="assign-options position-absolute">
           <ul class="item-list">
             <li class="search-item px-2 py-0">
               <input

@@ -34,6 +34,11 @@ const menus = ref([
     url: "/settings/roles",
   },
   {
+    title: "CRM Settings",
+    icon: "fas fa-layer-group",
+    url: "/settings/crm/leads",
+  },
+  {
     title: "Settings",
     icon: "fas fa-gear",
     url: "/settings/account",
@@ -47,9 +52,8 @@ onClickOutside(profileRef, () => {
 </script>
 
 <template>
-  <section ref="profileRef" class="user-profile">
-    <router-link
-      @click="emits('clickOutside', true)"
+  <section @click="emits('clickOutside', true)" ref="profileRef" class="user-profile">
+    <router-link      
       to="/settings/profile"
       class="header border-bottom px-2 py-2 d-flex flex-row justify-cotent-start align-items-center"
     >
@@ -61,13 +65,13 @@ onClickOutside(profileRef, () => {
           class="text-head fs-16px d-flex justify-content-start align-items-center fw-bold"
         >
           {{ authUser.name }}
-          <span class="badge bg-primary py-0 ms-2" v-if="!authUser.is_owner"
+          <span class="btn bg-primary px-2 text-white py-0 ms-2" v-if="authUser.is_owner"
             >Owner</span
           >
-          <span class="badge bg-primary py-0 ms-2" v-else-if="authUser.role">
+          <span class="btn bg-primary px-2 text-white py-0 ms-2" v-else-if="authUser.role">
             {{ authUser.role }}
           </span>
-          <span class="badge bg-warning py-0 ms-2" v-else>Guest</span>
+          <span class="btn bg-warning px-2 text-white py-0 ms-2" v-else>Guest</span>
         </span>
         <span class="text-soft fs-16px d-block">
           {{ authUser.email }}

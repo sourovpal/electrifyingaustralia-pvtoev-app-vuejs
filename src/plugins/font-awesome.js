@@ -2,10 +2,12 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import * as fa from '@fortawesome/free-solid-svg-icons';
 import * as far from '@fortawesome/free-regular-svg-icons';
+import * as fab from '@fortawesome/free-brands-svg-icons';
 
 
 const iconsToUse = [
     fa.faCircleRadiation,
+    fa.faPhone,
     fa.faSun,
     fa.faScrewdriverWrench,
     fa.faTrash,
@@ -71,6 +73,8 @@ const iconsToUse = [
     far.faThumbsUp,
     far.faCalendarCheck,
     far.faClock,
+    fab.faInstagram,
+    fab.faFacebook
 ];
 
 library.add(iconsToUse)

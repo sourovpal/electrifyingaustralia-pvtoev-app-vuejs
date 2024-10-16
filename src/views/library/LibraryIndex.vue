@@ -23,6 +23,6 @@ onMounted(() => {
     <section class="d-flex flex-row">
         <Menu :menus="menus" :title="title" v-if="route.name !== 'LibraryProposals'" />
         <LibraryMenu class="d-none d-xl-block" v-else/>
-        <router-view></router-view>
+        <router-view :key="$route.fullPath"></router-view>
     </section>
 </template>

@@ -1,7 +1,8 @@
 <template>
     <div class="content content-y-100vh">
-        <div class="proposal-display mt-3 d-flex justify-content-center gap-4">
-            <div ref="content" class="pages-wrapper d-flex flex-column align-items-center">
+        <div class="proposal-display mt-3">
+            <Menu @print="makePdf" />
+            <div ref="content" class="pages-wrapper d-flex flex-column">
                 <Cover :class="separatePages ? 'mb-5 shadow' : ''" />
                 <ProductionDetails  :page-number="1" :class="separatePages ? 'mb-5 shadow' : ''" />
                 <FinancialSummary   :page-number="2" :class="separatePages ? 'mb-5 shadow' : ''" />
@@ -10,8 +11,6 @@
                 <Warranty           :page-number="5" :class="separatePages ? 'mb-5 shadow' : ''" />
                 <TermsAndConditions :page-number="6" :class="separatePages ? 'mb-5 shadow' : ''" />
             </div>
-
-            <Menu @print="makePdf" />
         </div>
     </div>
 </template>
@@ -62,4 +61,8 @@ onMounted(fetchProjectDetails);
 
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.pages-wrapper {
+    margin-left: 25rem;
+}
+</style>

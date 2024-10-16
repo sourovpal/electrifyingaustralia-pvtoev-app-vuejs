@@ -36,6 +36,22 @@
                 Accept & Sign
             </button>
         </div>
+        <div class="contact-info text-secondary">
+            <div class="d-flex align-items-center gap-3 mb-2">
+                <div class="d-flex align-items-center gap-2">
+			        <font-awesome-icon icon="fas fa-circle-user" />
+			        <span class="mb-0 fw-bold">USER NAME</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+			        <font-awesome-icon icon="fas fa-phone" />
+			        <span class="mb-0 fw-bold"> 0416572462 </span>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+			    <font-awesome-icon icon="fab fa-instagram" />
+			    <font-awesome-icon icon="fab fa-facebook" />
+            </div>
+        </div>  
     </div>
 </template>
 
@@ -61,6 +77,11 @@ const {
 </script>
 
 <style lang="scss" scoped>
+.menu {
+    position: fixed;
+    right: 26rem;
+}
+
 .info-bg {
     padding: 1rem;
     padding-top: 4rem;

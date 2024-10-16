@@ -163,7 +163,7 @@ const routes = [
                 },
                 children: [
                     {
-                        name: 'ProfileSettingPage',
+                        name: 'profile-setting-index',
                         path: 'profile',
                         component: () => import('@views/settings/profile/ProfileIndex.vue'),
                         beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
@@ -352,7 +352,7 @@ const routes = [
                         },
                     },
                     {
-                        name: 'TeamMemberIndex',
+                        name: 'team-member-index',
                         path: 'team-members',
                         component: () => import('@views/settings/team/TeamMemberIndex.vue'),
                         beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),

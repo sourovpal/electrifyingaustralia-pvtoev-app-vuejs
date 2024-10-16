@@ -1,12 +1,20 @@
 <script setup>
   import { formatTimeAgo } from "@helpers";
-  import { ref } from "vue";
+  import { ref, reactive, watch, computed, onMounted, toRefs, createApp, defineComponent } from "vue";
   import { useIntersectionObserver, useDebounceFn } from "@vueuse/core";
+  import { useAppStore } from '@stores';
+  import { useRouter } from 'vue-router';
+
   const props = defineProps({
     notification: { type: Object, default: {} },
     alert_type: {
       default({ notification }) {
         return notification.alert_type;
+      }
+    },
+    model: {
+      default({ notification }) {
+        return notification.model ?? {};
       }
     },
     recerver: {
@@ -17,8 +25,34 @@
     }
   });
 
+  const router = useRouter();
+  const appStore = useAppStore();
+  const company = computed(() => appStore.getCompany);
   const alertItemRef = ref(null);
   const isLoading = ref(false);
+
+  const defaultAttributes = reactive({
+    company_name: null,
+    model: {},
+    user: {},
+  });
+
+  function assignAttributes(attributes = {}) {
+    Object.assign(defaultAttributes, { ...defaultAttributes, ...attributes });
+  }
+
+  watch(() => props.model, (newModel) => {
+    if (newModel) {
+      assignAttributes({ model: { ...newModel } });
+    }
+  }, { immediate: true });
+
+  onMounted(() => {
+    if (company.value && company.value.company_name) {
+      assignAttributes({ company_name: company.value.company_name });
+    }
+    const { model, user, company_name } = toRefs(defaultAttributes);
+  });
 
   const handleUpdateNotificationSeen = () => {
     setTimeout(() => {
@@ -40,23 +74,32 @@
     }
   );
 
+  function redireectRoute(name, params = {}, querys = {}) {
+    try {
+      return router.resolve({ name, param: params ?? {}, query: querys ?? {}, }).href;
+    } catch (error) { return ''; }
+  }
+
   function userNameFormat(user) {
     if (user && user.name) return user.name;
-    return 'https://placehold.co/200x200';
+    return 'Unknown name';
   }
 
   function notificationIconFormat(user) {
     if (user && user.profile_avatar) return user.profile_avatar;
   }
 
-  function eventTitleFormat(model) {
-    if (model) return model.lead_title ?? 'Untitled lead\'s';
-  }
+  const Message = defineComponent({
+    template: `${props.notification.message}`,
+    setup() {
+      return defaultAttributes;
+    }
+  });
 
 </script>
 
 <template>
-  <router-link to="#"
+  <router-link :to="redireectRoute(notification.route_name, notification.route_params, notification.route_querys)"
     class="d-block">
     <div ref="alertItemRef"
       :class="{ 'is-not-seen': recerver?.seen_at }"
@@ -68,9 +111,8 @@
         <div class="alert-title fs-14px text-head">
           <strong class="me-1">{{ userNameFormat(notification.user) }},</strong>
           <span class="me-1">
-            {{ notification.message }}
+            <Message></Message>
           </span>
-          <strong class="">{{ eventTitleFormat(notification.model)}}</strong>
         </div>
         <div class="created-at text-soft fs-12px py-1 d-flex justify-content-between align-items-center">
           <span>

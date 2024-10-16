@@ -81,7 +81,7 @@
                                         v-if="project.status">{{ project.status.name }}</span>
                                     <span class="text-overflow-ellipsis btn btn-sm py-0 px-2 shadow-0"
                                         :class="{'btn-success':(project.pipeline_stage.status == 'success'), 'btn-danger':(project.pipeline_stage.status == 'lost') , 'btn-primary':(project.pipeline_stage.status == 'primary')}"
-                                        v-if="project.pipeline && project.pipeline_stage">{{ project.pipeline.title }} /
+                                        v-if="project.pipeline && project.pipeline_stage">  {{ project.pipeline.title }} /
                                         {{ project.pipeline_stage.name }}</span>
                                     <div class="icon ms-3">
                                         <font-awesome-icon icon="fas fa-arrow-right"

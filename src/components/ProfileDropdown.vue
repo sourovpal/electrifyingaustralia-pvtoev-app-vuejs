@@ -64,7 +64,7 @@ onClickOutside(profileRef, () => {
         <span
           class="text-head fs-16px d-flex justify-content-start align-items-center fw-bold"
         >
-          {{ authUser.name }}
+          {{ authUser.name??'Unknown name' }}
           <span class="btn bg-primary px-2 text-white py-0 ms-2" v-if="authUser.is_owner"
             >Owner</span
           >

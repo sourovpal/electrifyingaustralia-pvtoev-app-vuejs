@@ -3,6 +3,12 @@
     import ContactSection from './components/ContactSection.vue';
     import ProfileAvatarSection from './components/ProfileAvatarSection.vue';
     import PreferencesSection from './components/PreferencesSection.vue';
+    import { onUnmounted } from 'vue';
+
+    onUnmounted(() => {
+        console.log('onUnmounted');
+    });
+
 </script>
 
 <template>

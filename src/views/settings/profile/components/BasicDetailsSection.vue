@@ -2,7 +2,6 @@
     import { ref, watch, computed, reactive } from 'vue';
     import { useAppStore, useAuthStore } from '@stores';
     import { $toast } from '@config';
-    import { defineProps, defineEmits } from 'vue';
     import { useApiRequest } from '@actions';
 
     const emit = defineEmits(['fetch-profile']);

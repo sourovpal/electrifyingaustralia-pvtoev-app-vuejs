@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 import { CONFIG } from "@config";
 import { useAuthStore } from "./auth";
 import { validateObject } from "@helpers";
+import { useNotificationStore } from "./notification";
 
 const appStorage = new Storage(CONFIG.VITE_AUTH_APP);
 const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
@@ -85,6 +86,7 @@ export const useAppStore = defineStore("app", {
             lead_statuses,
             pipelines,
             permissions,
+            unseen,
           } = res;
           if (success) {
             this.setUser(user);
@@ -92,6 +94,7 @@ export const useAppStore = defineStore("app", {
             this.setLeadStatuses(lead_statuses);
             this.setPipelines(pipelines);
             this.setPermssions(permissions);
+            useNotificationStore().setTotalUnseen(unseen);
           }
         })
         .catch((error) => {

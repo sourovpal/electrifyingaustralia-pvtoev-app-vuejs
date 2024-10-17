@@ -2,35 +2,28 @@
   import { formatTimeAgo } from "@helpers";
   import { ref, reactive, watch, computed, onMounted, toRefs, createApp, defineComponent } from "vue";
   import { useIntersectionObserver, useDebounceFn } from "@vueuse/core";
-  import { useAppStore } from '@stores';
+  import { useAppStore, useAuthStore, useNotificationStore } from '@stores';
+  import { useApiRequest } from '@actions';
   import { useRouter } from 'vue-router';
 
   const props = defineProps({
     notification: { type: Object, default: {} },
-    alert_type: {
-      default({ notification }) {
-        return notification.alert_type;
-      }
-    },
-    model: {
-      default({ notification }) {
-        return notification.model ?? {};
-      }
-    },
-    recerver: {
-      default({ notification }) {
-        if (notification.recerver) return notification.recerver;
-        return null;
-      }
-    }
+    alert_type: { default({ notification }) { return notification.alert_type; } },
+    model: { default({ notification }) { return notification.model ?? {}; } },
+    receiver: { default({ notification }) { return notification.receiver ?? {}; } }
   });
 
-  const router = useRouter();
   const appStore = useAppStore();
+  const authStore = useAuthStore();
+  const notificationStore = useNotificationStore();
+  const seenAll = computed(() => notificationStore.getSeenAll);
+  const authUser = computed(() => authStore.getUser);
+
+  const router = useRouter();
   const company = computed(() => appStore.getCompany);
   const alertItemRef = ref(null);
   const isLoading = ref(false);
-
+  const isSeenProcessing = ref(false);
   const defaultAttributes = reactive({
     company_name: null,
     model: {},
@@ -48,39 +41,64 @@
   }, { immediate: true });
 
   onMounted(() => {
-    if (company.value && company.value.company_name) {
+    if (company.value && company.value.company_name)
       assignAttributes({ company_name: company.value.company_name });
-    }
-    const { model, user, company_name } = toRefs(defaultAttributes);
   });
 
-  const handleUpdateNotificationSeen = () => {
-    setTimeout(() => {
-      props.notification.seen_at = new Date();
-    }, 5000);
+  const handleSeenNotification = async ({ stop }) => {
+    await useApiRequest({
+      url: `/notifications/${props.notification.notification_id}/seen`,
+    }).then(res => {
+      setTimeout(() => {
+        stop();
+        Object.assign(props.receiver, { ...props.receiver, seen_at: new Date() });
+        notificationStore.setTotalUnseen(null, true);
+      }, 5000);
+    }).catch(error => { });
+  };
+
+  const handleMarkNotification = async () => {
+    isLoading.value = true;
+    await useApiRequest({
+      url: `/notifications/${props.notification.notification_id}/mark`,
+    }).then(res => {
+      Object.assign(props.notification, { ...props.notification, highlight: !props.notification?.highlight });
+    }).catch(() => { }).finally(() => { isLoading.value = false; });
+  };
+
+  const handleHideNotification = async () => {
+    isLoading.value = true;
+    await useApiRequest({
+      url: `/notifications/${props.notification.notification_id}/hide`,
+    }).then(res => {
+      Object.assign(props.receiver, { ...props.receiver, hide_at: new Date() });
+    }).catch(() => { }).finally(() => { isLoading.value = false; });
   };
 
   const handleNotificationSeen = useDebounceFn(
-    handleUpdateNotificationSeen,
+    handleSeenNotification,
     2000
   );
 
   const { stop } = useIntersectionObserver(
     alertItemRef,
     ([{ isIntersecting }], observerElement) => {
-      if (isIntersecting && !isLoading.value && !props.notification.seen_at) {
-        handleNotificationSeen({ stop });
+      if (isIntersecting && !isSeenProcessing.value && !props.receiver?.seen_at) {
+        isSeenProcessing.value = true;
+        handleSeenNotification({ stop });
       }
-    }
-  );
+    }, {
+    rootMargin: "0px 0px -180px 0px",
+  });
 
   function redireectRoute(name, params = {}, querys = {}) {
     try {
-      return router.resolve({ name, param: params ?? {}, query: querys ?? {}, }).href;
+      router.push({ name, params, querys });
     } catch (error) { return ''; }
   }
 
   function userNameFormat(user) {
+    if (user && user.user_id === authUser.value?.user_id) return 'You ';
     if (user && user.name) return user.name;
     return 'Unknown name';
   }
@@ -89,7 +107,7 @@
     if (user && user.profile_avatar) return user.profile_avatar;
   }
 
-  const Message = defineComponent({
+  const NotificationMessage = defineComponent({
     template: `${props.notification.message}`,
     setup() {
       return defaultAttributes;
@@ -99,10 +117,11 @@
 </script>
 
 <template>
-  <router-link :to="redireectRoute(notification.route_name, notification.route_params, notification.route_querys)"
-    class="d-block">
+  <div v-if="!receiver.hide_at"
+    @click="redireectRoute(notification.route_name, notification.route_params, notification.route_querys)"
+    class="d-block cursor-pointer">
     <div ref="alertItemRef"
-      :class="{ 'is-not-seen': recerver?.seen_at }"
+      :class="{ 'is-not-seen':(!notification.highlight && !receiver?.seen_at && !seenAll), 'alert-warning':(notification.highlight) }"
       class="alert-item px-3 py-2 d-flex justify-context-start">
       <div class="alert-icon">
         <img :src="notificationIconFormat(notification.user)" />
@@ -111,7 +130,7 @@
         <div class="alert-title fs-14px text-head">
           <strong class="me-1">{{ userNameFormat(notification.user) }},</strong>
           <span class="me-1">
-            <Message></Message>
+            <notification-message></notification-message>
           </span>
         </div>
         <div class="created-at text-soft fs-12px py-1 d-flex justify-content-between align-items-center">
@@ -124,23 +143,29 @@
           <button class="btn btn-danger btn-sm py-1">Cancel</button>
         </div>
       </div>
-      <div class="dot-menu">
+      <div @click.stop=""
+        class="dot-menu">
         <div class="dropdown ms-2 position-relative">
           <button
             class="toolbar-btn dropdown-toggler me-n1 btn btn-light btn-sm btn-floating d-flex justify-content-center align-items-center"
             data-mdb-toggle="dropdown">
-            <font-awesome-icon icon="fas fa-ellipsis-vertical"
+            <svg-custom-icon v-if="isLoading"
+              icon="spinner-icon" />
+            <font-awesome-icon v-else
+              icon="fas fa-ellipsis-vertical"
               class="text-soft fs-16px"></font-awesome-icon>
           </button>
           <div class="dropdown-menu custom-dropdown-menu dropdown-menu-end me-n3">
-            <div class="dropdown-item cursor-pointer fw-bold">
+            <div @click="handleMarkNotification"
+              class="dropdown-item cursor-pointer fw-bold">
               <span class="icon">
                 <font-awesome-icon icon="fas fa-check"
                   class="text-head fs-16px"></font-awesome-icon>
               </span>
-              Make as read
+              Make as {{ notification.highlight?'unmark':'mark' }}
             </div>
-            <div class="dropdown-item cursor-pointer fw-bold">
+            <div @click="handleHideNotification"
+              class="dropdown-item cursor-pointer fw-bold">
               <span class="icon">
                 <font-awesome-icon icon="fas fa-eye-slash"
                   class="text-head fs-14px"></font-awesome-icon>
@@ -151,7 +176,7 @@
         </div>
       </div>
     </div>
-  </router-link>
+  </div>
 </template>
 <style lang="scss"
   scoped>

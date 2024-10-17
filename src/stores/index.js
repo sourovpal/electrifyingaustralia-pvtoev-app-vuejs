@@ -3,7 +3,7 @@ import { useLeadsStore } from "./leads";
 import { usePipelineStore } from "./pipeline";
 import { useAuthStore } from "./auth";
 import { useAppStore } from "./app";
-import { useNotification } from "./notification";
+import { useNotificationStore } from "./notification";
 
 export {
     useAuthStore,
@@ -11,5 +11,5 @@ export {
     usePlatformStore,
     useLeadsStore,
     usePipelineStore,
-    useNotification,
+    useNotificationStore,
 }

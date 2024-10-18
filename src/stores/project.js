@@ -163,6 +163,12 @@ export const useProjectStore = defineStore('project', {
 
             return state.getStcCount * state.getPaymentSettings?.stc_price;
         },
+        getProjectOwner(state) {
+            if (!state.project) 
+                return null;
+
+            return state.project.owner;
+        },
         getPricings(state) {
             const pricings = state.project?.pricings; 
             if (!pricings?.length)

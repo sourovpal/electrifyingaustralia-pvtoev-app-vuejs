@@ -32,25 +32,31 @@
 
             <p class="mb-0 fs-14px">Total incl. GST</p>
 
-            <button class="text-uppercase btn btn-success w-100 p-2 fw-bold fs-18px mt-3" @click="handleAcceptClick">
+            <button
+                class="text-uppercase btn btn-success w-100 p-2 fw-bold fs-18px mt-3" 
+                @click="handleAcceptClick"
+            >
                 Accept & Sign
             </button>
         </div>
-        <div class="contact-info text-secondary">
+        <div class="contact-info text-secondary" v-if="owner">
             <div class="d-flex align-items-center gap-3 mb-2">
                 <div class="d-flex align-items-center gap-2">
 			        <font-awesome-icon icon="fas fa-circle-user" />
-			        <span class="mb-0 fw-bold">USER NAME</span>
+			        <span class="mb-0 fw-bold">{{ owner.username }}</span>
                 </div>
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center gap-2" v-if="owner.phone_number">
 			        <font-awesome-icon icon="fas fa-phone" />
-			        <span class="mb-0 fw-bold"> 0416572462 </span>
+			        <span class="mb-0 fw-bold">
+			            {{ owner.phone_number }}
+			        </span>
                 </div>
             </div>
-            <div class="d-flex gap-2">
+            <!-- Keeping this commented as the user does not have social links-->
+            <!-- <div class="d-flex gap-2">
 			    <font-awesome-icon icon="fab fa-instagram" />
 			    <font-awesome-icon icon="fab fa-facebook" />
-            </div>
+            </div> -->
         </div>  
     </div>
 </template>
@@ -64,6 +70,7 @@ import { useProjectStore } from '../../stores/project';
 const projectStore = useProjectStore();
 const activeTaxSlug = computed(() => projectStore.getTaxType);
 const pricings = computed(() => projectStore.getPricings);
+const owner = computed(() => projectStore.getProjectOwner);
 
 const emit = defineEmits(['print']);
 const handleAcceptClick = () => emit('print');

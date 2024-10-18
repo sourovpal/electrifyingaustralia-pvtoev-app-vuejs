@@ -39,7 +39,13 @@ export default {
     },
     methods:{
         handleLocationClick(item) {
-            axiosInstance.post('projects/', { address: item.place_name_en })
+            const ownerDetails = JSON.parse(localStorage.getItem('user_data'));
+            const owner_id = ownerDetails.user_id;
+
+            if (!owner_id) 
+                return this.$toast.error('Oops, something went wrong');
+
+            axiosInstance.post('projects/', { address: item.place_name_en, owner_id })
                 .then(res => {
                     const projectId = res?.data?.project_id;
                     this.$router.push({ path: `library/proposals/${projectId}`});
@@ -52,7 +58,6 @@ export default {
     },
     mounted() {
         this.$el.addEventListener('click', (e)=>{
-            console.log(e.target.closest('.search-area'))
             if(e.target.closest('.search-area')){
                 if(this.searchLocation.length > 0){
                     this.searchBoxRef.classList.add('show');

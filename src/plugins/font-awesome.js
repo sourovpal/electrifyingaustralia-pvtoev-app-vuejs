@@ -116,6 +116,8 @@ const iconsToUse = [
   fa.faHome,
   fa.faUserLock,
   fa.faUserEdit,
+  fa.faSkullCrossbones,
+  fa.faFaceSmile,
   // Regular
   far.faSquare,
   far.faSquareMinus,

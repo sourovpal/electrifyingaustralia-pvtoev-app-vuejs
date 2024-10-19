@@ -39,7 +39,7 @@ const routes = [
                 redirect: "/platform/leads",
                 children: [
                     {
-                        name: "tasks",
+                        name: "platform-tasks",
                         path: 'tasks',
                         component: () => import('@views/platform/tasks/TaskIndexPage.vue'),
                         beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),

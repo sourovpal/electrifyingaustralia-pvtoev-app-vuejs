@@ -9,8 +9,10 @@
   const props = defineProps({
     notification: { type: Object, default: {} },
     alert_type: { default({ notification }) { return notification.alert_type; } },
+    alert_icon: { default({ notification }) { return notification.alert_icon || null; } },
     model: { default({ notification }) { return notification.model ?? {}; } },
-    receiver: { default({ notification }) { return notification.receiver ?? {}; } }
+    receiver: { default({ notification }) { return notification.receiver ?? {}; } },
+    actions: { default({ notification }) { return notification.actions ?? null; } },
   });
 
   const appStore = useAppStore();
@@ -75,11 +77,6 @@
     }).catch(() => { }).finally(() => { isLoading.value = false; });
   };
 
-  const handleNotificationSeen = useDebounceFn(
-    handleSeenNotification,
-    2000
-  );
-
   const { stop } = useIntersectionObserver(
     alertItemRef,
     ([{ isIntersecting }], observerElement) => {
@@ -91,20 +88,53 @@
     rootMargin: "0px 0px -180px 0px",
   });
 
-  function redireectRoute(name, params = {}, querys = {}) {
+  function redireectRoute(name, params = {}, query = {}) {
     try {
-      router.push({ name, params, querys });
-    } catch (error) { return ''; }
+
+      let routeName = props.notification.route_name;
+      let $url = null;
+      let $route = { name, params, query };
+      let model = props.model;
+
+      if (props.alert_type === 'deleted')
+        return '';
+
+      if (routeName === 'timeline-leads-edit' && model.is_pipeline) { // lead redirect url generate
+
+        $route['name'] = 'timeline-deals-edit';
+
+      } else if (routeName === 'platform-tasks') { // Lead Task url generate
+
+        if (model.completed_at) {
+
+          $route['query'] = { ...query, stage: 'complete' }
+
+        } else if (model.duration) {
+
+          $route['query'] = { ...query, stage: 'in-complete' }
+
+        } else {
+
+          $route['query'] = { ...query, stage: 'unscheduled' }
+
+        }
+
+      }
+
+      $url = router.resolve($route).href;
+      console.log($url)
+      return $url ?? '';
+
+    } catch (error) {
+      console.log(error)
+      return '';
+    }
   }
 
   function userNameFormat(user) {
     if (user && user.user_id === authUser.value?.user_id) return 'You ';
     if (user && user.name) return user.name;
     return 'Unknown name';
-  }
-
-  function notificationIconFormat(user) {
-    if (user && user.profile_avatar) return user.profile_avatar;
   }
 
   const NotificationMessage = defineComponent({
@@ -117,34 +147,60 @@
 </script>
 
 <template>
-  <div v-if="!receiver.hide_at"
-    @click="redireectRoute(notification.route_name, notification.route_params, notification.route_querys)"
+  <router-link v-if="!receiver.hide_at"
+    :to="redireectRoute(notification.route_name, notification.route_params, notification.route_querys)"
     class="d-block cursor-pointer">
+
     <div ref="alertItemRef"
-      :class="{ 'is-not-seen':(!notification.highlight && !receiver?.seen_at && !seenAll), 'alert-warning':(notification.highlight) }"
+      :class="{ 
+      'is-not-seen':(!notification.highlight && !receiver?.seen_at && !seenAll), 
+      'alert-warning':(notification.highlight && alert_type == 'normal'), 
+      'alert-danger':(notification.highlight && alert_type === 'deleted')}"
       class="alert-item px-3 py-2 d-flex justify-context-start">
-      <div class="alert-icon">
-        <img :src="notificationIconFormat(notification.user)" />
+
+      <!-- Alert Icon Start -->
+      <div v-if="notification.user"
+        class="alert-icon d-flex justify-content-center align-items-center">
+        <img :src="notification.user?.profile_avatar" />
       </div>
+
+      <div v-else
+        class="alert-icon d-flex justify-content-center align-items-center"
+        :class="`alert-${alert_type}`">
+        <font-awesome-icon :icon="alert_icon||'fas fa-bell'"
+          :class="`text-${alert_type} fs-25px`"></font-awesome-icon>
+      </div>
+      <!-- Alert Icon End -->
+
       <div class="alert-details ms-3">
+
         <div class="alert-title fs-14px text-head">
-          <strong class="me-1">{{ userNameFormat(notification.user) }},</strong>
+
+          <strong class="me-1">{{ userNameFormat(notification.user) }}</strong>
+
           <span class="me-1">
             <notification-message></notification-message>
           </span>
+
         </div>
+
         <div class="created-at text-soft fs-12px py-1 d-flex justify-content-between align-items-center">
           <span>
             {{ formatTimeAgo(notification.created_at)?.replace("a few seconds ago", "just now")}}</span>
         </div>
-        <div v-if="notification.action"
-          class="d-flex justify-content-between align-items-center">
-          <button class="btn btn-primary btn-sm py-1">Confirm</button>
+
+        <!-- Action Button -->
+        <div v-if="actions"
+          class="d-flex justify-content-between align-items-center"
+          :class="actions?.wrapper?.class"
+          :style="actions?.wrapper?.style">
           <button class="btn btn-danger btn-sm py-1">Cancel</button>
+          <button class="btn btn-primary btn-sm py-1">Confirm</button>
         </div>
+
       </div>
-      <div @click.stop=""
-        class="dot-menu">
+      <div class="dot-menu">
+
         <div class="dropdown ms-2 position-relative">
           <button
             class="toolbar-btn dropdown-toggler me-n1 btn btn-light btn-sm btn-floating d-flex justify-content-center align-items-center"
@@ -155,8 +211,9 @@
               icon="fas fa-ellipsis-vertical"
               class="text-soft fs-16px"></font-awesome-icon>
           </button>
+
           <div class="dropdown-menu custom-dropdown-menu dropdown-menu-end me-n3">
-            <div @click="handleMarkNotification"
+            <div @click.prevent="handleMarkNotification"
               class="dropdown-item cursor-pointer fw-bold">
               <span class="icon">
                 <font-awesome-icon icon="fas fa-check"
@@ -164,7 +221,8 @@
               </span>
               Make as {{ notification.highlight?'unmark':'mark' }}
             </div>
-            <div @click="handleHideNotification"
+
+            <div @click.prevent="handleHideNotification"
               class="dropdown-item cursor-pointer fw-bold">
               <span class="icon">
                 <font-awesome-icon icon="fas fa-eye-slash"
@@ -176,7 +234,8 @@
         </div>
       </div>
     </div>
-  </div>
+  </router-link>
+
 </template>
 <style lang="scss"
   scoped>
@@ -216,7 +275,7 @@
     }
 
     .dropdown-toggler {
-      //   opacity: 0;
+      /* opacity: 0; */
       transition: opacity 0.2s ease-in-out;
     }
 

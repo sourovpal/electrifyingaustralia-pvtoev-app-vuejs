@@ -13,10 +13,12 @@
   const infiniteLoadRef = ref(null);
   const isComplete = computed(() => notificationStore.getIsComplete);
 
-  const { stop } = useIntersectionObserver(
+  const { stop: observeStop } = useIntersectionObserver(
     infiniteLoadRef,
     ([{ isIntersecting }], observerElement) => {
-      if (isIntersecting && !isLoading.value && !isComplete.value) {
+      if (isComplete.value)
+        return observeStop();
+      if (isIntersecting && !isLoading.value) {
         notificationStore.callFetchNotifications();
       }
     }, {
@@ -31,11 +33,11 @@
 <template>
   <div class="alert-body"
     v-if="isLoading && !notifications?.length">
-    <notification-skeletor v-for="(_, index) in 5"
+    <notification-skeletor v-for="(_, index) in 6"
       :key="Math.random()"></notification-skeletor>
   </div>
   <custom-scrollbar v-else
-    thumbWidth="5"
+    thumbWidth="0"
     direction="vertical"
     :wrapper-style="{ height: '26.67rem' }"
     :style="{ height: '26.67rem' }"

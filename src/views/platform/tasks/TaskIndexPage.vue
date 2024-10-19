@@ -90,7 +90,6 @@
     }
 
     async function updateTaskStage(task) {
-        isLoading.value = true;
         task.is_complete = !task.is_complete;
         await useApiRequest({
             url: `/platform/${task.lead?.lead_id}/tasks/${task.task_id}/stage`,

@@ -66,19 +66,19 @@ export const useNotificationStore = defineStore('notification', {
         },
         setSeenAll() {
             this.seenAll = !this.seenAll;
-            this.totalUnseen = 0;
+            this.setTotalUnseen(0);
         },
         setHideAll() {
             this.hideAll = !this.hideAll;
-            this.totalUnseen = 0;
+            this.setTotalUnseen(0);
         },
         setTotalUnseen(payload = null, seen = null) {
-            if (payload != null && Number(payload)) {
+            if (typeof payload === 'number' && !isNaN(payload) && !seen) {
                 storeUnseen.set(payload)
                 return this.totalUnseen = payload;
             }
             if (seen) {
-                this.totalUnseen -= 1;
+                this.totalUnseen = this.totalUnseen - 1;
                 storeUnseen.set(this.totalUnseen);
             }
         },

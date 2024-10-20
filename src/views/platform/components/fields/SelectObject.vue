@@ -74,6 +74,7 @@ const selectedOption = ref(null);
 
 const options = computed(() => props.options);
 const selected = computed(() => props.selected);
+
 const filterOptions = computed(() => {
   return props.options?.filter((item) => {
     if (!searchOption.value) return item;
@@ -90,6 +91,7 @@ const fetchValue = (option) => {
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value;
 };
+
 async function autoSelectFirst() {
   if (props.autoSelected && options.value?.length && !selected.value) {
     selectedOption.value = options.value[0];
@@ -101,13 +103,16 @@ async function autoSelectFirst() {
     });
   }
 }
+
 onMounted(() => {
   nextTick(() => {
     selectedOption.value = selected.value;
     autoSelectFirst();
   });
 });
+
 watch(options, () => nextTick(() => autoSelectFirst()), { deep: true });
+
 watch(
   selected,
   () =>

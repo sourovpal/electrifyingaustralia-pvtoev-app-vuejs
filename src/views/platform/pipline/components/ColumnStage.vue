@@ -56,7 +56,7 @@
         }
 
         await useApiRequest({
-            url: `/leads/${pipelineId.value}/stage/${pipelineStage.value.stage_id}/${generateSlug(pipelineStage.value.name)}`,
+            url: `/leads/${pipelineId.value}/stage/${pipelineStage.value?.stage_id}/${generateSlug(pipelineStage.value.name)}`,
             payload
         }).then((res) => {
             const { success, leads, pagination } = res;

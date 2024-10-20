@@ -34,6 +34,7 @@ onMounted(() => {
 
 function showModalHandler() {
   $toast.clear();
+
   if (!pipelines.value.length) {
     platformStore.callFetchPipeline(function ({ loading, pipelines }) {
       pipelineIsLoading.value = loading;
@@ -90,6 +91,7 @@ function selectOwnerHandler(owner) {
 }
 
 async function confirmQualifyHandler() {
+  isSubmitConfirmQualify.value = true;
   await useApiRequest({
     url: `leads/${editLeadId.value}/confirm-qualify`,
     method: "POST",
@@ -103,22 +105,31 @@ async function confirmQualifyHandler() {
   })
     .then((res) => {
       const { success, message, ...args } = res;
+
       if (args.errors) {
         errors.value = args.errors;
         return;
       }
+
       platformStore.callFetchTimelineLogs();
       platformStore.setLeadPipeline(selectedPipeline.value);
       platformStore.setLeadStage(selectedStage.value);
       platformStore.callFetchLeadStages(platformStore.getEditLeadId);
       platformStore.callFetchProperties(platformStore.getEditLeadId);
+
       hideModalHandler();
+
       platformStore.setIsPipelineLead(true);
+
       router.push({ path: `/platform/deals/${editLeadId.value}` });
+
       $toast[message.type](message.text);
     })
     .catch((error) => {
       $toast.error("Oops, something went wrong");
+    })
+    .finally(() => {
+      isSubmitConfirmQualify.value = true;
     });
 }
 </script>
@@ -274,7 +285,7 @@ async function confirmQualifyHandler() {
             />
           </div>
           <div class="owner-name fs-16px fw--bold text-hard">
-            {{ selectedOwner?.name ?? "No Owner" }}
+            {{ selectedOwner?.name || selectedOwner?.email || "No Owner" }}
           </div>
         </div>
       </div>
@@ -282,6 +293,7 @@ async function confirmQualifyHandler() {
         ref="dropdownOwnerListRef"
         :lead-owner="leadOwner"
         @change="selectOwnerHandler"
+        :dropdown-menu-style="{ width: '100%' }"
       />
       <span
         class="fs-14px text-danger py-1 w-100 d-block"

@@ -1,54 +1,55 @@
 <script setup>
-    import { ref, onMounted } from 'vue';
-    import { VueDraggableNext } from 'vue-draggable-next';
-    import axios from '../../../../actions/api';
-    import { useToast } from 'vue-toast-notification';
-    import { CONFIG } from '../../../../config';
-    import moment from 'moment';
-    import ConfirmationModal from '../../../../components/Modals/ConfirmationModal.vue';
+import { ref, onMounted } from 'vue';
+import { VueDraggableNext } from 'vue-draggable-next';
+import axios from '@actions/api';
+import { useToast } from 'vue-toast-notification';
+import { CONFIG } from '@config';
+import moment from 'moment';
+import ConfirmationModal from '@components/Modals/ConfirmationModal.vue';
 
-    onMounted(() => {
-        getWorkFlows();
+onMounted(() => {
+    getWorkFlows();
+});
+
+const items = ref([]);
+const $toast = useToast(CONFIG.TOAST);
+
+async function getWorkFlows() {
+    axios.get('workflows').then(res => {
+        items.value = res.data;
+    }).catch(() => {
+        $toast.error('Something went wrong');
     });
+}
 
-    const items = ref([]);
-    const $toast = useToast(CONFIG.TOAST);
+const openWorkflowDeleteConfirmationModal = ref(false);
+const workflowToDeleteId = ref(null);
 
-    async function getWorkFlows() {
-        axios.get('workflows').then(res => {
-            items.value = res.data;
-        }).catch(() => {
+function handleWorkflowDeleteConfirm() {
+    axios.delete(`/workflows/delete/${workflowToDeleteId.value}`)
+        .then((res) => {
+            $toast.success(res.data.message);
+            getWorkFlows();
+        })
+        .catch(e => {
             $toast.error('Something went wrong');
-        });
-    }
+            console.log(e);
+        })
+        .finally(() => {
+            openWorkflowDeleteConfirmationModal.value = false;
+            handleWorkflowDeleteCancel(); // missnamed but fits the usage here
+        })
+}
 
-    const openWorkflowDeleteConfirmationModal = ref(false);
-    const workflowToDeleteId = ref(null);
+const handleDeleteClick = (workflowId) => {
+    workflowToDeleteId.value = workflowId;
+    openWorkflowDeleteConfirmationModal.value = true;
+}
 
-    function handleWorkflowDeleteConfirm() {
-        axios.delete(`/workflows/delete/${workflowToDeleteId.value}`)
-            .then((res) => {
-                $toast.success(res.data.message);
-                getWorkFlows();
-            })
-            .catch(e => {
-                $toast.error('Something went wrong');
-            })
-            .finally(() => {
-                openWorkflowDeleteConfirmationModal.value = false;
-                handleWorkflowDeleteCancel(); // missnamed but fits the usage here
-            })
-    }
-
-    const handleDeleteClick = (workflowId) => {
-        workflowToDeleteId.value = workflowId;
-        openWorkflowDeleteConfirmationModal.value = true;
-    }
-
-    const handleWorkflowDeleteCancel = () => {
-        openWorkflowDeleteConfirmationModal.value = false;
-        workflowToDeleteId.value = null;
-    }
+const handleWorkflowDeleteCancel = () => {
+    openWorkflowDeleteConfirmationModal.value = false;
+    workflowToDeleteId.value = null;
+}
 
 </script>
 

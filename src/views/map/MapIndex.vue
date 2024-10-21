@@ -94,11 +94,6 @@
         initializeGoogleMap();
     });
 
-
-
-
-
-
 </script>
 
 <template>

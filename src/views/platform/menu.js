@@ -50,13 +50,13 @@ export const menus = async () => {
                     {
                         label: 'Complete',
                         path: 'tasks',
-                        query: {stage: 'complete'},
+                        query: { stage: 'complete' },
                         icon: '',
                     },
                     {
                         label: 'In Complete',
                         path: 'tasks',
-                        query: {stage: 'in-complete'},
+                        query: { stage: 'in-complete' },
                         icon: '',
                     },
                     {

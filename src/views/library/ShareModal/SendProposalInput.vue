@@ -1,6 +1,6 @@
 <template>
     <div class="content-body">
-        <div class="header d-flex align-items-center gap-2">
+        <div class="header d-none d-lg-flex align-items-center gap-2">
             <p class="mb-0 lead text-black fw-bold fs-18px">Send proposal</p>
         </div>
         <div class="message-composer mt-3 p-2" style="background-color: #f5f7fa">

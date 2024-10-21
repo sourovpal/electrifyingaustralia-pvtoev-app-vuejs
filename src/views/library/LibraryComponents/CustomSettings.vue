@@ -1,16 +1,37 @@
+<script setup>
+import { ref, onMounted } from 'vue';
+import SaveableInput from '../components/SaveableInput.vue';
+import Formatter from '../../../helpers/Formatter';
+import updateCustomSettingsActions from './composables/useCustomSettingsActions';
+
+const formData = ref({});
+const loading = ref(false);
+
+const {
+    cancelInstallationDate,
+    cancelValidityDate,
+    updateCustomSettings,
+    getCustomSettingsDetails
+} = updateCustomSettingsActions(formData, loading);
+
+onMounted(
+    getCustomSettingsDetails
+);
+
+</script>
+
 <template>
-	<div>
+	<div :class="loading ? 'loading-opacity pe-none' : ''">
 		<div class="row mt-4">
 			<p class="text-end fs-14px col-md-4 text-secondary">
 				Installation year
 			</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">2024</p>
-					<font-awesome-icon
-						class="text-secondary fs-14px"
-						icon="fas fa-pen"
-					/>
+			        <SaveableInput
+			            v-model="formData.installation_year"
+			            @update:modelValue="updateCustomSettings"
+			        />
 				</div>
 				<p class="fs-12px">
 					The year of installation determines how many STCs this
@@ -24,11 +45,11 @@
 			</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">87%</p>
-					<font-awesome-icon
-						class="text-secondary fs-14px"
-						icon="fas fa-pen"
-					/>
+			        <SaveableInput 
+			            :amount-formatter="(num) => Formatter.toIntlFormat(num) + '%'" 
+			            v-model="formData.system_efficiency" 
+			            @update:modelValue="updateCustomSettings"
+			        />
 				</div>
 				<p class="fs-12px">
 					This value should account for inverter losses, AC/DC
@@ -43,42 +64,59 @@
 			</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">July 31, 2024</p>
-					<font-awesome-icon
-						class="text-secondary fs-14px"
-						icon="fas fa-calendar"
+					<input
+					    type="date"
+					    class="form-control w-50"
+					    v-model="formData.valid_date"
+					    @change="updateCustomSettings"
 					/>
-
 					<font-awesome-icon
-						class="text-secondary fs-14px"
+                        @click="cancelValidityDate"
+						class="text-secondary fs-14px cursor-pointer date-control-btn"
 						icon="fas fa-trash"
 					/>
 				</div>
 			</div>
 		</div>
 
-		<div class="row mt-4">
+		<div class="row my-4">
 			<p class="text-end fs-14px col-md-4 text-secondary">
 				Proposed installation date
 			</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">July 15, 2024</p>
-					<font-awesome-icon
-						class="text-secondary fs-14px"
-						icon="fas fa-calendar"
+					<input
+					    type="date"
+					    class="form-control w-50"
+					    v-model="formData.installation_date" 
+					    @change="updateCustomSettings"
 					/>
-
 					<font-awesome-icon
-						class="text-secondary fs-14px"
+					    @click="cancelInstallationDate"
+						class="text-secondary fs-14px cursor-pointer date-control-btn"
 						icon="fas fa-trash"
 					/>
 				</div>
 			</div>
 		</div>
+
+        <div v-if="loading" class="card-loader">
+			<font-awesome-icon
+			    icon="fas fa-circle-notch"
+			    class="animate-spin"
+			/>
+        </div>
 	</div>
 </template>
 
-<script setup></script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.date-control-btn {
+    transition: 100ms;
+
+    &:hover {
+        transform: scale(1.2);
+        color: rgb(220, 76, 100) !important;
+    }
+}
+</style>

@@ -1,20 +1,72 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import SaveableInput from '../components/SaveableInput.vue';
+import Formatter from '../../../helpers/Formatter';
+import axios from '../../../actions/api';
+import { useProjectStore } from '../../../stores/project';
+import { useToast } from 'vue-toast-notification';
 
-const totalAmount = ref('$27,990');
+const seasonList = [
+    { id: 'winter', label: 'Winter' },
+    { id: 'summer', label: 'Summer' },
+    { id: 'autumn', label: 'Autumn' },
+    { id: 'spring', label: 'Spring' },
+]
+
+const projectStore = useProjectStore();
+const formData = ref({});
+
+const getCurrentBillsDetails = () => {
+    loading.value = true;
+    axios.get(`projects/${projectStore.getProjectId}/current_bills`)
+        .then(res => { 
+            formData.value = res.data 
+            projectStore.setCurrentBills(res.data);
+        })
+        .catch(err => {
+            toast.error(err?.res?.data?.message ?? 'Something went wrong');
+            console.log(err);
+        })
+        .finally(() => {
+            loading.value = false;
+        })
+}
+
+const loading = ref(false);
+const toast = useToast();
+const updateCurrentBills = () => {
+    loading.value = true;
+    const apiEndpoint = `projects/${projectStore.getProjectId}/current_bills/${formData.value.id}`;
+    axios.put(apiEndpoint, formData.value)
+        .then((res) => {
+            toast.success(res?.data?.message ?? 'Current bills updated');
+            getCurrentBillsDetails();
+        }).catch(() => {
+            toast.error(err?.res?.data?.message ?? 'Something went wrong');
+            console.log(err);
+        })
+        .finally(() => {
+            loading.value = false;
+        })
+}
+
+onMounted(getCurrentBillsDetails);
 
 </script>
 
 <template>
-	<div>
+	<div :class="loading ? 'loading-opacity' : ''">
 		<div class="row mt-4">
 			<p class="text-end fs-14px col-md-4 text-secondary">
 				Total amount
 			</p>
 			<div class="col-md-8">
-			    <SaveableInput v-model="totalAmount" />
-				<p class="fs-12px">
+			    <SaveableInput 
+			        :amount-formatter="(num) => '$' + Formatter.toIntlFormat(num)" 
+			        v-model.number="formData.total_amount" 
+			        @update:modelValue="updateCurrentBills"
+			    />
+ 			    <p class="fs-12px">
 				    This is used to calculate the customer's energy usage and provides the baseline for the <span class="text-info">financial outcomes</span> charts. 
 				</p>
 			</div>
@@ -26,11 +78,12 @@ const totalAmount = ref('$27,990');
 			</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">Winter</p>
-					<font-awesome-icon
-					    class="text-secondary fs-14px"
-					    icon="fas fa-pen"
-					/>
+			        <SaveableInput 
+			            v-model="formData.bill_season" 
+			            :input-type="'select'"
+			            :option-list="seasonList"
+			            @update:modelValue="updateCurrentBills"
+			        />
 				</div>
 				<p class="fs-12px"> For which season was the bill amount above? </p>
 			</div>
@@ -42,11 +95,11 @@ const totalAmount = ref('$27,990');
 			</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">$1.00 per day</p>
-					<font-awesome-icon
-					    class="text-secondary fs-14px"
-					    icon="fas fa-pen"
-					/>
+			        <SaveableInput 
+			            :amount-formatter="(num) => '$' + Formatter.toIntlFormat(num)" 
+			            v-model="formData.daily_supply_charge" 
+			            @update:modelValue="updateCurrentBills"
+			        />
 				</div>
 				<p class="fs-12px"> The daily charge is inclusive in the customer's bill. </p>
 			</div>
@@ -58,11 +111,11 @@ const totalAmount = ref('$27,990');
 			</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">$0.34 per kWh</p>
-					<font-awesome-icon
-					    class="text-secondary fs-14px"
-					    icon="fas fa-pen"
-					/>
+			        <SaveableInput 
+			            :amount-formatter="(num) => '$' + Formatter.toIntlFormat(num) + ' per kWh'" 
+			            v-model="formData.electricity_charge_per_kwh" 
+			            @update:modelValue="updateCurrentBills"
+			        />
 				</div>
 				<p class="fs-12px"> The electricity rate is used when calculating the savings from not consuming utility power. </p>
 			</div>
@@ -74,15 +127,22 @@ const totalAmount = ref('$27,990');
 			</p>
 			<div class="col-md-8">
 				<div class="d-flex gap-3 align-items-center">
-					<p class="fs-14px mb-0 text-black">$0.07 per kWh</p>
-					<font-awesome-icon
-					    class="text-secondary fs-14px"
-					    icon="fas fa-pen"
-					/>
+			        <SaveableInput 
+			            :amount-formatter="(num) => '$' + Formatter.toIntlFormat(num) + ' per kWh'" 
+			            v-model="formData.tariff_feed_per_kwh" 
+			            @update:modelValue="updateCurrentBills"
+			        />
 				</div>
 				<p class="fs-12px">This is used when self consumption is not 100%.</p>
 			</div>
 		</div>
+
+        <div v-if="loading" class="card-loader">
+			<font-awesome-icon
+			    icon="fas fa-circle-notch"
+			    class="animate-spin"
+			/>
+        </div>
 	</div>
 </template>
 

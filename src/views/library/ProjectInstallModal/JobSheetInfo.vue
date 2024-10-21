@@ -1,6 +1,5 @@
 <script setup>
 import { VueDraggableNext } from 'vue-draggable-next';
-import {} from 'vue';
 const emit = defineEmits(['close']);
 
 const handleCloseClick = () => {
@@ -95,8 +94,8 @@ const handleCloseClick = () => {
                     <p class="text-muted fs-13px mb-2">Unsolicited Customer</p>
 
                     <div class="btn-group shadow-none me-3 w-100 rounded border" style="padding: 0.125rem;">
-                        <button class="btn btn-secondary text-muted">Unsolicited</button>
-                        <button class="btn btn-primary">Solicited</button>
+                        <button class="btn btn-sm btn-secondary text-muted">Unsolicited</button>
+                        <button class="btn btn-sm btn-primary">Solicited</button>
                     </div>
                 </div>
 
@@ -182,7 +181,7 @@ const handleCloseClick = () => {
     background: rgb(255,255,255);
     background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 30%);
 
-    // padding: 1rem 0;
+    /* padding: 1rem 0; */
     position: absolute;
     left: 0;
     right: 0;
@@ -200,7 +199,7 @@ const handleCloseClick = () => {
 }
 
 .material-row {
-    // border: 1px solid red;
+    /* border: 1px solid red; */
     .handle {
         cursor: move;
         left: 5px;

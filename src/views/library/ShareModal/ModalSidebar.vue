@@ -1,33 +1,15 @@
 <script setup>
-import {onMounted, ref, } from 'vue'
-const tabs = [
-	{name: 'esignature-input', label: 'Send e-Signature request'},
-	{name: 'send-proposal', label: 'Send proposal'},
-]
+import {onMounted, ref} from 'vue'
+import { useTabs } from './useTabs';
 
 const emit = defineEmits('tab-click')
 
-const activeTab = ref('')
-const handleTabClick = (tab) => {
-	emit('tab-click', tab)
-	activeTab.value = tab
-}
-
-const setDefaultTab = () => {
-	emit('tab-click', tabs[0].name)
-	activeTab.value = tabs[0].name
-}
-
-onMounted(() => {
-	setDefaultTab()
-})
-
-// emittnig an event out of the tabs
-const handleShareBtnClick = () => {
-    emit('tab-click', 'share-history');
-    activeTab.value = 'share-history';
-}
-
+const {
+    tabs,
+    activeTab,
+    handleTabClick,
+    handleShareBtnClick
+} = useTabs(emit);
 
 const comparisonInputValue = ref(
 	'https://app.getpylon.com/proposals/JUf91oOcWd'

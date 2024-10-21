@@ -173,7 +173,6 @@ onMounted(() => {
   z-index: 0;
   padding: 0;
 }
-
 .body-img:after {
   position: absolute;
   top: 0;
@@ -225,23 +224,19 @@ h5,
   padding: 7em 0;
   height: 100vh;
 }
-
 .heading-section {
   font-size: 28px;
   color: #fff;
 }
-
 .body-img {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
 }
-
 .login-wrap {
   position: relative;
   color: rgba(255, 255, 255, 0.9);
 }
-
 .login-wrap h3 {
   font-weight: 300;
   color: #fff;
@@ -258,7 +253,6 @@ h5,
   color: #000;
   background: #fff;
 }
-
 .login-wrap .social a:hover {
   background: #000;
   color: #fff;
@@ -278,7 +272,6 @@ h5,
   transform: translateY(-50%);
   color: rgba(255, 255, 255, 0.9);
 }
-
 .login-form-control {
   background: transparent;
   border: none;
@@ -349,7 +342,6 @@ textarea.login-form-control {
   -ms-user-select: none;
   user-select: none;
 }
-
 .checkbox-wrap input {
   position: absolute;
   opacity: 0;
@@ -357,13 +349,11 @@ textarea.login-form-control {
   height: 0;
   width: 0;
 }
-
 .checkmark {
   position: absolute;
   top: 0;
   left: 0;
 }
-
 .checkmark:after {
   content: "\f0c8";
   font-family: "FontAwesome";
@@ -419,19 +409,16 @@ textarea.login-form-control {
   border: 1px solid #fbceb5 !important;
   color: #000 !important;
 }
-
 .btn.btn-primary:hover {
   border: 1px solid #fbceb5;
   background: transparent;
   color: #fbceb5;
 }
-
 .btn.btn-primary.btn-outline-primary {
   border: 1px solid #fbceb5;
   background: transparent;
   color: #fbceb5;
 }
-
 .btn.btn-primary.btn-outline-primary:hover {
   border: 1px solid transparent;
   background: #fbceb5;

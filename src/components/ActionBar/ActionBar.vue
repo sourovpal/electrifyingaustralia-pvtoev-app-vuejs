@@ -1,9 +1,5 @@
-<script>
-    import LeftActionBar from './LeftActionBar.vue';
-    import RightActionBar from './RightActionBar.vue';
-    export default {
-        name: 'ActionBar',
-    }
+<script setup>
+    
 </script>
 
 <template>

@@ -111,32 +111,32 @@ const routes = [
                 children: [
                 ]
             },
-            {
-                name: "LibraryIndex",
+            { 
+                name:"LibraryIndex",
                 path: '/library',
                 redirect: '/library/active',
-                component: () => import('@views/library/LibraryIndex.vue'),
-                beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
-                meta: {
-                    title: 'Home Page',
+                component:()=>import('../views/library/LibraryIndex.vue'),
+                beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
+                meta:{
+                    title:'Home Page',
                 },
                 children: [
                     {
-                        name: 'LibraryProjects',
-                        path: 'active',
-                        component: () => import('@views/library/LibraryProjectsList.vue'),
-                        beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
-                        meta: {
-                            title: 'Projects',
+                        name:'LibraryProjects',
+                        path:'active',
+                        component:()=>import('../views/library/LibraryProjectsList.vue'),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
+                        meta:{
+                            title:'Projects',
                         },
                     },
                     {
-                        name: 'LibraryProposals',
-                        path: 'proposals',
-                        component: () => import('@views/library/LibraryProposalList.vue'),
-                        beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
-                        meta: {
-                            title: 'Projects',
+                        name:'LibraryProposals', // DO NOT CHANGE THIS NAME
+                        path:'proposals/:project_id',
+                        component:()=>import('../views/library/LibraryProposalList.vue'),
+                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
+                        meta:{
+                            title:'Projects',
                         },
                     }
                 ]

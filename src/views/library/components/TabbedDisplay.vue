@@ -14,7 +14,7 @@
                         fw-bold
                         ${activeTab === tab.component ? 'text-primary' : 'text-secondary'}
                     `"
-					@click="handleTabClick(tab)"
+					@click="switchComponents(tab)"
 					v-for="(tab, i) in tabsToLeft"
 					:key="i"
 				>
@@ -43,7 +43,7 @@
                         fw-bold
                         ${activeTab === tab.component ? 'text-primary' : 'text-secondary'}
                     `"
-					@click="handleTabClick(tab)"
+					@click="switchComponents(tab)"
 					v-for="(tab, i) in tabsToRight"
 					:key="i"
 				>
@@ -64,13 +64,35 @@
 			:class="`component-display rounded ${fade ? 'fade-in-out' : ''} ${componentClass}`"
 			:style="`transition: ${transitionDuration}ms;`"
 		>
-			<component :is="components[activeTab]" />
+			<component 
+			    @switch-request="handleSwitchRequest" 
+			    :is="components[activeTab]" 
+			/>
 		</div>
 	</div>
 </template>
 
 <script setup>
-import {computed, ref, } from 'vue'
+import {computed, ref} from 'vue'
+
+/* *
+Example props
+
+components: {
+    name: <component>
+}
+
+tabs: [
+    {
+        label: 'string',
+        component: 'string' // pointing to the name key in the components object  
+        icon: { name: 'fa-pen', toRight: false } // will show next to he tab name
+    },
+    ...
+]
+
+component-class: 'bg-secondary'
+*/
 
 const props = defineProps(['tabs', 'components', 'component-class'])
 
@@ -84,13 +106,22 @@ const tabsToRight = computed(
 const activeTab = ref(props.tabs[0].component)
 const fade = ref(false)
 const transitionDuration = ref(150)
-const handleTabClick = ({component}) => {
+const switchComponents = ({component}) => {
 	fade.value = true
 
 	setTimeout(() => {
 		activeTab.value = component
 		fade.value = false
 	}, transitionDuration.value)
+}
+
+const handleSwitchRequest = (component) => {
+    const registeredComponents = props.tabs.map(tab => tab.component);
+    if (!registeredComponents.includes(component)) {
+        throw new Error(`${component} is not passed down as a component in props`)
+    }
+
+    switchComponents({component});
 }
 </script>
 

@@ -56,7 +56,6 @@
             async fetchPropertieDataHandler(page = 1, limit = 25) {
                 try {
                     if (this.isLoading) { return; }
-
                     this.isLoading = true;
                     const querys = this.$route.query;
                     if (querys && querys.pipeline) {
@@ -65,7 +64,6 @@
                     }
 
                     const res = await FetchLeadProperties({ page, limit, pipeline_id: this.pipeline_id });
-
                     try {
                         const { properties, pagination } = res;
                         this.isFirstLoading = false;

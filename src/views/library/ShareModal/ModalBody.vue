@@ -1,5 +1,5 @@
 <script setup>
-import { computed,    } from 'vue'
+import { computed } from 'vue'
 
 import ESignatureInput from './ESignatureInput.vue'
 import SendProposalInput from './SendProposalInput.vue'
@@ -8,12 +8,11 @@ import ShareHistory from './ShareHistory.vue'
 const props = defineProps(['activeTab']);
 const emit = defineEmits(['close']);
 
-const componentToShow = computed(() => {
-    if (props.activeTab === 'send-proposal') return SendProposalInput;
-    if (props.activeTab === 'esignature-input') return ESignatureInput;
-    if (props.activeTab === 'share-history') return ShareHistory;
-    return '';
-});
+const componentToShow = computed(() => ({
+    'send-proposal': SendProposalInput,
+    'esignature-input': ESignatureInput,
+    'share-history': ShareHistory,
+})[props.activeTab]);
 
 const handleCloseClick = () => {
     emit('close');
@@ -22,11 +21,11 @@ const handleCloseClick = () => {
 </script>
 
 <template>
-	<div class="content-wrapper py-4 px-3 h-100 position-relative col-md-9">
+	<div class="content-wrapper py-md-4 px-3 h-100 position-relative col-md-9">
         <button
             @click="handleCloseClick"
             type="button"
-            class="position-absolute btn btn-light p-0"
+            class="position-absolute d-none d-md-block btn btn-light p-0"
             style="right: 0.75rem; top: 0.75rem;"
             data-bs-dismiss="modal"
             aria-label="Close">

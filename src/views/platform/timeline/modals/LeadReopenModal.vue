@@ -9,14 +9,17 @@
 
     const platformStore = usePlatformStore();
     const errors = ref({});
+    const modalRef = ref(null);
 
     const pipelineIsLoading = ref(false);
     const stagesIsLoading = ref(false);
     const usersIsLoading = ref(false);
+    const workflowIsLoading = ref(false);
 
     const selectedPipeline = ref(null);
     const selectedStage = ref(null);
     const selectedOwner = ref(null);
+    const selectedWorkflow = ref(null);
     const commant = ref(null);
     const isSubmit = ref(false);
 
@@ -26,6 +29,7 @@
     const users = computed(() => platformStore.getUsers);
     const leadOwner = computed(() => platformStore.getLeadOwner);
     const editLeadId = computed(() => platformStore.getEditLeadId);
+    const workflows = computed(() => platformStore.getWorkflows);
 
     function showModalHandler() {
         $toast.clear();
@@ -45,6 +49,12 @@
             platformStore.callFetchUsers(function ({ loading, users }) {
                 usersIsLoading.value = loading;
             });
+
+        if (!workflows.value?.length) {
+            platformStore.callFetchWorkflows(editLeadId.value, ({ loading }) => {
+                workflowIsLoading.value = loading;
+            });
+        }
 
         platformStore.setPipelineStages([]);
     }
@@ -92,6 +102,7 @@
             commant: commant.value,
             pipeline: selectedPipeline.value?.pipeline_id,
             pipeline_stage: selectedStage.value?.stage_id,
+            workflow: selectedWorkflow.value?.workflow_id
         };
 
         if (selectedOwner.value) payload["owner"] = selectedOwner.value.user_id;
@@ -101,24 +112,40 @@
             url,
             method: "post",
             payload,
-        })
-            .then((res) => {
-                const { success, errors: validation, message } = res;
-                if (validation) return (errors.value = validation);
-                $toast[message.type](message.text);
-                platformStore.setLeadStage({ ...selectedStage.value });
-            })
-            .catch((error) => {
-                $toast.error("Oops, something went wrong");
-            })
-            .finally(() => {
-                isSubmit.value = false;
-            });
+        }).then((res) => {
+            const { success, errors: validation, message } = res;
+
+            if (validation) return (errors.value = validation);
+
+            $toast[message.type](message.text);
+
+            platformStore.setLeadStage({ ...selectedStage.value });
+            platformStore.callFetchLeadStages(editLeadId.value);
+
+            if (payload["owner"])
+                platformStore.setLeadOwner({ ...selectedOwner.value });
+
+            if (leadPipeline.value?.pipeline_id != payload['pipeline']) {
+                platformStore.setLeadPipeline({ ...selectedPipeline.value });
+            }
+
+            if (selectedWorkflow.value) platformStore.callFetchLeadTasks(editLeadId.value);
+            modalRef.value?.hide();
+        }).catch((error) => {
+
+            $toast.error("Oops, something went wrong");
+
+        }).finally(() => {
+
+            isSubmit.value = false;
+
+        });
     }
 </script>
 
 <template>
     <bootstrap-modal v-bind="$attrs"
+        ref="modalRef"
         :dialog-style="{ width: '400px' }"
         position="normal">
         <template #header>
@@ -215,15 +242,13 @@
 
                 <label class="mb-2 fs-16px text-head"> Select workflow </label>
 
-                <select-object :loading="false"
-                    :options="[]"
-                    :selected="null"
+                <select-object :options="workflows"
+                    :selected="selectedWorkflow"
+                    :loading="workflowIsLoading"
                     placeholder="Start new workflow"
-                    @change="(stage) => {}"
+                    @change="(flow) => selectedWorkflow = flow"
                     @click="delete errors?.workflow"
-                    label="name"
-                    :disabled="false"
-                    auto-selected></select-object>
+                    label="title"></select-object>
 
                 <span class="fs-14px text-danger py-1 w-100 d-block"
                     v-if="errors?.workflow?.length">{{ errors?.workflow[0] }}</span>

@@ -29,7 +29,7 @@
     const emits = defineEmits(['toggle', 'deleteRefresh']);
 
     const imagePreviewModalRef = ref(null);
-    const deleteFileModalRef = ref(null);
+    const toggleDeleteFileModalRef = ref(false);
     const currentPreviewFile = ref(null);
     const prevPreviewImage = ref(null);
     const nextPreviewImage = ref(null);
@@ -112,7 +112,7 @@
             deleteIsLoading.value = false;
             if (success) {
                 emits('deleteRefresh', currentPreviewFile.value);
-                deleteFileModalRef.value.modalHide();
+                toggleDeleteFileModalRef.value = false;
                 var file = nextPreviewImage.value ?? prevPreviewImage.value ?? null;
                 if (file) {
                     handlePreviewFile(file);
@@ -125,18 +125,18 @@
         }).catch(error => {
             deleteIsLoading.value = false;
             modalInstance.show();
-            deleteFileModalRef.value.modalHide();
+            toggleDeleteFileModalRef.value = false;
         });
     }
 
     function handleDeleteConfirmation() {
         modalInstance.hide();
-        deleteFileModalRef.value.modalShow();
+        toggleDeleteFileModalRef.value = true;
     }
 
     function handleCancelConfirmation() {
         modalInstance.show();
-        deleteFileModalRef.value.modalHide();
+        toggleDeleteFileModalRef.value = false;
     }
 
     defineExpose({
@@ -228,7 +228,8 @@
         </div>
     </div>
 
-    <BootstrapModal ref="deleteFileModalRef"
+    <bootstrap-modal v-if="toggleDeleteFileModalRef"
+        @close="handleCancelConfirmation"
         size="sm">
         <h5 class="text-head text-center fw-bold">Delete this file?</h5>
         <p class="fs-12px text-center text-danger">
@@ -247,7 +248,7 @@
                 Delete
             </loading-button>
         </div>
-    </BootstrapModal>
+    </bootstrap-modal>
 </template>
 
 <style scoped

@@ -79,7 +79,7 @@ const routes = [
                         children: [],
                     },
                     {
-                        name: "timeline-deals-edit",
+                        name: "timeline-deal-edit",
                         path: 'deals/:id',
                         component: () => import('@views/platform/timeline/LeadEditTimelinePage.vue'),
                         beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),

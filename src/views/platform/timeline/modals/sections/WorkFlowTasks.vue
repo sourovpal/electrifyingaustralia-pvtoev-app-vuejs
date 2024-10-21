@@ -1,15 +1,17 @@
 <script setup>
-    import {   ref, nextTick, computed } from 'vue';
+    import { ref, nextTick, computed } from 'vue';
     import SlideUpDown from "vue-slide-up-down";
     import { usePlatformStore } from "@stores";
     import { $toast } from '@config';
     import { useApiRequest } from '@actions';
+    import { Skeletor } from "vue-skeletor";
 
     const platformStore = usePlatformStore();
-    const isLoading = ref(false);
     const props = defineProps({
         workflow: { type: Object, default: {} }
     });
+
+    const isLoading = ref(false);
     const selectAllStage = ref(false);
     const assignTasks = ref([]);
     const selectedTasks = ref([]);
@@ -30,7 +32,7 @@
         } else {
             selectedTasks.value = [];
         }
-        assignWorkflowTask();
+        assignWorkflowTask(true);
     }
 
     function selectSingleTask(id) {
@@ -70,9 +72,9 @@
         });
     }
 
-    async function assignWorkflowTask() {
+    async function assignWorkflowTask(assignAll = false) {
         await useApiRequest({
-            url: `/platform/${$leadId.value}/workflows/${props.workflow?.workflow_id}/tasks`,
+            url: `/platform/${$leadId.value}/workflows/${props.workflow?.workflow_id}/tasks${assignAll ? '?assing=all' : ''}`,
             method: 'post',
             payload: {
                 tasks: selectedTasks.value,
@@ -83,6 +85,7 @@
                 assignTasks.value = [...assignTasks.value, ...selectedTasks.value];
                 selectedTasks.value = [];
                 platformStore.callFetchLeadTasks($leadId.value);
+                if (assignAll) fetchWorkflowTasks();
                 return;
             }
             $toast.error(message.text);
@@ -99,7 +102,7 @@
             <custom-checkbox
                 :checked="!!([...assignTasks, ...selectedTasks].length === workflowTasks.length && workflowTasks.length) || !!(workflow.assign_tasks_count === workflow.tasks_count)"
                 @click="handleSelectAllTasks"
-                :disabled="!workflowTasks.length || !!(workflow.assign_tasks_count === workflow.tasks_count) || !!([...assignTasks, ...selectedTasks].length === workflowTasks.length && workflowTasks.length)"></custom-checkbox>
+                :disabled="!!(workflow.assign_tasks_count === workflow.tasks_count) || !!([...assignTasks, ...selectedTasks].length === workflowTasks.length && workflowTasks.length)"></custom-checkbox>
             <div @click="fetchWorkflowTasks"
                 class="d-flex justify-content-start align-items-center flex-grow-1">
                 {{ workflow.title }} ({{ workflow.tasks_count }})
@@ -112,14 +115,19 @@
         <slide-up-down :active="toggleTaskList"
             :duration="500">
 
-            <div v-if="isLoading"
-                class="py-1 pb-2">
-                <svg-custom-icon icon="SpinnerIcon" /> Loading...
-            </div>
+            <div class="workflow-body ps-4">
 
-            <div v-else-if="(workflowTasks && !isLoading)"
-                class="workflow-body ps-4">
-                <div v-for="(task, index) in workflowTasks"
+                <div v-if="isLoading"
+                    v-for="(_, index) in 5"
+                    :key="index*Math.random()"
+                    class="task py-2 px-2">
+                    <Skeletor style="width:1.3rem;height:1.3rem;border-radius:3px;"
+                        class="me-2"></Skeletor>
+                    <Skeletor style="width:80%;height:1rem;border-radius:3px;"></Skeletor>
+                </div>
+
+                <div v-else
+                    v-for="(task, index) in workflowTasks"
                     :key="index"
                     class="task">
                     <custom-checkbox @click="selectSingleTask(task.task_id)"
@@ -127,7 +135,9 @@
                         :disabled="assignTasks.includes(task.task_id)"></custom-checkbox>
                     {{ task.title }}
                 </div>
+
             </div>
+
         </slide-up-down>
     </div>
 </template>

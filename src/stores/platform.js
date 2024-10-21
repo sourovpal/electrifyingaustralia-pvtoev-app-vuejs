@@ -37,10 +37,11 @@ export const usePlatformStore = defineStore("platform", {
       statuses: [],
       users: [],
       sources: [],
+      workflows: [],
       //
       toggleLeadEditModal: false,
       //
-      timelinesRef: () => {},
+      timelinesRef: () => { },
       toggleTimelineRightSidebar: false,
     };
   },
@@ -144,6 +145,9 @@ export const usePlatformStore = defineStore("platform", {
     getLeadEditModal(stage) {
       return stage.toggleLeadEditModal;
     },
+    getWorkflows(stage) {
+      return stage.workflows;
+    }
   },
   actions: {
     setToggleRightSidebar() {
@@ -261,6 +265,11 @@ export const usePlatformStore = defineStore("platform", {
         this.sources = payload;
       }
     },
+    setWorkflows(payload) {
+      if (Array.isArray(payload)) {
+        this.workflows = payload;
+      }
+    },
     setLeadPrimaryStages(payload) {
       if (Array.isArray(payload)) {
         this.leadPrimaryStages = payload;
@@ -355,7 +364,7 @@ export const usePlatformStore = defineStore("platform", {
           this.setIsFirstLoading(false);
         });
     },
-    callFetchLeadContacts($leadId, $callback = () => {}) {
+    callFetchLeadContacts($leadId, $callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/${$leadId}/contacts`,
@@ -373,7 +382,7 @@ export const usePlatformStore = defineStore("platform", {
           $callback({ loading: false });
         });
     },
-    callFetchLeadStages($leadId, $callback = () => {}) {
+    callFetchLeadStages($leadId, $callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/leads/${$leadId}/stages`,
@@ -393,7 +402,7 @@ export const usePlatformStore = defineStore("platform", {
           $callback({ loading: false });
         });
     },
-    callFetchPipeline($callback = () => {}) {
+    callFetchPipeline($callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/pipelines`,
@@ -411,7 +420,7 @@ export const usePlatformStore = defineStore("platform", {
           $callback({ loading: false });
         });
     },
-    callFetchPipelineStages($pieplineId, $callback = () => {}) {
+    callFetchPipelineStages($pieplineId, $callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/${$pieplineId}/stages`,
@@ -429,7 +438,7 @@ export const usePlatformStore = defineStore("platform", {
           $callback({ loading: false });
         });
     },
-    callFetchStatuses($callback = () => {}) {
+    callFetchStatuses($callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/statuses`,
@@ -447,7 +456,7 @@ export const usePlatformStore = defineStore("platform", {
           $callback({ loading: false });
         });
     },
-    callFetchUsers($callback = () => {}) {
+    callFetchUsers($callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/users`,
@@ -465,7 +474,7 @@ export const usePlatformStore = defineStore("platform", {
           $callback({ loading: false });
         });
     },
-    callFetchProperties($leadId = null, $callback = () => {}) {
+    callFetchProperties($leadId = null, $callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/leads/${$leadId ? $leadId + "/" : ""}properties`,
@@ -484,7 +493,7 @@ export const usePlatformStore = defineStore("platform", {
           $callback({ loading: false });
         });
     },
-    callFetchSources($callback = () => {}) {
+    callFetchSources($callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/sources`,
@@ -502,7 +511,7 @@ export const usePlatformStore = defineStore("platform", {
           $callback({ loading: false });
         });
     },
-    callFetchFiles($leadId, $callback = () => {}) {
+    callFetchFiles($leadId, $callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/${$leadId}/files`,
@@ -520,7 +529,7 @@ export const usePlatformStore = defineStore("platform", {
           $callback({ loading: false });
         });
     },
-    callFetchLeadTasks($leadId, $callback = () => {}) {
+    callFetchLeadTasks($leadId, $callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
         url: `/platform/${$leadId}/tasks`,
@@ -544,5 +553,27 @@ export const usePlatformStore = defineStore("platform", {
     callFetchTimelineLogs(...args) {
       this.timelinesRef(...args);
     },
+    callFetchWorkflows($leadId, $callback = () => { }) {
+      $callback({ loading: true });
+      useApiRequest({
+        url: `/platform/${$leadId}/workflows`,
+      })
+        .then(async (res) => {
+          const { success, workflows, message } = res;
+          $callback({ loading: false });
+          if (success) {
+            this.setWorkflows(workflows);
+            return;
+          }
+          $toast.error(message.text);
+        })
+        .catch((error) => { })
+        .finally(() => {
+          $callback({ loading: false });
+        });
+    }
+
+
+
   },
 });

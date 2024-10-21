@@ -150,8 +150,8 @@
               </span>
             </div>
 
-            <div class="px-2 fw-bold fs-14px py-2" v-if="!loading && filterUsers?.length">
-              Subscriber is not available. 
+            <div class="px-2 fw-bold fs-14px py-2" v-if="!loading && !filterUsers?.length">
+              User is not available. 
             </div>
 
           </div>

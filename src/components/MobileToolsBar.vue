@@ -17,7 +17,7 @@
         },
     ]);
 
-    const disabled = ['timeline-lead-edit', 'timeline-deals-edit'];
+    const disabled = ['timeline-lead-edit', 'timeline-deal-edit'];
     const route = useRoute();
     const router = useRouter();
     const isDisabled = ref(false);

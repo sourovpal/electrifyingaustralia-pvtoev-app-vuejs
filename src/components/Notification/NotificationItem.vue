@@ -99,9 +99,9 @@
       if (props.alert_type === 'deleted')
         return '';
 
-      if (routeName === 'timeline-leads-edit' && model.is_pipeline) { // lead redirect url generate
+      if (routeName === 'timeline-lead-edit' && model.is_pipeline) { // lead redirect url generate
 
-        $route['name'] = 'timeline-deals-edit';
+        $route['name'] = 'timeline-deal-edit';
 
       } else if (routeName === 'platform-tasks') { // Lead Task url generate
 

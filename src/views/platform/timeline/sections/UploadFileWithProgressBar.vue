@@ -48,7 +48,7 @@
         if (!file) return;
         const formData = new FormData();
         formData.append("files[]", file);
-        await api.post(`/leads/${platformStore.getEditLeadId}/upload/files`, formData,
+        await api.post(`/leads/${platformStore.getEditLeadId}/upload/attachment`, formData,
             {
                 headers: {
                     "Content-Type": "multipart/form-data",

@@ -175,7 +175,12 @@ export const useProjectStore = defineStore('project', {
                 return []
 
             return pricings;
-        }
+        },
+        getWarranties(state) {
+            if (!state.project) 
+                return [];
+            return state.project.warranties;
+        },
     },
 
     actions: {

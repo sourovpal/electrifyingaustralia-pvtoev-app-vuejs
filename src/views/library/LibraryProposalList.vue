@@ -8,12 +8,13 @@ import CustomerDetailsSidebar from './CustomerDetailsSidebar/CustomerDetailsSide
 import { onMounted, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { onClickOutside } from '@vueuse/core'
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useProjectStore } from '../../stores/project'
 
 
 // For the initial project api call
 const route = useRoute();
+const router = useRouter();
 const projectId = route?.params?.project_id;
 
 const crmLinkModalClose = ref(false);
@@ -34,6 +35,9 @@ onMounted(() => {
 
     projectStore.setCurrentProject(projectId)
         .then(() => projectLoaded.value = true)
+        .catch((e) => {
+            if (e.response.status === 404) return router.push('/app');
+        })
 });
 
 const { toggleCustomerDetailsSidebar } = storeToRefs(projectStore);

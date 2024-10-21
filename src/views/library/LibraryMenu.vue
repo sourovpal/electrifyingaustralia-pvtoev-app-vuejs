@@ -1,10 +1,11 @@
 <template>
     <section :class="`library-menu ${ toggleCustomerDetailsSidebar ? 'custom-blur' : '' }`">
         <div class="submenu-header">
-            <h1 v-if="!isLoading">beans</h1>
+            <h1 v-if="!isLoading"> Library </h1>
             <Skeletor v-else />
         </div>
-        <div class="menu-control d-flex align-items-center justify-content-between border-bottom pb-3 px-4">
+        <!-- Keeping this commented for now -->
+        <!-- <div class="menu-control d-flex align-items-center justify-content-between border-bottom pb-3 px-4">
             <div>
                 <small class="me-2 fw-bold">Active</small>
 				<font-awesome-icon
@@ -13,7 +14,7 @@
 				/>
             </div>
             <small class="text-info mb-0 fw-bold">View all</small>
-        </div>
+        </div> -->
         <div 
             class="border mb-5" 
             style="height: calc(88vh + 5px); overflow-y: scroll"

@@ -43,7 +43,7 @@
                     <p class="fw-bold mb-0 text-black">Solar panel</p>
                     <span class="fs-12px"> {{ selectedPanel.manufacturer }} · {{selectedPanel.model}} · {{selectedPanel.name}} </span>
                 </div>
-                <div class="lh-sm">
+                <div class="lh-sm" v-if="inverterSales.length">
                     <p class="fw-bold mb-0 text-black">Inverter </p>
                     <template v-for="inverter in inverterSales">
                         <span class="fs-12px">{{inverter.pivot.quantity}} × {{inverter.manufacturer}} - {{ inverter.model }}</span> <br>

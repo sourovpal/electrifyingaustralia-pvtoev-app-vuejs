@@ -2,7 +2,9 @@
 	<div
 	    @click="handleMenuItemClick"
 		:class="`
-        ${projectId.toString() === project.id.toString() ? 'active-border' : '' }
+        ${projectId.toString() === project?.id?.toString() ? 'active-border' : '' }
+        ${!!project.archived ? 'archived' : '' }
+        ${!!project.marked_as_sold ? 'sold' : '' }
         library-menu-item
         px-4
         cursor-pointer
@@ -23,7 +25,7 @@
 			v-else
 			class="mb-0 overflow-hidden fs-16px project-name"
 		>
-			{{ project.address }}
+			{{ project?.address }}
 		</p>
 
 
@@ -47,17 +49,29 @@
 			    Created at Jul 1, 2024
 		    </small>
 		    <div class="position-absolute item-control-wrapper">
-			    <div class="item-control sold-btn">
+			    <div class="item-control sold-btn"
+			        @click="handleMarkAsSoldClick"
+				    v-tippy="{
+					    content: projectStore.project?.marked_as_sold ? 'Mark as active' : 'Mark as Sold',
+					    placement: 'right',
+				    }"
+			    >
 				    <font-awesome-icon
-				    class="text-secondary"
-				    icon="fas fa-check"
+				        class="text-secondary"
+				        icon="fas fa-check"
 				    />
 			    </div>
 
-			    <div class="item-control archive-btn">
+			    <div class="item-control archive-btn" 
+			        @click="handleArchiveClick"
+					v-tippy="{
+						content: projectStore.project?.archived ? 'Unarchive' : 'Archive',
+						placement: 'right',
+					}"
+			    >
 				    <font-awesome-icon
-				    class="text-secondary"
-				    icon="fas fa-box-archive"
+				        class="text-secondary"
+				        icon="fas fa-box-archive"
 				    />
 			    </div>
 		    </div>
@@ -71,29 +85,47 @@ import { onMounted, ref, computed } from 'vue'
 import { useRouter } from 'vue-router';
 import { Skeletor } from 'vue-skeletor'
 import { useProjectStore } from '../../stores/project';
+import useProjectActions from './LibraryComponents/composables/userProjectActions';
 
 const props = defineProps(['project']);
 const router = useRouter();
 const projectStore = useProjectStore();
+const projectActions = useProjectActions();
 
 const projectId = computed(() => projectStore.getProjectId ?? '');
 
-onMounted(() => {
-	simulateApiCall()
-})
 const isLoading = ref(false)
 
 
 const handleMenuItemClick = () => {
+    if (!props.project)
+        return;
+
     router.push(`/library/proposals/${props.project.id}`); 
 }
 
 const simulateApiCall = () => {
 	isLoading.value = true
-	setTimeout(() => {
-		isLoading.value = false
-	}, 1500)
+	setTimeout(
+	    () => isLoading.value = false,
+	    1500
+	)
 }
+
+const handleArchiveClick = () => {
+    if (!props.project)
+        return;
+    projectActions.toggleProjectArchivedState(props.project.id);
+}
+
+const handleMarkAsSoldClick = () => {
+    if (!props.project)
+        return;
+    projectActions.toggleMarkAsSoldState(props.project.id);
+}
+
+
+onMounted(simulateApiCall)
 </script>
 
 <style lang="scss" scoped>
@@ -101,6 +133,10 @@ $item-control-wrapper-width: 2.15rem;
 
 .active-border { border-left: 2px solid #007ee5; }
 .bottom-border { border-bottom: 1px solid #999 !important; }
+
+.library-menu-item { transition: 50ms; }
+.archived { background-color: #e1e1e1; }
+.sold { opacity: 50%; }
 
 .item-control-wrapper {
 	height: 100%;

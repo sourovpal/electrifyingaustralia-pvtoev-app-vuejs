@@ -1,13 +1,16 @@
 <script setup>
-import {ref, onMounted} from 'vue'
+import {ref, onMounted, computed} from 'vue'
 import ActionBar from '../../components/ActionBar/ActionBar.vue'
 import LeftActionBar from '../../components/ActionBar/LeftActionBar.vue'
 import RightActionBar from '../../components/ActionBar/RightActionBar.vue'
-import LibraryDesignDropdownList from './LibraryDesignDropdownList.vue'
-import DropdownOwnerList from '../platform/lead/components/dropdowns/DropdownOwnerList.vue'
+// import LibraryDesignDropdownList from './LibraryDesignDropdownList.vue'
+// import DropdownOwnerList from '../platform/lead/components/dropdowns/DropdownOwnerList.vue'
 import { Skeletor } from 'vue-skeletor';
 import { useProjectStore } from '../../stores/project'
 import { useToast } from 'vue-toast-notification'
+import useProjectActions from './LibraryComponents/composables/userProjectActions';
+
+const projectActions = useProjectActions();
 
 const toast = useToast();
 const owners = ref([
@@ -52,6 +55,8 @@ const handleCopyToClipboardClick = async () => {
         });
 }
 
+const projectId = computed(() => projectStore.getProjectId);
+const project = computed(() => projectStore.project);
 </script>
 
 <template>
@@ -96,25 +101,29 @@ const handleCopyToClipboardClick = async () => {
 			</div>
 
             <div v-else class="d-flex align-items-center gap-2">
-				<font-awesome-icon
+                <!-- Keeping this commented for now -->
+				<!-- <font-awesome-icon
 				    v-if="!projectStore.getRecalculationLoadingState"
 				    class="text-success d-none d-xl-inline"
 				    icon="fas fa-check"
-				/>
+				/> 
 				<font-awesome-icon
 				    v-else
 				    class="d-none d-xl-inline animate-spin"
 				    icon="fas fa-circle-notch"
-				/>
+				/> -->
 				<button
 				    @click="handleLinkToCrmBtnClick" 
 				    class="btn btn-transparent text-info btn-link rounded-lg fw-bold"
 				>
 				    Link to CRM
 				</button>
-                <LibraryDesignDropdownList />
 
-                <div class="dropdown">
+                <!-- Keeping this commented for now -->
+                <!-- <LibraryDesignDropdownList /> -->
+
+                <!-- Keeping this commented for now -->
+                <!-- <div class="dropdown">
                     <div class="d-flex cursor-pointer align-items-center gap-2 p-2 rounded"
                         data-mdb-toggle="dropdown"
                         aria-expanded="false"
@@ -137,9 +146,10 @@ const handleCopyToClipboardClick = async () => {
                             </a>
                         </li>
                     </ul>
-			    </div>
+			    </div> -->
 
-                <div class="dropdown d-none d-lg-block">
+                <!-- Keeping this commented for now -->
+                <!-- <div class="dropdown d-none d-lg-block">
                     <div class="d-flex cursor-pointer align-items-center gap-2 p-2 rounded"
                         data-mdb-toggle="dropdown"
                         aria-expanded="false"
@@ -151,7 +161,7 @@ const handleCopyToClipboardClick = async () => {
 				        />
 				    </div>
                     <DropdownOwnerList :owners="owners" />
-                </div>
+                </div> -->
 
 				<div class="dropdown d-none d-lg-block">
 				    <button
@@ -163,31 +173,32 @@ const handleCopyToClipboardClick = async () => {
                     </button>
 
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <li><a class="dropdown-item fs-14px" href="#">Select template $ edit pages</a></li>
-                        <li><a class="dropdown-item fs-14px" href="#">Show sent e-signature requests</a></li>
-
-                        <hr>
-
-                        <li><a class="dropdown-item fs-14px" href="#">Sync with Solar Analytics</a></li>
-                        <li><a class="dropdown-item fs-14px" href="#">Sync with ServiceM8</a></li>
-                        <li><a class="dropdown-item fs-14px" href="#">Installer job sheet</a></li>
-                        <li><a class="dropdown-item fs-14px" href="#">User manual</a></li>
-                        <li><a class="dropdown-item fs-14px" href="#">CER statements</a></li>
-                        <li><a class="dropdown-item fs-14px" href="#">Digital Handover</a></li>
+                        <!-- Keeping this commented for now -->
+                        <!-- <li><a class="dropdown-item fs-14px" href="#">Select template $ edit pages</a></li> -->
+                        <!-- <li><a class="dropdown-item fs-14px" href="#">Show sent e-signature requests</a></li> -->
+                        <!---->
+                        <!-- <hr> -->
+                        <!---->
+                        <!-- <li><a class="dropdown-item fs-14px" href="#">Sync with Solar Analytics</a></li> -->
+                        <!-- <li><a class="dropdown-item fs-14px" href="#">Sync with ServiceM8</a></li> -->
+                        <!-- <li><a class="dropdown-item fs-14px" href="#">Installer job sheet</a></li> -->
+                        <!-- <li><a class="dropdown-item fs-14px" href="#">User manual</a></li> -->
+                        <!-- <li><a class="dropdown-item fs-14px" href="#">CER statements</a></li> -->
+                        <!-- <li><a class="dropdown-item fs-14px" href="#">Digital Handover</a></li> -->
 
                         <hr>
 
                         <li>
-                            <a class="dropdown-item fs-14px d-inline-flex align-items-center gap-2 " href="#">
+                            <a @click="projectActions.toggleMarkAsSoldState(projectId)" class="dropdown-item fs-14px d-inline-flex align-items-center gap-2 " href="#">
                                 <font-awesome-icon icon="fas fa-check" />
-                                <span>Mark as sold</span>
+                                <span>{{projectStore.project?.marked_as_sold ? 'Mark project as active' : 'Mark project as Sold'}}</span>
                             </a>
                         </li>
 
-                        <li>
+                        <li @click="projectActions.toggleProjectArchivedState(projectId)">
                             <a class="dropdown-item fs-14px d-inline-flex align-items-center gap-2 " href="#">
                                 <font-awesome-icon icon="fas fa-archive" />
-                                <span>Archive project</span>
+                                <span>{{projectStore.project?.archived ? 'Unarchive' : 'Archive'}} project</span>
                             </a>
                         </li>
 

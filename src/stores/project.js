@@ -230,7 +230,7 @@ export const useProjectStore = defineStore('project', {
             this.panelModels = response.data.panel_models;
         },
         async setProjectList() {
-            const response = await api.get('projects/')
+            const response = await api.get('projects')
             this.projectList = response.data.data;
         },
     }

@@ -204,7 +204,7 @@ const projects = computed(() => projectStore.projectList);
                     </div>
                 </div>
 
-                <DataTableSkeletor v-if="isFirstLoading" />
+                <!-- <DataTableSkeletor v-if="isFirstLoading" /> -->
                 <!-- temp condition -->
                 <DatatableNoDataMessage v-if="false"  />
             </datatable-body>

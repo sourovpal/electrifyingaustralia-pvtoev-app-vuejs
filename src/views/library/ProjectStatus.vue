@@ -335,7 +335,7 @@ const simulateApiCall = () => {
 }
 
 .project-status {
-	// min-width: 20rem;
+	/* min-width: 20rem; */
 	position: fixed;
 	top: 3.45rem;
 	right: 0;

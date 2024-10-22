@@ -1,85 +1,105 @@
-import api from "../actions/api";
-import Storage from "../helpers/Storage";
-import { defineStore } from 'pinia';
-import { CONFIG } from "../config";
+import { useApiRequest } from "@actions";
+import Storage from "@helpers/Storage";
+import { defineStore } from "pinia";
+import { CONFIG } from "@config";
+import { useAuthStore } from "./auth";
+import { validateObject } from "@helpers";
+import { useNotificationStore } from "./notification";
 
 const appStorage = new Storage(CONFIG.VITE_AUTH_APP);
+const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
+const companyStorage = new Storage(CONFIG.VITE_AUTH_COMPANY);
+const permissionsStorage = new Storage(CONFIG.VITE_AUTH_PERMISSIONS);
+const statusesStorage = new Storage(CONFIG.VITE_AUTH_STATUSES);
+const pipelinesStorage = new Storage(CONFIG.VITE_AUTH_PIPELINES);
 
-export const useAppStore = defineStore('app', {
-
+export const useAppStore = defineStore("app", {
   state: () => {
     return {
-        company:{},
-        leadStatuses:[],
-        pipelines:[],
-        permissions:[],
-        users:[],
-    }
+      app: appStorage.get() ?? {},
+      company: companyStorage.get() ?? {},
+      leadStatuses: statusesStorage.get() ?? [],
+      pipelines: pipelinesStorage.get() ?? [],
+      permissions: permissionsStorage.get() ?? {},
+      user: userStorage.get() ?? {},
+    };
   },
 
-  getters:{
-    getUsers(state){
-      return state.users;
-    },
-    getPermissions(state){
+  getters: {
+    getPermissions(state) {
       return state.permissions;
     },
-    getCompany(state){
+    getCompany(state) {
       return state.company;
     },
-    getLeadStatuses(state){
+    getLeadStatuses(state) {
       return state.leadStatuses;
     },
-    getPipelines(state){
+    getPipelines(state) {
       return state.pipelines;
     },
+    getUser(state) {
+      return state.user;
+    }
   },
   actions: {
-    setUsers(payload){
-      this.users = payload;
-    },
-    setPermssions(payload){
-      this.permissions = payload;
-    },
-    setCompany(payload){
-      this.company = payload;
-    },
-    setLeadStatuses(payload){
-      this.leadStatuses = payload;
-    },
-    setPipelines(payload){
-      this.pipelines = payload;
-    },
-    async fetchAppData() {
-      this.setLocalStorageData();
-      try{
-          await api.get(`/app`).then((res)=>{
-            this.setLocalStorageData(res.data);
-          }).catch((error)=>{
-            console.log(error);
-          });
-      }catch(error){}
-    },
-    setLocalStorageData(payload=null){
-      var {
-        lead_statuses, 
-        pipelines, 
-        permissions, 
-        company, 
-        users
-      } = {...appStorage.get(), ...payload??{}};
-      if(payload){
-        appStorage.remove();
-        appStorage.set({lead_statuses, permissions, company, pipelines});
+    setUser(payload) {
+      if (validateObject(payload)) {
+        this.user = payload;
+        userStorage.set(payload);
+        useAuthStore().setUser(payload);
       }
-      
-      this.setUsers(users);
-      this.setCompany(company);
-      this.setPermssions(permissions);
-      this.setLeadStatuses(lead_statuses);
-      this.setPipelines(pipelines);
-
     },
-  }
-
+    setPermssions(payload) {
+      if (Array.isArray(payload)) {
+        this.permissions = payload;
+        permissionsStorage.set(payload);
+      }
+    },
+    setCompany(payload) {
+      if (validateObject(payload)) {
+        this.company = payload;
+        companyStorage.set(payload);
+      }
+    },
+    setLeadStatuses(payload) {
+      if (Array.isArray(payload)) {
+        this.leadStatuses = payload;
+        statusesStorage.set(payload);
+      }
+    },
+    setPipelines(payload) {
+      if (Array.isArray(payload)) {
+        this.pipelines = payload;
+        pipelinesStorage.set(payload);
+      }
+    },
+    callFetchAppData() {
+      useApiRequest({
+        url: "/app",
+      })
+        .then((res) => {
+          const {
+            success,
+            user,
+            company,
+            lead_statuses,
+            pipelines,
+            permissions,
+            unseen,
+          } = res;
+          if (success) {
+            this.setUser(user);
+            this.setCompany(company);
+            this.setLeadStatuses(lead_statuses);
+            this.setPipelines(pipelines);
+            this.setPermssions(permissions);
+            useNotificationStore().setTotalUnseen(unseen);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+  },
 });

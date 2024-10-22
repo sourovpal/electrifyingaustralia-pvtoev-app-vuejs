@@ -163,14 +163,13 @@ $item-control-wrapper-width: 2.15rem;
 
 .project-name {
 	text-overflow: ellipsis;
-	white-space: nowrap; // comment this for 2 lines
+	white-space: nowrap;
 	text-overflow: ellipsis;
 	overflow: hidden;
-	// Uncomment these for 2 lines
-	// display: -webkit-box;
-	// -webkit-line-clamp: 2;
-	// -webkit-box-orient: vertical;
-	// line-height: 1.15rem;
+	/* Uncomment these for 2 lines */
+	/* -webkit-line-clamp: 2; */
+	/* -webkit-box-orient: vertical; */
+	/* line-height: 1.15rem; */
 }
 
 .library-menu-item:hover .item-control-wrapper { right: 0; }

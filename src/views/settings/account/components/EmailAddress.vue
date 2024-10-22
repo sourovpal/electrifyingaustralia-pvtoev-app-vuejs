@@ -1,156 +1,178 @@
-<script>
-import { UpdateProfile, UpdateProfilePassword } from '../../../../actions/ProfileAction';
-export default {
-    props:{
-        user:Object,
-    },
-    data() {
-      return{
-        errors:{},
-        email:'',
-        email_otp:'',
-        password:'',
-        showEmailOtpInputDialog:false,
-        tempChangeEmail:'',
-        isSubmitEmailChange:false,
-        isSubmitEmailChangeOtp:false,
-      }
-    },
-    watch: {
-        user:{
-            handler(val){
-                try{
-                    this.email = val.email;
-                }catch(error){}
-            },
-            immediate:true, deep:true,
-        }
-    },
-    methods:{
-        async updateEmailAddress(action=null){
-            try{
-                
-                if(this.email === this.user.email){
-                    this.errors = {email:['Please change current email address.']};
-                    return ;
-                }
-                var data = new FormData();
-                if(action === 'send_email_otp'){
-                    this.isSubmitEmailChange = true;
-                    this.tempChangeEmail = '';
-                    this.email_otp = '',
-                    data.append('email', this.email??'');
-                    data.append('action', 'send_email_otp');
-                }else if(action === 'update_email'){
-                    this.isSubmitEmailChangeOtp = true;
-                    data.append('action', 'update_email');
-                    data.append('email', this.tempChangeEmail??'');
-                    data.append('email_otp', this.email_otp??'');
-                    data.append('password', this.password??'');
-                }else{
-                    return;
-                }
-                
-                const res = await UpdateProfile(data);
-                
-                if(action === 'send_email_otp'){
-                    this.tempChangeEmail = this.email;
-                    this.showEmailOtpInputDialog = true;
-                }else{
-                    this.tempChangeEmail = '';
-                    this.email_otp = '';
-                    this.password = '';
-                    this.showEmailOtpInputDialog = false;
-                }
+<script setup>
+  import { computed, ref, reactive, watch } from "vue";
+  import { useApiRequest } from "@actions";
+  import { useAppStore } from "@stores";
+  import { $toast } from "@config";
 
-                try{
-                    const {message} = res;
-                    this.$toast[message.type](message.text);
-                }catch(error){}
+  const toggleVerificationModal = ref(false);
 
-            }catch(error){
-                try{
-                    var data = error.response.data;
-                    this.errors = data.errors;
-                }catch(e){}
-                
-                try{
-                    var message = error.response.data.message;
-                    this.$toast[message.type](message.text);
-                }catch(e){
-                    this.$toast.error('Oops, something went wrong');
-                }
-            }finally{
-                this.isSubmitEmailChange = false;
-                this.isSubmitEmailChangeOtp = false;
-            }
-        },
-    },
-    mounted(){
-        try{
-            const {name, email} = this.$cookies.get('user_data');
-            this.name = name;
-            this.email = email;
-        }catch(error){}
+  const state = reactive({
+    errors: {},
+    email: null,
+    verification_code: null,
+    password: null,
+    isSubmitSendOtp: false,
+    isShowGetOtpModal: false,
+    isSubmitChangeEmail: false,
+  });
+
+  const appStore = useAppStore();
+  const authUser = computed(() => appStore.getUser);
+
+  watch(() => authUser, () => {
+    state.email = authUser.value.email ?? null;
+  }, { immediate: true, deep: true });
+
+  const isResetButtonActive = computed(() => {
+    const isEqual = (val1, val2) => {
+      return (
+        val1 === val2 ||
+        (val1 === null && val2 === "") ||
+        (val1 === "" && val2 === null)
+      );
+    };
+    return !isEqual(state.email, authUser.value.email);
+  });
+
+  // Method to send OTP
+  const sendEmailOptHandler = async () => {
+    $toast.clear();
+    state.errors = {};
+    state.isSubmitSendOtp = true;
+    if (state.email === authUser.value.email) {
+      state.errors.email = ["Please change your current email to proceed."];
+      return;
     }
-}
+    const payload = { email: state.email };
+    await useApiRequest({
+      url: '/users/send/email-otp',
+      method: 'post',
+      payload,
+    }).then(res => {
+      const { message, success, errors } = res;
+      if (!success && errors) {
+        state.errors = errors;
+        return;
+      }
+      toggleVerificationModal.value = true;
+    }).catch(error => {
+      $toast.error("Oops, something went wrong");
+    }).finally(() => {
+      state.isSubmitSendOtp = false;
+    });
+  };
+
+  const updateEmailAddress = async () => {
+    $toast.clear();
+    state.errors = {};
+    state.isSubmitChangeEmail = true;
+    const payload = {
+      email: state.email,
+      verification_code: state.verification_code,
+      password: state.password,
+    };
+    await useApiRequest({
+      url: '/users/change/email-address',
+      method: 'post',
+      payload,
+    }).then(res => {
+      const { success, message, errors } = res;
+      if (!success && errors) {
+        state.errors = errors;
+        return;
+      } else {
+        $toast[message.type](message.text);
+        toggleVerificationModal.value = false;
+        state.verification_code = null;
+        state.password = null;
+        appStore.callFetchAppData();
+      }
+    }).catch(error => {
+      $toast.error("Oops, something went wrong");
+    }).finally(() => {
+      state.isSubmitChangeEmail = false;
+    });
+  };
 </script>
+
+
+
 <template>
-    <div class="row">
-        <div class="col-lg-2 col-12 mb-3 mb-lg-0">
-            <div class="settings-group-header">
-                <h2>Account email</h2>
-            </div>
-        </div>
-        <div class="col-lg-6 col-12">
-
-            <div class="settings-group-item">
-                <label class="form-label-title" for="">Email address</label>
-                <input @focus="delete errors?.email" v-model="email" type="text" class="form-control">
-                <span class="form-input-commant" v-if="!errors?.email?.length">When changing your account email address, you will be sent a email to validate your new email address.</span>
-                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.email?.length">{{ errors?.email[0] }}</span>
-            </div>
-            
-            <div>
-                <button :disabled="isSubmitEmailChange" @click="updateEmailAddress('send_email_otp')" type="submit" class="login-form-control btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
-                    <div v-if="isSubmitEmailChange">
-                        <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
-                            <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
-                        </svg>
-                        <span>Submitting...</span>
-                    </div>
-                    <span v-if="!isSubmitEmailChange">Save Change</span>
-                </button>
-            </div>
-        </div>
+  <div class="row">
+    <div class="col-lg-2 col-12 mb-3 mb-lg-0">
+      <div class="settings-group-header">
+        <h2>Account email</h2>
+      </div>
     </div>
+    <div class="col-lg-5 col-12">
+      <div class="settings-group-item">
+        <label class="form-label-title"
+          for="">Email address</label>
+        <input @focus="delete state.errors.email"
+          v-model="state.email"
+          type="text"
+          class="form-control" />
+        <span class="form-input-commant"
+          v-if="!state.errors.email?.length">
+          When changing your account email address, you will be sent a email to
+          validate your new email address.
+        </span>
+        <span class="fs-14px text-danger py-1 w-100 d-block"
+          v-if="state.errors?.email?.length">{{ state.errors?.email[0] }}</span>
+      </div>
 
-    <div v-if="showEmailOtpInputDialog" class="confirm-dialog-area">
-        <div class="confirm-dialog" style="max-width:450px;">
-            <p class="text-hard pt-4 mb-2" style="margin: 0;font-size: 20px;line-height: 20px;">
-                <span class="fw-bold text-primary">You got your verification code to this </span>
-                <br> <span class="text-hard fs-14px ">{{ email }}</span>
-            </p>
-            <div class="px-4 pb-3 pt-2">
-                <label class="form-label-title">Verification Code</label>
-                <input @focus="delete errors?.email_otp" type="text" class="form-control" v-model="email_otp" placeholder="">
-                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.email_otp?.length">{{ errors?.email_otp[0] }}</span>
-            </div>
-            <div class="px-4 mb-5 pb-4">
-                <label class="form-label-title">Your Current Password</label>
-                <input @focus="delete errors?.password" type="text" class="form-control" v-model="password" placeholder="">
-                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.password?.length">{{ errors?.password[0] }}</span>
-            </div>
-            <button @click="showEmailOtpInputDialog=!showEmailOtpInputDialog">Cancel</button>
-            <button :disabled="isSubmitEmailChangeOtp" @click="updateEmailAddress('update_email')">
-                <div v-if="isSubmitEmailChangeOtp">
-                    <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
-                        <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
-                    </svg>
-                    <span>Submitting...</span>
-                </div>
-                <span v-if="!isSubmitEmailChangeOtp">Confirm</span>
-            </button>
-        </div>
+      <div class="d-flex justify-content-between align-items-center">
+        <loading-button :disabled="!isResetButtonActive"
+          :isLoading="state.isSubmitSendOtp"
+          @click="sendEmailOptHandler">
+          Save Change
+        </loading-button>
+        <button class="btn btn-danger"
+          v-if="isResetButtonActive"
+          @click="state.email = authUser.email">
+          Reset
+        </button>
+      </div>
     </div>
+  </div>
+  <!--  -->
+  <bootstrap-modal v-if="toggleVerificationModal"
+    @close="() => (toggleVerificationModal = false)">
+    <div class="text-center my-2">
+      <h4 class="text-head fw-bold text-center">Confirm Verification</h4>
+    </div>
+    <div class="">
+      <div class="pb-3 pt-2">
+        <label class="form-label-title">Verification Code</label>
+        <input @focus="delete state.errors.verification_code"
+          type="text"
+          class="form-control"
+          v-model="state.verification_code"
+          placeholder="" />
+        <span class="fs-14px text-danger py-1 w-100 d-block"
+          v-if="state.errors?.verification_code?.length">{{ state.errors?.verification_code[0] }}</span>
+      </div>
+      <div class="mb-3 pb-2">
+        <label class="form-label-title">Your Current Password</label>
+        <input @focus="delete state.errors?.password"
+          type="text"
+          class="form-control"
+          v-model="state.password"
+          placeholder="" />
+        <span class="fs-14px text-danger py-1 w-100 d-block"
+          v-if="state.errors?.password?.length">{{ state.errors?.password[0] }}</span>
+      </div>
+      <div class="d-flex justify-content-between align-items-center">
+        <button @click="toggleVerificationModal = false"
+          class="btn fw-bold btn-danger">
+          Cancle
+        </button>
+        <loading-button :disabled="!(state.password && state.verification_code)"
+          :isLoading="state.isSubmitChangeEmail"
+          @click="updateEmailAddress">
+          Save Change
+        </loading-button>
+      </div>
+    </div>
+  </bootstrap-modal>
 </template>

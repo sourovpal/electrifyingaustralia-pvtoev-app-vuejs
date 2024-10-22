@@ -1,14 +1,4 @@
-<script>
-export default {
-    name:'PaymentIndex',
-    data(){
-        return {
-            status:false,
-        }
-    },
-    methods:{
-    }
-}
+<script setup>
 </script>
 
 <template>

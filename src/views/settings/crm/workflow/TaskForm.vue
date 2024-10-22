@@ -1,10 +1,10 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue';
-import axios from '../../../../actions/api'
+import axios from '@actions/api'
 
-import { CONFIG } from '../../../../config';
+import { CONFIG } from '@config';
 import {useToast} from 'vue-toast-notification';
-import ConfirmationModal from '../../../../components/Modals/ConfirmationModal.vue';
+import ConfirmationModal from '@components/Modals/ConfirmationModal.vue';
 
 const props = defineProps(['workflowId']);
 
@@ -24,6 +24,7 @@ const isCurrentlyOnLastPage = computed(() => currentPageNumber.value?.toString()
 const getTasks = (afterTaskGet) => {
     axios.get(`workflows/${props.workflowId}/tasks?page=${taskNextPageNumber.value}`)
         .then(res => {
+            console.log(res.data.data)
             tasks.value = [...tasks.value, ...res?.data?.data]
 
             currentPageNumber.value = res.data.current_page
@@ -199,8 +200,8 @@ const handleScroll = (e) => {
 				</li>
 			    <template v-if="tasks.length">
 				    <li 
-				        @click="handleTaskClick(task.id)" 
-				        :class="`task cursor-pointer ${ activeTaskId?.toString() === task.id.toString() ? 'active-task' : '' } ps-4 py-2`" 
+				        @click="handleTaskClick(task.task_id)" 
+				        :class="`task cursor-pointer ${ activeTaskId?.toString() === task.task_id.toString() ? 'active-task' : '' } ps-4 py-2`" 
 				        v-for="task in tasks"
 				    >
 				        {{task.title}}
@@ -273,8 +274,9 @@ const handleScroll = (e) => {
 								    v-for="(item, index) in durations"
 								    :key="index"
 								    @click="handleDurationSelect(item)"
-								    :class="`dropdown-item text-hard fw-bold fs-14px d-flex py-1 ${status?.id == item.id ? 'selected' : ''}`"
+								    :class="`dropdown-item text-hard fw-bold fs-14px d-flex py-1`"
 							        >
+                                    <!-- ${status?.id == item.id ? 'selected' : ''} -->
 								    {{ item.name }}
 							    </li>
 							    <li class="dropdown-item text-danger fw-bold fs-14px d-flex py-1" @click="handleDurationClearClick">

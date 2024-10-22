@@ -1,23 +1,8 @@
-<script>
+<script setup>
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import '@vueup/vue-quill/dist/vue-quill.bubble.css';
 
-
-export default {
-  name:'ProfileIndex',
-    data() {
-      return{
-        content: '<h2>I am Example</h2>',
-        editorOption:{
-        }
-      }
-    },
-    components:{
-        QuillEditor
-    }
-  }
-  
 </script>
 
 <template>

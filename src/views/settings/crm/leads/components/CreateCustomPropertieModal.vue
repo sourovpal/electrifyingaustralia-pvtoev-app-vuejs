@@ -2,7 +2,7 @@
     import { Modal } from "mdb-ui-kit";
     import CustomScrollbar from 'custom-vue-scrollbar';
     import { VueDraggableNext } from 'vue-draggable-next';
-    import { CreateLeadPropertie, FindLeadPropertie, UpdateLeadPropertie } from '../../../../../actions/CrmLeads';
+    import { CreateLeadPropertie, FindLeadPropertie, UpdateLeadPropertie } from '@actions/CrmLeads';
     import { datatypeList } from '../data.js';
     export default {
         props: ['pipeline_title', 'fetchPropertieDataHandler'],
@@ -74,40 +74,27 @@
                 try {
                     this.isFetchLoading = true;
                     const res = await FindLeadPropertie({ id: id });
-                    try {
-                        const { propertie, pipelines } = res;
-                        if (propertie) {
-                            const select = this.datatypeList.find(e => e.id == propertie.data_type_id);
-                            if (select) {
-                                this.selectedDataTypeId = propertie.data_type_id;
-                                this.label = propertie.label;
-                                this.data_type = propertie.data_type;
-                                this.unique_id = propertie.unique_id;
-                                this.visibility = propertie.visibility;
-                                if (propertie.data_type_id === 'single_choice' || propertie.data_type_id === 'multiple_choice') {
-                                    this.showSingleChoiceInput = true;
-                                    if (propertie.options) {
-                                        this.options = propertie.options;
-                                    }
-                                } else {
-                                    this.showSingleChoiceInput = false;
-                                    this.options = [];
-                                }
-                                if (pipelines) {
-                                    this.pipelines = pipelines;
-                                }
-                            } else {
-                                this.$toast.error('Invalid Data Type.');
-                            }
+                    const { propertie, pipelines } = res;
+                    if (!propertie) return;
+                    const select = this.datatypeList.find(e => e.id == propertie.data_type_id);
+                    if (!select) return this.$toast.error('Invalid Data Type.');
+                    this.selectedDataTypeId = propertie.data_type_id;
+                    this.label = propertie.label;
+                    this.data_type = propertie.data_type;
+                    this.unique_id = propertie.unique_id;
+                    this.visibility = propertie.visibility;
+                    if (propertie.data_type_id === 'single_choice' || propertie.data_type_id === 'multiple_choice') {
+                        this.showSingleChoiceInput = true;
+                        if (propertie.options) {
+                            this.options = propertie.options;
                         }
-                    } catch (error) { }
-                } catch (error) {
-                    try {
-                        var message = error.response.data.message;
-                        this.$toast[message.type](message.text);
-                    } catch (e) {
-                        this.$toast.error('Oops, something went wrong');
+                    } else {
+                        this.showSingleChoiceInput = false;
+                        this.options = [];
                     }
+                    if (pipelines) this.pipelines = pipelines;
+                } catch (error) {
+                    this.$toast.error('Oops, something went wrong');
                 } finally {
                     this.isFetchLoading = false;
                 }
@@ -149,31 +136,18 @@
                     };
                     this.isSubmitProperties = true;
                     const res = await CreateLeadPropertie(data);
-
-                    try {
-                        const { message } = res;
-                        this.$toast[message.type](message.text);
-                        this.pipelineId = 0;
-                        this.label = null;
-                        this.data_type = null;
-                        this.unique_id = null;
-                        this.visibility = 1;
-                        this.hideModalHandler();
-                        this.fetchPropertieDataHandler();
-                    } catch (error) { }
-
+                    const { success, errors, message } = res;
+                    this.$toast[message.type](message.text);
+                    if (!success && errors) return this.errors = errors;
+                    this.pipelineId = 0;
+                    this.label = null;
+                    this.data_type = null;
+                    this.unique_id = null;
+                    this.visibility = 1;
+                    this.hideModalHandler();
+                    this.fetchPropertieDataHandler();
                 } catch (error) {
-                    console.log(error)
-                    try {
-                        var data = error.response.data;
-                        this.errors = data.errors;
-                    } catch (e) { }
-                    try {
-                        var message = error.response.data.message;
-                        this.$toast[message.type](message.text);
-                    } catch (e) {
-                        this.$toast.error('Oops, something went wrong');
-                    }
+                    this.$toast.error('Oops, something went wrong');
                 } finally {
                     this.isSubmitProperties = false;
                 }
@@ -198,29 +172,18 @@
 
                     this.isSubmitProperties = true;
                     const res = await UpdateLeadPropertie(data, this.propertieId);
-                    try {
-                        const { message } = res;
-                        this.$toast[message.type](message.text);
-                        this.pipelineId = 0;
-                        this.label = null;
-                        this.data_type = null;
-                        this.unique_id = null;
-                        this.visibility = 1;
-                        this.hideModalHandler();
-                        this.fetchPropertieDataHandler();
-                    } catch (error) { }
-
+                    const { success, errors, message } = res;
+                    this.$toast[message.type](message.text);
+                    if (!success && errors) return this.errors = errors;
+                    this.pipelineId = 0;
+                    this.label = null;
+                    this.data_type = null;
+                    this.unique_id = null;
+                    this.visibility = 1;
+                    this.hideModalHandler();
+                    this.fetchPropertieDataHandler();
                 } catch (error) {
-                    try {
-                        var data = error.response.data;
-                        this.errors = data.errors;
-                    } catch (e) { }
-                    try {
-                        var message = error.response.data.message;
-                        this.$toast[message.type](message.text);
-                    } catch (e) {
-                        this.$toast.error('Oops, something went wrong');
-                    }
+                    this.$toast.error('Oops, something went wrong');
                 } finally {
                     this.isSubmitProperties = false;
                 }
@@ -289,7 +252,7 @@
                                 <ul class="list-unstyled mb-0">
                                     <li v-for="(item, index) in datatypeList"
                                         :key="index"
-                                        :class="`dropdown-item ${selectedDataTypeId == item.id?'bg-primary text-white':''}`"
+                                        :class="`py-1 dropdown-item ${selectedDataTypeId == item.id?'bg-primary text-white':''}`"
                                         @click="datatypeHandler(item.id)">
                                         {{ item.data_type }}
                                     </li>

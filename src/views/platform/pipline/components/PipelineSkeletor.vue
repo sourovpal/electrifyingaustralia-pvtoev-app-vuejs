@@ -1,12 +1,7 @@
-<script>
+<script setup>
     import LoadingStateLeads from './LoadingStateLeads.vue';
     import { Skeletor } from 'vue-skeletor';
-    export default {
-        components:{
-            LoadingStateLeads,
-            Skeletor
-        }
-    }
+    
 </script>
 
 <template>

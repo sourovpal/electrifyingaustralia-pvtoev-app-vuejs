@@ -181,7 +181,7 @@ const handleCloseClick = () => {
     background: rgb(255,255,255);
     background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 30%);
 
-    // padding: 1rem 0;
+    /* padding: 1rem 0; */
     position: absolute;
     left: 0;
     right: 0;
@@ -199,7 +199,7 @@ const handleCloseClick = () => {
 }
 
 .material-row {
-    // border: 1px solid red;
+    /* border: 1px solid red; */
     .handle {
         cursor: move;
         left: 5px;

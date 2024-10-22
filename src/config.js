@@ -1,4 +1,6 @@
 
+import { useToast } from "vue-toast-notification";
+
 export const CONFIG = {
     ...import.meta.env,
     TOAST: {
@@ -10,8 +12,14 @@ export const CONFIG = {
         component: 'tippy',
         componentSingleton: 'tippy-singleton',
         defaultProps: {
-            placement: 'auto-end',
+            placement: 'top',
             allowHTML: true,
         },
     }
+}
+
+const $toast = useToast(CONFIG.TOAST);
+
+export {
+    $toast
 }

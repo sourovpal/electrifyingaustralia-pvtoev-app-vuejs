@@ -1,12 +1,5 @@
-<script>
-export default {
-  name:'AccountIndex',
-    data() {
-      return{
-      }
-    },
-  }
-  
+<script setup>
+
 </script>
 
 <template>

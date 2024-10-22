@@ -1,23 +1,7 @@
-<script>
-import Datatable from '../../../components/Datatable/Datatable.vue';
-import DatatableHeader from '../../../components/Datatable/DatatableHeader.vue';
-import DatatableBody from '../../../components/Datatable/DatatableBody.vue';
-
-
-
-export default {
-  name:'AccountIndex',
-    data() {
-      return{
-      }
-    },
-    components:{
-        Datatable,
-        DatatableHeader,
-        DatatableBody,
-    }
-  }
-  
+<script setup>
+import Datatable from '@components/Datatable/Datatable.vue';
+import DatatableHeader from '@components/Datatable/DatatableHeader.vue';
+import DatatableBody from '@components/Datatable/DatatableBody.vue';
 </script>
 
 <template>
@@ -30,7 +14,7 @@ export default {
                 <h1 class="mb-0">API settings</h1>
             </router-link>
             <div class="mx-2">
-                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path><path fill="none" d="M0 0h24v24H0V0z"></path></svg>
+                <svg   xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path><path fill="none" d="M0 0h24v24H0V0z"></path></svg>
             </div>
             <h1 class="mb-0">API Logs</h1>
         </div>

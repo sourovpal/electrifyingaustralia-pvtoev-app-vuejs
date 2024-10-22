@@ -1,261 +1,219 @@
 <script setup>
-import SearchBar from '../../../components/SearchBar.vue';
-import ActionBar from '../../../components/ActionBar/ActionBar.vue';
-import DropdownUsersList from './DropdownUsersList.vue';
-import { onMounted, ref } from 'vue';
-import { Tooltip } from 'bootstrap';
-import axios from '../../../actions/api.js';
-  import {useToast} from 'vue-toast-notification';
-import { CONFIG } from '../../../config.js';
+    import { ref, watch, onMounted } from 'vue';
+    import VueCountdown from '@chenfengyuan/vue-countdown';
+    import moment from 'moment';
+    import SearchBar from '@components/SearchBar.vue';
+    import TaskToolsBar from './components/TaskToolsBar.vue';
+    import DataTableSkeletor from './components/DataTableSkeletor.vue';
+    import Datatable from '@components/Datatable/Datatable.vue';
+    import DatatableHeader from '@components/Datatable/DatatableHeader.vue';
+    import DatatableBody from '@components/Datatable/DatatableBody.vue';
+    import { useApiRequest } from '@actions';
+    import { useRoute } from 'vue-router';
+    import { $toast } from '@config';
+    import { useDebounceFn } from '@vueuse/core';
+    import EmptyPage from '@errors/EmptyPage.vue';
+    import ErrorPage from '@errors/ErrorPage.vue';
 
-
-onMounted(() => {
-    getWorkFlows();
-    getUsers();
-})
-
-const $toast = useToast(CONFIG.TOAST);
-
-const workflows = ref([]);
-async function getWorkFlows() {
-    axios.get('workflows').then(res => {
-        workflows.value = res.data.map(workflow => ({...workflow, tasks: workflow.tasks.map(task => ({...task, is_complete: false}))}));
-    }).catch(() => {
-        $toast.error('Something went wrong');
-    })
-    .finally(() => {
-        [].slice
-            .call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            .map(tooltipTriggerEl => new Tooltip(tooltipTriggerEl));
+    const route = useRoute();
+    const isFirstLoading = ref(false);
+    const isLoading = ref(false);
+    const tableHeaders = ref(['Task', 'Lead\'s', 'Deadline', 'Remaining time', 'Owner']);
+    const stages = ref(['upcoming', 'overdue', 'unassigned', 'unscheduled', 'complete', 'in-complete']);
+    const pagination = ref({
+        prev_page: null,
+        next_prev: null,
+        total: 0,
+        from: 0,
+        to: 0,
+        current_page: 1,
     });
-}
+    const leadTasks = ref([]);
+    const searchTasks = ref();
+    const isError = ref(false);
 
-const handleWorkflowClick = () => 
-    workflows.value.forEach(workflow => workflow.tasks.forEach(task => task.is_complete = true));
+    watch(route, () => {
+        handleFetchTasks({ page: 1 });
+    }, { deep: true });
 
-const handleTaskClick = (workflowId, taskId) => {
-    const workflow = workflows.value.find(workflow => workflow.id === workflowId);
-    if (!workflow) return;
-    const task = workflow.tasks.find(task => task.id === taskId);
-    task.is_complete = !task.is_complete;
-}
+    onMounted(() => {
+        isFirstLoading.value = true;
+        handleFetchTasks();
+    });
 
-const getWorkflowCompleteStatus = (workflowId) => {
-    const workflow = workflows.value.find(workflow => workflow.id === workflowId);
-    const allTasksComplete = workflow.tasks.every(task => task.is_complete);
-    return allTasksComplete;
-}
+    function getTotalHours(datetime) {
+        const start = moment(new Date());
+        const end = moment(new Date(datetime));
+        var diff = end.diff(start, 'miliseconds');
+        if (diff > 0) {
+            return diff;
+        }
+        return 0;
+    }
 
+    const handleSearchTasks = useDebounceFn((search) => {
+        var payload = { search, page: 1 };
+        if (pagination.value?.current_page && pagination.value?.current_page > 1) {
+            payload['page'] = pagination.value.current_page;
+        }
+        handleFetchTasks(payload);
+    }, 2000);
 
-
-const users = ref([]);
-async function getUsers() {
-    axios.get('users')
-        .then(res => {
-            const usersData = res?.data?.users;
-            if (!usersData) return;
-            const valuesExtracted = usersData.map(
-                ({name, email, profile_avatar, id}) => ({name, email, profile_avatar, id})
-            );
-            users.value = valuesExtracted;
-        })
-        .catch(e => {
-            console.log(e);
+    async function handleFetchTasks(payload = {}) {
+        $toast.clear();
+        isError.value = false;
+        const stage = route.query?.stage;
+        if (!stages.value.includes(stage) && stage) return;
+        payload['stage'] = stage;
+        if (typeof payload['page'] === 'undefined') {
+            payload['page'] = pagination.value?.current_page ?? 1;
+        }
+        isLoading.value = true;
+        await useApiRequest({
+            url: '/platform/tasks',
+            payload,
+        }).then(res => {
+            const { success, message, lead_tasks, ...args } = res;
+            if (success) {
+                leadTasks.value = lead_tasks;
+                pagination.value = args.pagination;
+                return;
+            }
+            $toast.error(message.text);
+        }).catch(error => {
+            isError.value = true;
+            $toast.error("Oops, something went wrong");
+        }).finally(() => {
+            isLoading.value = false;
+            isFirstLoading.value = false;
         });
-}
+    }
 
-
-const handleUserSelected = (data) => {
-    console.log(data);
-}
-
-// also temporary, duh
-const leadStatus = [
-    {name: 'fahim'},
-    {name: 'emroz'},
-]
-
+    async function updateTaskStage(task) {
+        task.is_complete = !task.is_complete;
+        await useApiRequest({
+            url: `/platform/${task.lead?.lead_id}/tasks/${task.task_id}/stage`,
+            method: 'post',
+            payload: {
+                is_complete: task.is_complete,
+            },
+        }).then(res => {
+            const { success, message, completed_at } = res;
+            if (success) {
+                if (completed_at) {
+                    task.completed_at = completed_at;
+                }
+                return;
+            }
+            $toast.error(message.text);
+        }).catch(error => {
+            $toast.error("Oops, something went wrong");
+        }).finally(() => {
+            isLoading.value = false;
+        });
+    }
 </script>
 
 <template>
     <section class="content">
-        <!-- Showing the wrong text at the moment -->
-        <SearchBar /> 
-        <action-bar>
-            <div 
-                v-if="true"         
-                class="settings-group-item owner-list-dropdown ms-3 ps-2 d-none d-xl-block">
-                <button 
-                    class="user-dropdown-toggler bg-transparent border-0" 
-                    data-mdb-toggle="dropdown" 
-                    aria-expanded="false" 
-                    v-tippy='{ content:"Change Owner", placement : "top" }'
-                >
-                    <div class="icon d-flex py-2 align-items-center gap-2">
-				        <font-awesome-icon
-				            class="text-secondary"
-				            icon="fas fa-bars"
-				        />
-                        <span class="font-bold">All users</span>
-                    </div>
-                </button>
-                <DropdownUsersList
-                    :users="users"
-                    @user-selected="handleUserSelected"
-                />
-            </div>
-        </action-bar>
-
-        <div class="tasks-list w-50 mx-auto mt-5 rounded">
-
-            <div class="overdue-tasks-wrapper">
-                <p class="fw-bold lead">Overdue</p>
-                <div class="tasks-wrapper">
-                    <div class="task-bar shadow border" v-for="workflow in workflows">
-                        <div class="row-1 d-flex align-items-center justify-content-between mb-4">
-                            <div class="d-flex gap-2 align-items-center">
-                                <!-- <input type="checkbox" /> -->
-                                <label 
-                                    data-bs-toggle="tooltip" 
-                                    data-bs-placement="top" 
-                                    title="beans" 
-                                    @click="handleWorkflowClick" 
-                                    type="checkbox" 
-                                    class="custom-form-checkbox"
-                                >
-                                    <svg
-                                        v-if="!getWorkflowCompleteStatus(workflow.id)"
-                                        class="unchecked"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="currentColor"
-                                        height="24"
-                                        viewBox="0 -960 960 960" 
-                                        width="24">
-                                        <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
-                                    <svg
-                                        v-else
-                                        class="checked"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="currentColor"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24">
-                                            <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
-                                    </svg>
-                                </label>
-                                <p class="fw-bold mb-0">{{ workflow.title }}</p>
-                                <small class="status border fw-bold rounded px-2 py-1">Status</small>
-                            </div>
-                            <p class="address text-secondary align-self-end mb-0">Lorem ipsum dolor sit amet, qui minim labore </p>
-                        </div>
-
-                        <div class="row-2 d-flex justify-content-between align-items-end">
-                            <div class="checkboxes-wrapper d-flex flex-wrap --gap-2">
-                                <label 
-                                    v-for="task in workflow.tasks" 
-                                    data-bs-toggle="tooltip" 
-                                    data-bs-placement="top" 
-                                    :title="task.title" 
-                                    type="checkbox" 
-                                    @click="handleTaskClick(workflow.id, task.id)" 
-                                    class="custom-form-checkbox"
-                                >
-                                    <svg
-                                        v-if="!task.is_complete"
-                                        class="unchecked"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="currentColor"
-                                        height="18"
-                                        viewBox="0 -960 960 960" 
-                                        width="18">
-                                            <path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"/></svg>
-                                    <svg
-                                        v-else
-                                        class="checked"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="currentColor"
-                                        width="18"
-                                        height="18"
-                                        viewBox="0 0 24 24">
-                                            <path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
-                                    </svg>
-                                </label>
-                            </div>
-
-                            <div class="task-actions d-flex align-items-center">
-                                <button 
-                                    class="border-0 bg-transparent" 
-                                    type="button" 
-                                    data-mdb-toggle="dropdown" 
-                                    aria-expanded="false"
-                                >
-				                    <font-awesome-icon
-				                        class="text-secondary"
-				                        icon="fas fa-stopwatch"
-				                    />
-                                </button>
-                                <div 
-                                    v-if="true" 
-                                    v-tippy='{ content:"Change Lead Status", placement : "top" }'
-                                    class="dropdown ms-2 d-none d-xl-block">
-                                    <div class="dropdown-menu dropdown-menu-end shadow-md custom-dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <span
-                                            style="width:170px;"
-                                            v-for="(status, index) in leadStatus" 
-                                            :key="index" 
-                                            @click="updateLeadStatusHandler(selectedRows, status)"
-                                            class="dropdown-item d-flex justify-content-between align-items-center cursor-pointer py-1">
-                                            <span class="text-overflow-ellipsis text-head">{{ status?.name }}</span>
-                                            <span class="text-overflow-ellipsis text-secondary text-head">{{ 'beans wjkx' }}</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div v-if="true" class="settings-group-item owner-list-dropdown relative d-none d-xl-block">
-                                    <button 
-                                        class="user-dropdown-toggler bg-transparent border-0" 
-                                        data-mdb-toggle="dropdown" 
-                                        aria-expanded="false" 
-                                        v-tippy='{ content:"Change Owner", placement : "bottom" }'
-                                    >
-                                        <div class="temp-filter d-flex align-items-center gap-2" style="margin-left: 20px;">
-				                            <font-awesome-icon
-				                                class="text-secondary"
-				                                icon="fas fa-bars"
-				                            />
-				                            <font-awesome-icon
-				                                class="text-secondary"
-				                                icon="fas fa-caret-down"
-				                            />
-                                        </div>
-                                    </button>
-                                    <DropdownUsersList
-                                        :users="users"
-                                        @user-selected="handleUserSelected"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Temporary -->
-                    <!-- This will only be shown to the user if no more pages exist -->
-                    <p class="text-center text-secondary mt-5">No more tasks to show</p>
+        <search-bar />
+        <task-tools-bar :pagination="pagination"
+            :is-loading="isLoading"
+            @pagination:fetch="handleFetchTasks"
+            @search:update="handleSearchTasks"></task-tools-bar>
+        <error-page v-if="isError"
+            :css="{icon:{width:'30%'}}"></error-page>
+        <empty-page v-else-if="!isLoading && !leadTasks.length"
+            :css="{icon:{width:'30%'}}"></empty-page>
+        <Datatable v-else>
+            <DatatableHeader>
+                <div class="tbl-th"
+                    style="width: 3.5rem;">
+                    &nbsp;
                 </div>
-            </div>
-
-        </div>
+                <div v-for="(tblTh, index) in tableHeaders"
+                    :key="index"
+                    class="tbl-th"
+                    style="width: 10rem; flex-grow: 1">
+                    {{ tblTh }}
+                </div>
+            </DatatableHeader>
+            <datatable-body>
+                <DataTableSkeletor v-if="isFirstLoading"></DataTableSkeletor>
+                <div v-else
+                    v-for="(task, index) in leadTasks"
+                    :key="index"
+                    class="tbl-tr full-width">
+                    <div style="width: 4rem; margin-left: -7px;"
+                        class="tbl-td full-width">
+                        <custom-checkbox @click="updateTaskStage(task)"
+                            :checked="!!task.is_complete" />
+                    </div>
+                    <div class="tbl-td"
+                        style="width: 10rem; flex-grow: 1">
+                        <span class="overflow-ellipsis">{{ task.title }}</span>
+                    </div>
+                    <div class="tbl-td"
+                        style="width: 10rem; flex-grow: 1">
+                        <router-link class="overflow-ellipsis"
+                            :to="`/platform/leads/${task.lead?.lead_id}`">
+                            {{ task.lead?.lead_title??'Untitled lead\'s' }}
+                        </router-link>
+                    </div>
+                    <div class="tbl-td"
+                        style="width: 10rem; flex-grow: 1">
+                        <span v-if="task.duration">
+                            {{ task.duration }}
+                        </span>
+                        <span v-else
+                            class="badge bg-warning">Unscheduled Task</span>
+                    </div>
+                    <div class="tbl-td"
+                        style="width: 10rem; flex-grow: 1">
+                        <span v-tippy="task.completed_at"
+                            v-if="task.is_complete"
+                            class="badge bg-success cursor-pointer">Complete</span>
+                        <vue-countdown v-else
+                            :time="getTotalHours(task.duration)"
+                            :interval="100"
+                            v-slot="{ days, hours, minutes, seconds, milliseconds }">
+                            <span class="badge"
+                                :class="`${milliseconds ? 'bg-success' : 'bg-danger'}`">
+                                {{ days }} Days - {{ hours }}:{{ minutes }}:{{ seconds }}
+                            </span>
+                        </vue-countdown>
+                    </div>
+                    <div class="tbl-td"
+                        style="width: 10rem; flex-grow: 1">
+                        <span class="owner-avatar">
+                            <img :src="task.owner?.profile_avatar"
+                                alt="">
+                        </span>
+                    </div>
+                </div>
+            </datatable-body>
+        </Datatable>
     </section>
 </template>
 
-<style lang="scss" scoped>
-.task-bar {
-    border-radius: 0.65rem;
-    padding: 1rem;
-    padding-top: 0.55rem;
+<style lang="scss"
+    scoped>
+    .owner-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgb(209, 213, 219) 0px 0px 0px 1px inset;
 
-    .checkboxes-wrapper {
-        width: 65%;
-        margin-top: 0.75rem;
+        img {
+            width: 100%;
+            object-fit: cover;
+        }
     }
-}
 
+    .overflow-ellipsis {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 </style>

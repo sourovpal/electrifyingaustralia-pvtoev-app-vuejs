@@ -1,5 +1,5 @@
 <script>
-  import {RegisterAction} from '../../actions/AuthAction';
+  import {RegisterAction} from '@actions/AuthAction';
   export default {
     data() {
       return {

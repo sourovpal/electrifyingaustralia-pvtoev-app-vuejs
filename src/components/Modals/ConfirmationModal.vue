@@ -1,6 +1,6 @@
 <script setup>
-import {onBeforeUnmount, onMounted, ref} from 'vue'
-import {Modal} from 'mdb-ui-kit'
+import {onBeforeUnmount, onMounted, ref,   } from 'vue';
+import {Modal} from 'mdb-ui-kit';
 
 const props = defineProps({
 	icon: {type: String, default: 'fa-solid fa-xmark'},

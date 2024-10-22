@@ -62,6 +62,61 @@ const simulateApiCall = () => {
 	</button>
 	<div class="col-md-4">
 		<div class="project-status">
+            <div class="d-none d-md-flex align-items-center gap-2 my-3">
+				<Skeletor
+				    v-if="isLoading"
+				    width="10.25rem"
+				    height="2.4375rem"
+				/>
+				<router-link
+					v-else
+					class="btn btn-sm btn-lg-large btn-primary py-xl-2"
+					style="flex-grow: 2"
+					:to="`/proposal/${projectStore.getProjectId}`"
+					target="_blank"
+				>
+					<font-awesome-icon
+					    class="d-none d-lg-inline"
+					    icon="fas fa-up-right-from-square"
+					/>
+					<span class="fw-bold ms-2">PROPOSAL</span>
+				</router-link>
+
+				<Skeletor
+				    v-if="isLoading"
+				    width="7.6875rem"
+				    height="2.4375rem"
+				/>
+				<!-- <button -->
+				<!-- 	v-else -->
+				<!-- 	class="btn btn-sm btn-lg-large btn-secondary py-xl-2" -->
+				<!-- 	style="flex-grow: 1" -->
+				<!-- 	@click="handleShareBtnClick" -->
+				<!-- > -->
+				<!-- 	<font-awesome-icon -->
+				<!-- 		class="text-secondary" -->
+				<!-- 		icon="fas fa-share-nodes" -->
+				<!-- 	/> -->
+				<!-- 	<span class="fw-bold text-black ms-2 d-none d-lg-inline">SHARE</span> -->
+				<!-- </button> -->
+				<!---->
+				<!-- <Skeletor -->
+				<!-- 	v-if="isLoading" -->
+				<!-- 	width="4.5rem" -->
+				<!-- 	height="2.4375rem" -->
+				<!-- /> -->
+				<!-- <button -->
+				<!-- 	v-else -->
+				<!-- 	class="btn btn-secondary btn-sm btn-lg-large py-xl-2" -->
+				<!-- 	style="flex-grow: 1" -->
+				<!-- 	@click="handleInstallerBtnClick" -->
+				<!-- > -->
+				<!-- 	<font-awesome-icon -->
+				<!-- 		class="text-secondary" -->
+				<!-- 		icon="fas fa-clipboard-list" -->
+				<!-- 	/> -->
+				<!-- </button> -->
+			</div>
 			<div class="proposal-info-display mt-2 rounded border">
 				<div :class="`editor-display position-relative ${isLoading ? 'opacity-0' : ''}`">
                     <!-- temporarily keeping this opacity-0 for a temporary input -->
@@ -237,62 +292,6 @@ const simulateApiCall = () => {
 						</div>
 					</div>
 				</div>
-			</div>
-
-			<div class="d-none d-md-flex align-items-center gap-2 my-3">
-				<Skeletor
-					v-if="isLoading"
-					width="10.25rem"
-					height="2.4375rem"
-				/>
-				<router-link
-					v-else
-					class="btn btn-sm btn-lg-large btn-primary py-xl-2"
-					style="flex-grow: 2"
-					:to="`/proposal/${projectStore.getProjectId}`"
-					target="_blank"
-				>
-					<font-awesome-icon
-					    class="d-none d-lg-inline"
-						icon="fas fa-up-right-from-square"
-					/>
-					<span class="fw-bold ms-2">PROPOSAL</span>
-				</router-link>
-
-				<Skeletor
-					v-if="isLoading"
-					width="7.6875rem"
-					height="2.4375rem"
-				/>
-				<button
-					v-else
-					class="btn btn-sm btn-lg-large btn-secondary py-xl-2"
-					style="flex-grow: 1"
-					@click="handleShareBtnClick"
-				>
-					<font-awesome-icon
-						class="text-secondary"
-						icon="fas fa-share-nodes"
-					/>
-					<span class="fw-bold text-black ms-2 d-none d-lg-inline">SHARE</span>
-				</button>
-
-				<Skeletor
-					v-if="isLoading"
-					width="4.5rem"
-					height="2.4375rem"
-				/>
-				<button
-					v-else
-					class="btn btn-secondary btn-sm btn-lg-large py-xl-2"
-					style="flex-grow: 1"
-					@click="handleInstallerBtnClick"
-				>
-					<font-awesome-icon
-						class="text-secondary"
-						icon="fas fa-clipboard-list"
-					/>
-				</button>
 			</div>
 		</div>
 	</div>

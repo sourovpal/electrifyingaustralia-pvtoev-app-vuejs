@@ -52,7 +52,13 @@ onMounted(() => {
 			<div class="col-md-8">
 				<p class="text-black fs-14px mb-0"> {{ inverter.model }} · {{ inverter.max_input_v }} VA </p>
                 <!-- <small class="text-secondary fs-12px">GEP 4-20KW Three Phase Series · Three-phase · PV-only Inverter · AU</small> -->
+                <!-- Temporarily keeping this input here -->
+		        <SaveableInput
+		            @update:modelValue="updateInverterSale"
+		            v-model.number="formData.quantity"
+		        />
 			</div>
+
 		</div>
 
 		<div  class="inverter-control position-absolute text-end d-inline-flex align-items-center gap-3">

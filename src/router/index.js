@@ -544,6 +544,15 @@ const routes = [
             },
         ],
     },
+    { 
+        name:"Proposal",
+        path:'/proposal/:project_id',
+        component:()=>import('../views/proposals/Proposal.vue'),
+        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
+        meta:{
+            title:'Proposal',
+        },
+    },
     {
         name: "login",
         path: '/login',

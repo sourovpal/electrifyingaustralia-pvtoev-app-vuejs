@@ -19,7 +19,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <MobileHeader/>
+    <!-- <MobileHeader/> -->
     <section class="d-flex flex-row">
         <Menu :menus="menus" :title="title" v-if="route.name !== 'LibraryProposals'" />
         <LibraryMenu class="d-none d-xl-block" v-else/>

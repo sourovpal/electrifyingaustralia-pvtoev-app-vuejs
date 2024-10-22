@@ -118,6 +118,11 @@ const iconsToUse = [
   fa.faUserEdit,
   fa.faSkullCrossbones,
   fa.faFaceSmile,
+  fa.faStar,
+  fa.faSun,
+  fa.faScrewdriverWrench,
+  fa.faCircleRadiation,
+  fa.faHeart,
   // Regular
   far.faSquare,
   far.faSquareMinus,

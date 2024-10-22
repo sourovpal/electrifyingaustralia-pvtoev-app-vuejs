@@ -10,6 +10,7 @@ import DatatableBody from '../../components/Datatable/DatatableBody.vue';
 import DatatableNoDataMessage from '../../components/Datatable/DatatableNoDataMessage.vue';
 import { useRouter } from 'vue-router';
 import { useProjectStore } from '../../stores/project.js';
+import DropdownOwnerList from '@views/platform/components/dropdowns/DropdownOwnerList.vue';
 
 const router = useRouter();
 
@@ -93,7 +94,7 @@ const projects = computed(() => projectStore.projectList);
                         </div>
                     </button>
                     <DropdownOwnerList
-                    :owners="owners"
+                    :lead-owner="null"
                     :selectOwnerHandler="(item)=>updateLeadOwnerHandler(item, null)"
                 />
                 </div>

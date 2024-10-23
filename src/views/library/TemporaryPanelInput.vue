@@ -1,13 +1,16 @@
 <script setup>
 import SaveableInput from './components/SaveableInput.vue'
-import {computed, onMounted, ref} from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import {useProjectStore} from '../../stores/project'
 import axios from '../../actions/api'
 
 const quantity = ref(0)
 const projectStore = useProjectStore()
 
-const handlePanelClick = (panelId) => updateSelectedPanel(panelId)
+const handlePanelClick = (panelId) => {
+    searchTerm.value = '';
+    updateSelectedPanel(panelId) 
+}
 
 const updateSelectedPanel = async (panelId) => {
 	await axios.post(`projects/${projectStore.getProjectId}/panel-sales`, {
@@ -33,25 +36,48 @@ const getSelectedPanelDetails = () => {
 	)
 }
 
-onMounted(() => {
-	quantity.value = projectStore.selectedPanelDetails.quantity
-})
+onMounted(() => quantity.value = projectStore.selectedPanelDetails.quantity)
+
+const searchTerm = ref('');
+
+const matchingPanels = computed(() => {
+    const attributesToLookFor = [
+        'name',
+        'manufacturer',
+        'model',
+        'size',
+        'preferred_supplier'
+    ];
+
+    const panels = projectStore.getAvailablePanels;
+
+    if (!panels.length)
+        return '';
+
+    return panels.filter(panel => 
+        attributesToLookFor
+            .map((attr) => panel[attr].toString().toLowerCase()) 
+            .some((value) => value.includes(searchTerm.value.toLowerCase()))
+    );
+});
+
+
 </script>
 
 <template>
 	<div class="mb-5 px-3">
 		<div class="dropdown mb-2 d-flex align-items-center justify-content-between">
-			<!-- <span>{{ selectedPanel?.model ?? '' }}</span> -->
-			<p class="fw-bold mb-0 fs-12px">Panel: </p>
+			<small class="fw-bold fs-12px">Panel: </small>
 			<div>
                 <input
-				    :placeholder="selectedPanel?.model ?? `Search for available panels`"
-				    class="dropdown-toggle form-control"
+				    :placeholder="selectedPanel.model ?? 'Search for available panels'"
+				    class="dropdown-toggle form-control panel-search-input"
 				    id="dropdownMenuButton"
 				    data-toggle="dropdown"
 				    aria-haspopup="true"
 				    data-mdb-toggle="dropdown"
 				    aria-expanded="false"
+				    v-model="searchTerm"
 			    />
 
 			    <div
@@ -61,8 +87,8 @@ onMounted(() => {
 				    <a
 					    class="dropdown-item cursor-pointer d-flex align-items-center justify-content-between"
 					    @click="handlePanelClick(panelModel.id)"
-					    v-for="panelModel in projectStore.getAvailablePanels"
-				        >
+					    v-for="panelModel in matchingPanels"
+				    >
 					    <div>
 						    <span class="mb-0 d-block">
 							    <span>{{ panelModel.model }}</span> ·
@@ -80,7 +106,7 @@ onMounted(() => {
             </div>
 		</div>
 		<div class="d-flex align-items-center justify-content-between">
-			<p class="fw-bold mb-0 fs-12px">Quantity:</p>
+			<small class="fw-bold fs-12px">Quantity: </small>
 			<SaveableInput
 				v-model.number="quantity"
 				@update:modelValue="handlePanelQuantityChange"
@@ -89,4 +115,15 @@ onMounted(() => {
 	</div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+.panel-search-input {
+    &::placeholder { color: #333333; }
+
+    &:focus 
+    &::placeholder {
+        color: transparent; 
+    }
+}
+
+</style>

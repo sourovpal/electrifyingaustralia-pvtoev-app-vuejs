@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-
 import { isAuthorized, checkPermission } from "@stores/auth";
+import { useProgress } from '@stores';
 
 const loginPath = '/login';
 
@@ -111,32 +111,32 @@ const routes = [
                 children: [
                 ]
             },
-            { 
-                name:"LibraryIndex",
+            {
+                name: "LibraryIndex",
                 path: '/library',
                 redirect: '/library/active',
-                component:()=>import('../views/library/LibraryIndex.vue'),
-                beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
-                meta:{
-                    title:'Home Page',
+                component: () => import('../views/library/LibraryIndex.vue'),
+                beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
+                meta: {
+                    title: 'Home Page',
                 },
                 children: [
                     {
-                        name:'LibraryProjects',
-                        path:'active',
-                        component:()=>import('../views/library/LibraryProjectsList.vue'),
-                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
-                        meta:{
-                            title:'Projects',
+                        name: 'LibraryProjects',
+                        path: 'active',
+                        component: () => import('../views/library/LibraryProjectsList.vue'),
+                        beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
+                        meta: {
+                            title: 'Projects',
                         },
                     },
                     {
-                        name:'LibraryProposals', // DO NOT CHANGE THIS NAME
-                        path:'proposals/:project_id',
-                        component:()=>import('../views/library/LibraryProposalList.vue'),
-                        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
-                        meta:{
-                            title:'Projects',
+                        name: 'LibraryProposals', // DO NOT CHANGE THIS NAME
+                        path: 'proposals/:project_id',
+                        component: () => import('../views/library/LibraryProposalList.vue'),
+                        beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
+                        meta: {
+                            title: 'Projects',
                         },
                     }
                 ]
@@ -544,13 +544,13 @@ const routes = [
             },
         ],
     },
-    { 
-        name:"Proposal",
-        path:'/proposal/:project_id',
-        component:()=>import('../views/proposals/Proposal.vue'),
-        beforeEnter:()=>isAuthorized(loginPath) && checkPermission([]),
-        meta:{
-            title:'Proposal',
+    {
+        name: "Proposal",
+        path: '/proposal/:project_id',
+        component: () => import('../views/proposals/Proposal.vue'),
+        beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
+        meta: {
+            title: 'Proposal',
         },
     },
     {
@@ -579,5 +579,8 @@ const router = createRouter({
     mode: 'history',
     base: '/',
 });
+
+router.beforeEach((to, from) => useProgress().startProgress());
+router.afterEach((to, from) => useProgress().doneProgress());
 
 export default router;

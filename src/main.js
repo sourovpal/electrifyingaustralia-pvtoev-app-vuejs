@@ -9,7 +9,7 @@ import ToastPlugin from "vue-toast-notification";
 import VueLazyLoad from "vue3-lazyload";
 import { createPinia } from "pinia";
 import { FontAwesomeIcon } from "./plugins/font-awesome";
-import { ProgressBar, ProgressBarOptions } from "./plugins/progress-bar";
+// import { ProgressBar, ProgressBarOptions } from "./plugins/progress-bar";
 import { CONFIG } from "./config";
 import VueNumberFormat from "@coders-tm/vue-number-format";
 // import { setupCalendar, Calendar, DatePicker } from 'v-calendar';
@@ -45,7 +45,7 @@ app.component("InfiniteLoading", InfiniteLoading);
 app.component("VueDatePicker", VueDatePicker);
 // app.use(setupCalendar, {});
 app.use(VueNumberFormat, { precision: 4 });
-app.use(ProgressBar, ProgressBarOptions);
+// app.use(ProgressBar, ProgressBarOptions);
 app.use(pinia);
 app.use(router);
 app.use(drag);
@@ -59,13 +59,13 @@ app.use(VueTippy, CONFIG.TIPPYOPTIONS);
 app.mount("#app");
 
 // Pusher Configer
-window.Pusher = Pusher;
-window.Echo = new Echo({
-  broadcaster: "pusher",
-  key: CONFIG.MIX_PUSHER_APP_KEY,
-  cluster: CONFIG.MIX_PUSHER_APP_CLUSTER,
-  forceTLS: true,
-});
+// window.Pusher = Pusher;
+// window.Echo = new Echo({
+//   broadcaster: "pusher",
+//   key: CONFIG.MIX_PUSHER_APP_KEY,
+//   cluster: CONFIG.MIX_PUSHER_APP_CLUSTER,
+//   forceTLS: true,
+// });
 
 // app.config.errorHandler = (err, instance, info) => {
 //   console.log(err, instance, info);
@@ -75,15 +75,3 @@ window.Echo = new Echo({
 //+++++++++++++++++ Router Middleware ++++++++++++++
 // ==================================================
 
-router.beforeEach(async (to, from, next) => {
-  try {
-    app.config.globalProperties.$Progress.start();
-    return next();
-  } catch (e) {
-    throw new Error(e);
-  }
-});
-
-router.afterEach((to, from) => {
-  app.config.globalProperties.$Progress.finish();
-});

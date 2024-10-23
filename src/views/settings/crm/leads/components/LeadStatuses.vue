@@ -1,6 +1,6 @@
 <script>
     import { VueDraggableNext } from 'vue-draggable-next';
-    import { FetchAllStatus, UpdateStatus } from '../../../../../actions/StatusAction';
+    import { FetchAllStatus, UpdateStatus } from '@actions/StatusAction';
     export default {
         components: {
             VueDraggableNext

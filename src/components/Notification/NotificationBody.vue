@@ -35,7 +35,7 @@
   </div>
   <custom-scrollbar v-else
     thumbWidth="0"
-    direction="horizontal"
+    direction="vertical"
     :wrapper-style="{height:'28rem'}"
     :style="{height:'100%'}"
     :content-style="{height:'100%'}">

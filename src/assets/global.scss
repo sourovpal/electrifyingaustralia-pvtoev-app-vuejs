@@ -49,8 +49,8 @@ html::-webkit-scrollbar {
 }
 
 .modal .modal-dialog {
-  margin-left:auto !important;
-  margin-right:auto !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 .content {
@@ -769,7 +769,9 @@ textarea::-webkit-scrollbar {
 .custom-blur {
   filter: blur(3px);
 
-  & > * { pointer-events: none; }
+  &>* {
+    pointer-events: none;
+  }
 }
 
 .loading-opacity {
@@ -779,7 +781,19 @@ textarea::-webkit-scrollbar {
 }
 
 .animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  @keyframes pulse {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: .5;
+    }
+  }
 }
 
 .animate-spin {
@@ -792,13 +806,70 @@ textarea::-webkit-scrollbar {
   left: 50%;
 }
 
-.dragged-on { background-color: #f1f1f1; }
+.dragged-on {
+  background-color: #f1f1f1;
+}
 
 @keyframes spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
+    transform: rotate(360deg);
+  }
+}
+
+
+
+/* Make clicks pass-through */
+#nprogress {
+  pointer-events: none;
+}
+
+#nprogress .bar {
+  background: #ff023f;
+
+  position: fixed;
+  z-index: 99999999;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 2px;
+}
+
+/* Fancy blur effect */
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0px;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px #29d, 0 0 5px #29d;
+  opacity: 1.0;
+
+  -webkit-transform: rotate(3deg) translate(0px, -4px);
+  -ms-transform: rotate(3deg) translate(0px, -4px);
+  transform: rotate(3deg) translate(0px, -4px);
+}
+
+@-webkit-keyframes nprogress-spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes nprogress-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
     transform: rotate(360deg);
   }
 }

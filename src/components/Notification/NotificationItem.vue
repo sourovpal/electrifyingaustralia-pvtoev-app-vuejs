@@ -1,6 +1,6 @@
 <script setup>
   import { formatTimeAgo } from "@helpers";
-  import { ref, reactive, watch, computed, onMounted, toRefs, createApp, defineComponent } from "vue";
+  import { ref, reactive, watch, computed, onMounted, toRefs, createApp, defineComponent, h } from "vue";
   import { useIntersectionObserver, useDebounceFn } from "@vueuse/core";
   import { useAppStore, useAuthStore, useNotificationStore } from '@stores';
   import { useApiRequest } from '@actions';
@@ -138,11 +138,17 @@
   }
 
   const NotificationMessage = defineComponent({
-    template: `${props.notification.message}`,
     setup() {
       return defaultAttributes;
-    }
+    },
+    template:`${props.notification.message}`,
+    // render() {
+    //     return h({template:`<div>hello</div>`, props:{title: 'Sourov Pal'}});
+    // },
   });
+
+
+
 
 </script>
 

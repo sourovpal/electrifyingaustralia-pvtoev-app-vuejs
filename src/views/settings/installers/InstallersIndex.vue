@@ -1,5 +1,4 @@
 <script>
-    import { encode, decode } from 'js-base64';
     import ActionBar from '../../../components/ActionBar/ActionBar.vue';
     import LeftActionBar from '../../../components/ActionBar/LeftActionBar.vue';
     import RightActionBar from '../../../components/ActionBar/RightActionBar.vue';

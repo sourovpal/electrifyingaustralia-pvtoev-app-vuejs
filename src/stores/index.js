@@ -4,8 +4,10 @@ import { usePipelineStore } from "./pipeline";
 import { useAuthStore } from "./auth";
 import { useAppStore } from "./app";
 import { useNotificationStore } from "./notification";
+import { useProgress } from './progress';
 
 export {
+    useProgress,
     useAuthStore,
     useAppStore,
     usePlatformStore,

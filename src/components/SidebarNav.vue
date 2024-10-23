@@ -1,5 +1,4 @@
 <script setup>
-  import CustomScrollbar from "custom-vue-scrollbar";
   import { computed, reactive, ref } from "vue";
   import NotificationsDropdown from "./Notification/NotificationsDropdown.vue";
   import ProfileDropdown from "./ProfileDropdown.vue";
@@ -40,41 +39,41 @@
       path: "/library",
       icon: "fas fa-folder-open",
     },
-    {
-      unique_id: "nav-payments",
-      label: "Payments",
-      path: "/payments",
-      icon: "fas fa-hand-holding-usd",
-      icon_w: "28px",
-      icon_h: "28px",
-    },
+    // {
+    //   unique_id: "nav-payments",
+    //   label: "Payments",
+    //   path: "/payments",
+    //   icon: "fas fa-hand-holding-usd",
+    //   icon_w: "28px",
+    //   icon_h: "28px",
+    // },
   ]);
 
   const bottomNavbarItems = reactive([
-    {
-      unique_id: "nav-reporting",
-      label: "Reporting",
-      path: "/reporting",
-      icon: "fas fa-chart-pie",
-    },
-    {
-      unique_id: "nav-learn",
-      label: "Learn",
-      path: "/learn",
-      icon: "fas fa-book-open",
-    },
-    {
-      unique_id: "nav-feedback",
-      label: "Feedback",
-      path: "/feedback",
-      icon: "fas fa-message",
-    },
-    {
-      unique_id: "nav-help",
-      label: "Help",
-      path: "/help",
-      icon: "fas fa-circle-info",
-    },
+    // {
+    //   unique_id: "nav-reporting",
+    //   label: "Reporting",
+    //   path: "/reporting",
+    //   icon: "fas fa-chart-pie",
+    // },
+    // {
+    //   unique_id: "nav-learn",
+    //   label: "Learn",
+    //   path: "/learn",
+    //   icon: "fas fa-book-open",
+    // },
+    // {
+    //   unique_id: "nav-feedback",
+    //   label: "Feedback",
+    //   path: "/feedback",
+    //   icon: "fas fa-message",
+    // },
+    // {
+    //   unique_id: "nav-help",
+    //   label: "Help",
+    //   path: "/help",
+    //   icon: "fas fa-circle-info",
+    // },
     // {
     //   unique_id: "nav-setting",
     //   label: "Settings",
@@ -107,9 +106,6 @@
 
 <template>
   <aside class="main-left-navbar parent-navbar">
-    <CustomScrollbar class="custom-scrollbar"
-      thumbWidth="6"
-      direction="vertical">
       <div class="navbar">
         <div class="top-navbar">
           <div v-for="(item, index) in topNavbarItems"
@@ -184,7 +180,6 @@
           </div>
         </div>
       </div>
-    </CustomScrollbar>
   </aside>
   <bootstrap-modal v-if="authStore.getConfirmLogout"
     @close="authStore.setConfirmLogout(false)"
@@ -212,7 +207,7 @@
     width: 100%;
     object-fit: cover;
     object-position: top center;
-    border-radius: 15px;
+    border-radius: 50%;
   }
 
   .fade-enter-active,
@@ -281,7 +276,7 @@
 
       .nav-item {
         .nav-link {
-          --nav-bg-color: #f4f6f6;
+          --nav-bg-color: #ffffff;
           --nav-icon-color: #6b7c92;
           --nav-active-color: #2196f3;
           --nav-border-color: transparent;
@@ -306,7 +301,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            border-radius: 15px;
+            border-radius: 50%;
             border: 2px solid var(--nav-border-color);
             box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
               rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;

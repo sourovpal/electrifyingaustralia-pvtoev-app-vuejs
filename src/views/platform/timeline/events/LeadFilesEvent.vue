@@ -5,7 +5,7 @@
         getVSIFileIcon,
         getVSIFolderIcon,
     } from "file-extension-icon-js";
-    import {   ref, nextTick } from 'vue';
+    import { ref, nextTick } from 'vue';
     import ImagePreviewModal from '../modals/ImagePreviewModal.vue';
     import ShowAllFilesModal from '../modals/ShowAllFilesModal.vue';
     import { shortenFileName, leadImageTypes } from '@helpers';
@@ -73,10 +73,12 @@
                     <div class="grid-item"
                         :data-other-files="index === 3 ? otherTotalFiles+'+' : ''"
                         :class="{overlay:(totalFiles > 4 && index == 3), 'w-100':((index == 0 && totalFiles == 1) || (index == 2 && totalFiles == 3)), 'h-100':((index == 0 && totalFiles == 1) || (index == 2 && totalFiles == 3))}">
-                        <FetchImage :src="file.filepath"
+                        <fetch-image :key="file.filepath"
+                            :src="file.filepath"
                             :filename="file.filename"
                             :alt="file.filename"
-                            loader />
+                            loader>
+                        </fetch-image>
                     </div>
                     <span class="text-center d-block fs-12px text-head">{{ shortenFileName(file.filename, ((index == 0
                         && totalFiles == 1) || (index == 2 && totalFiles == 3))?25:12) }}</span>

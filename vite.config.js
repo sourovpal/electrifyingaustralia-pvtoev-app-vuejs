@@ -37,7 +37,7 @@ export default defineConfig({
       { find: '@stores', replacement: fileURLToPath(new URL('./src/stores', import.meta.url)) },
       { find: '@config', replacement: fileURLToPath(new URL('./src/config.js', import.meta.url)) },
       { find: '@actions', replacement: fileURLToPath(new URL('./src/actions', import.meta.url)) },
-      { find: '@plugins', replacement: fileURLToPath(new URL('./src/plugins', import.meta.url)) },
+      { find: 'vue', replacement: fileURLToPath(new URL('node_modules/vue/dist/vue.esm-bundler.js', import.meta.url)) },
     ]
   },
   build: {

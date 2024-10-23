@@ -53,12 +53,18 @@
     })
       .then((res) => {
         const { success, message, ...args } = res;
+        
         isSubmitEditLead.value = false;
+        
         if (!success && args.errors) {
           errors.value = args.errors;
           return;
         }
+        
+        platformStore.callFetchTimelineLogs();
+        
         platformStore.callFetchNewLead(platformStore.getEditLeadId);
+
         $toast[message.type](message.text);
       })
       .catch((error) => {

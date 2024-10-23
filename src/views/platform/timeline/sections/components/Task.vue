@@ -7,12 +7,14 @@ import { useApiRequest } from "@actions";
 import { $toast } from "@config";
 import DropdownOwnerList from "../../../components/dropdowns/DropdownOwnerList.vue";
 import moment from "moment";
+
 const attrs = useAttrs();
 const platformStore = usePlatformStore();
 const props = defineProps({
   task: { type: Object, default: {} },
   isNew: { type: Boolean, default: false },
 });
+
 const emits = defineEmits(["toggleNewTask"]);
 const isEdit = ref(false);
 const taskItemRef = ref(null);
@@ -27,16 +29,21 @@ const tempDuration = ref(null);
 
 async function handleUpdateOrCreateTask() {
   $toast.clear();
+
   if (!leadTask.value.title) return;
+
   if (!props.isNew) {
     return handleUpdateTask();
   }
+
   isLoading.value = true;
+
   if (tempDuration.value) {
     tempDuration.value = moment(tempDuration.value).format(
       "YYYY-MM-DD HH:mm:ss"
     );
   }
+
   await useApiRequest({
     url: `/platform/${editLeadId.value}/tasks`,
     method: "post",
@@ -49,7 +56,10 @@ async function handleUpdateOrCreateTask() {
   })
     .then((res) => {
       const { success, message } = res;
+
       if (success) {
+        platformStore.callFetchTimelineLogs();
+
         platformStore.callFetchLeadTasks(
           editLeadId.value,
           function ({ loading }) {
@@ -73,8 +83,11 @@ async function handleUpdateOrCreateTask() {
 async function handleUpdateTaskStage() {
   $toast.clear();
   leadTask.value.is_complete = !leadTask.value.is_complete;
+
   if (props.isNew) return;
+
   isLoading.value = true;
+
   await useApiRequest({
     url: `/platform/${editLeadId.value}/tasks/${leadTask.value.task_id}/stage`,
     method: "post",
@@ -85,8 +98,9 @@ async function handleUpdateTaskStage() {
     .then((res) => {
       const { success, message } = res;
       if (!success) {
-        $toast.error(message.text);
+        return $toast.error(message.text);
       }
+      platformStore.callFetchTimelineLogs();
     })
     .catch((error) => {
       $toast.error("Oops, something went wrong");
@@ -102,6 +116,7 @@ async function handleUpdateTask() {
       "YYYY-MM-DD HH:mm:ss"
     );
   }
+
   if (
     props.isNew ||
     (tempTitle.value === leadTask.value.title &&
@@ -111,6 +126,7 @@ async function handleUpdateTask() {
   }
 
   isLoading.value = true;
+
   await useApiRequest({
     url: `/platform/${editLeadId.value}/tasks/${leadTask.value.task_id}/update`,
     method: "post",
@@ -121,10 +137,16 @@ async function handleUpdateTask() {
   })
     .then((res) => {
       const { success, message, task } = res;
+
       if (success) {
+        platformStore.callFetchTimelineLogs();
+
         tempTitle.value = task.title;
+
         leadTask.value["duration"] = task.duration;
+
         isEdit.value = false;
+
         return;
       }
       $toast.error(message.text);
@@ -154,6 +176,7 @@ async function handleUpdateOwner(owner = {}) {
     .then((res) => {
       const { success, message } = res;
       if (success) {
+        platformStore.callFetchTimelineLogs();
         leadTask.value["owner"] = { ...owner };
         return;
       }
@@ -178,11 +201,15 @@ async function handleDeleteTask() {
     .then((res) => {
       const { success, message } = res;
       if (success) {
+        platformStore.callFetchTimelineLogs();
+
         toggleTaskDelete.value = false;
+
         platformStore.callFetchLeadTasks(
           editLeadId.value,
           function ({ loading }) {}
         );
+        
         return;
       }
       $toast.error(message.text);

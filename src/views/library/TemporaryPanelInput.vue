@@ -39,44 +39,48 @@ onMounted(() => {
 </script>
 
 <template>
-	<div class="mb-5">
-		<div class="dropdown">
-			<span>{{ selectedPanel?.model ?? '' }}</span>
-			<input
-				placeholder="Search for available panels"
-				class="dropdown-toggle form-control"
-				id="dropdownMenuButton"
-				data-toggle="dropdown"
-				aria-haspopup="true"
-				data-mdb-toggle="dropdown"
-				aria-expanded="false"
-			/>
+	<div class="mb-5 px-3">
+		<div class="dropdown mb-2 d-flex align-items-center justify-content-between">
+			<!-- <span>{{ selectedPanel?.model ?? '' }}</span> -->
+			<p class="fw-bold mb-0 fs-12px">Panel: </p>
+			<div>
+                <input
+				    :placeholder="selectedPanel?.model ?? `Search for available panels`"
+				    class="dropdown-toggle form-control"
+				    id="dropdownMenuButton"
+				    data-toggle="dropdown"
+				    aria-haspopup="true"
+				    data-mdb-toggle="dropdown"
+				    aria-expanded="false"
+			    />
 
-			<div
-				class="dropdown-menu border panel-list"
-				aria-labelledby="dropdownMenuButton"
-			>
-				<a
-					class="dropdown-item cursor-pointer d-flex align-items-center justify-content-between"
-					@click="handlePanelClick(panelModel.id)"
-					v-for="panelModel in projectStore.getAvailablePanels"
-				>
-					<div>
-						<span class="mb-0 d-block">
-							<span>{{ panelModel.model }}</span> ·
-							<span class="text-secondary"
-								>{{ panelModel.max_input_v }}VA</span
-							>
-						</span>
-					</div>
-					<font-awesome-icon
-						class="fs-13px text-warning"
-						icon="fas fa-star"
-					/>
-				</a>
-			</div>
+			    <div
+				    class="dropdown-menu border panel-list"
+				    aria-labelledby="dropdownMenuButton"
+			        >
+				    <a
+					    class="dropdown-item cursor-pointer d-flex align-items-center justify-content-between"
+					    @click="handlePanelClick(panelModel.id)"
+					    v-for="panelModel in projectStore.getAvailablePanels"
+				        >
+					    <div>
+						    <span class="mb-0 d-block">
+							    <span>{{ panelModel.model }}</span> ·
+							    <span class="text-secondary">
+							        {{ panelModel.max_input_v }}VA
+							    </span>
+						    </span>
+					    </div>
+					    <font-awesome-icon
+						    class="fs-13px text-warning"
+						    icon="fas fa-star"
+					    />
+				    </a>
+			    </div>
+            </div>
 		</div>
-		<div>
+		<div class="d-flex align-items-center justify-content-between">
+			<p class="fw-bold mb-0 fs-12px">Quantity:</p>
 			<SaveableInput
 				v-model.number="quantity"
 				@update:modelValue="handlePanelQuantityChange"

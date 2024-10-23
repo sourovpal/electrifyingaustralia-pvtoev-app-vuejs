@@ -207,7 +207,7 @@
     width: 100%;
     object-fit: cover;
     object-position: top center;
-    border-radius: 15px;
+    border-radius: 50%;
   }
 
   .fade-enter-active,

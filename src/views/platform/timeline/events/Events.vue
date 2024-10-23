@@ -10,8 +10,9 @@
     import LeadContactEvent from './LeadContactEvent.vue';
     import EstimatedValueEvent from './EstimatedValueEvent.vue';
     import MessageEvent from './MessageEvent.vue';
+    import LeadEvent from './LeadEvent.vue';
 
-    import {   computed } from 'vue';
+    import { computed } from 'vue';
     const props = defineProps({
         message: {
             type: Object,
@@ -25,7 +26,10 @@
 </script>
 
 <template>
-    <lead-status-event
+
+    <lead-event :event="message"></lead-event>
+
+    <!-- <lead-status-event
         v-if="message.event_type == 'change-status' || message.event_type == 'assign-status' || message.event_type == 'remove-status'"
         :message="message" />
 
@@ -58,7 +62,8 @@
         :message="message" />
 
     <MessageEvent v-else-if="message.event_type == 'message'"
-        :message="message" />
+        :message="message" /> -->
+
     <template v-if="message.groups_message?.length"
         v-for="(childMessage, index) in message.groups_message"
         :key="childMessage.timeline_id">

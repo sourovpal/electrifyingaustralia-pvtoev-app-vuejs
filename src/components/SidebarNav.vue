@@ -105,7 +105,7 @@
 </script>
 
 <template>
-  <aside class="main-left-navbar parent-navbar">
+  <aside class="main-left-navbar parent-navbar d-none d-xl-block">
       <div class="navbar">
         <div class="top-navbar">
           <div v-for="(item, index) in topNavbarItems"

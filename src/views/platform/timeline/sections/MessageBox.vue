@@ -11,7 +11,7 @@
 
 <template>
     <div class="message-box">
-        <div class="tab-area border h-100 rounded d-flex flex-column">
+        <div class="tab-area border h-100 rounded flex-column">
             <div class="tab-menu px-2 mb-3">
                 <ul class="nav nav-tabs mb-0">
                     <li class="nav-item">
@@ -47,15 +47,13 @@
 <style lang="scss"
     scoped>
     .message-box {
-        position: absolute;
-        bottom: 0;
         width: 100%;
         min-height: 12rem;
         padding: .7rem;
         background-color: #ffffff;
         display: flex;
         flex-direction: column;
-
+        
         .tab-area {
             box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
             border-color: #007ee5 !important;

@@ -45,19 +45,23 @@
     })
       .then((res) => {
         const { success, message, ...args } = res;
-        if (!success && args.errors) {
-          $toast.error("Oops, something went wrong");
-          return;
-        }
+        if (!success && args.errors)
+          return $toast.error("Oops, something went wrong");
+
+        platformStore.callFetchTimelineLogs();
         platformStore.setLeadStage(stage);
+
         platformStore.callFetchLeadStages(
           platformStore.getEditLeadId,
           ({ loading }) => {
+
             if (!loading) {
               isLoadingStageId.value = null;
             }
+
           }
         );
+
       })
       .catch((error) => {
         $toast.error("Oops, something went wrong");

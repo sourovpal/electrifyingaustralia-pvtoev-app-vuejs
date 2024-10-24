@@ -68,6 +68,7 @@
     "vue-star-rating": "^2.1.0",
     "vue-tippy": "^6.4.1",
     "vue-toast-notification": "^3.1.2",
+    "vue3-emoji-picker": "^1.1.8",
     "vue3-google-map": "^0.20.0",
     "vue3-lazyload": "^0.3.8",
     "vue3-mui": "^2.0.0-beta-12b",

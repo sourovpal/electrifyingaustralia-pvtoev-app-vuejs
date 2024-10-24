@@ -2,28 +2,33 @@
     import Quill from 'quill';
     import { reactive, ref, onMounted, onUnmounted, computed } from 'vue';
     import { usePlatformStore } from '@stores';
+
+    import { useDebounceFn, onClickOutside } from '@vueuse/core';
+    import EmojiPicker from 'vue3-emoji-picker';
+    import {
+        leadImageTypes,
+        fileNameToExtension
+    } from '@helpers';
+    import { useApiRequest } from '@actions';
+    import { $toast } from '@config';
+
     import "quill-mention/autoregister";
     import "quill/dist/quill.core.css";
     import "quill-mention/dist/quill.mention.css";
-    import { leadImageTypes, fileNameToExtension } from '@helpers';
-    import { useApiRequest } from '@actions';
-    import {
-        getMaterialFileIcon,
-        getMaterialFolderIcon,
-        getVSIFileIcon,
-        getVSIFolderIcon,
-    } from "file-extension-icon-js";
-    import { $toast } from '@config';
+    import 'vue3-emoji-picker/css';
 
     const platformStore = usePlatformStore();
     const quillEditorRef = ref();
-    const quillEditor = ref();
     const quillDraftId = 'quill_local_draft_history_message';
     const selectedUsers = ref([]);
     const users = computed(() => platformStore.getUsers);
     const mentions = ref([]);
     const clipboardFiles = ref([]);
     const $leadId = computed(() => platformStore.getEditLeadId);
+    let quillEditor = null;
+    const toggleEmojiBox = ref(false);
+    const toggleEmojiRef = ref(null);
+    const isSubmitMessage = ref(false);
 
     const quillOptions = {
         theme: 'bubble',
@@ -69,7 +74,7 @@
 
 
     onMounted(() => {
-        quillEditor.value = new Quill(quillEditorRef.value, quillOptions);
+        quillEditor = new Quill(quillEditorRef.value, quillOptions);
     });
 
     function handleFetchUsers() {
@@ -80,7 +85,7 @@
 
     function selectedMentions() {
         mentions.value = [];
-        quillEditor.value.getContents().ops.forEach(op => {
+        quillEditor.getContents().ops.forEach(op => {
             if (op.insert && typeof op.insert === 'object' && op.insert.mention) {
                 mentions.value.push(op.insert.mention?.id);
             }
@@ -88,26 +93,64 @@
     }
 
     async function handleSubmitMessage() {
+
+        var html = quillEditor.getSemanticHTML();
+        var div = document.createElement('div');
+
+        div.innerHTML = html;
+        if (!div.innerText?.length) return;
+
+        isSubmitMessage.value = true;
+
         await useApiRequest({
             url: `/platform/${$leadId.value}/message`,
             method: 'POST',
             payload: {
                 mentions: mentions.value,
-                message: quillEditor.value.root.innerHTML,
+                message: html,
             }
         }).then(res => {
             const { success, message, errors } = res;
+
             if (success) {
+
                 mentions.value = [];
-                quillEditor.value.root.innerHTML = '';
+
+                quillEditor.deleteText(0, quillEditor.getLength())
+
                 platformStore.callFetchTimelineLogs();
+
                 return;
             }
+
             $toast[message.type](message.text);
+
         }).catch(error => {
 
+        }).finally(() => {
+            isSubmitMessage.value = false;
         });
     }
+
+
+    function handleSelecgtedEmoji(emoji) {
+
+        if (!quillEditor && !emoji.i) return;
+
+        const selection = quillEditor.getSelection();
+        if (selection) {
+            quillEditor.insertText(selection.index, emoji.i);
+            quillEditor.setSelection(selection.index + emoji.i.length);
+        }
+    }
+
+    const handleToggleEmoji = useDebounceFn(() => {
+        toggleEmojiBox.value = !toggleEmojiBox.value;
+    }, 100);
+
+    onClickOutside(toggleEmojiRef, () => handleToggleEmoji());
+
+
 
 </script>
 
@@ -118,8 +161,19 @@
             @click="handleFetchUsers"
             class="flex-grow-1"></div>
         <div class="d-flex px-2 py-2">
-            <button @click="handleSubmitMessage"
-                class="ms-auto btn btn-sm btn-primary">Send Message</button>
+            <EmojiPicker ref="toggleEmojiRef"
+                v-if="toggleEmojiBox"
+                :native="true"
+                @select="handleSelecgtedEmoji"></EmojiPicker>
+            <button @click="handleToggleEmoji"
+                class="ms-auto me-2 toolbar-btn btn btn-light btn-sm btn-floating d-flex justify-content-center align-items-center position-relative">
+                <font-awesome-icon icon="fas fa-face-smile"
+                    class="text-soft"></font-awesome-icon>
+            </button>
+            <loading-button @click="handleSubmitMessage"
+                :is-loading="isSubmitMessage"
+                loading-text="Sending..."
+                class="btn btn-sm btn-primary">Send Message</loading-button>
         </div>
     </div>
 </template>
@@ -169,6 +223,12 @@
     }
 
     .tab-content {
+        &:deep(.v3-emoji-picker) {
+            position: absolute;
+            bottom: 1rem;
+            right: 10.3rem;
+        }
+
         &:deep(.ql-mention-list-container) {
             box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px !important;
             background-color: rgb(255, 255, 255) !important;

@@ -94,7 +94,7 @@
             });
     }
 
-    async function handleSubmitLostOrWon() {
+    async function handleSubmitReopen() {
         $toast.clear();
 
         let url = `/platform/${editLeadId.value}/reopen`;
@@ -119,18 +119,22 @@
 
             $toast[message.type](message.text);
 
+            platformStore.callFetchTimelineLogs();
+
             platformStore.setLeadStage({ ...selectedStage.value });
+
             platformStore.callFetchLeadStages(editLeadId.value);
 
             if (payload["owner"])
                 platformStore.setLeadOwner({ ...selectedOwner.value });
 
-            if (leadPipeline.value?.pipeline_id != payload['pipeline']) {
+            if (leadPipeline.value?.pipeline_id != payload['pipeline'])
                 platformStore.setLeadPipeline({ ...selectedPipeline.value });
-            }
 
             if (selectedWorkflow.value) platformStore.callFetchLeadTasks(editLeadId.value);
+
             modalRef.value?.hide();
+
         }).catch((error) => {
 
             $toast.error("Oops, something went wrong");
@@ -274,7 +278,7 @@
 
                 <loading-button :is-loading="isSubmit"
                     :disabled="!(selectedOwner && selectedPipeline && selectedStage)"
-                    @click="handleSubmitLostOrWon"
+                    @click="handleSubmitReopen"
                     class="btn btn-sm text-white btn-warning">
                     Confirm
                 </loading-button>

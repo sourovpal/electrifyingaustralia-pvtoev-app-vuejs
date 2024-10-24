@@ -23,7 +23,7 @@
         setup() {
             return { ...props };
         },
-        template: `${props.event.message}`,
+        template: `<div class="fs-16px feed-wrap mb-1 timeline-log">${props.event.message}</div>`,
     });
 
 
@@ -31,8 +31,20 @@
 </script>
 <template>
     <div class="d-block">
-        <div class="fs-16px feed-wrap mb-1">
-            <notification-message></notification-message>
-        </div>
+        <notification-message></notification-message>
     </div>
 </template>
+<style scoped
+    lang="scss">
+    .timeline-log:deep() {
+        p {
+            margin: 0;
+            font-size: 16px;
+
+        }
+
+        br {
+            display: none;
+        }
+    }
+</style>

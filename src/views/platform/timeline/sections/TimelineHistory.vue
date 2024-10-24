@@ -11,7 +11,7 @@
     import moment from 'moment';
     import { $toast } from '@config';
     import { mergeTimelineLogs } from '@helpers';
-    import ScrollBottomPosition from '@components/ScrollBottomPosition.vue';
+    import ScrollBottomPosition from './ScrollBottomPosition.vue';
 
     const platformStore = usePlatformStore();
     const timelineLogs = ref([]);
@@ -34,7 +34,7 @@
         } else {
             payload['latest_id'] = latestId.value;
         }
-        
+
         await useApiRequest({
             url: `/platform/${$leadId}/timelines`,
             method: 'get',
@@ -52,7 +52,6 @@
             }
             $toast[message.type](message.text);
         }).catch(error => {
-            console.log(error)
             $toast.error("Oops, something went wrong");
         });
     }
@@ -92,7 +91,7 @@
                     :message="message"></log-message>
             </template>
         </scroll-bottom-position>
-        <message-box />
+        <message-box></message-box>
     </div>
 </template>
 
@@ -105,26 +104,31 @@
     }
 
     .col-left {
-        flex-grow: 1;
         border-right: 1px solid #dddddd;
         width: calc(100% - 24rem);
         position: relative;
         display: flex;
         flex-direction: column;
-        height: calc(90vh - 7px);
-
+        box-sizing: border-box;
+        height: calc(89.8vh);
+        
         &.is-pipeline-lead {
-            height: calc(84vh - 5px);
+            height: calc(83.5vh);
         }
 
+        @media only screen and (max-width:768.99px) {
+            height: calc(77vh) !important;
+        }
+        
         @media only screen and (max-width:991.99px) {
             width: 100% !important;
         }
+        
 
         &:deep(.history-logs) {
-            height: calc(100% - 192px);
             background-color: #e8ebef;
             overflow: auto;
+            flex: 1;
 
             .circle-avatar {
                 background-color: transparent;

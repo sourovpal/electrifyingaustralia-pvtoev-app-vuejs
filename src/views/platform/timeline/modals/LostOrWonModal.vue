@@ -121,20 +121,24 @@
 
       if (validation) return (errors.value = validation);
 
+      platformStore.callFetchTimelineLogs();
+
       $toast[message.type](message.text);
 
       platformStore.setLeadStage({ ...selectedStage.value });
+
       platformStore.callFetchLeadStages(editLeadId.value);
 
       if (payload["owner"])
         platformStore.setLeadOwner({ ...selectedOwner.value });
 
-      if (leadPipeline.value?.pipeline_id != payload['pipeline']) {
+      if (leadPipeline.value?.pipeline_id != payload['pipeline'])
         platformStore.setLeadPipeline({ ...selectedPipeline.value });
-      }
 
       if (selectedWorkflow.value) platformStore.callFetchLeadTasks(editLeadId.value);
+
       modalRef.value?.hide();
+      
     }).catch((error) => {
 
       $toast.error("Oops, something went wrong");

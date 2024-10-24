@@ -423,10 +423,10 @@ button[disabled],
   z-index: 1090999999999999 !important;
 
   .v-toast__item--success {
-    background: rgba(240, 253, 244, 0.95);
-    border: solid #1bc058;
+    // background: rgba(240, 253, 244, 0.95);
+    // border: solid #1bc058;
     border-width: 1px;
-    color: #16a34a;
+    // color: #16a34a;
   }
 
   .v-toast__item.v-toast__item--success .v-toast__icon {
@@ -434,10 +434,10 @@ button[disabled],
   }
 
   .v-toast__item--error {
-    background: rgba(254, 242, 242, 0.95);
-    border: solid #fa4646;
+    // background: rgba(254, 242, 242, 0.95);
+    // border: solid #fa4646;
     border-width: 1px;
-    color: #dc2626;
+    // color: #dc2626;
   }
 
   .v-toast__item.v-toast__item--error .v-toast__icon {
@@ -448,8 +448,12 @@ button[disabled],
 
 .v-toast__item {
   min-height: 1em !important;
-  box-shadow: none !important;
-
+  // box-shadow: none !important;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px !important;
+  background-color: #ffffff !important;
+  color: #1f2933 !important;
+  font-size:14px !important;
+  font-weight: bold;
   .v-toast__icon {
     width: 20px !important;
     height: 20px !important;

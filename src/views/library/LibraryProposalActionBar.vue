@@ -100,7 +100,7 @@ const project = computed(() => projectStore.project);
                 <Skeletor width="2.4375rem" height="2.4375rem" style="border-radius: 50%;" />
 			</div>
 
-            <div v-else class="d-flex align-items-center gap-2">
+            <div v-else class="d-flex align-items-center gap-2 me-4">
                 <!-- Keeping this commented for now -->
 				<!-- <font-awesome-icon
 				    v-if="!projectStore.getRecalculationLoadingState"

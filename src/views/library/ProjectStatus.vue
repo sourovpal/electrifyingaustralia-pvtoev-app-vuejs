@@ -12,6 +12,8 @@ import { RouterLink } from 'vue-router'
 const projectStore = useProjectStore();
 const { toggleSendModal } = storeToRefs(projectStore);
 
+const activeTaxSlug = computed(() => projectStore.getTaxType);
+
 watch(toggleSendModal, (newValue) => {
     if (!newValue) return; // to prevent infinite recursion
     shareModalOpen.value = newValue;
@@ -19,25 +21,12 @@ watch(toggleSendModal, (newValue) => {
 });
 
 const shareModalOpen = ref(false);
-const activeTaxSlug = computed(() => projectStore.getTaxType);
-
-const handleShareBtnClick = () => {
-	shareModalOpen.value = true
-}
-
-const handleShareModalClose = () => {
-	shareModalOpen.value = false
-}
+const handleShareModalClose = () => shareModalOpen.value = false
+// const handleShareBtnClick = () => shareModalOpen.value = true
 
 const projectInstallModalOpen = ref(false)
-
-const handleInstallerBtnClick = () => {
-	projectInstallModalOpen.value = !projectInstallModalOpen.value
-}
-
-const handleProjectInstallModalClose = () => {
-	projectInstallModalOpen.value = false
-}
+// const handleInstallerBtnClick = () => projectInstallModalOpen.value = !projectInstallModalOpen.value
+const handleProjectInstallModalClose = () => projectInstallModalOpen.value = false
 
 onMounted(() => {
 	simulateApiCall()

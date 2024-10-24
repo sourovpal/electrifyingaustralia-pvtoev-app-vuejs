@@ -70,7 +70,7 @@ const matchingPanels = computed(() => {
 			<small class="fw-bold fs-12px">Panel: </small>
 			<div>
                 <input
-				    :placeholder="selectedPanel.model ?? 'Search for available panels'"
+				    :placeholder="selectedPanel?.model ?? 'Search for available panels'"
 				    class="dropdown-toggle form-control panel-search-input"
 				    id="dropdownMenuButton"
 				    data-toggle="dropdown"

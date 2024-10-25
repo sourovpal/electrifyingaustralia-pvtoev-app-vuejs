@@ -11,9 +11,11 @@ export const useProjectStore = defineStore('project', {
         certificateTypes: [],
         project: null,
         recalculationLoading: false,
+        projectLoading: false,
         inverterModels: [],
         panelModels: [],
         projectList: [],
+        ownerList: [],
 
         selfConsumption: 0,
         selectedPanelDetails: {
@@ -181,6 +183,12 @@ export const useProjectStore = defineStore('project', {
                 return [];
             return state.project.warranties;
         },
+        getProjectLoadingState(state) {
+            return state.projectLoading
+        },
+        getOwnerList(state) {
+            return state.ownerList;
+        }
     },
 
     actions: {
@@ -230,6 +238,7 @@ export const useProjectStore = defineStore('project', {
             this.panelModels = response.data.panel_models;
         },
         async setProjectList() {
+            this.projectLoading = true;
             const response = await api.get('projects')
             const projects = response.data.data;
             const formatted = projects.map(project => ({
@@ -238,6 +247,7 @@ export const useProjectStore = defineStore('project', {
                 postcode: project.lead.post_code
             }));
             this.projectList = formatted;
+            this.projectLoading = false;
         },
     }
 

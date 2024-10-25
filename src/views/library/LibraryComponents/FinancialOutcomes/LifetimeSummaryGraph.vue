@@ -1,6 +1,6 @@
 <script setup>
 import Chart from 'chart.js/auto'
-import { ref, onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 
 const data = [
 	{ x_points:  1,  y_points: 2000 },
@@ -47,17 +47,8 @@ const initChart = () => {
 }
 
 
-const isLoading = ref(false)
-
-const simulateApiCall = () => {
-	isLoading.value = true
-	setTimeout(() => {
-		isLoading.value = false
-		initChart()
-	}, 1500)
-}
-
-onMounted(simulateApiCall)
+const isLoading = computed(() => projectStore.getProjectLoadingState);
+onMounted(initChart);
 
 </script>
 

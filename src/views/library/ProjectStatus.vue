@@ -28,17 +28,7 @@ const projectInstallModalOpen = ref(false)
 // const handleInstallerBtnClick = () => projectInstallModalOpen.value = !projectInstallModalOpen.value
 const handleProjectInstallModalClose = () => projectInstallModalOpen.value = false
 
-onMounted(() => {
-	simulateApiCall()
-})
-const isLoading = ref(false)
-
-const simulateApiCall = () => {
-	isLoading.value = true
-	setTimeout(() => {
-		isLoading.value = false
-	}, 1500)
-}
+const isLoading = computed(() => projectStore.getProjectLoadingState);
 </script>
 
 <template>

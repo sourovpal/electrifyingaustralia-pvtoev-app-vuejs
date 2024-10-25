@@ -47,17 +47,8 @@ const initChart = () => {
 }
 
 
-const isLoading = ref(false)
-
-const simulateApiCall = () => {
-	isLoading.value = true
-	setTimeout(() => {
-		isLoading.value = false
-		initChart()
-	}, 1500)
-}
-
-onMounted(simulateApiCall)
+const isLoading = computed(() => projectStore.getProjectLoadingState);
+onMounted(initChart);
 
 </script>
 

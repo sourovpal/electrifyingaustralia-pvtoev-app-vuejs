@@ -231,7 +231,13 @@ export const useProjectStore = defineStore('project', {
         },
         async setProjectList() {
             const response = await api.get('projects')
-            this.projectList = response.data.data;
+            const projects = response.data.data;
+            const formatted = projects.map(project => ({
+                ...project,
+                address: project.lead.address_line_one,
+                postcode: project.lead.post_code
+            }));
+            this.projectList = formatted;
         },
     }
 

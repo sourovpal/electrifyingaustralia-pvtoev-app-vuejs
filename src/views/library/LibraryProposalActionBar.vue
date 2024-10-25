@@ -67,7 +67,7 @@ const project = computed(() => projectStore.project);
 			    <Skeletor width="65%" />
 			</div>
 			<div class="cursor-pointer" @click="handleAddressClick" v-else>
-				<p class="mb-0">
+				<div class="mb-0">
 					<!-- 185 Military Road , Dover Heights -->
 					<!-- <span class="text-secondary d-none d-lg-inline">New South Wales</span> -->
                     {{ projectStore.project?.address }}
@@ -82,7 +82,7 @@ const project = computed(() => projectStore.project);
 						    icon="fas fa-copy"
 						/>
                     </div>
-				</p>
+				</div>
 				<div>
 					<small class="text-secondary fs-12px">
 						Dov Frazer · 0402450222 · dovman@gmail.com ·

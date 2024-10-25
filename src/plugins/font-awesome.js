@@ -109,6 +109,7 @@ const iconsToUse = [
   fa.faBarsStaggered,
   fa.faLocationDot,
   fa.faSackDollar,
+  fa.faDollarSign,
   fa.faToggleOn,
   fa.faToggleOff,
   fa.faEyeSlash,

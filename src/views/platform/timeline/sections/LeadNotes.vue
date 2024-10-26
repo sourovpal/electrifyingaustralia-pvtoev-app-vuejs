@@ -10,6 +10,7 @@
     const toggle = ref(true);
     const editLead = computed(() => platformStore.getEditLead);
     const editLeadId = computed(() => platformStore.getEditLeadId);
+
     const leadNotes = computed({
         get() {
             return platformStore.getEditLead.notes;
@@ -24,19 +25,25 @@
     }
 
     const handleOnUpdateNotes = useDebounceFn(() => {
+
         $toast.clear();
+
         useApiRequest({
             url: `leads/${editLeadId.value}/notes`,
             method: 'POST',
             payload: { notes: leadNotes.value }
         }).then(res => {
-            const { success, message, errors } = res;
-            if (!success) {
-                $toast.error(message.text);
-            }
-        }).catch(error => {
 
+            const { success, message, errors } = res;
+
+            if (!success)
+                $toast.error(message.text);
+
+        }).catch(error => {
+            $toast.clear();
+            $toast.error(error.message);
         })
+
     }, 2000);
 
 </script>

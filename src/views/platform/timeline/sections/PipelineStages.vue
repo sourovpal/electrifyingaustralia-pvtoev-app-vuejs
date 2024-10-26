@@ -44,9 +44,11 @@
       payload: data,
     })
       .then((res) => {
+
         const { success, message, ...args } = res;
+
         if (!success && args.errors)
-          return $toast.error("Oops, something went wrong");
+          return $toast.error(message.text);
 
         platformStore.callFetchTimelineLogs();
         platformStore.setLeadStage(stage);
@@ -55,16 +57,16 @@
           platformStore.getEditLeadId,
           ({ loading }) => {
 
-            if (!loading) {
+            if (!loading)
               isLoadingStageId.value = null;
-            }
 
           }
         );
 
       })
       .catch((error) => {
-        $toast.error("Oops, something went wrong");
+        $toast.clear();
+        $toast.error(error.message);
       });
   }
 
@@ -94,11 +96,14 @@
   }
 
   watchEffect(() => {
+
     leadPrimaryStages.value?.map((item) => {
-      if (item.lead_stage) {
+
+      if (item.lead_stage)
         lastStagePosition.value = item.position;
-      }
+
     });
+
   });
 </script>
 

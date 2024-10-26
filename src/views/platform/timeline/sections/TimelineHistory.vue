@@ -22,8 +22,11 @@
     const latestId = ref(null);
 
     const scrollBottomPositionRef = ref(null);
+
     async function fetchTimelineLogsHandler($state = null) {
+
         var $leadId = leadId.value ?? route.params.id;
+
         var payload = {
             next_id: nextId.value,
             limit: 20
@@ -40,33 +43,55 @@
             method: 'get',
             payload
         }).then(async res => {
+
             const { success, message, timeline_logs, next_id, latest_id } = res;
+
             if (success) {
+
                 nextId.value = next_id;
+
                 latestId.value = latest_id;
+
                 timelineLogs.value = await mergeTimelineLogs(timelineLogs.value, timeline_logs, $state.isReset);
+
                 await nextTick();
+
                 await $state?.loaded();
+
                 if (!nextId.value) $state?.complete();
+
                 return;
             }
+
             $toast[message.type](message.text);
+
         }).catch(error => {
-            $toast.error("Oops, something went wrong");
+            $toast.clear();
+            $toast.error(error.message);
         });
     }
 
     async function resetTimelineLogs(isNew = false, $leadId = null) {
+
         if (isNew && $leadId) {
+
             lastId.value = 0;
+
             nextId.value = 0;
+
             leadId.value = $leadId;
+
             timelineLogs.value = [];
+
             await nextTick();
+
             scrollBottomPositionRef.value.firstload();
+
             return;
         }
+
         scrollBottomPositionRef.value.reset();
+        
     }
 
     onMounted(() => {

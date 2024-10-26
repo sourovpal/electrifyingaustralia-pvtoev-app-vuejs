@@ -3,7 +3,7 @@
   import DateAndTimeInput from "./fields/DateAndTimeInput.vue";
   import MultipleChooseInput from "./fields/MultipleChooseInput.vue";
   import { usePlatformStore } from "@stores";
-  import { computed, ref, watchEffect,  } from "vue";
+  import { computed, ref, watchEffect, } from "vue";
   import YesOrNoInput from "./fields/YesOrNoInput.vue";
   import { useApiRequest } from "@actions/api";
   import { useRoute } from "vue-router";
@@ -16,30 +16,42 @@
   const leadProperties = computed(() => {
     return platformStore.getLeadProperties.concat(platformStore.getPipelineProperties);
   });
+
   const propertiesValues = computed(() => platformStore.getLeadPropertiesValues);
   const isFirstLoading = computed(() => platformStore.getIsFirstLoading);
   const editLeadId = computed(() => platformStore.getEditLeadId);
 
   async function onChangeHandler(value, uniqueId) {
+
     if (Object.keys(propertiesValues.value).includes(uniqueId)) {
+
       var data = {
         propertie: {
           [uniqueId]: value,
         },
       };
+
       const res = await useApiRequest({
         url: `/leads/${editLeadId.value}/propertie`,
         method: 'post',
         payload: data
       }).then(res => {
+
         const { success, message } = res;
+
         if (success) {
+
           platformStore.callFetchTimelineLogs();
+
         } else {
+
           $toast.error(message.text);
+
         }
+
       }).catch(error => {
-        $toast.error("Oops, something went wrong");
+        $toast.clear();
+        $toast.error(error.message);
       });
     }
   }

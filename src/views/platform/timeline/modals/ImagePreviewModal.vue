@@ -1,6 +1,6 @@
 <script setup>
     import { Modal } from "mdb-ui-kit";
-    import {     ref,   onMounted } from 'vue';
+    import { ref, onMounted } from 'vue';
     import { leadImageTypes, handleDownloadFile, fetchImage } from '@helpers';
     import { useApiRequest } from '@actions';
     import {
@@ -126,6 +126,8 @@
             deleteIsLoading.value = false;
             modalInstance.show();
             toggleDeleteFileModalRef.value = false;
+            $toast.clear();
+            $toast.error(error.message);
         });
     }
 

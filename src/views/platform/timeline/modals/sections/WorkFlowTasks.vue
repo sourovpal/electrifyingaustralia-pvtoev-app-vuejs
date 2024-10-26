@@ -7,6 +7,7 @@
     import { Skeletor } from "vue-skeletor";
 
     const platformStore = usePlatformStore();
+
     const props = defineProps({
         workflow: { type: Object, default: {} }
     });
@@ -21,41 +22,66 @@
     const $leadId = computed(() => platformStore.getEditLeadId);
 
     function handleSelectAllTasks() {
+
         var total = [...assignTasks.value, ...selectedTasks.value].length;
+
         if (total !== workflowTasks.value.length) {
+
             selectedTasks.value = workflowTasks.value?.reduce((acc, task) => {
+
                 if (!assignTasks.value.includes(task.task_id)) {
+
                     acc.push(task.task_id);
+
                 }
+
                 return acc;
+
             }, []);
+
         } else {
+
             selectedTasks.value = [];
         }
+
         assignWorkflowTask(true);
     }
 
     function selectSingleTask(id) {
+
         var index = selectedTasks.value.findIndex((task) => task === id);
+
         if (index !== -1) {
+
             selectedTasks.value.splice(index, 1);
+
         } else {
+
             selectedTasks.value.push(id);
+
         }
+
         assignWorkflowTask();
     }
 
     async function fetchWorkflowTasks() {
+
         $toast.clear();
+
         toggleTaskList.value = !toggleTaskList.value;
+
         if ((workflowTasks.value?.length || fetchComplete.value) || !props.workflow.tasks_count) {
             return;
         };
+
         isLoading.value = true;
+
         await useApiRequest({
             url: `/platform/${$leadId.value}/workflows/${props.workflow?.workflow_id}/tasks`,
         }).then(async res => {
+
             const { success, tasks, assign_tasks, message } = res;
+
             if (success) {
                 fetchComplete.value = true;
                 toggleTaskList.value = true;
@@ -64,15 +90,21 @@
                 assignTasks.value = assign_tasks;
                 return;
             }
+
             $toast.error(message.text);
-        }).catch(error => {
-            $toast.error("Oops, something went wrong");
-        }).finally(() => {
-            isLoading.value = false;
-        });
+
+        })
+            .catch(error => {
+                $toast.clear();
+                $toast.error(error.message);
+            })
+            .finally(() => {
+                isLoading.value = false;
+            });
     }
 
     async function assignWorkflowTask(assignAll = false) {
+
         await useApiRequest({
             url: `/platform/${$leadId.value}/workflows/${props.workflow?.workflow_id}/tasks${assignAll ? '?assing=all' : ''}`,
             method: 'post',
@@ -80,18 +112,27 @@
                 tasks: selectedTasks.value,
             }
         }).then(async res => {
+
             const { success, message } = res;
+
             if (success) {
+
                 assignTasks.value = [...assignTasks.value, ...selectedTasks.value];
+
                 selectedTasks.value = [];
+
                 platformStore.callFetchLeadTasks($leadId.value);
+
                 if (assignAll) fetchWorkflowTasks();
+
                 return;
             }
+
             $toast.error(message.text);
+
         }).catch(error => {
-            $toast.error("Oops, something went wrong");
-        }).finally(() => {
+            $toast.clear();
+            $toast.error(error.message);
         });
     }
 

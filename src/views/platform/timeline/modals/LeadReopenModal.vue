@@ -50,11 +50,10 @@
                 usersIsLoading.value = loading;
             });
 
-        if (!workflows.value?.length) {
+        if (!workflows.value?.length)
             platformStore.callFetchWorkflows(editLeadId.value, ({ loading }) => {
                 workflowIsLoading.value = loading;
             });
-        }
 
         platformStore.setPipelineStages([]);
     }
@@ -87,7 +86,8 @@
                     };
             })
             .catch((error) => {
-                $toast.error("Oops, something went wrong");
+                $toast.clear();
+                $toast.error(error.message);
             })
             .finally(() => {
                 stagesIsLoading.value = false;
@@ -135,15 +135,16 @@
 
             modalRef.value?.hide();
 
-        }).catch((error) => {
+        })
+            .catch((error) => {
+                $toast.clear();
+                $toast.error(error.message);
+            })
+            .finally(() => {
 
-            $toast.error("Oops, something went wrong");
+                isSubmit.value = false;
 
-        }).finally(() => {
-
-            isSubmit.value = false;
-
-        });
+            });
     }
 </script>
 

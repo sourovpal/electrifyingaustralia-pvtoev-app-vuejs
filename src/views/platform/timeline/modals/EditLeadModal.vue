@@ -28,24 +28,38 @@
   const sources = computed(() => platformStore.getSources);
 
   onMounted(() => {
+
     if (!sources.value?.length) {
+
       platformStore.callFetchSources(function ({ loading }) {
+
         sourcesIsLoading.value = loading;
+
       });
+
     }
+
     Object.assign(leadFormData, editLead.value);
+
     leadFormData.lead_source = editLead.value.source?.title;
+
     leadFormData.estimated_value = editLead.value.estimated_value ?? 0.0;
+
   });
 
   async function submitLeadFormHandler() {
+
     $toast.clear();
+
     isSubmitEditLead.value = true;
+
     errors.value = {};
+
     var data = {
       ...leadFormData,
       properties_values: { ...propertiesValues.value },
     };
+
     const res = await useApiRequest({
       url: `/leads/${editLeadId.value}/update`,
       method: "post",
@@ -53,23 +67,27 @@
     })
       .then((res) => {
         const { success, message, ...args } = res;
-        
+
         isSubmitEditLead.value = false;
-        
+
         if (!success && args.errors) {
+
           errors.value = args.errors;
           return;
         }
-        
+
         platformStore.callFetchTimelineLogs();
-        
+
         platformStore.callFetchNewLead(platformStore.getEditLeadId);
 
         $toast[message.type](message.text);
+
       })
       .catch((error) => {
+        $toast.clear();
+        $toast.error(error.message);
         isSubmitEditLead.value = false;
-        $toast.error("Oops, something went wrong");
+
       });
   }
 </script>
@@ -99,7 +117,8 @@
         </div>
       </div>
     </template>
-    <ul v-if="leadProperties?.length || pipelineProperties?.length" class="nav nav-tabs nav-justified mb-3 d-none d-lg-flex"
+    <ul v-if="leadProperties?.length || pipelineProperties?.length"
+      class="nav nav-tabs nav-justified mb-3 d-none d-lg-flex"
       id="ex1"
       role="tablist">
       <li class="nav-item nav-link text-capitalize cursor-pointer fs-14px fw-bold text-hard"

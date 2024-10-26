@@ -5,10 +5,12 @@
         getVSIFileIcon,
         getVSIFolderIcon,
     } from "file-extension-icon-js";
-    import {   onMounted, ref,  } from 'vue';
+    import { onMounted, ref, } from 'vue';
     import api from "@actions/api";
     import { shortenFileName } from '@helpers';
     import { usePlatformStore } from '@stores';
+
+    import {$toast} from '@config';
 
     const platformStore = usePlatformStore();
 

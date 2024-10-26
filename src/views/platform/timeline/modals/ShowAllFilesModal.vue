@@ -8,7 +8,7 @@
         getVSIFileIcon,
         getVSIFolderIcon,
     } from "file-extension-icon-js";
-    import { ref,     onMounted,   computed } from 'vue';
+    import { ref, onMounted, computed } from 'vue';
     import { useApiRequest } from '@actions/api';
     import { $toast } from '@config';
     import { usePlatformStore } from '@stores';
@@ -90,7 +90,8 @@
         }).catch(error => {
             infiniteLoading.value = false;
             isLoading.value = false;
-            $toast.error("Oops, something went wrong");
+            $toast.clear();
+            $toast.error(error.message);
         });
     }
 
@@ -260,6 +261,7 @@
                 width: 6rem;
                 display: flex;
                 flex-direction: column;
+
                 :deep(.file) {
                     width: 6rem;
                     height: 8rem;

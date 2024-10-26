@@ -91,7 +91,8 @@
           };
       })
       .catch((error) => {
-        $toast.error("Oops, something went wrong");
+        $toast.clear();
+        $toast.error(error.message);
       })
       .finally(() => {
         stagesIsLoading.value = false;
@@ -138,16 +139,16 @@
       if (selectedWorkflow.value) platformStore.callFetchLeadTasks(editLeadId.value);
 
       modalRef.value?.hide();
-      
+
     }).catch((error) => {
+      $toast.clear();
+      $toast.error(error.message);
+    })
+      .finally(() => {
 
-      $toast.error("Oops, something went wrong");
+        isSubmit.value = false;
 
-    }).finally(() => {
-
-      isSubmit.value = false;
-
-    });
+      });
   }
 </script>
 

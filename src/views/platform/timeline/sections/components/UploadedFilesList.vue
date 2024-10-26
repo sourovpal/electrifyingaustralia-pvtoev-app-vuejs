@@ -5,13 +5,21 @@
         getVSIFileIcon,
         getVSIFolderIcon,
     } from "file-extension-icon-js";
+
     import {   onMounted, ref,   computed } from 'vue';
+
     import api from "@actions/api";
+
     import { shortenFileName, leadImageTypes, fileNameToExtension, handleDownloadFile, fetchImage } from '@helpers';
+    
     import { usePlatformStore } from '@stores';
+
     const platformStore = usePlatformStore();
+
     const $leadId = computed(() => platformStore.getEditLeadId);
+
     const toggleDownloadBtn = ref(false);
+
     const props = defineProps({
         file: { type: Object, default: null },
         fileName: { default({ file }) { return file.filename; } },

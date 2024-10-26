@@ -30,7 +30,7 @@
   const stagesIsLoading = ref(false);
   const usersIsLoading = ref(false);
   const workflowIsLoading = ref(false);
-  
+
   onMounted(() => {
     showModalHandler();
   });
@@ -38,29 +38,28 @@
   function showModalHandler() {
     $toast.clear();
 
-    if (!pipelines.value.length) {
+    if (!pipelines.value.length)
       platformStore.callFetchPipeline(function ({ loading, pipelines }) {
         pipelineIsLoading.value = loading;
       });
-    }
 
-    if (!users.value?.length) {
+
+    if (!users.value?.length)
       platformStore.callFetchUsers(function ({ loading, users }) {
         usersIsLoading.value = loading;
       });
-    }
 
-    if (!workflows.value?.length) {
+    if (!workflows.value?.length)
       platformStore.callFetchWorkflows(editLeadId.value, ({ loading }) => {
         workflowIsLoading.value = loading;
       });
-    }
 
     errors.value = {};
     selectedOwner.value = leadOwner.value;
     selectedPipeline.value = null;
     selectedStage.value = null;
     pipelineStages.value = [];
+
   }
 
   function hideModalHandler() {
@@ -69,8 +68,11 @@
 
   async function selectPipelineHandler(pipelineOption) {
     $toast.clear();
+
     errors.value = {};
+
     selectedStage.value = null;
+
     selectedPipeline.value = pipelineOption;
 
     platformStore.callFetchPipelineStages(
@@ -97,9 +99,13 @@
   }
 
   function selectPipelineStageHandler(selectedOption) {
+
     $toast.clear();
+
     errors.value = {};
+
     selectedStage.value = selectedOption;
+
   }
 
   function selectOwnerHandler(owner) {
@@ -108,6 +114,7 @@
   }
 
   async function confirmQualifyHandler() {
+
     isSubmitConfirmQualify.value = true;
 
     await useApiRequest({
@@ -121,32 +128,39 @@
         commant: commant.value,
         workflow: selectedWorkflow.value?.workflow_id
       },
-    }).then((res) => {
-      const { success, message, errors: validation } = res;
+    })
+      .then((res) => {
+        const { success, message, errors: validation } = res;
 
-      if (validation) {
-        errors.value = validation;
-        return;
-      }
+        if (validation) {
+          errors.value = validation;
+          return;
+        }
 
-      platformStore.callFetchTimelineLogs();
-      platformStore.setLeadPipeline(selectedPipeline.value);
-      platformStore.setLeadStage(selectedStage.value);
-      platformStore.callFetchLeadStages(editLeadId.value);
-      platformStore.callFetchProperties(editLeadId.value);
+        platformStore.callFetchTimelineLogs();
+        platformStore.setLeadPipeline(selectedPipeline.value);
+        platformStore.setLeadStage(selectedStage.value);
+        platformStore.callFetchLeadStages(editLeadId.value);
+        platformStore.callFetchProperties(editLeadId.value);
 
-      hideModalHandler();
+        hideModalHandler();
 
-      platformStore.setIsPipelineLead(true);
+        platformStore.setIsPipelineLead(true);
 
-      router.push({ path: `/platform/deals/${editLeadId.value}` });
+        router.push({ path: `/platform/deals/${editLeadId.value}` });
 
-      $toast[message.type](message.text);
-    }).catch((error) => {
-      $toast.error("Oops, something went wrong");
-    }).finally(() => {
-      isSubmitConfirmQualify.value = true;
-    });
+        $toast[message.type](message.text);
+
+      })
+      .catch((error) => {
+        $toast.clear();
+        $toast.error(error.message);
+      })
+      .finally(() => {
+
+        isSubmitConfirmQualify.value = true;
+
+      });
   }
 </script>
 

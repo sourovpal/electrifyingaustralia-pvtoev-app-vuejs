@@ -1,6 +1,6 @@
 import axios from "axios";
-import { CONFIG } from "../config";
-import Storage from "../helpers/Storage";
+import { CONFIG, $toast } from "@config";
+import Storage from "@helpers/Storage";
 
 const securityStorage = new Storage(CONFIG.VITE_AUTH_TOKEN);
 const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
@@ -23,21 +23,43 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use((request) => {
+
+    $toast.clear();
+
     return request;
+
 }, (error) => {
+
     return Promise.reject(error);
+
 });
 
 instance.interceptors.response.use(function (response) {
+
+
     return response;
+
 }, function (error) {
+
+
     if (error?.response?.status === 401) {
+
         userStorage.remove();
+
         securityStorage.remove();
+
         window.location.replace('/login');
+
     }
+
+    const message = error.response?.data?.message?.text || error.response?.data?.message || error.message;
+    error.message = message;
+
     return Promise.reject(error);
+
 });
+
+
 
 export async function useApiRequest(http = {}) {
     const { url, method, payload, headers, ...attr } = {

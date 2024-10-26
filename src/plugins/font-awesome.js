@@ -123,6 +123,7 @@ const iconsToUse = [
   fa.faScrewdriverWrench,
   fa.faCircleRadiation,
   fa.faHeart,
+  fa.faWifi,
   // Regular
   far.faSquare,
   far.faSquareMinus,

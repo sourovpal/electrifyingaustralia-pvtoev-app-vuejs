@@ -126,7 +126,8 @@
             $toast[message.type](message.text);
 
         }).catch(error => {
-
+            $toast.clear();
+            $toast.error(error.message);
         }).finally(() => {
             isSubmitMessage.value = false;
         });

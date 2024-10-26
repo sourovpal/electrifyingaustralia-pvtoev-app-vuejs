@@ -50,7 +50,7 @@
     <PipelineStages v-if="isPipelineLead"></PipelineStages>
     <section class="h-100">
       <div class="col-area">
-        <timeline-history></timeline-history>
+        <timeline-history :key="`timeline_${$leadId}`"></timeline-history>
         <right-sidebar-timeline :isFirstLoading="false" />
       </div>
     </section>

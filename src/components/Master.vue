@@ -4,10 +4,10 @@
     import { useAppStore } from '@stores';
     import { useAuthStore, isAuthorized } from '@stores/auth';
     import MobileToolsBar from '@components/MobileToolsBar.vue';
+    import OfflineModal from './OfflineModal.vue';
 
     const appStore = useAppStore();
     const authStore = useAuthStore();
-
 
     onMounted(() => {
         appStore.callFetchAppData();
@@ -21,6 +21,7 @@
 </script>
 
 <template>
+    <offline-modal></offline-modal>
     <sidebar-nav></sidebar-nav>
     <router-view></router-view>
     <mobile-tools-bar class="d-md-none"></mobile-tools-bar>

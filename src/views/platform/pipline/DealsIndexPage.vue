@@ -1,5 +1,5 @@
 <script setup>
-    import './style.scss';
+    // import './style.scss';
     import { ref, onMounted, computed, watch } from 'vue';
     import SearchBar from '@components/SearchBar.vue';
     import FilterRightSidebar from './components/FilterRightSidebar.vue';
@@ -47,18 +47,25 @@
     <section class="content pipline-list">
         <search-bar></search-bar>
         <pipeline-tools-bar></pipeline-tools-bar>
-        <empty-page
+        <!-- <empty-page
             v-if="!isLoading && !isError && !pipelinePirimaryStages?.length && !pipelineSuccessStages?.length && !pipelineLostStages?.length"
-            :css="{icon:{width:'30%'}}"></empty-page>
-        <error-page v-else-if="!isLoading && isError" :css="{icon:{width:'30%'}}"></error-page>
-        <section v-else>
-            <filter-right-sidebar v-if="toggleFilter != 'render'"></filter-right-sidebar>
+            :css="{icon:{width:'30%'}}"></empty-page> -->
+        <!-- <error-page v-else-if="!isLoading && isError" :css="{icon:{width:'30%'}}"></error-page> -->
+        <!-- <section v-else> -->
+        <section>
+            <!-- <filter-right-sidebar v-if="toggleFilter != 'render'"></filter-right-sidebar> -->
             <pipeline-column-view v-if="pipelineView == 'column' || isLoading"></pipeline-column-view>
-            <pipeline-row-view v-else></pipeline-row-view>
+            <!-- <pipeline-row-view v-else></pipeline-row-view> -->
         </section>
     </section>
 </template>
 <style lang="scss">
+    .piplien-body {
+        background: #f4f6f6;
+        padding: 1rem 1rem;
+        margin-bottom:5rem;
+    }
+
     .pipline-list .piplien-body,
     .pipline-list .pip-body-scrollbar {
         height: calc(100vh - 102px) !important;

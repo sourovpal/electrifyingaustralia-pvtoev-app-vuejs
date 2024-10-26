@@ -13,18 +13,57 @@
     <router-link draggable="true"
         :to="`/platform/deals/${lead.lead_id}`">
         <div class="pip-item">
-            <h5 class="pip-title"
-                v-html="formatLeadAddress(lead, `<i class='text-soft'>Address not added yet.</i>`)"></h5>
-            <p class="pip-sub-title">{{ lead.lead_title??lead.primary_contact?.full_name??'Title not added yet.' }}</p>
-            <div class="pip-user d-flex justify-content-between align-items-center">
+            <h5 class="pip-title text-head">
+                {{ lead.lead_title??lead.primary_contact?.full_name??'Title not added yet.' }}
+            </h5>
+            <p class="pip-sub-title">
+                <!-- v-html="formatLeadAddress(lead, `<i class='text-soft'>Address not added yet.</i>`)" -->
+                Ms. Sharma 2234 NSW 31/10/6:00 PM Phone (IN)
+            </p>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="bar">
+                    <div class="progress"></div>
+                </div>
+                <span>85%</span>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="pip-value">${{ lead?.estimated_value??0.00 }}</div>
+                <div class="pip-source text-soft">{{ lead?.source?.title??'Not added yet' }}</div>
+            </div>
+
+            <div class="pip-user d-flex justify-content-between align-items-center mt-1">
+
                 <div>
                     <img class="pip-user-avatar"
                         :src="lead?.owner?.profile_avatar">
-                    <span class="pip-value">${{ lead?.estimated_value }}</span>
                 </div>
-                <div class="fs-16px star-value d-flex justify-content-start align-items-center" :class="{'text-soft':!lead.confidence}">
-                    <span class="me-1">{{ lead.confidence }}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg"
+
+                <div class="text-warning">
+                    <span class="me-1">5</span>
+                    <font-awesome-icon icon="fas fa-folder-open" class="fs-14px"></font-awesome-icon>
+                </div>
+
+                <div class="text-parimary">
+                    <span class="me-1">5</span>
+                    <font-awesome-icon icon="fas fa-list-check" class="fs-14px"></font-awesome-icon>
+                </div>
+
+                <div class="text-info">
+                    <span class="me-1">5</span>
+                    <font-awesome-icon icon="fas fa-users" class="fs-14px"></font-awesome-icon>
+                </div>
+
+                <div class="text-warning">
+                    <span class="me-1">5</span>
+                    <font-awesome-icon icon="fas fa-star" class="fs-14px"></font-awesome-icon>
+                </div>
+
+                <!-- <div class="fs-16px star-value d-flex justify-content-start align-items-center"
+                    :class="{'text-soft':!lead.confidence}">
+                    <span class="me-1">{{ lead.confidence }}</span> -->
+                <!-- <svg xmlns="http://www.w3.org/2000/svg"
                         height="16px"
                         viewBox="0 0 24 24"
                         width="16px"
@@ -37,10 +76,9 @@
                         <path
                             d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z">
                         </path>
-                    </svg>
-                </div>
+                    </svg> -->
+                <!-- </div> -->
             </div>
-            <div class="pip-source text-soft">{{ lead?.source?.title??'Not added yet' }}</div>
         </div>
     </router-link>
 
@@ -48,14 +86,39 @@
 
 <style scoped
     lang="scss">
+    /* Relevant progress bar CSS */
+    .bar {
+        background: #ededed;
+        width: 75%;
+        height: 6px;
+        border-radius: 5px;
+    }
+
+    .progress {
+        width: 50%;
+        height: 6px;
+        border-radius: 5px;
+        background: #3498db;
+        /* background: -webkit-linear-gradient(to right, #f47c34, #e03f97);
+        background: -o-linear-gradient(to right, #f47c34, #e03f97);
+        background: -moz-linear-gradient(to right, #f47c34, #e03f97);
+        background: -ms-linear-gradient(to right, #f47c34, #e03f97); */
+        /* background: linear-gradient(to right, #1fff9a, #63ffb9); */
+        /* -webkit-transition: 600ms cubic-bezier(0.6, 0, 0.38, 1);
+        -moz-transition: 600ms cubic-bezier(0.6, 0, 0.38, 1);
+        -o-transition: 600ms cubic-bezier(0.6, 0, 0.38, 1);
+        -ms-transition: 600ms cubic-bezier(0.6, 0, 0.38, 1);
+        transition: 600ms cubic-bezier(0.6, 0, 0.38, 1); */
+    }
+
     .pip-item {
         background-color: #ffffff;
-        border-radius: 4px;
+        border-radius: 8px;
         margin: 15px 0px;
         padding: 13px;
-        height: 125px;
+        height: 10rem;
         overflow: hidden;
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+        border: 1px solid var(--layout-border-color);
 
         .pip-title {
             font-size: 16px;
@@ -65,7 +128,6 @@
             overflow: hidden;
             width: 225px;
             margin-bottom: 5px;
-            color: #007ee5;
         }
 
         .pip-sub-title {
@@ -111,7 +173,7 @@
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
-            width: 225px;
+            margin-left:5rem;
         }
     }
 </style>

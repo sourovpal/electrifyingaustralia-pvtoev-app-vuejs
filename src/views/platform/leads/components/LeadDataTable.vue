@@ -1,518 +1,597 @@
 <script setup>
-    import { ref,     computed } from 'vue';
-    import DropdownOwnerList from '../../components/dropdowns/DropdownOwnerList.vue';
-    import Datatable from '@components/Datatable/Datatable.vue';
-    import DatatableHeader from '@components/Datatable/DatatableHeader.vue';
-    import DatatableBody from '@components/Datatable/DatatableBody.vue';
-    import ColumnSorted from './ColumnSorted.vue';
-    import DataTableSkeletor from './DataTableSkeletor.vue';
-    import { AvatarIcon } from "@assets/icons";
-    import { useLeadsStore, usePlatformStore } from '@stores';
-    import { handleDateTimeFormat, formatTimeAgo } from '@helpers';
-    import EmptyPage from '@components/Errors/EmptyPage.vue';
-    import ErrorPage from '@components/Errors/ErrorPage.vue';
-    import { $toast } from '@config';
-    import moment from 'moment';
-    import { useApiRequest } from '@actions';
-    import { useClipboard } from '@vueuse/core';
+import { ref, computed } from "vue";
+import DropdownOwnerList from "../../components/dropdowns/DropdownOwnerList.vue";
+import Datatable from "@components/Datatable/Datatable.vue";
+import DatatableHeader from "@components/Datatable/DatatableHeader.vue";
+import DatatableBody from "@components/Datatable/DatatableBody.vue";
+import ColumnSorted from "./ColumnSorted.vue";
+import DataTableSkeletor from "./DataTableSkeletor.vue";
+import { AvatarIcon } from "@assets/icons";
+import { useLeadsStore, usePlatformStore } from "@stores";
+import { handleDateTimeFormat, formatTimeAgo } from "@helpers";
+import EmptyPage from "@components/Errors/EmptyPage.vue";
+import ErrorPage from "@components/Errors/ErrorPage.vue";
+import { $toast } from "@config";
+import moment from "moment";
+import { useApiRequest } from "@actions";
+import { useClipboard } from "@vueuse/core";
 
-    const leadsStore = useLeadsStore();
-    const platformStore = usePlatformStore();
-    // Computed
-    const leads = computed(() => leadsStore.getLeads);
-    const isFirstLoading = computed(() => leadsStore.getIsFirstLoading);
-    const selectedLeads = computed(() => leadsStore.getSelectedLeads);
-    const isError = computed(() => leadsStore.getError);
-    const isLoading = computed(() => leadsStore.getIsLoading);
-    const leadProperties = computed(() => platformStore.getLeadProperties);
-    const statuses = computed(() => platformStore.getStatuses);
-    const headerAttributes = computed(() => leadsStore.getHeaders);
+const leadsStore = useLeadsStore();
+const platformStore = usePlatformStore();
+// Computed
+const leads = computed(() => leadsStore.getLeads);
+const isFirstLoading = computed(() => leadsStore.getIsFirstLoading);
+const selectedLeads = computed(() => leadsStore.getSelectedLeads);
+const isError = computed(() => leadsStore.getError);
+const isLoading = computed(() => leadsStore.getIsLoading);
+const leadProperties = computed(() => platformStore.getLeadProperties);
+const statuses = computed(() => platformStore.getStatuses);
+const headerAttributes = computed(() => leadsStore.getHeaders);
 
-    const isStatusUpdating = ref(null);
-    const isOwnerUpdating = ref(null);
-    const isLoadingUsers = ref(false);
+const isStatusUpdating = ref(null);
+const isOwnerUpdating = ref(null);
+const isLoadingUsers = ref(false);
 
-    function handleSelectRow(id) {
-        leadsStore.setSelectedLeads(id);
+function handleSelectRow(id) {
+  leadsStore.setSelectedLeads(id);
+}
+
+function getPropertieValue(propertie, lead) {
+  const { properties_values } = lead;
+  if (!properties_values) {
+    return "—";
+  }
+
+  let attrType = propertie.data_type_id;
+  let attrValue = properties_values[propertie.unique_id];
+
+  if (
+    (attrType === "free_text" || attrType === "multiline_free_text") &&
+    attrValue
+  ) {
+    if (attrValue.length > 20) {
+      return `<div class="text-overflow-ellipsis w-100 hover-scroll">${attrValue}</div>`;
+    } else {
+      return `<span class="text-overflow-ellipsis w-100">${attrValue}</span>`;
     }
+  } else if (attrType === "date" && attrValue) {
+    return handleDateTimeFormat(attrValue, "YYYY-MM-DD");
+  } else if (attrType === "date_and_time" && attrValue) {
+    return handleDateTimeFormat(attrValue, "YYYY-MM-DD HH:MM:SS");
+  } else if (attrType === "single_choice" && attrValue) {
+    return `<span class="text-overflow-ellipsis w-100">${attrValue}</span>`;
+  } else if (attrType === "multiple_choice" && attrValue && attrValue?.length) {
+    return `<span class="text-overflow-ellipsis w-100">${attrValue.join(
+      ", "
+    )}</span>`;
+  } else if (attrType === "yes_or_no" && attrValue) {
+    return `<span class="text-overflow-ellipsis w-100 text-capitalize">${attrValue}</span>`;
+  } else if (attrType === "real_number" && typeof attrValue != "undefined") {
+    return `<span class="text-overflow-ellipsis w-100 text-capitalize">${attrValue}</span>`;
+  }
+  return "—";
+}
 
-    function getPropertieValue(propertie, lead) {
-        const { properties_values } = lead;
-        if (!properties_values) {
-            return '—';
-        }
+async function handleUpdateLeadStatus(lead, status) {
+  $toast.clear();
+  isStatusUpdating.value = lead.lead_id;
+  await useApiRequest({
+    url: `/leads/${lead.lead_id}/status`,
+    method: "POST",
+    payload: {
+      status: lead.status?.status_id,
+      leads: lead.lead_id,
+    },
+  })
+    .then((res) => {
+      const { success, errors, message } = res;
+      if (!success) $toast.error(message.text);
+    })
+    .catch((error) => {
+      $toast.error("Oops, something went wrong");
+    })
+    .finally(() => {
+      isStatusUpdating.value = null;
+    });
+}
 
-        let attrType = propertie.data_type_id;
-        let attrValue = properties_values[propertie.unique_id];
+function fetchUsers() {
+  if (platformStore.getUsers.length) return;
+  platformStore.callFetchUsers(({ loading }) => {
+    isLoadingUsers.value = loading;
+  });
+}
 
-        if ((attrType === 'free_text' || attrType === 'multiline_free_text') && attrValue) {
-            if (attrValue.length > 20) {
-                return `<div class="text-overflow-ellipsis w-100 hover-scroll">${attrValue}</div>`;
-            } else {
-                return `<span class="text-overflow-ellipsis w-100">${attrValue}</span>`;
-            }
-        } else if (attrType === 'date' && attrValue) {
-            return handleDateTimeFormat(attrValue, 'YYYY-MM-DD');
-        } else if (attrType === 'date_and_time' && attrValue) {
-            return handleDateTimeFormat(attrValue, 'YYYY-MM-DD HH:MM:SS');
-        } else if (attrType === 'single_choice' && attrValue) {
-            return `<span class="text-overflow-ellipsis w-100">${attrValue}</span>`;
-        } else if (attrType === 'multiple_choice' && attrValue && attrValue?.length) {
-            return `<span class="text-overflow-ellipsis w-100">${attrValue.join(', ')}</span>`;
-        } else if (attrType === 'yes_or_no' && attrValue) {
-            return `<span class="text-overflow-ellipsis w-100 text-capitalize">${attrValue}</span>`;
-        } else if (attrType === 'real_number' && typeof attrValue != 'undefined') {
-            return `<span class="text-overflow-ellipsis w-100 text-capitalize">${attrValue}</span>`;
-        }
-        return '—';
-    }
+async function handleUpdateLeadOwner(owner, lead) {
+  $toast.clear();
+  if (lead.owner?.user_id == owner.user_id) return;
+  isOwnerUpdating.value = lead.lead_id;
+  await useApiRequest({
+    url: `/leads/${lead.lead_id}/owner`,
+    method: "POST",
+    payload: {
+      owner: owner?.user_id,
+      leads: lead.lead_id,
+    },
+  })
+    .then((res) => {
+      const { success, errors, message } = res;
+      if (success) {
+        lead.owner = owner;
+        return;
+      }
+      $toast.error("You can't change the owner of this lead's");
+    })
+    .catch((error) => {
+      $toast.error("Oops, something went wrong");
+    })
+    .finally(() => {
+      isOwnerUpdating.value = null;
+    });
+}
 
-    async function handleUpdateLeadStatus(lead, status) {
-        $toast.clear();
-        if (lead.status?.status_id == status.status_id) return;
-        isStatusUpdating.value = lead.lead_id;
-        await useApiRequest({
-            url: `/leads/${lead.lead_id}/status`,
-            method: 'POST',
-            payload: {
-                status: status?.status_id,
-                leads: lead.lead_id,
-            }
-        }).then(res => {
-            const { success, errors, message } = res;
-            if (success) {
-                lead.status = status;
-                return;
-            }
-            $toast.error('Oops, the lead\'s status hasn\'t changed.');
-        }).catch(error => {
-            $toast.error("Oops, something went wrong");
-        }).finally(() => {
-            isStatusUpdating.value = null;
-        });
-    }
-
-    function fetchUsers() {
-        if (platformStore.getUsers.length) return;
-        platformStore.callFetchUsers(({ loading }) => {
-            isLoadingUsers.value = loading;
-        });
-    }
-
-    async function handleUpdateLeadOwner(owner, lead) {
-        $toast.clear();
-        if (lead.owner?.user_id == owner.user_id) return;
-        isOwnerUpdating.value = lead.lead_id;
-        await useApiRequest({
-            url: `/leads/${lead.lead_id}/owner`,
-            method: 'POST',
-            payload: {
-                owner: owner?.user_id,
-                leads: lead.lead_id,
-            }
-        }).then(res => {
-            const { success, errors, message } = res;
-            if (success) {
-                lead.owner = owner;
-                return;
-            }
-            $toast.error('You can\'t change the owner of this lead\'s');
-        }).catch(error => {
-            $toast.error("Oops, something went wrong");
-        }).finally(() => {
-            isOwnerUpdating.value = null;
-        });
-    }
-
-    function copyClipboardHandler(source) {
-        if (!source) return;
-        const { copy, copied } = useClipboard();
-        copy(source);
-        $toast.success(`Copied to clipboard`);
-    }
-
+function copyClipboardHandler(source) {
+  if (!source) return;
+  const { copy, copied } = useClipboard();
+  copy(source);
+  $toast.success(`Copied to clipboard`);
+}
 </script>
 
 <template>
+  <error-page
+    :css="{ icon: { width: '30%' } }"
+    v-if="isError && !isLoading"
+  ></error-page>
 
-    <error-page :css="{icon:{width:'30%'}}"
-        v-if="isError && !isLoading"></error-page>
+  <empty-page
+    :css="{ icon: { width: '30%' } }"
+    v-else-if="!leads.length && !isLoading"
+  ></empty-page>
 
-    <empty-page :css="{icon:{width:'30%'}}"
-        v-else-if="!leads.length && !isLoading"></empty-page>
+  <Datatable v-else>
+    <datatable-header>
+      <div class="tbl-th" style="width: 3.6rem; flex-grow: 1"></div>
 
-    <Datatable v-else>
-        <datatable-header>
-            <div class="tbl-th"
-                style="width: 3.6rem; flex-grow: 1">
+      <div
+        v-show="!headerAttributes.includes('lead')"
+        class="tbl-th"
+        style="width: 20rem; flex-grow: 1"
+      >
+        Lead
+      </div>
+
+      <div
+        v-show="!headerAttributes.includes('source')"
+        @click="leadSortedHandler('source')"
+        class="tbl-th cursor-pointer"
+        style="width: 10rem; flex-grow: 1"
+      >
+        Source
+        <column-sorted field="source" :column="'column'" :order="'order'" />
+      </div>
+
+      <div
+        v-show="!headerAttributes.includes('status')"
+        @click="leadSortedHandler('status')"
+        class="tbl-th cursor-pointer pe-0"
+        style="width: 12rem; flex-grow: 1"
+      >
+        Status
+        <column-sorted field="status" :column="'column'" :order="'order'" />
+      </div>
+
+      <div
+        v-show="!headerAttributes.includes('phone_number')"
+        class="tbl-th text-end"
+        style="width: 13rem; flex-grow: 1"
+      >
+        Phone Number
+      </div>
+
+      <div
+        v-show="!headerAttributes.includes('email_address')"
+        class="tbl-th"
+        style="width: 15rem; flex-grow: 1"
+      >
+        Email Address
+      </div>
+
+      <div
+        v-show="!headerAttributes.includes('address_line_one')"
+        class="tbl-th"
+        style="width: 10rem; flex-grow: 1"
+      >
+        Address One
+      </div>
+
+      <div
+        v-show="!headerAttributes.includes('address_line_two')"
+        class="tbl-th"
+        style="width: 10rem; flex-grow: 1"
+      >
+        Address Two
+      </div>
+
+      <div
+        v-show="!headerAttributes.includes('city')"
+        class="tbl-th"
+        style="width: 10rem; flex-grow: 1"
+      >
+        City
+      </div>
+
+      <div
+        v-show="!headerAttributes.includes('state')"
+        class="tbl-th"
+        style="width: 10rem; flex-grow: 1"
+      >
+        State
+      </div>
+
+      <div
+        v-show="!headerAttributes.includes('post_code')"
+        @click="leadSortedHandler('post_code')"
+        class="tbl-th cursor-pointer"
+        style="width: 10rem; flex-grow: 1"
+      >
+        Postcode
+        <column-sorted field="post_code" :column="'column'" :order="'order'" />
+      </div>
+
+      <div
+        v-show="!headerAttributes.includes('country')"
+        class="tbl-th"
+        style="width: 10rem; flex-grow: 1"
+      >
+        Country
+      </div>
+
+      <!-- Custom Propertys -->
+
+      <div
+        v-for="(propertie, index) in leadProperties"
+        :key="index"
+        class="tbl-th"
+        v-show="!headerAttributes.includes(propertie.unique_id)"
+        style="width: 12rem; flex-grow: 1"
+      >
+        <span class="text-overflow-ellipsis w-100">{{ propertie.label }}</span>
+      </div>
+
+      <div
+        v-show="!headerAttributes.includes('last_update')"
+        @click="leadSortedHandler('updated_at')"
+        class="tbl-th cursor-pointer"
+        style="width: 10rem; flex-grow: 1"
+      >
+        Last Update
+        <column-sorted field="updated_at" :column="'column'" :order="'order'" />
+      </div>
+      <div
+        v-show="!headerAttributes.includes('first_create')"
+        @click="leadSortedHandler('created_at')"
+        class="tbl-th cursor-pointer"
+        style="width: 10rem; flex-grow: 1"
+      >
+        Created At
+        <column-sorted field="created_at" :column="'column'" :order="'order'" />
+      </div>
+
+      <div
+        v-show="!headerAttributes.includes('owner')"
+        class="tbl-th"
+        style="width: 10rem; flex-grow: 1"
+      >
+        Owner
+      </div>
+    </datatable-header>
+
+    <datatable-body>
+      <data-table-skeletor v-if="isFirstLoading"></data-table-skeletor>
+      <div
+        v-else
+        class="tbl-tr full-width"
+        v-for="(lead, index) in leads"
+        :key="index"
+        :class="selectedLeads.includes(lead.lead_id) ? 'active' : ''"
+      >
+        <div style="width: 3.5rem; flex-grow: 1" class="tbl-td full-width ps-2">
+          <custom-checkbox
+            @click="handleSelectRow(lead.lead_id)"
+            :checked="!!selectedLeads.includes(lead.lead_id)"
+          />
+        </div>
+
+        <div
+          v-show="!headerAttributes.includes('lead')"
+          style="width: 20rem; flex-grow: 1"
+          class="tbl-td full-width"
+        >
+          <router-link
+            class="text-overflow-ellipsis"
+            :to="`/platform/leads/${lead.lead_id}`"
+          >
+            {{ lead.lead_title ?? lead?.primary_contact?.full_name }}
+          </router-link>
+        </div>
+
+        <div
+          v-show="!headerAttributes.includes('source')"
+          style="width: 10rem; flex-grow: 1"
+          class="tbl-td"
+        >
+          <span class="text-overflow-ellipsis">{{ lead.source?.title }}</span>
+        </div>
+
+        <div
+          v-show="!headerAttributes.includes('status')"
+          style="width: 12rem; flex-grow: 1"
+          class="tbl-td pe-0"
+        >
+          <select-option
+            filter
+            scroll-height="20rem"
+            auto-filter-focus
+            :loading="isStatusUpdating == lead.lead_id"
+            label-class="py-1"
+            v-model="lead['status']"
+            :options="statuses"
+            :filterFields="['name']"
+            optionLabel="name"
+            placeholder="Select a status"
+            class="w-100"
+            @change="handleUpdateLeadStatus(lead)"
+          >
+            <template #value="slotProps">
+              <div v-if="slotProps.value" class="flex items-center">
+                <div>{{ slotProps.value.name }}</div>
+              </div>
+              <span v-else>
+                {{ slotProps.placeholder }}
+              </span>
+            </template>
+            <template #option="slotProps">
+              <div class="flex items-center">
+                <div>{{ slotProps.option.name }}</div>
+              </div>
+            </template>
+          </select-option>
+        </div>
+
+        <div
+          v-show="!headerAttributes.includes('phone_number')"
+          style="width: 13rem; flex-grow: 1"
+          class="tbl-td"
+        >
+          <div class="d-flex justify-content-between align-items-center w-100">
+            <div class="me-2 call-phone">
+              <button
+                @click="
+                  copyClipboardHandler(lead?.primary_contact?.phone_number)
+                "
+                v-show="lead?.primary_contact?.phone_number"
+                class="toolbar-btn btn btn-light btn-floating btn-sm me-1"
+              >
+                <font-awesome-icon
+                  icon="fas fa-copy"
+                  class="fs-14px text-soft"
+                />
+              </button>
+              <button
+                v-show="lead?.primary_contact?.phone_number"
+                target="_blank"
+                title="Call phone number"
+                class="toolbar-btn btn btn-light btn-floating btn-sm"
+              >
+                <a
+                  :href="`tel:${lead?.primary_contact?.phone_number}`"
+                  target="_blank"
+                >
+                  <font-awesome-icon
+                    icon="fas fa-phone"
+                    class="fs-14px text-soft"
+                  />
+                </a>
+              </button>
             </div>
-
-            <div v-show="!headerAttributes.includes('lead')"
-                class="tbl-th"
-                style="width: 20rem; flex-grow: 1">
-                Lead
+            <div class="text-overflow-ellipsis">
+              {{ lead.primary_contact?.phone_number }}
             </div>
+          </div>
+        </div>
 
-            <div v-show="!headerAttributes.includes('source')"
-                @click="leadSortedHandler('source')"
-                class="tbl-th cursor-pointer"
-                style="width: 10rem; flex-grow: 1">
-                Source
-                <column-sorted field="source"
-                    :column="'column'"
-                    :order="'order'" />
-            </div>
+        <div
+          v-show="!headerAttributes.includes('email_address')"
+          style="width: 15rem; flex-grow: 1"
+          class="tbl-td"
+        >
+          <a class="text-overflow-ellipsis">
+            {{ lead.primary_contact?.email }}
+          </a>
+        </div>
 
-            <div v-show="!headerAttributes.includes('status')"
-                @click="leadSortedHandler('status')"
-                class="tbl-th cursor-pointer pe-0"
-                style="width: 12rem; flex-grow: 1">
-                Status
-                <column-sorted field="status"
-                    :column="'column'"
-                    :order="'order'" />
-            </div>
+        <div
+          v-show="!headerAttributes.includes('address_line_one')"
+          style="width: 10rem; flex-grow: 1"
+          class="tbl-td"
+        >
+          <span class="text-overflow-ellipsis">{{
+            lead.address_line_one
+          }}</span>
+        </div>
 
-            <div v-show="!headerAttributes.includes('phone_number')"
-                class="tbl-th text-end"
-                style="width: 13rem; flex-grow: 1">
-                Phone Number
-            </div>
+        <div
+          v-show="!headerAttributes.includes('address_line_two')"
+          style="width: 10rem; flex-grow: 1"
+          class="tbl-td"
+        >
+          <span class="text-overflow-ellipsis">{{
+            lead.address_line_two
+          }}</span>
+        </div>
 
-            <div v-show="!headerAttributes.includes('email_address')"
-                class="tbl-th"
-                style="width: 15rem; flex-grow: 1">
-                Email Address
-            </div>
+        <div
+          v-show="!headerAttributes.includes('city')"
+          style="width: 10rem; flex-grow: 1"
+          class="tbl-td"
+        >
+          {{ lead.city }}
+        </div>
 
-            <div v-show="!headerAttributes.includes('address_line_one')"
-                class="tbl-th"
-                style="width: 10rem; flex-grow: 1">
-                Address One
-            </div>
+        <div
+          v-show="!headerAttributes.includes('state')"
+          style="width: 10rem; flex-grow: 1"
+          class="tbl-td"
+        >
+          {{ lead.state }}
+        </div>
 
-            <div v-show="!headerAttributes.includes('address_line_two')"
-                class="tbl-th"
-                style="width: 10rem; flex-grow: 1">
-                Address Two
-            </div>
+        <div
+          v-show="!headerAttributes.includes('post_code')"
+          style="width: 10rem; flex-grow: 1"
+          class="tbl-td"
+        >
+          {{ lead.post_code }}
+        </div>
 
-            <div v-show="!headerAttributes.includes('city')"
-                class="tbl-th"
-                style="width: 10rem; flex-grow: 1">
-                City
-            </div>
+        <div
+          v-show="!headerAttributes.includes('country')"
+          style="width: 10rem; flex-grow: 1"
+          class="tbl-td"
+        >
+          {{ lead.country }}
+        </div>
 
-            <div v-show="!headerAttributes.includes('state')"
-                class="tbl-th"
-                style="width: 10rem; flex-grow: 1">
-                State
-            </div>
+        <!-- Custom Properties -->
 
-            <div v-show="!headerAttributes.includes('post_code')"
-                @click="leadSortedHandler('post_code')"
-                class="tbl-th cursor-pointer"
-                style="width: 10rem; flex-grow: 1">
-                Postcode
-                <column-sorted field="post_code"
-                    :column="'column'"
-                    :order="'order'" />
-            </div>
+        <div
+          v-for="(propertie, index) in leadProperties"
+          :key="index"
+          :id="propertie?.unique_id"
+          v-show="!headerAttributes.includes(propertie.unique_id)"
+          class="tbl-td"
+          style="width: 12rem; flex-grow: 1"
+          v-html="getPropertieValue(propertie, lead)"
+        ></div>
 
-            <div v-show="!headerAttributes.includes('country')"
-                class="tbl-th"
-                style="width: 10rem; flex-grow: 1">
-                Country
-            </div>
+        <div
+          v-show="!headerAttributes.includes('last_update')"
+          style="width: 10rem; flex-grow: 1"
+          class="tbl-td"
+        >
+          {{ formatTimeAgo(lead.updated_at, 30, "Do MMMM, YYYY") }}
+        </div>
 
-            <!-- Custom Propertys -->
+        <div
+          v-show="!headerAttributes.includes('first_create')"
+          style="width: 10rem; flex-grow: 1"
+          class="tbl-td"
+        >
+          {{ formatTimeAgo(lead.created_at, 30, "Do MMMM, YYYY") }}
+        </div>
 
-            <div v-for="(propertie, index) in leadProperties"
-                :key="index"
-                class="tbl-th"
-                v-show="!headerAttributes.includes(propertie.unique_id)"
-                style="width: 12rem; flex-grow: 1">
-                <span class="text-overflow-ellipsis w-100">{{ propertie.label }}</span>
-            </div>
-
-            <div v-show="!headerAttributes.includes('last_update')"
-                @click="leadSortedHandler('updated_at')"
-                class="tbl-th cursor-pointer"
-                style="width: 10rem; flex-grow: 1">
-                Last Update
-                <column-sorted field="updated_at"
-                    :column="'column'"
-                    :order="'order'" />
-            </div>
-            <div v-show="!headerAttributes.includes('first_create')"
-                @click="leadSortedHandler('created_at')"
-                class="tbl-th cursor-pointer"
-                style="width: 10rem; flex-grow: 1">
-                Created At
-                <column-sorted field="created_at"
-                    :column="'column'"
-                    :order="'order'" />
-            </div>
-
-            <div v-show="!headerAttributes.includes('owner')"
-                class="tbl-th"
-                style="width: 10rem; flex-grow: 1">
-                Owner
-            </div>
-        </datatable-header>
-
-        <datatable-body>
-            <data-table-skeletor v-if="isFirstLoading"></data-table-skeletor>
-            <div v-else
-                class="tbl-tr full-width"
-                v-for="(lead, index) in leads"
-                :key="index"
-                :class="selectedLeads.includes(lead.lead_id) ? 'active' : ''">
-                <div style="width: 3.5rem; flex-grow: 1"
-                    class="tbl-td full-width ps-2">
-                    <custom-checkbox @click="handleSelectRow(lead.lead_id)"
-                        :checked="!!selectedLeads.includes(lead.lead_id)" />
-                </div>
-
-                <div v-show="!headerAttributes.includes('lead')"
-                    style="width: 20rem; flex-grow: 1"
-                    class="tbl-td full-width">
-                    <router-link class="text-overflow-ellipsis"
-                        :to="`/platform/leads/${lead.lead_id}`">
-                        {{ lead.lead_title ?? lead?.primary_contact?.full_name }}
-                    </router-link>
-                </div>
-
-                <div v-show="!headerAttributes.includes('source')"
-                    style="width: 10rem; flex-grow: 1"
-                    class="tbl-td">
-                    <span class="text-overflow-ellipsis">{{ lead.source?.title }}</span>
-                </div>
-
-                <div v-show="!headerAttributes.includes('status')"
-                    style="width: 12rem; flex-grow: 1"
-                    class="tbl-td  pe-0">
-                    <div class="dropdown w-100">
-                        <button
-                            class="btn btn-sm btn-outline-secondary fw-400 w-100 d-flex justify-content-between align-items-center"
-                            type="button"
-                            data-mdb-toggle="dropdown"
-                            aria-expanded="false">
-                            <span class="fw-bold fs-14px"
-                                v-if="isStatusUpdating == lead.lead_id">
-                                <svg-custom-icon icon="SpinnerIcon" />
-                                Updating...
-                            </span>
-                            <span v-else
-                                class="fw-bold text-fs tbl-dropdown-title text-overflow-ellipsis text-head">
-                                {{lead.status?.name??"Lead Status" }}
-                            </span>
-                            <div class="dropdown--icon">
-                                <font-awesome-icon icon="fas fa-caret-down"
-                                    class="fs-16px text-head"></font-awesome-icon>
-                            </div>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end"
-                            aria-labelledby="dropdownMenuButton">
-                            <span style="width: 170px"
-                                v-for="(status, index) in statuses"
-                                :key="index"
-                                class="dropdown-item d-flex justify-content-between align-items-center cursor-pointer py-1"
-                                :class="`${status.name == lead.status?.name ? 'selected' : ''}`"
-                                @click="handleUpdateLeadStatus(lead, status)">
-                                <span class="text-overflow-ellipsis text-head fs-14px fw-bold">
-                                    {{status.name}}
-                                </span>
-                                <font-awesome-icon v-if="status.is_lost"
-                                    icon="fas fa-caret-down"
-                                    class="fs-16px text-soft"></font-awesome-icon>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <div v-show="!headerAttributes.includes('phone_number')"
-                    style="width: 13rem; flex-grow: 1"
-                    class="tbl-td">
-                    <div class="d-flex justify-content-between align-items-center w-100">
-                        <div class="me-2 call-phone">
-                            <button @click="copyClipboardHandler(lead?.primary_contact?.phone_number)"
-                                v-show="lead?.primary_contact?.phone_number"
-                                class="toolbar-btn btn btn-light btn-floating btn-sm me-1">
-                                <font-awesome-icon icon="fas fa-copy"
-                                    class="fs-14px text-soft" />
-                            </button>
-                            <button v-show="lead?.primary_contact?.phone_number"
-                                target="_blank"
-                                title="Call phone number"
-                                class="toolbar-btn btn btn-light btn-floating btn-sm">
-                                <a :href="`tel:${lead?.primary_contact?.phone_number}`"
-                                    target="_blank">
-                                    <font-awesome-icon icon="fas fa-phone"
-                                        class="fs-14px text-soft" />
-                                </a>
-                            </button>
-                        </div>
-                        <div class="text-overflow-ellipsis">
-                            {{ lead.primary_contact?.phone_number }}
-                        </div>
-                    </div>
-                </div>
-
-                <div v-show="!headerAttributes.includes('email_address')"
-                    style="width: 15rem; flex-grow: 1"
-                    class="tbl-td">
-                    <a class="text-overflow-ellipsis">
-                        {{lead.primary_contact?.email}}
-                    </a>
-                </div>
-
-                <div v-show="!headerAttributes.includes('address_line_one')"
-                    style="width: 10rem; flex-grow: 1"
-                    class="tbl-td">
-                    <span class="text-overflow-ellipsis">{{ lead.address_line_one }}</span>
-                </div>
-
-                <div v-show="!headerAttributes.includes('address_line_two')"
-                    style="width: 10rem; flex-grow: 1"
-                    class="tbl-td">
-                    <span class="text-overflow-ellipsis">{{ lead.address_line_two }}</span>
-                </div>
-
-                <div v-show="!headerAttributes.includes('city')"
-                    style="width: 10rem; flex-grow: 1"
-                    class="tbl-td">
-                    {{ lead.city }}
-                </div>
-
-                <div v-show="!headerAttributes.includes('state')"
-                    style="width: 10rem; flex-grow: 1"
-                    class="tbl-td">
-                    {{ lead.state }}
-                </div>
-
-                <div v-show="!headerAttributes.includes('post_code')"
-                    style="width: 10rem; flex-grow: 1"
-                    class="tbl-td">
-                    {{ lead.post_code }}
-                </div>
-
-                <div v-show="!headerAttributes.includes('country')"
-                    style="width: 10rem; flex-grow: 1"
-                    class="tbl-td">
-                    {{ lead.country }}
-                </div>
-
-                <!-- Custom Properties -->
-
-                <div v-for="(propertie, index) in leadProperties"
-                    :key="index"
-                    :id="propertie?.unique_id"
-                    v-show="!headerAttributes.includes(propertie.unique_id)"
-                    class="tbl-td"
-                    style="width: 12rem; flex-grow: 1"
-                    v-html="getPropertieValue(propertie, lead)">
-                </div>
-
-                <div v-show="!headerAttributes.includes('last_update')"
-                    style="width: 10rem; flex-grow: 1"
-                    class="tbl-td">
-                    {{ formatTimeAgo(lead.updated_at, 30, 'Do MMMM, YYYY') }}
-                </div>
-
-                <div v-show="!headerAttributes.includes('first_create')"
-                    style="width: 10rem; flex-grow: 1"
-                    class="tbl-td">
-                    {{ formatTimeAgo(lead.created_at, 30, 'Do MMMM, YYYY') }}
-                </div>
-
-                <div v-show="!headerAttributes.includes('owner')"
-                    style="width: 10rem; flex-grow: 1"
-                    class="tbl-td">
-                    <div class="settings-group-item owner-list-dropdown position-relative">
-                        <button class="owner-dropdown-toggler"
-                            @click="fetchUsers"
-                            data-mdb-toggle="dropdown"
-                            aria-expanded="false"
-                            v-tippy="{ content: lead.owner?.name?? 'Change Owner', placement: 'top' }">
-                            <svg-custom-icon v-if="isOwnerUpdating == lead.lead_id"
-                                icon="SpinnerIcon" />
-                            <div v-else
-                                class="icon">
-                                <img v-if="lead.owner?.profile_avatar"
-                                    :src="lead.owner?.profile_avatar ?? AvatarIcon"
-                                    :alt="lead.owner?.name" />
-                            </div>
-                        </button>
-                        <DropdownOwnerList class="tbl-lead-owner-list"
-                            :lead-owner="lead.owner"
-                            :loading="isLoadingUsers"
-                            @change="(owner) => handleUpdateLeadOwner(owner, lead)" />
-                    </div>
-                </div>
-            </div>
-        </datatable-body>
-    </Datatable>
+        <div
+          v-show="!headerAttributes.includes('owner')"
+          style="width: 10rem; flex-grow: 1"
+          class="tbl-td"
+        >
+          <div
+            class="settings-group-item owner-list-dropdown position-relative"
+          >
+            <button
+              class="owner-dropdown-toggler"
+              @click="fetchUsers"
+              data-mdb-toggle="dropdown"
+              aria-expanded="false"
+              v-tippy="{
+                content: lead.owner?.name ?? 'Change Owner',
+                placement: 'top',
+              }"
+            >
+              <svg-custom-icon
+                v-if="isOwnerUpdating == lead.lead_id"
+                icon="SpinnerIcon"
+              />
+              <div v-else class="icon">
+                <img
+                  v-if="lead.owner?.profile_avatar"
+                  :src="lead.owner?.profile_avatar ?? AvatarIcon"
+                  :alt="lead.owner?.name"
+                />
+              </div>
+            </button>
+            <DropdownOwnerList
+              class="tbl-lead-owner-list"
+              :lead-owner="lead.owner"
+              :loading="isLoadingUsers"
+              @change="(owner) => handleUpdateLeadOwner(owner, lead)"
+            />
+          </div>
+        </div>
+      </div>
+    </datatable-body>
+  </Datatable>
 </template>
 
 <style scoped
     lang="scss">
-    .tbl-tr {
-        .call-phone {
-            visibility: hidden;
-        }
+.tbl-tr {
+  .call-phone {
+    visibility: hidden;
+  }
 
-        &:hover {
-            .call-phone {
-                visibility: visible;
-            }
-        }
+  &:hover {
+    .call-phone {
+      visibility: visible;
     }
+  }
+}
 
-    .text-overflow-ellipsis {
-        max-width: fit-content;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+.text-overflow-ellipsis {
+  max-width: fit-content;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.owner-dropdown-toggler {
+  cursor: pointer;
+  width: auto !important;
+  border: none;
+  outline: none;
+  padding: 3px 25px 3px 0px;
+  background-color: transparent;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &::before {
+    content: "";
+    position: absolute;
+    right: 5px;
+    top: 45%;
+    transform: translateY(-50%) rotate(45deg);
+    border: 0.25rem solid transparent;
+    border-bottom-color: rgb(164, 164, 164);
+    border-right-color: rgb(164, 164, 164);
+  }
+
+  .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      border-radius: 50%;
+      width: 100%;
+      height: 100%;
     }
-
-    .owner-dropdown-toggler {
-        cursor: pointer;
-        width: auto !important;
-        border: none;
-        outline: none;
-        padding: 3px 25px 3px 0px;
-        background-color: transparent;
-        position: relative;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        &::before {
-            content: "";
-            position: absolute;
-            right: 5px;
-            top: 45%;
-            transform: translateY(-50%) rotate(45deg);
-            border: 0.25rem solid transparent;
-            border-bottom-color: rgb(164, 164, 164);
-            border-right-color: rgb(164, 164, 164);
-        }
-
-        .icon {
-            width: 1.5rem;
-            height: 1.5rem;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            img {
-                border-radius: 50%;
-                width: 100%;
-                height: 100%;
-            }
-        }
-    }
+  }
+}
 </style>

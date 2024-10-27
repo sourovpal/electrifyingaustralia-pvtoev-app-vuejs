@@ -14,8 +14,10 @@
   import RightSidebarTimeline from "./sections/RightSidebarTimeline.vue";
   import { usePlatformStore } from "@stores";
   import { useRoute } from "vue-router";
-  const platformStore = usePlatformStore();
+
   const route = useRoute();
+  const platformStore = usePlatformStore();
+  
   const isPipelineLead = computed(() => platformStore.getIsPipelineLead);
   let $leadId = route.params.id;
 

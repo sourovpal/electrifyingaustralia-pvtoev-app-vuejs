@@ -1,11 +1,9 @@
 <script setup>
-    import { ref,     computed, watchEffect, nextTick } from 'vue';
+    import { ref, computed } from 'vue';
     import ActionBar from '@components/ActionBar/ActionBar.vue';
     import LeftActionBar from '@components/ActionBar/LeftActionBar.vue';
     import RightActionBar from '@components/ActionBar/RightActionBar.vue';
-    import DropdownOwnerList from '../../components/dropdowns/DropdownOwnerList.vue';
     import HeaderPropertiesDropdown from '../../components/dropdowns/HeaderPropertiesDropdown.vue';
-    import { AvatarIcon } from "@assets/icons";
     import { usePlatformStore, useLeadsStore } from "@stores";
     import { useDebounceFn } from '@vueuse/core';
     import { useRouter, useRoute } from 'vue-router';
@@ -16,10 +14,6 @@
     const leadsStore = useLeadsStore();
     const platformStore = usePlatformStore();
     const emits = defineEmits([]);
-    const searchTasks = ref(null);
-    const userIsLoading = ref(false);
-    const owner = ref(null);
-    const selectedRows = ref([]);
     const searchInput = ref(null);
 
     // Computed
@@ -181,7 +175,7 @@
                     @click="showAddNewModal">
                     <font-awesome-icon icon="fas fa-user-plus"
                         class="fs-14px me-1"></font-awesome-icon>
-                    New Lead's
+                    New new
                 </button>
             </div>
 

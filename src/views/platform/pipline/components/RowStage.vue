@@ -2,7 +2,7 @@
     import { ref,   onMounted, computed, watch } from 'vue';
     import CustomScrollbar from 'custom-vue-scrollbar';
     import LoadingStateLeads from './LoadingStateLeads.vue';
-    import ColumnStageLead from './ColumnStageLead.vue';
+    import ColumnDeal from './ColumnDeal.vue';
     import { usePipelineStore } from '@stores';
     import { useApiRequest } from '@actions';
     import { generateSlug, formatTimeAgo } from '@helpers';

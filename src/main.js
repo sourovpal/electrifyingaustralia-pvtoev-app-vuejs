@@ -44,6 +44,8 @@ import SelectOption from "primevue/select";
 import ModalDialog from "primevue/dialog";
 import Textarea from "primevue/textarea";
 import Popover from "primevue/popover";
+import Button from "primevue/button";
+import Skeleton from "primevue/skeleton";
 
 import Echo from "laravel-echo";
 
@@ -83,6 +85,7 @@ app.component("svg-custom-icon", SvgCustomIcon);
 app.component("InfiniteLoading", InfiniteLoading);
 app.component("VueDatePicker", VueDatePicker);
 //
+app.component("Skeleton", Skeleton);
 app.component("select-option", SelectOption);
 app.component("icon-field", IconField);
 app.component("input-icon", InputIcon);
@@ -91,6 +94,7 @@ app.component("auto-complete", AutoComplete);
 app.component("modal-dialog", ModalDialog);
 app.component("text-area", Textarea);
 app.component("Popover", Popover);
+app.component("Button", Button);
 
 app.use(PrimeVue, {
   theme: {

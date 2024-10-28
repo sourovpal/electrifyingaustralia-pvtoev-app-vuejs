@@ -348,7 +348,7 @@
                 <div class="d-flex justify-context-start align-items-center">
 
                   <div class="circle-avatar me-2"
-                  style="--height: 1.6rem; --width: 1.6rem">
+                    style="--height: 1.6rem; --width: 1.6rem">
 
                     <img :alt="slotProps.option?.name"
                       :src="slotProps.option?.profile_avatar"
@@ -401,10 +401,11 @@
 
         <div class="d-flex justify-content-between align-items-center">
 
-          <button @click="hideModalHandler"
-            class="btn btn-danger">
+          <Button @click="hideModalHandler"
+            size="small"
+            severity="danger">
             Close
-          </button>
+          </Button>
 
           <loading-button :disabled="!selectedOwner || !selectedPipeline || !selectedStage"
             :is-loading="isSubmitConfirmQualify"

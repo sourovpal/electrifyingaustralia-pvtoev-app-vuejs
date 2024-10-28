@@ -68,6 +68,6 @@
 
     .pipline-list .piplien-body,
     .pipline-list .pip-body-scrollbar {
-        height: calc(100vh - 102px) !important;
+        height: calc(100vh - 98px) !important;
     }
 </style>

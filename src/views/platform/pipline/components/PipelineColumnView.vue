@@ -19,11 +19,12 @@
 
             <div class="piplien-body d-flex flex-row">
 
-                <!-- <pipeline-skeletor v-if="isFirstLoading" /> -->
+                <pipeline-skeletor v-if="isFirstLoading" />
 
                 <column-stage v-for="(stage, index) in pipelinePirimaryStages"
                     :key="stage.stage_id"
                     :stage="stage"></column-stage>
+
                 <column-stage v-for="(stage, index) in pipelineSuccessStages"
                     :key="stage.stage_id"
                     :stage="stage"></column-stage>

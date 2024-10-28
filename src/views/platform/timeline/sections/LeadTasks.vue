@@ -62,13 +62,16 @@
       :duration="500">
       <div class="dropdown-body">
         <div class="px-3 py-1 pb-2">
+          
           <vue-draggable-next tag="div"
             :list="leadTasks"
             @change="handleTaskPositionUpdate"
             handle=".task-item">
+
             <Task v-for="(task, index) in leadTasks"
               :key="Math.random()"
               :task="task"></Task>
+
           </vue-draggable-next>
 
           <Task v-if="isCreateNew"

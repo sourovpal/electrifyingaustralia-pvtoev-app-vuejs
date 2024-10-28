@@ -1,222 +1,320 @@
 <script setup>
-import { ref } from "vue";
+  import { ref, computed, onMounted, nextTick } from "vue";
+  import { formatLeadAddress, formatTimeAgo } from "@helpers";
+  import { usePipelineStore } from "@stores";
+  import { useClipboard } from "@vueuse/core";
+  import { $toast } from '@config';
 
-import { formatLeadAddress } from "@helpers";
+  defineOptions({
+    inheritAttrs: false,
+  });
 
-defineOptions({
-  inheritAttrs: false,
-});
+  const props = defineProps({
+    lead: { type: Object, default: {} },
+    pipeline: {
+      default({ lead }) {
+        return lead.pipeline ?? {}
+      }
+    },
+    owner: {
+      default({ lead }) {
+        return lead.owner ?? {}
+      }
+    },
+    stage: {
+      default({ lead }) {
+        return lead.pipeline_stage ?? {}
+      }
+    },
+    contact: {
+      default({ lead }) {
+        return lead.primary_contact ?? {}
+      }
+    },
+  });
 
-const popoverRef = ref(null);
+  const pipelineStore = usePipelineStore();
+  const pipelinePirimaryStages = computed(() => pipelineStore.getPipelinePrimaryStages);
+  const pipelineSuccessStages = computed(() => pipelineStore.getPipelineSuccessStages);
+  const pipelineLostStages = computed(() => pipelineStore.getPipelineLostStages);
 
-const toggle = (event) => {
+
+  const popoverRef = ref(null);
+  const progress = ref(0);
+  const progressColor = ref(null);
+  const popovarItems = [
+    { title: 'Name', value: props.contact.full_name, copy: true },
+    { title: 'Email', value: props.contact.email, copy: true },
+    { title: 'Phone', value: props.contact.phone_number, copy: true },
+    { title: 'Address', value: formatLeadAddress(props.lead), copy: true },
+    { title: 'First Create', value: formatTimeAgo(props.lead?.created_at), copy: false },
+    { title: 'Last update', value: formatTimeAgo(props.lead?.updated_at), copy: false },
+  ];
+
+  const toggle = (event) => {
     popoverRef.value.toggle(event);
-}
+  }
 
-const props = defineProps({
-  lead: { type: Object, default: {} },
-});
+
+  function getProgress() {
+
+    let primary = pipelinePirimaryStages.value?.length;
+    let success = pipelineSuccessStages.value?.length;
+    let lost = pipelineLostStages.value?.length;
+    let stage = props.stage;
+    let position = stage?.position ?? 0;
+    let totalStage = 0;
+
+    if (stage.status == 'primary') {
+
+      totalStage = primary;
+
+      progressColor.value = stage.color != 'white' ? stage.color : null;
+
+    } else if (stage.status == 'success') {
+
+      position = (position - primary);
+
+      totalStage = success;
+
+      progressColor.value = stage.color != 'white' ? stage.color : null;
+
+    } else if (stage.status == 'lost') {
+
+      position = (position - (primary + success));
+
+      totalStage = lost;
+
+      progressColor.value = stage.color != 'white' ? stage.color : null;
+
+    }
+
+    if (position && totalStage)
+      return (position / totalStage) * 100;
+
+    return 0;
+  }
+
+  function copyClipboardHandler(source) {
+    const { copy, copied } = useClipboard();
+    copy(source);
+    $toast.success(`Copied to clipboard`);
+  }
+
+
+  onMounted(() => {
+    progress.value = getProgress();
+    nextTick(() => {
+      if (progressColor.value) return;
+      if (progress.value == 100) progressColor.value = '#16a085';
+      else if (progress.value > 79) progressColor.value = '#2ecc71';
+      else if (progress.value > 69) progressColor.value = 'rgb(0, 126, 229)';
+      else if (progress.value > 49) progressColor.value = 'rgb(255, 204, 4)';
+      else if (progress.value > 29) progressColor.value = 'rgb(255, 87, 34)';
+      else progressColor.value = 'rgb(236, 64, 122)';
+    });
+  })
+
 </script>
 
 <template>
-  <router-link draggable="true" :to="`/platform/deals/${lead.lead_id}`">
+  <router-link draggable="true"
+    :to="`/platform/deals/${lead.lead_id}`">
     <div class="pip-item">
       <div class="d-flex jsutify-content-between align-items-center">
         <h5 class="pip-title text-head">
-          {{
-            lead.lead_title ??
-            lead.primary_contact?.full_name ??
-            "Title not added yet."
-          }}
+          {{ contact?.full_name }}
         </h5>
 
-        <div @click.prevent="toggle" class="px-1 py-1 popover-icon">
+        <div @click.prevent="toggle"
+          class="px-1 py-1 popover-icon">
           <span class="pi pi-info-circle text-soft"></span>
         </div>
+
       </div>
 
-      <p class="pip-sub-title">
-        <!-- v-html="formatLeadAddress(lead, `<i class='text-soft'>Address not added yet.</i>`)" -->
-        Ms. Sharma 2234 NSW 31/10/6:00 PM Phone (IN)
+      <p class="pip-sub-title"
+        :class="{'text-soft':!lead.lead_title}">
+        {{ lead.lead_title??'Tital not added yet' }}
       </p>
 
       <div class="d-flex justify-content-between align-items-center">
         <div class="bar">
-          <div class="progress"></div>
+          <div class="progress"
+            :style="`--progress-width:${progress}%; --bg-color:${progressColor}`"></div>
         </div>
-        <span>85%</span>
+        <span class="text-head">{{ progress }}%</span>
       </div>
 
       <div class="d-flex justify-content-between align-items-center">
-        <div class="pip-value">${{ lead?.estimated_value ?? 0.0 }}</div>
+        <div class="pip-value">${{ lead?.estimated_value?.toLocaleString() }}</div>
         <div class="pip-source text-soft">
           {{ lead?.source?.title ?? "Not added yet" }}
         </div>
       </div>
 
-      <div
-        class="pip-user d-flex justify-content-between align-items-center mt-1"
-      >
-        <div>
-          <img class="pip-user-avatar" :src="lead?.owner?.profile_avatar" />
+      <div class="pip-user d-flex justify-content-between align-items-center mt-1">
+        <div v-tippy="{ content: `${owner.name}`, placement: 'top' }">
+          <img class="pip-user-avatar"
+            :src="owner?.profile_avatar" />
         </div>
 
-        <div class="text-warning">
-          <span class="me-1">5</span>
-          <font-awesome-icon
-            icon="fas fa-folder-open"
-            class="fs-14px"
-          ></font-awesome-icon>
+        <div class="text-warning  d-flex justify-content-center align-items-center">
+          <span class="me-1 fs-16px">{{ lead.lead_files_count }}</span>
+          <i class="fs-16px pi pi-folder-open"></i>
         </div>
 
-        <div class="text-parimary">
-          <span class="me-1">5</span>
-          <font-awesome-icon
-            icon="fas fa-list-check"
-            class="fs-14px"
-          ></font-awesome-icon>
+        <div class="text-info d-flex justify-content-center align-items-center">
+          <span class="me-1 fs-16px">{{ lead.lead_subscribers_count }}</span>
+          <i class="fs-16px pi pi-users"></i>
         </div>
 
-        <div class="text-info">
-          <span class="me-1">5</span>
-          <font-awesome-icon
-            icon="fas fa-users"
-            class="fs-14px"
-          ></font-awesome-icon>
+        <div class="text-parimary d-flex justify-content-center align-items-center">
+          <span class="me-1 fs-16px">{{ lead.tasks_count }}</span>
+          <i class="pi pi-list-check fs-16px"></i>
         </div>
 
-        <div class="text-warning">
-          <span class="me-1">5</span>
-          <font-awesome-icon
-            icon="fas fa-star"
-            class="fs-14px"
-          ></font-awesome-icon>
+        <div class="text-warning d-flex justify-content-center align-items-center">
+          <span class="me-1 fs-16px">{{ lead.confidence }}</span>
+          <i class="fs-14px pi pi-star-fill"></i>
         </div>
 
-        <!-- <div class="fs-16px star-value d-flex justify-content-start align-items-center"
-                    :class="{'text-soft':!lead.confidence}">
-                    <span class="me-1">{{ lead.confidence }}</span> -->
-        <!-- <svg xmlns="http://www.w3.org/2000/svg"
-                        height="16px"
-                        viewBox="0 0 24 24"
-                        width="16px"
-                        :fill="`#${lead.confidence?'de911d':'8094ae'}`"
-                        class="icon icon--star icon--inline">
-                        <path d="M0 0h24v24H0z"
-                            fill="none"></path>
-                        <path d="M0 0h24v24H0z"
-                            fill="none"></path>
-                        <path
-                            d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z">
-                        </path>
-                    </svg> -->
-        <!-- </div> -->
       </div>
     </div>
   </router-link>
 
   <Popover ref="popoverRef">
-    <div class="flex flex-col gap-4">
-      <div>
-        <span class="font-medium block mb-2">Team Members</span>
-      </div>
+    <div>
+
+      <ul class="list-unstyled popovar-list mb-0">
+
+        <li v-for="(item, index) in popovarItems"
+          :key="index"
+          class="d-flex justify-content-start align-items-center popovar-item cursor-pointer">
+
+          <span class="fs-14px text-title fw-bold">{{ item.title }} :</span>
+
+          <span class="fs-14px text-value ms-2">{{ item.value??'Not available' }}</span>
+
+          <i v-if="item.copy && item.value"
+            @click="copyClipboardHandler(item.value)"
+            class="pi pi-copy text-copy pe-1 ps-2 py-1 ms-auto text-soft"></i>
+
+        </li>
+
+      </ul>
+
     </div>
+
   </Popover>
 </template>
 
 <style scoped
-    lang="scss">
-/* Relevant progress bar CSS */
-.popover-icon {
-  line-height: 14px;
-}
-.bar {
-  background: #ededed;
-  width: 75%;
-  height: 6px;
-  border-radius: 5px;
-}
+  lang="scss">
+  .popovar-list {
+    min-width: 15rem;
 
-.progress {
-  width: 50%;
-  height: 6px;
-  border-radius: 5px;
-  background: #3498db;
-  /* background: -webkit-linear-gradient(to right, #f47c34, #e03f97);
-        background: -o-linear-gradient(to right, #f47c34, #e03f97);
-        background: -moz-linear-gradient(to right, #f47c34, #e03f97);
-        background: -ms-linear-gradient(to right, #f47c34, #e03f97); */
-  /* background: linear-gradient(to right, #1fff9a, #63ffb9); */
-  /* -webkit-transition: 600ms cubic-bezier(0.6, 0, 0.38, 1);
-        -moz-transition: 600ms cubic-bezier(0.6, 0, 0.38, 1);
-        -o-transition: 600ms cubic-bezier(0.6, 0, 0.38, 1);
-        -ms-transition: 600ms cubic-bezier(0.6, 0, 0.38, 1);
-        transition: 600ms cubic-bezier(0.6, 0, 0.38, 1); */
-}
+    .popovar-item {
 
-.pip-item {
-  background-color: #ffffff;
-  border-radius: 8px;
-  margin: 15px 0px;
-  padding: 13px;
-  height: 10rem;
-  overflow: hidden;
-  border: 1px solid var(--layout-border-color);
+      .text-title {
+        white-space: nowrap;
+        width: 5rem;
+      }
 
-  .pip-title {
-    font-size: 16px;
-    font-weight: 700;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    width: 225px;
-    margin-bottom: 5px;
-  }
+      .text-copy {
+        transition: opacity 0.2s ease-in-out;
+        opacity: 0;
+      }
 
-  .pip-sub-title {
-    font-size: 14px;
-    line-height: 18px;
-    margin-bottom: 3px;
-    min-height: 36px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
+      &:hover {
+        .text-copy {
+          opacity: 1;
+        }
+      }
 
-  .pip-user {
-    line-height: 18px;
-
-    .pip-user-avatar {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: #f1f1f1;
-      object-fit: cover;
+      .text-value {}
     }
+  }
 
-    .pip-value {
-      color: #1f2933;
-      font-size: 0.875rem;
+  /* Relevant progress bar CSS */
+  .popover-icon {
+    line-height: 14px;
+  }
+
+  .bar {
+    background: #ededed;
+    width: 75%;
+    height: 6px;
+    border-radius: 5px;
+  }
+
+  .progress {
+    --progress-width: 0%;
+    width: var(--progress-width);
+    height: 6px;
+    border-radius: 5px;
+    background: v-bind(progressColor);
+  }
+
+  .pip-item {
+    background-color: #ffffff;
+    border-radius: 8px;
+    margin: 15px 0px;
+    padding: 13px;
+    height: 10rem;
+    overflow: hidden;
+    border: 1px solid var(--layout-border-color);
+
+    .pip-title {
+      font-size: 16px;
       font-weight: 700;
-      line-height: 1.5rem;
-      margin-left: 0.5rem;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      width: 225px;
+      margin-bottom: 5px;
     }
 
-    .star-value {
-      color: #de911d;
+    .pip-sub-title {
+      font-size: 14px;
+      line-height: 18px;
+      margin-bottom: 3px;
+      min-height: 36px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .pip-user {
+      line-height: 18px;
+
+      .pip-user-avatar {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #f1f1f1;
+        object-fit: cover;
+      }
+
+      .pip-value {
+        color: #1f2933;
+        font-size: 0.875rem;
+        font-weight: 700;
+        line-height: 1.5rem;
+        margin-left: 0.5rem;
+      }
+    }
+
+    .pip-source {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      margin-left: 5rem;
     }
   }
-
-  .pip-source {
-    font-size: 14px;
-    font-weight: 500;
-    line-height: 20px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    margin-left: 5rem;
-  }
-}
 </style>

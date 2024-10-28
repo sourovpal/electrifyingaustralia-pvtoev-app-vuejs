@@ -167,7 +167,7 @@ const handleChange = async () => {
         { new_order_values: indicesMappedToOrders }
     );
 
-    await getPricings();
+    // await getPricings();
     loading.value = false
 };
 

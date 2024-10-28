@@ -175,7 +175,7 @@
                     @click="showAddNewModal">
                     <font-awesome-icon icon="fas fa-user-plus"
                         class="fs-14px me-1"></font-awesome-icon>
-                    New new
+                    Add new
                 </button>
             </div>
 

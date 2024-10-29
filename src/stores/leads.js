@@ -192,7 +192,7 @@ export const useLeadsStore = defineStore("leads", {
       this.setIsLoading(true);
       this.setError(false);
       useApiRequest({
-        url: "/leads",
+        url: "/platform/leads",
         payload: this.fetchQuery,
       })
         .then((res) => {

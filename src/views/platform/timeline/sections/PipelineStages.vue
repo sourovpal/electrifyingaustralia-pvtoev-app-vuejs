@@ -110,13 +110,18 @@
 <template>
   <Transition>
     <action-bar class="flex-column justify-content-start align-items-start px-3">
+
       <div class="pipeline-progress-bar w-100 d-flex justify-content-start align-items">
+
         <div class="w-50 flex-grow-1">
+
           <CustomScrollbar :wrapper-style="{ width: '100%' }"
             :style="{ width: '100%', paddingBottom: '5px' }"
             direction="horizontal"
             thumbWidth="3.5">
+
             <div class="btn-group flex-grow-1 shadow-0 white-space-nowrap">
+
               <button v-if="!isFirstLoading"
                 v-for="(stage, index) in leadPrimaryStages"
                 :key="index"
@@ -129,14 +134,23 @@
                   active: handleIsActive(stage),
                   lost: handleIsLost(stage),
                   'cursor-no-drop':(handleIsSuccess(stage) ||  handleIsLost(stage)),
-                }">
+                }"
+                :style="`--background-color:${stage?.color};`"
+                >
+
                 <span class="d-flex justify-content-center align-items-center"
                   v-if="isLoadingStageId == stage?.stage_id">
+
                   <svg-custom-icon style="width: 1rem; height: 1rem"
                     class="me-2"
-                    icon="SpinnerIcon" />Processing...</span>
+                    icon="SpinnerIcon" />
+                    Processing...
+
+                  </span>
+
                 <span class="text-lowercase text-overflow-ellipsis d-block"
-                  v-else>{{
+                  v-else>
+                  {{
                   timeDifference(
                   stage?.lead_stage?.start_at,
                   stage?.lead_stage?.completed_at
@@ -145,22 +159,31 @@
                   "just now"
                   )
                   }}
+
                 </span>
+
               </button>
+
               <Skeletor v-else
                 v-for="(item, index) in 8"
                 :key="Math.random()"
                 class="btn btn-sm btn-stage flex-grow-1 py-0 fw-bold shadow-0"
                 style="border-radius: 3px; line-height: normal !important"></Skeletor>
+
             </div>
+
           </CustomScrollbar>
+
         </div>
+
         <div class="btn-group ms-2 shadow-0">
+
           <button v-if="leadStage.status == 'lost' || leadStage.status == 'primary'"
             @click="handleToggleModal(true, true)"
             class="btn btn-sm btn-danger btn-lost py-0 fw-bold me-1">
             Lost
           </button>
+
           <button v-if="
               leadStage.status == 'success' || leadStage.status == 'primary'
             "
@@ -174,19 +197,30 @@
             class="btn btn-sm btn-secondary btn-reopen py-0 fw-bold">
             Reopen
           </button>
+
         </div>
+
       </div>
+
       <div v-if="!isFirstLoading"
         class="d-flex py-1 current-pipeline-stage">
+
         <span class="mb-0 fs-16px text-soft fw-bold me-1">{{ leadPipeline?.title }} :
         </span>
+
         <span class="mb-0 fs-16px text-soft">{{ leadStage?.name }}</span>
+
       </div>
+
       <div v-else>
+
         <Skeletor style="width: 100px; height: 0.6rem" /> :
         <Skeletor style="width: 50px; height: 0.6rem" />
+
       </div>
+
     </action-bar>
+
   </Transition>
 
   <lost-or-won-modal :is-lost="isLost"
@@ -223,10 +257,6 @@
         box-sizing: border-box;
         flex: 1;
 
-        &.normal-stage {
-          background-color: #e4e7eb;
-        }
-
         &.lost-stage {
           background-color: #ff8ea1;
         }
@@ -247,6 +277,7 @@
           color: #ffffff;
           cursor: no-drop;
         }
+        
       }
 
       .btn-reopen,

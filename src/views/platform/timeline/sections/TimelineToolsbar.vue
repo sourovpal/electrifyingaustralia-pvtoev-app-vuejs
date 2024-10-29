@@ -6,14 +6,14 @@
   import LeftActionBar from "@components/ActionBar/LeftActionBar.vue";
   import RightActionBar from "@components/ActionBar/RightActionBar.vue";
   import EditLeadModal from "../modals/EditLeadModal.vue";
-  import DropdownSubscriberList from "../../components/dropdowns/DropdownSubscriberList.vue";
-  import DropdownOwnerList from "../../components/dropdowns/DropdownOwnerList.vue";
+  import TeamMembersPopover from "../../components/dropdowns/TeamMembersPopover.vue";
   import { AvatarIcon } from "@assets/icons";
   import LeadReCategoriseModal from "../modals/LeadReCategoriseModal.vue";
   import LeadQualifyModal from "../modals/LeadQualifyModal.vue";
   import { useApiRequest } from "@actions";
   import { $toast } from "@config";
   import { useClipboard } from "@vueuse/core";
+  import TeamMembersGroup from '@views/platform/timeline/components/TeamMembersGroup.vue';
 
   const platformStore = usePlatformStore();
   const editLead = computed(() => platformStore.getEditLead);
@@ -69,11 +69,10 @@
     $toast.clear();
 
     await useApiRequest({
-      url: `/leads/${editLeadId.value}/owner`,
-      method: "POST",
+      url: `/platform/${editLeadId.value}/owner`,
+      method: "PUT",
       payload: {
-        owner: owner?.user_id,
-        leads: editLeadId.value,
+        owner_id: owner?.user_id,
       },
     })
       .then((res) => {
@@ -99,28 +98,22 @@
     $toast.clear();
 
     await useApiRequest({
-      url: `/leads/${editLeadId.value}/status`,
-      method: "POST",
+      url: `/platform/${editLeadId.value}/status`,
+      method: "PUT",
       payload: {
-        status: status?.status_id,
-        leads: editLeadId.value,
+        status_id: status?.status_id,
       },
     })
       .then((res) => {
         const { success, errors, message } = res;
 
-        if (success) {
-          platformStore.setLeadStatus(status);
+        if (!success) return $toast.error(message.text);
 
-          platformStore.callFetchTimelineLogs();
+        platformStore.callFetchTimelineLogs();
+        platformStore.setLeadStatus(status);
 
-          return;
-        }
-
-        $toast.error("Oops, the lead's status hasn't changed.");
       })
       .catch((error) => {
-        $toast.clear();
         $toast.error(error.message);
       });
   }
@@ -128,163 +121,202 @@
 
 
 <template>
+
   <action-bar class="timeline-tools-bar"
     :class="{ 'border-0': isPipelineLead }">
+
     <left-action-bar class="left-hover-action ms-3 ps-1">
+
       <div class="lead-title">
+
         <Skeletor v-if="isFirstLoading"
           style="width: 150px" />
-        <span @click="platformStore.setToggleLeadEditModal(true)"
-          v-else
+
+        <span v-else
+          @click="platformStore.setToggleLeadEditModal(true)"
           class="text-head mb-0 fs-16px fw-bold lead-title-text cursor-pointer text-overflow-ellipsis">
           {{ editLead?.lead_title ?? primaryContact?.full_name }}
         </span>
+
       </div>
 
       <button @click="platformStore.setToggleLeadEditModal(true)"
         class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-2 d-none d-md-inline"
         style="margin-left: 14px">
+
         <font-awesome-icon icon="fas fa-pen"
           class="text-soft fs-14px" />
+
       </button>
+
       <button @click="copyClipboardHandler"
         class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-3 d-none d-md-inline">
+
         <font-awesome-icon icon="fas fa-copy"
           class="text-soft fs-16px"></font-awesome-icon>
+
       </button>
+
     </left-action-bar>
 
     <right-action-bar>
+
       <div class="me-3"
         v-if="isLoading">
+
         <svg-custom-icon icon="SpinnerIcon" />
+
       </div>
 
       <router-link v-if="!isPipelineLead"
         @click="handleFetchNewLead(prevLeadId)"
         :to="`${prevLeadId ? `/platform/leads/${prevLeadId}` : ''}`">
+
         <button v-tippy="{ content: 'Previous Lead', placement: 'top' }"
           class="toolbar-btn btn btn-light btn-sm btn-floating me-3 d-flex justify-content-center align-items-center"
           :disabled="!prevLeadId">
+
           <font-awesome-icon icon="fas fa-arrow-left"
             class="text-soft fs-16px"></font-awesome-icon>
+
         </button>
+
       </router-link>
 
       <router-link v-if="!isPipelineLead"
         @click="handleFetchNewLead(nextLeadId)"
         :to="`${nextLeadId ? `/platform/leads/${nextLeadId}` : ''}`">
+
         <button v-tippy="{ content: 'Next Lead', placement: 'top' }"
           class="toolbar-btn btn btn-light btn-sm btn-floating me-3 d-flex justify-content-center align-items-center"
           :disabled="!nextLeadId">
+
           <font-awesome-icon icon="fas fa-arrow-right"
             class="text-soft fs-16px"></font-awesome-icon>
+
         </button>
+
       </router-link>
 
       <button @click="platformStore.setToggleRightSidebar()"
         class="toolbar-btn btn btn-transparent shadow-0 btn-sm btn-floating me-3 d-flex justify-content-center align-items-center d-lg-none">
+
         <font-awesome-icon icon="fas fa-sliders"
           class="text-soft fs-16px"></font-awesome-icon>
+
       </button>
 
       <button v-if="!isPipelineLead"
         @click="toggleLeadQualifiedModal = true"
         class="btn btn-sm btn-primary fw-bold me-3 justify-content-center align-items-center d-none d-md-flex">
-        <font-awesome-icon icon="fas fa-user-check"
-          class="fs-14px me-2"></font-awesome-icon>
-        Qualify
+        <i class="pi pi-check-circle fs-14px me-2"></i>
+        certify
       </button>
 
       <div v-if="!isPipelineLead"
         v-tippy="{ content: 'Change Lead Status', placement: 'top' }"
         class="dropdown me-3 d-none d-xl-inline">
+
         <Skeletor v-if="isFirstLoading"
           style="width: 150px; height: 1.6rem; border-radius: 3px" />
+
         <button v-else
           style="min-width: 150px; max-width: 150px"
           class="btn btn-sm btn-outline-secondary fw-400 d-flex justify-content-between align-items-center curtom-dropdown-toggler-btn"
           data-mdb-toggle="dropdown">
+
           <span class="fw-bold text-fs tbl-dropdown-title text-overflow-ellipsis text-head"
             style="white-space: nowrap">{{ leadStatus?.name ?? "Lead Status" }}</span>
+
           <div class="dropdown--icon">
             <font-awesome-icon icon="fas fa-caret-down"
               class="text-soft fs-16px"></font-awesome-icon>
           </div>
+
         </button>
+
         <div class="dropdown-menu dropdown-menu-end shadow-md custom-dropdown-menu"
           aria-labelledby="dropdownMenuButton">
+
           <div style="max-height: 25rem; overflow: auto">
+
             <span style="width: 170px"
               v-for="(status, index) in statuses"
               :key="index"
               @click="updateLeadStatusHandler(status)"
-              :class="`${
-                status.status_id == leadStatus?.status_id ? 'selected' : ''
-              }`"
+              :class="`${ status.status_id == leadStatus?.status_id ? 'selected' : '' }`"
               class="dropdown-item d-flex justify-content-between align-items-center cursor-pointer py-1">
-              <span class="text-overflow-ellipsis text-head">{{
-                status.name
-                }}</span>
+
+              <span class="text-overflow-ellipsis text-head">
+                {{ status.name }}
+              </span>
+
               <font-awesome-icon v-if="status.is_lost"
                 icon="fas fa-caret-down"
                 class="text-soft fs-16px"></font-awesome-icon>
+
             </span>
+
           </div>
+
         </div>
+
       </div>
 
-      <div class="settings-group-item owner-list-dropdown me-3 d-none d-lg-inline">
-        <button @click="handleLoadUsers"
-          class="owner-dropdown-toggler"
-          data-mdb-toggle="dropdown"
-          v-tippy="{ content: 'Assign Subscribers', placement: 'top' }"
-          aria-expanded="false">
-          <div class="icon">
-            <img :src="leadOwner?.profile_avatar ?? AvatarIcon"
-              alt="" />
-          </div>
-        </button>
-        <DropdownSubscriberList :loading="isLoadingFetchUsers" />
+      <button v-tippy="{ content: 'Add Project', placement: 'top' }"
+        class="toolbar-btn btn btn-light btn-sm btn-floating me-3 d-flex justify-content-center align-items-center">
+        <i class="text-soft fs-16px pi pi-folder-plus"></i>
+      </button>
+
+      <div class="me-3">
+        <team-members-group></team-members-group>
       </div>
 
-      <div class="settings-group-item owner-list-dropdown me-3 position-relative d-none d-lg-inline">
-        <button @click="handleLoadUsers"
-          class="owner-dropdown-toggler"
-          data-mdb-toggle="dropdown"
-          aria-expanded="false"
-          v-tippy="{ content: 'Change Owner', placement: 'top' }">
-          <div class="icon">
-            <img v-if="leadOwner?.user_id"
-              :src="leadOwner?.profile_avatar"
-              alt="Profile" />
-            <img v-else
-              :src="AvatarIcon"
-              alt="Profile" />
-          </div>
-        </button>
-        <DropdownOwnerList :lead-owner="leadOwner"
-          :loading="isLoadingFetchUsers"
-          @change="updateLeadOwnerHandler" />
-      </div>
+      <avatar-group>
+        <Avatar @click="$refs['teamMembersPopovarRef']?.toggle"
+          :image="leadOwner?.profile_avatar || AvatarIcon"
+          v-tippy="{ 
+                content: leadOwner?.name 
+                || leadOwner?.email 
+                || `Change Owner`,
+              placement: 'top'
+              }"
+          size="small"
+          shape="circle"
+          class="me-3 cursor-pointer"
+          style="--p-avatar-width:1.8rem;--p-avatar-height:1.8rem;" />
 
-      <div v-if="leadStage.status == 'primary'"
-        class="me-3 position-relative">
+        <team-members-popover ref="teamMembersPopovarRef"
+          :member="leadOwner"
+          @change="updateLeadOwnerHandler"></team-members-popover>
+
+      </avatar-group>
+
+      <div class="me-3 position-relative">
+
         <button class="toolbar-btn btn btn-light btn-sm btn-floating d-flex justify-content-center align-items-center"
           data-mdb-toggle="dropdown">
+
           <font-awesome-icon icon="fas fa-ellipsis-vertical"
             class="text-soft fs-16px"></font-awesome-icon>
+
         </button>
-        <div class="dropdown-menu dropdown-menu-end shadow-md custom-dropdown-menu three-dot"
-          aria-labelledby="dropdownMenuButton">
+
+        <div class="dropdown-menu dropdown-menu-end shadow-md custom-dropdown-menu three-dot">
+
           <span v-if="!isPipelineLead"
             @click="toggleLeadQualifiedModal = true"
             class="dropdown-item cursor-pointer text-head d-block d-lg-none py-1">Qualify</span>
+
           <span @click="toggleReCategoriesModal = !toggleReCategoriesModal"
             class="dropdown-item cursor-pointer text-head py-1">Re-categorise lead</span>
+
         </div>
+
       </div>
+
     </right-action-bar>
+
   </action-bar>
 
   <!--  -->

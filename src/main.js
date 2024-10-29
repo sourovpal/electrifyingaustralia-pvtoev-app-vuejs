@@ -46,6 +46,9 @@ import Textarea from "primevue/textarea";
 import Popover from "primevue/popover";
 import Button from "primevue/button";
 import Skeleton from "primevue/skeleton";
+import AvatarGroup from "primevue/avatargroup";
+import Avatar from "primevue/avatar";
+import InputGroup from "primevue/inputgroup";
 
 import Echo from "laravel-echo";
 
@@ -95,6 +98,9 @@ app.component("modal-dialog", ModalDialog);
 app.component("text-area", Textarea);
 app.component("Popover", Popover);
 app.component("Button", Button);
+app.component("avatar-group", AvatarGroup);
+app.component("Avatar", Avatar);
+app.component("input-group", InputGroup);
 
 app.use(PrimeVue, {
   theme: {

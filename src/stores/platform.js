@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { useApiRequest } from "@actions";
 import { validateObject } from "@helpers";
 
-import {$toast} from '@config';
+import { $toast } from '@config';
 
 export const usePlatformStore = defineStore("platform", {
   state: () => {
@@ -328,7 +328,7 @@ export const usePlatformStore = defineStore("platform", {
       this.setIsLoading($isNew);
       this.setEditLeadId($leadId);
       useApiRequest({
-        url: `/platform/${$leadId}/leads`,
+        url: `/platform/${$leadId}/deals`,
       })
         .then((res) => {
           const { success, lead, next_lead, prev_lead, is_pipeline } = res;
@@ -371,14 +371,15 @@ export const usePlatformStore = defineStore("platform", {
       useApiRequest({
         url: `/platform/${$leadId}/contacts`,
       })
-        .then((res) => {
-          const { success, contacts } = res;
-          if (success && contacts) {
+        .then((contacts) => {
+          if (contacts) {
+
             this.setLeadContacts(contacts);
-            $callback({ loading: false, contacts });
-          } else {
-            $callback({ loading: false });
+            return $callback({ loading: false, contacts });
+
           }
+
+          $callback({ loading: false });
         })
         .catch((error) => {
           $callback({ loading: false });
@@ -389,34 +390,45 @@ export const usePlatformStore = defineStore("platform", {
       useApiRequest({
         url: `/platform/leads/${$leadId}/stages`,
       })
-        .then((res) => {
-          const { success, primary_stages, success_stages, lost_stages } = res;
-          if (success) {
+        .then((stages) => {
+
+          if (stages) {
+
+            const { primary_stages, success_stages, lost_stages } = stages;
+
             this.setLeadPrimaryStages(primary_stages);
+
             this.setLeadSuccessStages(success_stages);
+
             this.setLeadLostStages(lost_stages);
+
             $callback({ loading: false, stages });
-          } else {
-            $callback({ loading: false });
+
           }
+
+          $callback({ loading: false });
         })
         .catch((error) => {
+
           $callback({ loading: false });
+
         });
     },
     callFetchPipeline($callback = () => { }) {
+
       $callback({ loading: true });
+
       useApiRequest({
         url: `/platform/pipelines`,
       })
-        .then((res) => {
-          const { success, pipelines } = res;
-          if (success && pipelines) {
+        .then((pipelines) => {
+
+          if (pipelines) {
             this.setPipelines(pipelines);
-            $callback({ loading: false, pipelines });
-          } else {
-            $callback({ loading: false });
+            return $callback({ loading: false, pipelines: pipelines });
           }
+
+          $callback({ loading: false });
         })
         .catch((error) => {
           $callback({ loading: false });
@@ -427,126 +439,180 @@ export const usePlatformStore = defineStore("platform", {
       useApiRequest({
         url: `/platform/${$pieplineId}/stages`,
       })
-        .then((res) => {
-          const { success, stages, message } = res;
-          if (success && stages) {
+        .then((stages) => {
+
+          if (stages) {
+
             this.setPipelineStages(stages);
-            $callback({ loading: false, stages });
-          } else {
-            $callback({ loading: false, message });
+            return $callback({ loading: false, stages });
           }
+          $callback({ loading: false, message });
+
         })
         .catch((error) => {
           $callback({ loading: false });
         });
     },
     callFetchStatuses($callback = () => { }) {
+
       $callback({ loading: true });
+
       useApiRequest({
         url: `/platform/statuses`,
       })
-        .then((res) => {
-          const { success, statuses } = res;
-          if (success && statuses) {
+        .then((statuses) => {
+
+          if (statuses) {
             this.setStatuses(statuses);
-            $callback({ loading: false, statuses });
-          } else {
-            $callback({ loading: false });
+            return $callback({ loading: false, statuses });
+
           }
+
+          $callback({ loading: false });
         })
         .catch((error) => {
+
           $callback({ loading: false });
+
         });
     },
     callFetchUsers($callback = () => { }) {
+
       $callback({ loading: true });
+
       useApiRequest({
         url: `/platform/users`,
       })
-        .then((res) => {
-          const { success, users } = res;
-          if (success && users) {
+        .then((users) => {
+
+          if (users) {
+
             this.setUsers(users);
+
             $callback({ loading: false, users });
+
           } else {
+
             $callback({ loading: false });
+
           }
+
         })
         .catch((error) => {
+
           $callback({ loading: false });
+
         });
     },
     callFetchProperties($leadId = null, $callback = () => { }) {
+
       $callback({ loading: true });
+
       useApiRequest({
         url: `/platform/leads/${$leadId ? $leadId + "/" : ""}properties`,
       })
-        .then((res) => {
-          const { success, lead_properties, pipeline_properties } = res;
-          if (success) {
+        .then((properties) => {
+          if (properties) {
+
+            const { lead_properties, pipeline_properties } = properties;
+
             this.setLeadProperties(lead_properties);
+
             this.setPipelineProperties(pipeline_properties);
+
             $callback({ loading: false, lead_properties, pipeline_properties });
+
           } else {
+
             $callback({ loading: false });
+
           }
+
         })
         .catch((error) => {
           $callback({ loading: false });
         });
     },
     callFetchSources($callback = () => { }) {
+
       $callback({ loading: true });
+
       useApiRequest({
         url: `/platform/sources`,
       })
-        .then((res) => {
-          const { success, sources } = res;
-          if (success) {
+        .then((sources) => {
+          if (sources) {
+
             this.setSources(sources);
+
             $callback({ loading: false, sources });
+
           } else {
+
             $callback({ loading: false });
+
           }
         })
         .catch((error) => {
+
           $callback({ loading: false });
+
         });
     },
     callFetchFiles($leadId, $callback = () => { }) {
+
       $callback({ loading: true });
+
       useApiRequest({
         url: `/platform/${$leadId}/files`,
       })
         .then((res) => {
+
           const { success, files } = res;
+
           if (success) {
+
             this.setLeadFiles(files);
+
             $callback({ loading: false, files });
+
           } else {
+
             $callback({ loading: false });
+
           }
         })
         .catch((error) => {
+
           $callback({ loading: false });
+
         });
     },
     callFetchLeadTasks($leadId, $callback = () => { }) {
+
       $callback({ loading: true });
+
       useApiRequest({
         url: `/platform/${$leadId}/tasks`,
       })
-        .then((res) => {
-          const { success, tasks } = res;
-          if (success) {
+        .then((tasks) => {
+
+          if (tasks) {
+
             this.setLeadTasks(tasks);
+
             $callback({ loading: false, tasks });
+
           } else {
+
             $callback({ loading: false });
+
           }
         })
         .catch((error) => {
+
           $callback({ loading: false });
+
         });
     },
     setFetchTimelineLogs(payload) {
@@ -556,22 +622,29 @@ export const usePlatformStore = defineStore("platform", {
       this.timelinesRef(...args);
     },
     callFetchWorkflows($leadId, $callback = () => { }) {
+
       $callback({ loading: true });
+
       useApiRequest({
         url: `/platform/${$leadId}/workflows`,
       })
-        .then(async (res) => {
-          const { success, workflows, message } = res;
+        .then(async (workflows) => {
+
           $callback({ loading: false });
-          if (success) {
-            this.setWorkflows(workflows);
-            return;
-          }
-          $toast.error(message.text);
+
+          if (workflows)
+            return this.setWorkflows(workflows);
+
         })
-        .catch((error) => { })
+        .catch((error) => {
+
+          $toast.error(error.message);
+
+        })
         .finally(() => {
+
           $callback({ loading: false });
+
         });
     }
 

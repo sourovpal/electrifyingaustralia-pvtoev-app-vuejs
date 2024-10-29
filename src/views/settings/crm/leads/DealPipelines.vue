@@ -2,7 +2,6 @@
 import DealPipelinesSkeletor from './DealPipelinesSkeletor.vue';
 import {UpdateOrCreatePipelines} from '../../../../actions/CrmLeads';
 export default {
-    name:'ProfileIndex',
     props:{
         pipelines:{},
         isFirstLoading:{

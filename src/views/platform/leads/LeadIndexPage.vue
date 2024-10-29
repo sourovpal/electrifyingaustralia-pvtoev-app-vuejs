@@ -74,32 +74,3 @@ onMounted(() => {
   inset: 0px 0px auto auto !important;
 }
 </style>
-<style scoped
-  lang="scss">
-/* .curtom-dropdown-toggler-btn {
-  border: 1px solid rgba(0, 0, 0, 0.09);
-
-  &:hover {
-    background-color: #f7f7f9 !important;
-    border: 1px solid #007ee5 !important;
-    box-shadow: 0 1px 3px rgba(0, 126, 229, 0.34) !important;
-  }
-}
-
-.custom-dropdown-menu {
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px,
-    rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-  border-radius: 3px;
-
-  ::after {
-    content: "";
-    position: absolute;
-    top: -6px;
-    right: 20px;
-    border: 7px solid white;
-    transform: rotate(45deg);
-    border-bottom-color: transparent;
-    border-right-color: transparent;
-  }
-} */
-</style>

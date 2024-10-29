@@ -76,11 +76,10 @@
     $toast.clear();
     isStatusUpdating.value = lead.lead_id;
     await useApiRequest({
-      url: `/leads/${lead.lead_id}/status`,
-      method: "POST",
+      url: `/platform/${lead.lead_id}/status`,
+      method: "PUT",
       payload: {
-        status: lead.status?.status_id,
-        leads: lead.lead_id,
+        status_id: lead.status?.status_id,
       },
     })
       .then((res) => {
@@ -88,7 +87,7 @@
         if (!success) $toast.error(message.text);
       })
       .catch((error) => {
-        $toast.error("Oops, something went wrong");
+        $toast.error(error.message);
       })
       .finally(() => {
         isStatusUpdating.value = null;
@@ -295,6 +294,7 @@
         <div v-show="!headerAttributes.includes('status')"
           style="width: 12rem; flex-grow: 1"
           class="tbl-td pe-0">
+
           <select-option filter
             scroll-height="20rem"
             auto-filter-focus
@@ -308,21 +308,30 @@
             class="w-100 select-option-small"
             panel-class="panel-option-small"
             @change="handleUpdateLeadStatus(lead)">
+
             <template #value="slotProps">
+
               <div v-if="slotProps.value"
                 class="flex items-center">
                 <div>{{ slotProps.value.name }}</div>
               </div>
+
               <span v-else>
                 {{ slotProps.placeholder }}
               </span>
+
             </template>
+
             <template #option="slotProps">
+
               <div class="flex items-center">
                 <div>{{ slotProps.option.name }}</div>
               </div>
+
             </template>
+
           </select-option>
+
         </div>
 
         <div v-show="!headerAttributes.includes('phone_number')"

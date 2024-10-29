@@ -3,13 +3,15 @@
     import {   ref } from 'vue';
     const colors = ref([
         { name: 'No colour', code: 'white' },
-        { name: 'Sunflower Gold', code: 'rgb(255, 204, 4)' },
         { name: 'Sky Blue', code: 'rgb(0, 126, 229)' },
-        { name: 'Ember Orange', code: 'rgb(255, 87, 34)' },
-        { name: 'Natural Green', code: 'rgb(41, 153, 0)' },
-        { name: 'Plasma Pink', code: 'rgb(236, 64, 122)' },
-        { name: 'Hotspot Red', code: 'rgb(207, 17, 36)' },
+        { name: 'Dark Blue', code: 'rgb(76, 59, 207)' },
+        { name: 'Light Green', code: 'rgb(46, 204, 113)' },
         { name: 'Silicon Grey', code: 'rgb(66, 66, 66)' },
+        { name: 'Sunflower Gold', code: 'rgb(255, 204, 4)' },
+        { name: 'Hotspot Red', code: 'rgb(207, 17, 36)' },
+        { name: 'Dark Red', code: 'rgb(135, 35, 65)' },
+        { name: 'Ember Orange', code: 'rgb(255, 87, 34)' },
+        { name: 'Plasma Pink', code: 'rgb(236, 64, 122)' },
     ]);
     const props = defineProps({
         title: {

@@ -3,10 +3,11 @@
   import MobileHeader from '@components/MobileHeader.vue';
   import Menu from '@components/Menu/Menu.vue';
   import { title, menus } from './menu';
+
   const menusData = ref([]);
-  onMounted(async () => {
-    menusData.value = await menus();
-  });
+
+  onMounted(async () => menusData.value = await menus());
+
 </script>
 
 

@@ -17,12 +17,13 @@
 
   const route = useRoute();
   const platformStore = usePlatformStore();
-  
+
   const isPipelineLead = computed(() => platformStore.getIsPipelineLead);
   let $leadId = route.params.id;
 
   const fetchResources = () => {
     let isPipelineCheck = !!(window.location.href.indexOf("deals") > -1);
+    platformStore.callFetchUsers();
     platformStore.setIsPipelineLead(isPipelineCheck);
     platformStore.setEditLeadId($leadId);
     platformStore.callFetchStatuses();

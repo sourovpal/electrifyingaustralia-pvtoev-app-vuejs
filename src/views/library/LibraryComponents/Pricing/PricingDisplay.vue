@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="pricing-display position-relative">
+        <div class="pricing-display position-relative" :key="pricingItemKey">
             <!-- table header -->
             <div class="row px-4 py-2 table-header border-bottom --gx-0">
                 <small class="fw-bold col-5 col-md-3 ">Description*</small>
@@ -13,7 +13,7 @@
 
             <!-- table rows -->
             <vue-draggable-next
-                :class="`pricing-item-list ${loading ? 'opacity-30 pe-none' : ''}`"
+                :class="`pricing-item-list ${loading ? 'opacity-10 pe-none' : ''}`"
                 tag="div" 
                 :list="pricings" 
                 ghost-change="dragged-on" 
@@ -22,8 +22,8 @@
             >
                 <PricingItem
                     v-for="(pricing, idx) in pricings"
+                    :key="idx"
                     :pricing
-                    :key="`#${pricingItemKey}-${pricing.id}`"
                     @item-updated="handleItemUpdated"
                 />
             </vue-draggable-next>
@@ -168,6 +168,7 @@ const handleChange = async () => {
     );
 
     // await getPricings();
+    pricingItemKey.value++;
     loading.value = false
 };
 

@@ -18,7 +18,7 @@ const projectStore = useProjectStore();
 const toast = useToast();
 
 onMounted(() => {
-    total.value = props.pricing.solar_system_total_price;
+    total.value = props.pricing.line_item_price;
     userInput.value = total.value
 });
 
@@ -44,7 +44,7 @@ const handleTotalInput = () => {
 
 const updateRecord = () => {
 	const payload = { new_total: total.value }
-	axios.put(`projects/${projectStore.getProjectId}/pricing/${props.pricing.id}/update-solar-system-total`, payload)
+	axios.put(`projects/${projectStore.getProjectId}/pricing/${props.pricing.id}/update-line-item-price`, payload)
 	    .then((res) => {
             toast.success(res?.data?.message ?? 'Current bills updated');
             emit('item-updated');
@@ -80,7 +80,7 @@ onClickOutside(
         </div>
 
 		<!-- Description -->
-        <p class="col-5 col-md-3 mb-0 cursor-pointer text-info fw-bold"> Solar system </p>
+        <p class="col-5 col-md-3 mb-0 cursor-pointer text-info fw-bold">{{ pricing.description }}</p>
 
 		<!-- Temp -->
 		<small class="col-1 col-md-2"></small>

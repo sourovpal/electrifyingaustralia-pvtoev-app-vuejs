@@ -1,5 +1,5 @@
 <template>
-	<template v-if="!Boolean(pricing.is_solar_system_record)">
+	<template v-if="!Boolean(pricing.is_line_item)">
         <div
 		    v-if="!editMode"
 		    :class="`row pricing-value ${ loading ? 'loading' : '' } align-items-center px-4 py-2 position-relative`"
@@ -143,7 +143,7 @@
 		    @cancel="toggleEditMode"
 	    />
     </template>
-    <SolarSystemPricingInput @item-updated="emit('item-updated')" v-else :pricing />
+    <LineItemUnit @item-updated="emit('item-updated')" v-else :pricing />
 </template>
 
 <script setup>
@@ -152,7 +152,7 @@ import Formatter from '../../../../helpers/Formatter'
 import UnitSelector from './UnitSelector.vue'
 import AddPricingInput from './AddPricingInput.vue'
 import usePricingActions from '../composables/usePricingActions.js'
-import SolarSystemPricingInput from './SolarSystemPricingInput.vue'
+import LineItemUnit from './LineItemUnit.vue'
 
 const props = defineProps(['pricing'])
 const emit = defineEmits(['item-updated'])

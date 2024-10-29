@@ -7,7 +7,7 @@ import { useProjectStore } from '../../../../stores/project';
 import { useToast } from 'vue-toast-notification';
 
 const toast = useToast()
-const props = defineProps(['inverter']);
+const props = defineProps(['inverter', 'selectedInvertersCount']);
 const emit = defineEmits(['inverter-delete']);
 
 const formData = ref({
@@ -63,16 +63,25 @@ onMounted(() => {
 
 		<div  class="inverter-control position-absolute text-end d-inline-flex align-items-center gap-3">
 		    <font-awesome-icon
+		        v-if="selectedInvertersCount > 1"
 			    class="fs-13px inverter-delete-btn text-secondary cursor-pointer"
 			    icon="fas fa-trash"
                 @click="handleInverterDelete(inverter.id)"
 		    />
 
-			<!-- <font-awesome-icon -->
-			<!--     :class="`text-secondary fs-14px cursor-pointer ${!collapsed ? '' : 'while-collapsed'}`" -->
-			<!--     icon="fas fa-chevron-up" -->
-   <!--              @click="collapsed = !collapsed" -->
-			<!-- /> -->
+		    <font-awesome-icon
+		        v-else
+			    v-tippy="{ content: 'Cannot remove the only inverter left', placement: 'top' }"
+			    class="fs-13px text-secondary opacity-50"
+			    icon="fas fa-trash"
+		    />
+
+
+			<!-- <font-awesome-icon
+			    :class="`text-secondary fs-14px cursor-pointer ${!collapsed ? '' : 'while-collapsed'}`"
+			    icon="fas fa-chevron-up"
+                @click="collapsed = !collapsed"
+			/> -->
 		</div>
 
         <template v-if="!collapsed">

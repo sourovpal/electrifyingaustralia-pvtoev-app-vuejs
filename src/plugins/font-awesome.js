@@ -17,6 +17,7 @@ const iconsToUse = [
   fa.faUpload,
   fa.faPlus,
   fa.faCircleXmark,
+  fa.faXmark,
   fa.faEye,
   fa.faSpinner,
   fa.faCircleNotch,

@@ -371,6 +371,10 @@ button[disabled],
   line-height: 22px;
 }
 
+.rounded-5px{
+  border-radius:5px !important;
+}
+
 @media (min-width: 992px) {
   .w-lg-75 {
     width: 75% !important;
@@ -977,6 +981,7 @@ textarea::-webkit-scrollbar {
 }
 
 .auto-complete-option-small {
+  .p-autocomplete-empty-message,
   .p-autocomplete-option {
     padding-top: 4px;
     padding-bottom: 4px;

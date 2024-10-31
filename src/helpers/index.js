@@ -229,3 +229,23 @@ export function validateObject(payload) {
   }
   return false;
 }
+
+export async function handlePromise(promise) {
+    if (!(promise instanceof Promise)) 
+        throw new Error(`Expected Promise, ${typeof promise} given`) 
+
+    const result = await Promise.allSettled([promise]).then((settledPromises) => {
+        const [ settledData ] = settledPromises; // Getting the first and the only settled object  (since only one promise is given) 
+        const { value, reason } = settledData;
+
+        return {
+            res: value,
+            err: reason
+        }
+    })
+
+    return { 
+        res: result.res,
+        err: result.err
+    }
+}

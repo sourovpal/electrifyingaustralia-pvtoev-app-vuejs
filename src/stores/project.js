@@ -73,8 +73,9 @@ export const useProjectStore = defineStore('project', {
             const hoursOfSunlightInADay = 4;
             const systemSize = state.getSystemSize;
             const lowerSunlightDuringTheWinter = 0; // this needs to be a non zero value
+            const daysInAYear = 365;
 
-            const value = ((systemSize * hoursOfSunlightInADay) * 365) - lowerSunlightDuringTheWinter;
+            const value = ((systemSize * hoursOfSunlightInADay) * daysInAYear) - lowerSunlightDuringTheWinter;
             return Number.isInteger(value) ? value : value.toFixed(2);
         },
         getAnnualBill(state) {

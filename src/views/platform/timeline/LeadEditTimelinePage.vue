@@ -14,15 +14,23 @@
   import RightSidebarTimeline from "./sections/RightSidebarTimeline.vue";
   import { usePlatformStore } from "@stores";
   import { useRoute } from "vue-router";
+  import LeadCertifyModal from "./modals/LeadCertifyModal.vue";
+  import EditLeadModal from "./modals/EditLeadModal.vue";
 
   const route = useRoute();
   const platformStore = usePlatformStore();
 
   const isPipelineLead = computed(() => platformStore.getIsPipelineLead);
+  const pipelineStages = computed(() => platformStore.getPipelineStages);
+  const certifyModalAction = computed(() => platformStore.getCertifyModalAction);
+  const toggleEditLeadModal = computed(() => platformStore.getLeadEditModal);
+
   let $leadId = route.params.id;
 
   const fetchResources = () => {
+
     let isPipelineCheck = !!(window.location.href.indexOf("deals") > -1);
+
     platformStore.callFetchUsers();
     platformStore.setIsPipelineLead(isPipelineCheck);
     platformStore.setEditLeadId($leadId);
@@ -33,6 +41,7 @@
     platformStore.callFetchProperties($leadId);
     platformStore.callFetchLeadTasks($leadId);
     if (isPipelineCheck) platformStore.callFetchLeadStages($leadId);
+
   }
 
   watch(route, () => {
@@ -58,6 +67,13 @@
       </div>
     </section>
   </section>
+
+
+  <lead-certify-modal :action="certifyModalAction"
+    v-if="certifyModalAction"></lead-certify-modal>
+
+  <edit-lead-modal v-if="toggleEditLeadModal"></edit-lead-modal>
+
 </template>
 
 <style scoped

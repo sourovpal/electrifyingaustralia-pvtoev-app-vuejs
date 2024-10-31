@@ -460,7 +460,7 @@
           <div class="modal-header py-lg-2 px-0 border-bottom">
             <div class="d-flex justify-content-center align-items-center">
               <i class="pi pi-pen-to-square fs-16px me-2"></i>
-              <span class="text-hard fw-bold fs-16px">Details</span>
+              <span class="text-hard fw-bold fs-16px">Deals</span>
             </div>
           </div>
 
@@ -485,29 +485,6 @@
                 v-if="errors?.lead_title?.length">
                 {{ errors?.lead_title[0] }}
               </span>
-            </div>
-
-            <div class="mb-3">
-              <label class="mb-2 fs-16px text-head">
-                Source
-                <span class="text-soft fs-12px ms-1">(Optional)</span>
-              </label>
-
-              <icon-field>
-                <input-icon class="pi pi-pen-to-square fs-14px z-index-999" />
-                <auto-complete class="w-100 auto-complete-small"
-                  panel-class="auto-complete-option-small"
-                  input-class="w-100 auto-complete-input"
-                  dropdown-class="py-1"
-                  placeholder="Type lead source"
-                  @focus="delete errors?.lead_source"
-                  v-model="attributes.lead_source"
-                  :suggestions="filterSources"
-                  @complete="handleFilterSource" />
-              </icon-field>
-
-              <span class="fs-14px text-danger py-1 w-100 d-block"
-                v-if="errors?.lead_source?.length">{{ errors?.lead_source[0] }}</span>
             </div>
 
             <div class="mb-3 position-relative">
@@ -544,6 +521,29 @@
                 v-if="errors?.lead_status?.length">
                 {{ errors?.lead_status[0] }}
               </span>
+            </div>
+
+            <div class="mb-3">
+              <label class="mb-2 fs-16px text-head">
+                Source
+                <span class="text-soft fs-12px ms-1">(Optional)</span>
+              </label>
+
+              <icon-field>
+                <input-icon class="pi pi-pen-to-square fs-14px z-index-999" />
+                <auto-complete class="w-100 auto-complete-small"
+                  panel-class="auto-complete-option-small"
+                  input-class="w-100 auto-complete-input"
+                  dropdown-class="py-1"
+                  placeholder="Type lead source"
+                  @focus="delete errors?.lead_source"
+                  v-model="attributes.lead_source"
+                  :suggestions="filterSources"
+                  @complete="handleFilterSource" />
+              </icon-field>
+
+              <span class="fs-14px text-danger py-1 w-100 d-block"
+                v-if="errors?.lead_source?.length">{{ errors?.lead_source[0] }}</span>
             </div>
 
             <div class="mb-3 add-new-lead-owner-list-dropdown">
@@ -623,10 +623,12 @@
           <div class="d-flex justify-content-between align-items-center">
             <div>
               <button @click="hideModal"
-                class="btn btn-danger">Close</button>
+                class="btn btn-danger btn-sm">Close</button>
             </div>
             <div>
-              <loading-button :is-loading="isLoading"
+              <loading-button class="btn-sm"
+                :disabled="!attributes.name"
+                :is-loading="isLoading"
                 @submit="handleCreateNewLead">Save Change</loading-button>
             </div>
           </div>

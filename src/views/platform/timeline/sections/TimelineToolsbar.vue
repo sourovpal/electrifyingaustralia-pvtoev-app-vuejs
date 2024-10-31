@@ -5,11 +5,9 @@
   import ActionBar from "@components/ActionBar/ActionBar.vue";
   import LeftActionBar from "@components/ActionBar/LeftActionBar.vue";
   import RightActionBar from "@components/ActionBar/RightActionBar.vue";
-  import EditLeadModal from "../modals/EditLeadModal.vue";
   import TeamMembersPopover from "../../components/dropdowns/TeamMembersPopover.vue";
   import { AvatarIcon } from "@assets/icons";
   import LeadReCategoriseModal from "../modals/LeadReCategoriseModal.vue";
-  import LeadQualifyModal from "../modals/LeadQualifyModal.vue";
   import { useApiRequest } from "@actions";
   import { $toast } from "@config";
   import { useClipboard } from "@vueuse/core";
@@ -29,10 +27,8 @@
   const nextLeadId = computed(() => platformStore.getNextLeadId);
   const primaryContact = computed(() => platformStore.getPrimaryContact);
   const users = computed(() => platformStore.getUsers);
-  const toggleEditLeadModal = computed(() => platformStore.getLeadEditModal);
   const isLoadingFetchUsers = ref(false);
   const toggleReCategoriesModal = ref(false);
-  const toggleLeadQualifiedModal = ref(false);
 
   function copyClipboardHandler() {
     var source = ` Title : ${editLead.value.lead_title ?? null}\n Owner : ${leadOwner.value.name ?? null
@@ -207,7 +203,7 @@
       </button>
 
       <button v-if="!isPipelineLead"
-        @click="toggleLeadQualifiedModal = true"
+        @click="platformStore.setCertifyModalAction('certify')"
         class="btn btn-sm btn-primary fw-bold me-3 justify-content-center align-items-center d-none d-md-flex">
         <i class="pi pi-check-circle fs-14px me-2"></i>
         certify
@@ -304,9 +300,9 @@
 
         <div class="dropdown-menu dropdown-menu-end shadow-md custom-dropdown-menu three-dot">
 
-          <span v-if="!isPipelineLead"
+          <!-- <span v-if="!isPipelineLead"
             @click="toggleLeadQualifiedModal = true"
-            class="dropdown-item cursor-pointer text-head d-block d-lg-none py-1">Qualify</span>
+            class="dropdown-item cursor-pointer text-head d-block d-lg-none py-1">Qualify</span> -->
 
           <span @click="toggleReCategoriesModal = !toggleReCategoriesModal"
             class="dropdown-item cursor-pointer text-head py-1">Re-categorise lead</span>
@@ -324,12 +320,6 @@
   <lead-re-categorise-modal @close="() => (toggleReCategoriesModal = false)"
     v-if="toggleReCategoriesModal"></lead-re-categorise-modal>
 
-  <lead-qualify-modal v-model:visible="toggleLeadQualifiedModal"
-    @close="() => (toggleLeadQualifiedModal = false)"
-    v-if="!isPipelineLead && toggleLeadQualifiedModal"></lead-qualify-modal>
-
-  <edit-lead-modal v-if="toggleEditLeadModal"
-    @close="() => platformStore.setToggleLeadEditModal()"></edit-lead-modal>
 </template>
 
 

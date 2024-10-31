@@ -7,8 +7,6 @@
   import { Skeletor } from "vue-skeletor";
   import { $toast } from "@config";
   import { useApiRequest } from "@actions";
-  import LostOrWonModal from "../modals/LostOrWonModal.vue";
-  import LeadReopenModal from "../modals/LeadReopenModal.vue";
 
   const platformStore = usePlatformStore();
   const editLeadId = computed(() => platformStore.getEditLeadId);
@@ -18,9 +16,6 @@
   const leadPipeline = computed(() => platformStore.getLeadPipeline);
   const isLoadingStageId = ref(null);
   const lastStagePosition = ref(null);
-  const toggleLostOrWonModal = ref(false);
-  const toggleReopenModal = ref(false);
-  const isLost = ref(false);
 
   function handlePipelineStageUpdate(stage) {
     $toast.clear();
@@ -65,15 +60,8 @@
 
       })
       .catch((error) => {
-        $toast.clear();
         $toast.error(error.message);
       });
-  }
-
-  function handleToggleModal(stage, lost) {
-    if (leadStage.value?.status != "primary") return;
-    toggleLostOrWonModal.value = stage;
-    isLost.value = lost;
   }
 
   function handleIsComplete(stage) {
@@ -135,8 +123,7 @@
                   lost: handleIsLost(stage),
                   'cursor-no-drop':(handleIsSuccess(stage) ||  handleIsLost(stage)),
                 }"
-                :style="`--background-color:${stage?.color};`"
-                >
+                :style="`--background-color:${stage?.color};`">
 
                 <span class="d-flex justify-content-center align-items-center"
                   v-if="isLoadingStageId == stage?.stage_id">
@@ -144,9 +131,9 @@
                   <svg-custom-icon style="width: 1rem; height: 1rem"
                     class="me-2"
                     icon="SpinnerIcon" />
-                    Processing...
+                  Processing...
 
-                  </span>
+                </span>
 
                 <span class="text-lowercase text-overflow-ellipsis d-block"
                   v-else>
@@ -178,21 +165,19 @@
 
         <div class="btn-group ms-2 shadow-0">
 
-          <button v-if="leadStage.status == 'lost' || leadStage.status == 'primary'"
-            @click="handleToggleModal(true, true)"
-            class="btn btn-sm btn-danger btn-lost py-0 fw-bold me-1">
-            Lost
+          <button v-if="leadStage.status == 'primary'"
+            @click="platformStore.setCertifyModalAction('lost')"
+            class="btn btn-sm btn-danger btn-lost me-1 d-flex justify-content-center align-items-center">
+            <i class="pi pi-thumbs-down-fill"></i>
           </button>
 
-          <button v-if="
-              leadStage.status == 'success' || leadStage.status == 'primary'
-            "
-            @click="handleToggleModal(true, false)"
-            class="btn btn-sm btn-success btn-won py-0 fw-bold">
-            Won
+          <button v-if="leadStage.status == 'primary'"
+            @click="platformStore.setCertifyModalAction('success')"
+            class="btn btn-sm btn-success btn-won d-flex justify-content-center align-items-center">
+            <i class="pi pi-thumbs-up-fill mt-n1"></i>
           </button>
 
-          <button @click="toggleReopenModal=true"
+          <button @click="platformStore.setCertifyModalAction('reopen')"
             v-if="leadStage.status != 'primary' && !isFirstLoading"
             class="btn btn-sm btn-secondary btn-reopen py-0 fw-bold">
             Reopen
@@ -222,14 +207,6 @@
     </action-bar>
 
   </Transition>
-
-  <lost-or-won-modal :is-lost="isLost"
-    @close="() => (toggleLostOrWonModal = false)"
-    v-if="toggleLostOrWonModal"></lost-or-won-modal>
-
-  <lead-reopen-modal @close="() => (toggleReopenModal = false)"
-    v-if="toggleReopenModal">
-  </lead-reopen-modal>
 
 </template>
 
@@ -277,7 +254,7 @@
           color: #ffffff;
           cursor: no-drop;
         }
-        
+
       }
 
       .btn-reopen,

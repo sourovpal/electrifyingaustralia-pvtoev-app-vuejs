@@ -45,9 +45,13 @@ export const usePlatformStore = defineStore("platform", {
       //
       timelinesRef: () => { },
       toggleTimelineRightSidebar: false,
+      certifyModalAction: false,
     };
   },
   getters: {
+    getCertifyModalAction(stage) {
+      return stage.certifyModalAction;
+    },
     getToggleRightSidebar(stage) {
       return stage.toggleTimelineRightSidebar;
     },
@@ -152,6 +156,9 @@ export const usePlatformStore = defineStore("platform", {
     }
   },
   actions: {
+    setCertifyModalAction(payload) {
+      this.certifyModalAction = payload;
+    },
     setToggleRightSidebar() {
       return (this.toggleTimelineRightSidebar =
         !this.toggleTimelineRightSidebar);

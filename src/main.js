@@ -49,6 +49,8 @@ import Skeleton from "primevue/skeleton";
 import AvatarGroup from "primevue/avatargroup";
 import Avatar from "primevue/avatar";
 import InputGroup from "primevue/inputgroup";
+import DatePicker from "primevue/datepicker";
+import InputNumber from "primevue/inputnumber";
 
 import Echo from "laravel-echo";
 
@@ -101,6 +103,8 @@ app.component("Button", Button);
 app.component("avatar-group", AvatarGroup);
 app.component("Avatar", Avatar);
 app.component("input-group", InputGroup);
+app.component("input-date", DatePicker);
+app.component("input-number", InputNumber);
 
 app.use(PrimeVue, {
   theme: {

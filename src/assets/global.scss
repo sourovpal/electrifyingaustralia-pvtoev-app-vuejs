@@ -2,6 +2,7 @@
 @import "/node_modules/primeicons/primeicons.css";
 
 :root {
+  --p-inputtext-sm-font-size: 0.875rem;
   --main-left-navbar-width: 4rem;
   --child-left-navbar-width: 16rem;
 
@@ -299,6 +300,14 @@ button[disabled],
   color: #0c213c !important;
 }
 
+.fs-6px {
+  font-size: 6px !important;
+}
+
+.fs-8px {
+  font-size: 8px !important;
+}
+
 .fs-10px {
   font-size: 10px !important;
 }
@@ -371,8 +380,8 @@ button[disabled],
   line-height: 22px;
 }
 
-.rounded-5px{
-  border-radius:5px !important;
+.rounded-5px {
+  border-radius: 5px !important;
 }
 
 @media (min-width: 992px) {
@@ -933,17 +942,24 @@ textarea::-webkit-scrollbar {
 //   z-index: 99999 !important;
 // }
 
-
+.p-dialog {
+  .btn-sm {
+    font-size: var(--p-inputtext-sm-font-size) !important;
+    padding-top: 7.70px !important;
+    padding-bottom: 7.70px !important;
+  }
+}
 
 // Style For primevue <select-option> component
 
 /*
- Use Must use two props
-  class="select-option-small"
+Use Must use two props
+class="select-option-small"
   panel-class="panel-option-small"
 */
 
 .select-option-small {
+
   .p-select-label {
     padding-top: 6px;
     padding-bottom: 6px;
@@ -952,6 +968,7 @@ textarea::-webkit-scrollbar {
 }
 
 .panel-option-small {
+
   .p-select-filter {
     padding-top: 4px;
     padding-bottom: 4px;
@@ -972,6 +989,9 @@ textarea::-webkit-scrollbar {
 /* 
 
 */
+
+
+
 .auto-complete-small {
   .p-autocomplete-input {
     padding-top: 6px;
@@ -981,6 +1001,7 @@ textarea::-webkit-scrollbar {
 }
 
 .auto-complete-option-small {
+
   .p-autocomplete-empty-message,
   .p-autocomplete-option {
     padding-top: 4px;
@@ -988,4 +1009,33 @@ textarea::-webkit-scrollbar {
     font-size: var(--p-inputtext-sm-font-size);
   }
 }
+
+[size="small"] {
+
+  .p-multiselect-label,
+  input {
+    padding: var(--p-inputtext-sm-padding-y) var(--p-inputtext-sm-padding-x) !important;
+    font-size: var(--p-inputtext-sm-font-size) !important;
+  }
+
+  &.icon {
+    input {
+      padding-left: 2.5rem !important;
+    }
+  }
+}
+
+
+.multi-select-overlay-small {
+  .p-multiselect-filter {
+    padding: 0.200rem var(--p-inputtext-sm-padding-x);
+    font-size: var(--p-inputtext-sm-font-size);
+  }
+  .p-multiselect-empty-message,
+  .p-multiselect-option {
+    padding: var(--p-inputtext-sm-padding-y) var(--p-inputtext-sm-padding-x);
+    font-size: var(--p-inputtext-sm-font-size);
+  }
+}
+
 // End <auto-complete/>

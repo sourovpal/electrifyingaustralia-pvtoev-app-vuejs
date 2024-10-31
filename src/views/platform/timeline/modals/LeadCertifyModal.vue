@@ -4,8 +4,20 @@
   import { useApiRequest } from "@actions";
   import { usePlatformStore } from "@stores";
   import { useRouter } from "vue-router";
+  import ImageSmiley from '@assets/gif/sunglasses-smiley.gif';
+  import ImageSad from '@assets/gif/sad-face-emoji.gif';
+  import ImageVictoryHand from '@assets/gif/victory-hand-people.gif';
+  import ImageSmileyFace from '@assets/gif/smiling-face-people.gif';
 
   const emits = defineEmits(["close"]);
+  const props = defineProps({
+    action: {
+      type: String,
+      validator: value => ['certify', 'lost', 'success', 'reopen'].includes(value),
+      require: true,
+    },
+  });
+
   const router = useRouter();
   const platformStore = usePlatformStore();
   const editLeadId = computed(() => platformStore.getEditLeadId);
@@ -13,6 +25,7 @@
   const users = computed(() => platformStore.getUsers);
   const pipelines = computed(() => platformStore.getPipelines);
   const workflows = computed(() => platformStore.getWorkflows);
+  const certifyModalAction = computed(() => platformStore.getCertifyModalAction);
 
   const errors = ref({});
   const commant = ref(null);
@@ -21,7 +34,7 @@
   const selectedWorkflow = ref(null);
   const selectedStage = ref(null);
   const isSubmitConfirmQualify = ref(false);
-  const pipelineStages = ref([]);
+  const pipelineStages = computed(() => platformStore.getPipelineStages);
 
   const pipelineIsLoading = ref(false);
   const stagesIsLoading = ref(false);
@@ -29,6 +42,21 @@
   const workflowIsLoading = ref(false);
 
   onMounted(() => {
+    
+    selectedOwner.value = leadOwner.value;
+
+    if (props.action == 'lost') {
+
+      let pipeline = platformStore.getLeadPipeline;
+      if (!Object.keys(pipeline).length) return;
+
+      selectedPipeline.value = pipeline;
+
+      selectPipelineHandler();
+
+      return;
+    }
+
     if (!pipelines.value.length)
       platformStore.callFetchPipeline(function ({ loading, pipelines }) {
         pipelineIsLoading.value = loading;
@@ -44,36 +72,42 @@
         workflowIsLoading.value = loading;
       });
 
-    selectedOwner.value = leadOwner.value;
   });
 
   function hideModalHandler() {
+    platformStore.setCertifyModalAction(false);
     emits("close", false);
   }
 
   async function selectPipelineHandler() {
-    $toast.clear();
+    if (!selectedPipeline.value) return;
 
+    $toast.clear();
     errors.value = {};
 
+    stagesIsLoading.value = true;
     selectedStage.value = null;
+    platformStore.setPipelineStages([]);
 
-    platformStore.callFetchPipelineStages(
-      selectedPipeline.value?.pipeline_id,
-      function ({ loading, stages, message }) {
-        stagesIsLoading.value = loading;
+    let url = `/stages/${selectedPipeline.value.pipeline_id}`
 
-        if (!loading && stages) {
-          pipelineStages.value = stages;
+    if (props.action == 'lost') url += '/lost';
+    else if (props.action == 'success') url += '/success';
+    else url += '/primary';
 
-          if (!stages.length) {
-            errors.value = { pipeline_stage: ["Pipeline stage not found."] };
-          }
-        } else if (message) {
-          $toast.error(message.text);
-        }
-      }
-    );
+    await useApiRequest({
+      url,
+    })
+      .then((res) => {
+        platformStore.setPipelineStages(res);
+        if (!res?.length) errors.value = { pipeline_stage: [`Pipeline ${(props.action == 'reopen' || props.action == 'certify') ? 'primary' : props.action} stage not found.`] };
+      })
+      .catch((error) => {
+        $toast.error(error.message);
+      })
+      .finally(() => {
+        stagesIsLoading.value = false;
+      });
   }
 
   function selectOwnerHandler(owner) {
@@ -84,80 +118,104 @@
   async function confirmQualifyHandler() {
     isSubmitConfirmQualify.value = true;
 
+    let payload = {
+      action: props.action,
+      lead_id: editLeadId.value,
+      pipeline: selectedPipeline.value?.pipeline_id,
+      pipeline_stage: selectedStage.value?.stage_id,
+      owner: selectedOwner.value?.user_id,
+      commant: commant.value,
+      workflow: selectedWorkflow.value?.workflow_id,
+    };
+
     await useApiRequest({
-      url: `leads/${editLeadId.value}/confirm-qualify`,
+      url: `/platform/${editLeadId.value}/${props.action}`,
       method: "POST",
-      payload: {
-        lead_id: editLeadId.value,
-        pipeline: selectedPipeline.value?.pipeline_id,
-        pipeline_stage: selectedStage.value?.stage_id,
-        owner: selectedOwner.value?.user_id,
-        commant: commant.value,
-        workflow: selectedWorkflow.value?.workflow_id,
-      },
-    })
-      .then((res) => {
-        const { success, message, errors: validation } = res;
+      payload,
+    }).then((res) => {
 
-        if (validation) {
-          errors.value = validation;
-          return;
-        }
+      const { success, message, errors: validation } = res;
 
-        platformStore.callFetchTimelineLogs();
-        platformStore.setLeadPipeline(selectedPipeline.value);
-        platformStore.setLeadStage(selectedStage.value);
-        platformStore.callFetchLeadStages(editLeadId.value);
+      if (validation) return errors.value = validation;
+
+      $toast[message.type](message.text);
+
+      platformStore.callFetchTimelineLogs();
+      platformStore.setLeadOwner(selectedOwner.value);
+      platformStore.setLeadPipeline(selectedPipeline.value);
+      platformStore.setLeadStage(selectedStage.value);
+      platformStore.callFetchLeadStages(editLeadId.value);
+
+      if (props.action == 'certify') {
+
         platformStore.callFetchProperties(editLeadId.value);
-
-        hideModalHandler();
 
         platformStore.setIsPipelineLead(true);
 
         router.push({ path: `/platform/deals/${editLeadId.value}` });
 
-        $toast[message.type](message.text);
-      })
-      .catch((error) => {
-        $toast.clear();
-        $toast.error(error.message);
-      })
-      .finally(() => {
-        isSubmitConfirmQualify.value = true;
-      });
+      }
+      hideModalHandler();
+
+    }).catch((error) => {
+      $toast.error(error.message);
+    }).finally(() => {
+      isSubmitConfirmQualify.value = false;
+    });
+
   }
 </script>
 
 <template>
-  <modal-dialog v-bind="$attrs"
-    modal
-    header-class="py-2"
-    pt:root:class="!border-0 !bg-transparent overflow-hidden"
+  <modal-dialog modal
+    :visible="(!!certifyModalAction)"
+    pt:root:class="rounded-2 mh-100"
     pt:mask:class="backdrop-blur-sm"
     :style="{ width: '18vw' }">
-    <template #container="{}">
+    <template #container="{closeCallback}">
 
       <div class="px-3 pt-3 d-flex jsutify-content-between align-items-center">
 
-        <div class="d-flex justify-content-center align-items-center py-0">
-          <i class="pi pi-check-circle me-2"></i>
-          <span class="text-hard fw-bold fs-18px">Congratulations!</span>
-        </div>
+        <template v-if="action == 'certify' || action == 'success'">
+          <div class="d-flex justify-content-center align-items-center w-100 flex-column">
+            <div class="d-block">
+              <img v-if="action == 'certify'"
+                :src="ImageSmiley"
+                width="30">
+              <img v-else
+                :src="ImageVictoryHand"
+                width="30">
+            </div>
+            <span class="d-block text-head fw-bold fs-18px">Congratulations!</span>
+          </div>
+        </template>
 
-        <div>
+        <template v-if="action == 'reopen'">
+          <div class="d-flex justify-content-center align-items-center w-100 flex-column">
+            <div class="d-block">
+              <img :src="ImageSmileyFace"
+                width="30">
+            </div>
+            <span class="d-block text-head fw-bold fs-18px">Reopening Deals</span>
+          </div>
+        </template>
 
-          <button @click="hideModalHandler"
-            class="btn btn-light btn-sm btn-floating d-lg-none">
-            <font-awesome-icon icon="fas fa-close"
-              class="text-soft fs-14px"></font-awesome-icon>
-          </button>
+        <template v-if="action == 'lost'">
+          <div class="d-flex justify-content-center align-items-center w-100 flex-column">
+            <div class="d-block">
+              <img :src="ImageSad"
+                width="30">
+            </div>
+            <span class="d-block text-head fw-bold fs-18px">Lost Deals</span>
+          </div>
+        </template>
 
-        </div>
       </div>
 
       <div class="px-3 py-3">
 
-        <div class="mb-3">
+        <div v-if="action != 'lost'"
+          class="mb-3">
 
           <label class="mb-2 fs-16px text-head">
             Select a pipeline
@@ -166,7 +224,6 @@
 
           <select-option :loading="pipelineIsLoading"
             filter
-            autoFilterFocus
             v-model="selectedPipeline"
             :options="pipelines"
             @click="delete errors?.pipeline"
@@ -209,13 +266,14 @@
         <div class="mb-3">
 
           <label class="mb-2 fs-16px text-head">
-            Select a stage
+            <template v-if="action=='lost'">Select a lost stage</template>
+            <template v-else-if="action=='success'">Select a won stage</template>
+            <template v-else>Select a stage</template>
             <span class="text-soft fs-12px ms-1">(Required)</span>
           </label>
 
           <select-option :loading="stagesIsLoading"
             filter
-            autoFilterFocus
             v-model="selectedStage"
             :options="pipelineStages"
             @click="delete errors?.pipeline_stage"
@@ -254,7 +312,8 @@
 
         </div>
 
-        <div class="mb-3">
+        <div v-if="action != 'lost'"
+          class="mb-3">
 
           <label class="mb-2 fs-16px text-head">
             Start a workflow
@@ -263,7 +322,6 @@
 
           <select-option :loading="workflowIsLoading"
             filter
-            autoFilterFocus
             v-model="selectedWorkflow"
             :options="workflows"
             @click="delete errors?.pipeline_stage"
@@ -299,7 +357,8 @@
             v-if="errors?.workflow?.length">{{ errors?.workflow[0] }}</span>
         </div>
 
-        <div class="mb-3">
+        <div v-if="action != 'lost'"
+          class="mb-3">
 
           <label class="mb-2 fs-16px text-head">
             Change Owner
@@ -401,15 +460,16 @@
 
         <div class="d-flex justify-content-between align-items-center">
 
-          <Button @click="hideModalHandler"
-            size="small"
-            severity="danger">
+          <button @click="hideModalHandler"
+            class="btn btn-danger btn-sm">
             Close
-          </Button>
+          </button>
 
-          <loading-button :disabled="!selectedOwner || !selectedPipeline || !selectedStage"
+          <loading-button class="btn-sm" :disabled="!selectedOwner || !selectedPipeline || !selectedStage"
             :is-loading="isSubmitConfirmQualify"
-            @submit="confirmQualifyHandler">Confirm</loading-button>
+            @submit="confirmQualifyHandler">
+            Submit
+          </loading-button>
 
         </div>
 

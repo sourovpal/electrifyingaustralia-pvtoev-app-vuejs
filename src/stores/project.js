@@ -188,7 +188,11 @@ export const useProjectStore = defineStore('project', {
         },
         getOwnerList(state) {
             return state.ownerList;
-        }
+        },
+        getExportLimitDetails: (state) => ({
+            export_limit_in_kw: state.project.export_limit_in_kw,
+            export_limit_type: state.project.export_limit_type
+        })
     },
 
     actions: {

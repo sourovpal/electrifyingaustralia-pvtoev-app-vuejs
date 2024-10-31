@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import SaveableInput from '../components/SaveableInput.vue';
 import axios from '../../../actions/api.js';
 import { useToast } from 'vue-toast-notification';
@@ -13,8 +13,15 @@ const toast = useToast();
 const projectStore = useProjectStore();
 const projectId = projectStore.getProjectId;
 
-const noLimit = ref(projectStore.project.export_limit_type === "no_limit");
-const limit = ref(projectStore.project.export_limit_in_kw);
+const noLimit = ref();
+const limit = ref();
+
+const setValuesFromTheState = () => {
+    noLimit.value = projectStore.getExportLimitDetails.export_limit_type === "no_limit";
+    limit.value = projectStore.getExportLimitDetails.export_limit_in_kw;
+}
+
+onMounted(setValuesFromTheState)
 
 const loading = ref(false);
 
@@ -24,9 +31,12 @@ const sendUpdatedDetails = () => {
 
     const payload = { no_limit: noLimit.value, export_limit: limit.value }
     axios.post(`projects/${projectId}/export-limit-update`, payload)
-        .then(res => {
+        .then(async (res) => {
             toast.success(res?.data?.message ?? 'Success');
-            projectStore.setCurrentProject(projectId);
+            await projectStore.setCurrentProject(projectId);
+
+            noLimit.value = projectStore.project.export_limit_type === "no_limit";
+            limit.value = projectStore.project.export_limit_in_kw;
         })
         .catch((err) => {
             toast.error(err?.res?.data?.message ?? 'Something went wrong');

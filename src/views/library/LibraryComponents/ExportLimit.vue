@@ -42,7 +42,7 @@ const sendUpdatedDetails = async () => {
     }
 
     if (err) { 
-        toast.error(err?.res?.data?.message ?? 'Something went wrong');
+        toast.error(err?.response?.data?.message ?? 'Something went wrong');
         console.log(err);
     }
 

@@ -37,7 +37,7 @@ const handleInverterClick = (inverterId) => {
     axios.post(`projects/${projectStore.getProjectId}/inverter-sales/add`, { inverter_id: inverterId })
         .then(getInverterSales)
         .catch(err => {
-            toast.error(err?.res?.data?.message ?? 'Something went wrong');
+            toast.error(err?.response?.data?.message ?? 'Something went wrong');
             console.log(err);
         })
         .finally(() => {

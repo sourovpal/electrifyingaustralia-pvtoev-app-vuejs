@@ -50,7 +50,7 @@ const updateRecord = () => {
             emit('item-updated');
 	    })
 	    .catch(err => {
-            toast.error(err?.res?.data?.message ?? 'Something went wrong');
+            toast.error(err?.response?.data?.message ?? 'Something went wrong');
             console.log(err);
 	    })
 	    .finally(toggleEditMode)

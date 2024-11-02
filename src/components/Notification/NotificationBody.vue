@@ -33,12 +33,9 @@
     <notification-skeletor v-for="(_, index) in 6"
       :key="Math.random()"></notification-skeletor>
   </div>
-  <custom-scrollbar v-else
-    thumbWidth="0"
-    direction="vertical"
-    :wrapper-style="{height:'28rem'}"
-    :style="{height:'100%'}"
-    :content-style="{height:'100%'}">
+  <scroll-panel v-else
+    :dt="{bar: {background: '#aaaaaa',size:'0.2rem'}}"
+    class="scroll-panel">
     <div v-if="!hideAll"
       class="alert-body">
       <notification-item v-for="(notification, index) in notifications"
@@ -53,25 +50,13 @@
       <div v-if="!isLoading"
         class="py-5"></div>
     </div>
-  </custom-scrollbar>
+  </scroll-panel>
 </template>
 <style scoped
   lang="scss">
+  .scroll-panel,
   .alert-body {
+    height: 100%;
     max-height: 26.67rem;
-  }
-
-  ::root:deep() {
-    .scrollbar__scroller {
-      height: 100% !important;
-    }
-
-    .scrollbar__scroller {
-      scroll-behavior: auto !important;
-    }
-
-    .scrollbar__wrapper {
-      height: calc(30vh - 5px) !important;
-    }
   }
 </style>

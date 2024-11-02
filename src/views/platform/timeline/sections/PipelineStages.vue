@@ -103,10 +103,7 @@
 
         <div class="w-50 flex-grow-1">
 
-          <CustomScrollbar :wrapper-style="{ width: '100%' }"
-            :style="{ width: '100%', paddingBottom: '5px' }"
-            direction="horizontal"
-            thumbWidth="3.5">
+          <scroll-panel :dt="{bar: {background: '#aaaaaa',size:'0.2rem'}}" :style="{ width: '100%', height: '1.8rem' }">
 
             <div class="btn-group flex-grow-1 shadow-0 white-space-nowrap">
 
@@ -159,7 +156,7 @@
 
             </div>
 
-          </CustomScrollbar>
+          </scroll-panel>
 
         </div>
 

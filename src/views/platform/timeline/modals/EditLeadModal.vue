@@ -2,7 +2,7 @@
   import { ref, computed, onMounted, watch, reactive } from "vue";
   import { useApiRequest } from "@actions";
   import { usePlatformStore } from "@stores";
-  import LeadCustomProperties from "../components/LeadCustomProperties.vue";
+  import LeadCustomProperties from "../properties/LeadCustomProperties.vue";
   import { useToast } from "vue-toast-notification";
   import { $toast } from "@config";
 
@@ -18,11 +18,21 @@
   const sources = computed(() => platformStore.getSources);
 
   const platformStore = usePlatformStore();
-  const isSubmitEditLead = ref(false);
+  const isLoading = ref(false);
   const leadEditModalRef = ref(null);
   const sourcesIsLoading = ref(false);
   const filterSources = ref([]);
   const errors = ref({});
+  const hasProperties = ref(false);
+
+
+  watch(() => [leadProperties.value, pipelineProperties.value], () => {
+
+    if ((leadProperties.value?.length || pipelineProperties.value?.length)) return hasProperties.value = true;
+
+    hasProperties.value = false;
+
+  }, { deep: true, immediate: true });
 
 
   onMounted(() => {
@@ -34,10 +44,10 @@
       });
 
     }
-
     Object.assign(leadFormData, editLead.value);
 
     leadFormData.lead_source = editLead.value.source?.title;
+    
     leadFormData.estimated_value = editLead.value.estimated_value ?? 0.0;
 
   });
@@ -46,7 +56,7 @@
 
     $toast.clear();
 
-    isSubmitEditLead.value = true;
+    isLoading.value = true;
 
     errors.value = {};
 
@@ -63,7 +73,7 @@
       .then((res) => {
         const { success, message, ...args } = res;
 
-        isSubmitEditLead.value = false;
+        isLoading.value = false;
 
         if (!success && args.errors) {
 
@@ -79,10 +89,8 @@
 
       })
       .catch((error) => {
-        $toast.clear();
         $toast.error(error.message);
-        isSubmitEditLead.value = false;
-
+        isLoading.value = false;
       });
   }
 
@@ -102,20 +110,21 @@
     :visible="true"
     pt:root:class="rounded-2"
     pt:mask:class="backdrop-blur-sm"
-    :style="{ width: '40vw' }"
-    :breakpoints="{ '1199px': '75vw', '575px': '95vw' }">
+    :style="{ width: `${hasProperties?'40vw':'30'}` }"
+    :breakpoints="{ '1199px': '50vw', '575px': '90vw' }">
     >
     <template #container>
       <div class="">
         <div class="row m-0">
 
-          <div class="col-lg-8 py-2 ps-4">
+          <div class="col-lg-8 py-2 ps-3"
+            :class="{'col-lg-12':!hasProperties}">
 
             <div class="py-2 d-flex justify-context-start align-items-center">
               <span class="me-2">
                 <i class="pi pi-pen-to-square"></i>
               </span>
-              <span class="fw-bold fs-18px text-head">Edit Deals</span>
+              <span class="fw-bold fs-18px fw-bold text-head">Edit Deals</span>
             </div>
 
             <div class="mb-3">
@@ -350,34 +359,45 @@
             <div class="col-lg-12">
 
               <div class="d-flex jsutify-content-between align-items-center w-100">
+
                 <button @click="platformStore.setToggleLeadEditModal()"
                   class="btn btn-danger btn-sm">Close</button>
+
                 <loading-button @click="submitLeadFormHandler"
+                  :is-loading="isLoading"
                   class="btn-sm ms-auto">Save Change</loading-button>
+
               </div>
 
             </div>
 
           </div>
 
-          <div class="col-lg-4 py-2 pe-0 col-right">
+          <div v-if="hasProperties"
+            class="col-lg-4 py-2 pe-0 col-right">
 
             <div class="py-2 d-flex justify-context-start align-items-center">
               <span class="me-2">
                 <i class="pi pi-database"></i>
               </span>
-              <span class="fw-bold fs-18px text-head">Properties</span>
+              <span class="fw-bold fs-18px fw-bold text-head">Properties</span>
             </div>
 
-            <div class="custom-properties pe-4">
+            <scroll-panel :dt="{bar: {background: '#aaaaaa',size:'0.2rem'}}"
+              class="custom-properties pe-3">
+
               <lead-custom-properties :properties="leadProperties"></lead-custom-properties>
+
               <lead-custom-properties v-if="leadPipeline"
                 :properties="pipelineProperties"
                 :label-highlight="leadPipeline.title"></lead-custom-properties>
-            </div>
+
+            </scroll-panel>
 
           </div>
+
         </div>
+
       </div>
     </template>
   </modal-dialog>
@@ -392,11 +412,9 @@
     background-color: #f8f9f9;
 
     .custom-properties {
-
-      overflow-y: auto;
+      width: 100%;
+      height: 49vh;
       overflow-x: hidden;
-      max-height: 49vh;
     }
-
   }
 </style>

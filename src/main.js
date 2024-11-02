@@ -34,6 +34,24 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 
 import BootstrapModal from "@components/Modals/BootstrapModal.vue";
 
+
+import Echo from "laravel-echo";
+
+import Pusher from "pusher-js";
+
+import drag from "v-drag";
+
+import { CONFIG } from "./config";
+
+import "@vuepic/vue-datepicker/dist/main.css";
+import "mdb-ui-kit/css/mdb.min.css";
+import "custom-vue-scrollbar/dist/style.css";
+import "tippy.js/dist/tippy.css";
+import "vue-toast-notification/dist/theme-bootstrap.css";
+import "vue-skeletor/dist/vue-skeletor.css";
+import "v-calendar/style.css";
+import "v3-infinite-loading/lib/style.css";
+
 import PrimeVue from "primevue/config";
 import Aura from "@primevue/themes/aura";
 import IconField from "primevue/iconfield";
@@ -49,32 +67,9 @@ import Skeleton from "primevue/skeleton";
 import AvatarGroup from "primevue/avatargroup";
 import Avatar from "primevue/avatar";
 import InputGroup from "primevue/inputgroup";
-import DatePicker from "primevue/datepicker";
 import InputNumber from "primevue/inputnumber";
-
-import Echo from "laravel-echo";
-
-import Pusher from "pusher-js";
-
-import drag from "v-drag";
-
-import { CONFIG } from "./config";
-
-import "@vuepic/vue-datepicker/dist/main.css";
-
-import "mdb-ui-kit/css/mdb.min.css";
-
-import "custom-vue-scrollbar/dist/style.css";
-
-import "tippy.js/dist/tippy.css";
-
-import "vue-toast-notification/dist/theme-bootstrap.css";
-
-import "vue-skeletor/dist/vue-skeletor.css";
-
-import "v-calendar/style.css";
-
-import "v3-infinite-loading/lib/style.css";
+import ScrollPanel from 'primevue/scrollpanel';
+import DatePicker from 'primevue/datepicker';
 
 // import "primeicons/primeicons.css";
 
@@ -103,8 +98,9 @@ app.component("Button", Button);
 app.component("avatar-group", AvatarGroup);
 app.component("Avatar", Avatar);
 app.component("input-group", InputGroup);
-app.component("input-date", DatePicker);
 app.component("input-number", InputNumber);
+app.component("input-date", DatePicker);
+app.component("ScrollPanel", ScrollPanel);
 
 app.use(PrimeVue, {
   theme: {

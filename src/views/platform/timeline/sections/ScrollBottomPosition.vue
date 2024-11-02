@@ -1,5 +1,5 @@
 <script setup>
-
+    import { useIntersectionObserver } from '@vueuse/core';
     import {
         ref,
         nextTick,
@@ -9,128 +9,126 @@
         watchEffect,
         watch,
     } from "vue";
+
     const props = defineProps({
         distance: { type: Number, default: 0 },
     });
 
     const emits = defineEmits(['infinite']);
-    const prevHeight = ref(0);
     const isLoading = ref(false);
     const isComplete = ref(false);
-    const isReset = ref(false);
-    let observer = null;
-    const targetElement = ref(null);
 
-    function startObserver() {
-        observer = new IntersectionObserver((entries) => {
-            const entry = entries[0];
-            if (entry.isIntersecting && !isLoading.value && !isComplete.value) {
+    const scrollpanel = ref(null)
+
+    const targetScrollPanel = ref(null);
+
+    const targetLoader = ref(null);
+
+    const prevHeight = ref(0);
+
+    const { stop: stopObserver } = useIntersectionObserver(
+        targetLoader,
+        ([{ isIntersecting }], observerElement) => {
+            if (isIntersecting && !isLoading.value && !isComplete.value) {
                 isLoading.value = true;
                 callInfiniteLoad();
             }
-        }, { root: targetElement.value, rootMargin: `${props.distance}px 0px 0px 0px` });
+        },
+    )
 
-        observer.observe(targetElement.value.firstElementChild);
-    }
-
-    async function observerReset(disconnect = false) {
-        if (observer) {
-            if (disconnect) {
-                observer.disconnect();
-                return;
-            }
-            observer.disconnect();
-            startObserver()
-        }
-        return null;
-    }
-
-
-    async function firstload() {
-        isLoading.value = true;
-        isComplete.value = false;
-        isReset.value = false;
-        prevHeight.value = 0;
-        callInfiniteLoad();
-        await nextTick();
-        observerReset();
+    async function complete() {
+        console.log('complete')
+        isComplete.value = true;
+        isLoading.value = false;
+        stopObserver();
     }
 
     async function loading() {
-        await nextTick();
         isLoading.value = true;
     }
 
-    async function loaded() {
-        if (isComplete.value && !isReset.value) return;
-        isLoading.value = false;
-        isReset.value = false;
-        updateScrollPosition();
+    function loadLatest() {
+        loading();
+        callInfiniteLoad({ latest: true });
     }
 
-    function complete() {
-        observerReset(true);
-        isComplete.value = true;
-    }
-
-    function reset() {
-        observerReset(true);
-        prevHeight.value = 0;
-        isReset.value = true;
-        callInfiniteLoad();
-    }
-
-    async function updateScrollPosition() {
+    async function scrollBottom() {
         await nextTick();
-        if (prevHeight.value === 0) {
-            targetElement.value.scroll(0, targetElement.value.scrollHeight);
-        } else {
-            targetElement.value.scroll(0, ((targetElement.value.scrollHeight - targetElement.value.clientHeight / 2) - prevHeight.value));
-        }
-        prevHeight.value = targetElement.value.scrollHeight;
-        startObserver();
+
+        let height = scrollpanel.value.scrollHeight;
+
+        targetScrollPanel.value?.scrollTop(height)
+
+        prevHeight.value = height;
+
+        isLoading.value = false;
     }
 
-    function callInfiniteLoad(payload = {}) {
-        emits('infinite', { loaded, complete, loading, isReset: isReset.value, ...payload });
+    async function scrollPosition() {
+
+        if (prevHeight.value == 0) return await scrollBottom();
+
+        await nextTick();
+
+        let height = (scrollpanel.value.scrollHeight - prevHeight.value);
+
+        targetScrollPanel.value?.scrollTop(height);
+
+        await nextTick(() => {
+            prevHeight.value = scrollpanel.value.scrollHeight;
+        });
+
+        isLoading.value = false;
+    }
+
+    async function callInfiniteLoad(payload = {}) {
+        emits('infinite', { scrollBottom, scrollPosition, complete, loading, ...payload });
     }
 
     onMounted(() => {
+        isLoading.value = true;
+        scrollpanel.value = targetScrollPanel.value?.$el.querySelector('.p-scrollpanel-content');
         callInfiniteLoad();
     });
 
     onBeforeUnmount(() => {
-        if (observer) observer.disconnect();
+        stopObserver();
     });
 
     defineExpose({
-        reset,
-        firstload,
-        loading,
-        updateScrollPosition,
+        loadLatest,
     });
+
 </script>
 
 <template>
-    <div ref="targetElement"
-        id="timelineLogHistory"
-        class="history-logs">
-        <div id="topElement"
-            class="text-center">
+
+    <scroll-panel ref="targetScrollPanel"
+        class="history-logs"
+        :dt="{bar: {background: '#aaaaaa',size:'0.2rem'}}">
+
+        <div class="text-center">
             &nbsp;
-            <span class="text-soft py-5 d-block"
-                v-if="!isLoading || isComplete">No older activity to display.</span>
-            <span class="text-soft py-5 d-block"
-                v-if="isLoading">
-                <svg-custom-icon icon="SpinnerIcon"></svg-custom-icon>
-                Loading...
+
+            <div ref="targetLoader">
+                <span v-if="isLoading && !isComplete"
+                    class="text-soft py-5 d-block">
+                    <svg-custom-icon icon="SpinnerIcon"></svg-custom-icon>
+                    Loading...
+                </span>
+            </div>
+
+            <span v-if="isComplete && !isLoading"
+                class="text-soft py-5 d-block">
+                No older activity to display.
             </span>
+
+            <slot></slot>
         </div>
-        <slot></slot>
-    </div>
+
+    </scroll-panel>
+
 </template>
+
 <style scoped>
-    .history-logs {
-        scroll-behavior: unset !important;
-    }
 </style>

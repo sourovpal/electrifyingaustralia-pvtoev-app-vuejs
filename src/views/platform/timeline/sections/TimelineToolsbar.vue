@@ -317,7 +317,7 @@
 
   <!--  -->
 
-  <lead-re-categorise-modal @close="() => (toggleReCategoriesModal = false)"
+  <lead-re-categorise-modal v-model:visible="toggleReCategoriesModal" @close="() => (toggleReCategoriesModal = false)"
     v-if="toggleReCategoriesModal"></lead-re-categorise-modal>
 
 </template>

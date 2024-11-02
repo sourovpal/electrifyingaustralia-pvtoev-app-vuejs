@@ -42,7 +42,7 @@
   const workflowIsLoading = ref(false);
 
   onMounted(() => {
-    
+
     selectedOwner.value = leadOwner.value;
 
     if (props.action == 'lost') {
@@ -171,7 +171,9 @@
     :visible="(!!certifyModalAction)"
     pt:root:class="rounded-2 mh-100"
     pt:mask:class="backdrop-blur-sm"
-    :style="{ width: '18vw' }">
+    :style="{ width: '18vw' }"
+    :breakpoints="{ '1199px': '50vw', '575px': '90vw' }">
+
     <template #container="{closeCallback}">
 
       <div class="px-3 pt-3 d-flex jsutify-content-between align-items-center">
@@ -186,7 +188,7 @@
                 :src="ImageVictoryHand"
                 width="30">
             </div>
-            <span class="d-block text-head fw-bold fs-18px">Congratulations!</span>
+            <span class="d-block text-head fw-bold fs-18px fw-bold">Congratulations!</span>
           </div>
         </template>
 
@@ -465,7 +467,8 @@
             Close
           </button>
 
-          <loading-button class="btn-sm" :disabled="!selectedOwner || !selectedPipeline || !selectedStage"
+          <loading-button class="btn-sm"
+            :disabled="!selectedOwner || !selectedPipeline || !selectedStage"
             :is-loading="isSubmitConfirmQualify"
             @submit="confirmQualifyHandler">
             Submit

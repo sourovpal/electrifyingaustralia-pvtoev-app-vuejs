@@ -4,10 +4,11 @@
   import CustomScrollbar from "custom-vue-scrollbar";
   import RightSidebarContacts from './RightSidebarContacts.vue';
   import RightSidebarAddress from './RightSidebarAddress.vue';
-  import RightSidebarProperties from "./RightSidebarProperties.vue";
+  import RightSidebarProperties from "../properties/RightSidebarProperties.vue";
   import LeadFilesSection from "./LeadFilesSection.vue";
   import LeadNotes from './LeadNotes.vue';
   import LeadTasks from './LeadTasks.vue';
+
   const platformStore = usePlatformStore();
   const toggleRightSidebar = computed(() => platformStore.getToggleRightSidebar);
 
@@ -17,25 +18,18 @@
     class="col-right"
     :class="{ show: toggleRightSidebar }">
 
-    <CustomScrollbar>
+    <scroll-panel :dt="{bar: {background: '#aaaaaa',size:'0.2rem'}}"
+      style="width:100%;height:100%;">
 
-      <RightSidebarContacts></RightSidebarContacts>
-
-      <div class="p-3 border-bottom">
-
-        <right-sidebar-address></right-sidebar-address>
-
-        <right-sidebar-properties></right-sidebar-properties>
-
-      </div>
-
-      <lead-tasks></lead-tasks>     
+      <right-sidebar-contacts></right-sidebar-contacts>
+      <right-sidebar-address></right-sidebar-address>
+      <right-sidebar-properties></right-sidebar-properties>
+      <lead-tasks></lead-tasks>
       <lead-notes></lead-notes>
       <lead-files-section></lead-files-section>
+      <div style="height: 15rem"></div>
 
-      <div style="height: 10rem"></div>
-      
-    </CustomScrollbar>
+    </scroll-panel>
   </div>
 </template>
 
@@ -67,7 +61,9 @@
         width: calc(100%) !important;
       }
     }
+  }
 
+  /* 
     .dropdown-box {
       .dropdown-header {
         &.show {
@@ -79,9 +75,9 @@
         button {
           transition: transform 0.3s ease-in-out;
         }
-      }
+      } */
 
-      .dropdown-body {
+  /* .dropdown-body {
         overflow: hidden;
         transition: height 0.3s ease-in-out;
         position: relative;
@@ -129,7 +125,7 @@
             background-color: #fff3c4 !important;
           }
         }
-      }
-    }
-  }
+      } */
+  /* } */
+  /* } */
 </style>

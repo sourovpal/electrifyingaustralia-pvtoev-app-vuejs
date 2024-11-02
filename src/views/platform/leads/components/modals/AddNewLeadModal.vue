@@ -233,7 +233,8 @@
     v-bind="$attrs"
     pt:root:class="rounded-3 overflow-hidden"
     pt:mask:class="backdrop-blur-sm"
-    :style="{ width: '35vw' }">
+    :style="{ width: '35vw' }"
+    :breakpoints="{ '1199px': '50vw', '575px': '90vw' }">
     <template #container="{ closeCallback }">
       <div class="row m-0">
         <div class="col-lg-7">

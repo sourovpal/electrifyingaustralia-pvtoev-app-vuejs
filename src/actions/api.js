@@ -24,8 +24,6 @@ const instance = axios.create({
 
 instance.interceptors.request.use((request) => {
 
-    $toast.clear();
-
     return request;
 
 }, (error) => {

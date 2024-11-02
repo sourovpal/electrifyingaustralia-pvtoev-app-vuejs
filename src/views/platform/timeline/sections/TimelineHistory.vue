@@ -14,28 +14,31 @@
     import ScrollBottomPosition from './ScrollBottomPosition.vue';
 
     const platformStore = usePlatformStore();
+
     const timelineLogs = ref([]);
+
     const route = useRoute();
+
     const nextId = ref(0);
     const lastId = ref(0);
+
     const leadId = ref(null);
     const latestId = ref(null);
 
-    const scrollBottomPositionRef = ref(null);
+    const scrollBottomPanel = ref(null);
 
-    async function fetchTimelineLogsHandler($state = null) {
+    async function fetchTimelineLogsHandler({ scrollBottom, scrollPosition, complete, loading, latest }) {
 
         var $leadId = leadId.value ?? route.params.id;
 
         var payload = {
             next_id: nextId.value,
-            limit: 20
+            limit: 10
         };
 
-        if (!$state?.isReset) {
-            $state?.loading();
-        } else {
+        if (latest) {
             payload['latest_id'] = latestId.value;
+            delete payload['next_id'];
         }
 
         await useApiRequest({
@@ -52,13 +55,15 @@
 
                 latestId.value = latest_id;
 
-                timelineLogs.value = await mergeTimelineLogs(timelineLogs.value, timeline_logs, $state.isReset);
+                timelineLogs.value = await mergeTimelineLogs(timelineLogs.value, timeline_logs, !!latest);
 
                 await nextTick();
 
-                await $state?.loaded();
+                if (!nextId.value) await complete();
 
-                if (!nextId.value) $state?.complete();
+                if (latest) await scrollBottom();
+
+                else await scrollPosition();
 
                 return;
             }
@@ -66,47 +71,25 @@
             $toast[message.type](message.text);
 
         }).catch(error => {
-            $toast.clear();
             $toast.error(error.message);
         });
+
     }
 
-    async function resetTimelineLogs(isNew = false, $leadId = null) {
-
-        if (isNew && $leadId) {
-
-            lastId.value = 0;
-
-            nextId.value = 0;
-
-            leadId.value = $leadId;
-
-            timelineLogs.value = [];
-
-            await nextTick();
-
-            scrollBottomPositionRef.value.firstload();
-
-            return;
-        }
-
-        scrollBottomPositionRef.value.reset();
-        
-    }
-
-    onMounted(() => {
-        platformStore.setFetchTimelineLogs(resetTimelineLogs);
-    });
+    onMounted(() => platformStore.setFetchTimelineLogs(scrollBottomPanel.value?.loadLatest));
 
 </script>
 
 <template>
     <div class="col-left"
         :class="{'is-pipeline-lead':platformStore.isPipelineLead}">
-        <scroll-bottom-position ref="scrollBottomPositionRef"
+
+        <scroll-bottom-position ref="scrollBottomPanel"
             @infinite="fetchTimelineLogsHandler">
+
             <template v-for="(groupLogs, createdDate) in timelineLogs"
                 :key="createdDate">
+
                 <div class="text-center mb-1 mt-2 feed-updated-date">
                     <span class="text-head updated-date">{{ moment(createdDate).format('DD MMM, yyyy') }}</span>
                 </div>
@@ -114,9 +97,13 @@
                 <log-message v-for="(message, index) in groupLogs"
                     :key="message.timeline_id"
                     :message="message"></log-message>
+
             </template>
+
         </scroll-bottom-position>
+
         <message-box></message-box>
+
     </div>
 </template>
 
@@ -136,7 +123,7 @@
         flex-direction: column;
         box-sizing: border-box;
         height: calc(89.8vh);
-        
+
         &.is-pipeline-lead {
             height: calc(83.5vh);
         }
@@ -144,15 +131,15 @@
         @media only screen and (max-width:768.99px) {
             height: calc(77vh) !important;
         }
-        
+
         @media only screen and (max-width:991.99px) {
             width: 100% !important;
         }
-        
+
 
         &:deep(.history-logs) {
             background-color: #e8ebef;
-            overflow: auto;
+            overflow: hidden;
             flex: 1;
 
             .circle-avatar {

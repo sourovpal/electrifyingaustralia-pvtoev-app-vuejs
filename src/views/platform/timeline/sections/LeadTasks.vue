@@ -46,8 +46,8 @@
 </script>
 
 <template>
-  <div class="dropdown-box border-bottom">
-    <div :class="{ show: toggleDropdownBox }"
+  <div class="dropdown-box border-bottom border-top">
+    <div :class="{ 'show': toggleDropdownBox }"
       class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center">
       <span class="fw-bold fs-14px text-uppercase text-head d-block">Tasks</span>
       <div class="">
@@ -62,7 +62,7 @@
       :duration="500">
       <div class="dropdown-body">
         <div class="px-3 py-1 pb-2">
-          
+
           <vue-draggable-next tag="div"
             :list="leadTasks"
             @change="handleTaskPositionUpdate"

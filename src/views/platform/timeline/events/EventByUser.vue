@@ -26,12 +26,11 @@
         <div class="left-feed-col d-flex">
             <div class="me-2">
                 <div class="circle-avatar">
-                    <img :src="user.profile_avatar"
-                        alt="">
+                    <img :src="user.profile_avatar" alt="">
                 </div>
             </div>
-            <div class="">
-                <div>
+            <div class="feeds">
+                <div class="d-flex flex-row">
                     <span class="fs-14px fw-bold text-head d-inline-flex">{{ userName }}</span>
                     <span class="feed-time fs-12px text-head ms-3">{{ moment(eventDateTime).format('hh:mm A') }}</span>
                 </div>
@@ -42,3 +41,8 @@
         </div>
     </div>
 </template>
+<style scoped lang="scss">
+.feeds{
+    text-align: left;
+}
+</style>

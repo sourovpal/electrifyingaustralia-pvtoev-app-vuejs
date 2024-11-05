@@ -3,7 +3,7 @@
   import MultiSelect from 'primevue/multiselect';
   import { usePlatformStore } from "@stores";
   import { computed, ref, watchEffect, watch } from "vue";
-  import { useApiRequest } from "@actions/api";
+  import { useApiRequest } from "@actions";
   import { useRoute } from "vue-router";
   import { Skeletor } from "vue-skeletor";
   import { $toast } from '@config';
@@ -56,7 +56,7 @@
 </script>
 
 <template>
-  <div class="right-sidebar-properties p-3 pt-0">
+  <div class="right-sidebar-properties pt-0">
 
     <div v-if="isFirstLoading"
       v-for="(item, index) in 10"

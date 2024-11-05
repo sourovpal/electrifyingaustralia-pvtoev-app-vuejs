@@ -32,7 +32,7 @@
 
       <icon-field>
 
-        <input-icon class="pi pi-align-left fs-16px" />
+        <input-icon class="pi pi-align-left fs-14px" />
 
         <input-text class="w-100"
           size="small"
@@ -48,7 +48,7 @@
 
       <icon-field>
 
-        <input-icon class="pi pi-sort-numeric-up fs-16px z-index-999" />
+        <input-icon class="pi pi-sort-numeric-up fs-14px z-index-999" />
 
         <input-number class="w-100 icon"
           size="small"
@@ -64,7 +64,7 @@
 
       <icon-field>
 
-        <input-icon class="pi pi-calendar fs-16px" />
+        <input-icon class="pi pi-calendar fs-14px" />
 
         <input-date class="w-100 icon"
           size="small"
@@ -80,7 +80,7 @@
 
       <icon-field>
 
-        <input-icon class="pi pi-calendar-clock fs-16px" />
+        <input-icon class="pi pi-calendar-clock fs-14px" />
 
         <input-date class="w-100 icon"
           size="small"

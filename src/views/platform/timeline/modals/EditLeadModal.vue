@@ -110,7 +110,7 @@
     :visible="true"
     pt:root:class="rounded-2"
     pt:mask:class="backdrop-blur-sm"
-    :style="{ width: `${hasProperties?'40vw':'30'}` }"
+    :style="{ width: `${hasProperties?'40vw':'30vw'}` }"
     :breakpoints="{ '1199px': '50vw', '575px': '90vw' }">
     >
     <template #container>
@@ -134,7 +134,7 @@
               </label>
 
               <icon-field>
-                <input-icon class="pi pi-user-edit fs-16px" />
+                <input-icon class="pi pi-user-edit fs-14px" />
                 <input-text class="w-100"
                   size="small"
                   @focus="delete errors?.lead_title"
@@ -156,7 +156,7 @@
               </label>
 
               <icon-field>
-                <input-icon class="pi pi-dollar fs-14px z-index-999" />
+                <input-icon class="pi pi-dollar fs-13px z-index-999" />
                 <input-number class="w-100 icon"
                   inputId="currency-us"
                   mode="currency"
@@ -188,7 +188,7 @@
                   </label>
 
                   <icon-field>
-                    <input-icon class="pi pi-home fs-16px" />
+                    <input-icon class="pi pi-home fs-14px" />
                     <input-text class="w-100"
                       size="small"
                       @focus="delete errors?.address_line_one"
@@ -215,7 +215,7 @@
                   </label>
 
                   <icon-field>
-                    <input-icon class="pi pi-home fs-16px" />
+                    <input-icon class="pi pi-home fs-14px" />
                     <input-text class="w-100"
                       size="small"
                       @focus="delete errors?.address_line_two"
@@ -247,7 +247,7 @@
                   </label>
 
                   <icon-field>
-                    <input-icon class="pi pi-map-marker fs-16px" />
+                    <input-icon class="pi pi-map-marker fs-14px" />
                     <input-text class="w-100"
                       size="small"
                       @focus="delete errors?.city"
@@ -274,7 +274,7 @@
                   </label>
 
                   <icon-field>
-                    <input-icon class="pi pi-directions-alt fs-16px" />
+                    <input-icon class="pi pi-directions-alt fs-14px" />
                     <input-text class="w-100"
                       size="small"
                       @focus="delete errors?.state"

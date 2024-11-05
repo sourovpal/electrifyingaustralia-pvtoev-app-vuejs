@@ -5,7 +5,7 @@
   import { usePlatformStore } from "@stores";
   import { useApiRequest } from "@actions";
   import { $toast } from "@config";
-  import DropdownOwnerList from "../../../components/dropdowns/DropdownOwnerList.vue";
+  // import DropdownOwnerList from "../../../components/dropdowns/DropdownOwnerList.vue";
   import moment from "moment";
 
   const attrs = useAttrs();
@@ -301,9 +301,9 @@
             <img :src="leadTask.owner?.profile_avatar ?? AvatarIcon"
               alt="" />
           </div>
-          <DropdownOwnerList :leadOwner="leadTask?.owner"
+          <!-- <DropdownOwnerList :leadOwner="leadTask?.owner"
             :loading="isUserLoading"
-            @change="handleUpdateOwner"></DropdownOwnerList>
+            @change="handleUpdateOwner"></DropdownOwnerList> -->
         </div>
         <div v-if="isLoading"
           class="d-flex justify-content-center align-items-center flex-grow-1">

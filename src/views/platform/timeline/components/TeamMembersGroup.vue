@@ -107,7 +107,7 @@
             shape="circle"
             class="me-1"
             style="--p-avatar-width:1.8rem;--p-avatar-height:1.8rem;" />
-
+        
         <Avatar :label="othersMembers"
             class="cursor-pointer fw-bold"
             shape="circle"

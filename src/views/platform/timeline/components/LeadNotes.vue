@@ -2,7 +2,7 @@
     import { ref, computed } from 'vue';
     import SlideUpDown from "vue-slide-up-down";
     import { usePlatformStore } from '@stores';
-    import { useApiRequest } from '@actions/api';
+    import { useApiRequest } from '@actions';
     import { useDebounceFn } from '@vueuse/core';
     import { $toast } from '@config';
 
@@ -48,49 +48,26 @@
 
 </script>
 <template>
-    <div class="dropdown-box border-bottom">
-        <div class="dropdown-header py-2 px-3 d-flex justify-content-between align-items-center"
-            :class="{show:toggle}">
-            <span class="fw-bold fs-14px text-uppercase text-head d-block">Notes</span>
-            <div class="">
-                <button @click="handleDropdownToggle"
-                    :class="{toggler:toggle}"
-                    class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
-                    <font-awesome-icon class="text-soft fs-14px"
-                        icon="fa fa-chevron-up" />
-                </button>
-            </div>
-        </div>
-        <slide-up-down :active="toggle"
-            :duration="500">
-            <div class="dropdown-body">
-                <div class="lead-timeline-notes">
-                    <textarea class="notes"
-                        @keyup="handleOnUpdateNotes"
-                        v-model="leadNotes"
-                        rows="6"></textarea>
-                </div>
-            </div>
-        </slide-up-down>
+    <div class="mt-3">
+        <label class="fs-16px fw-bold text-soft mb-2">Notes</label>
+    </div>
+    <div class="lead-timeline-notes">
+        <textarea class="notes"
+            @keyup="handleOnUpdateNotes"
+            v-model="leadNotes"
+            rows="6"></textarea>
+    </div>
+    <div class="d-flex justify-content-end py-2">
+        <button class="btn btn-warning btn-warning-outlat btn-sm">Save change</button>
     </div>
 </template>
 
 <style scoped
     lang="scss">
-    button {
-        transition: transform 0.3s ease-in-out;
-    }
-
-    .show {
-        button.toggler {
-            transform: rotate(-180deg);
-        }
-    }
 
     .lead-timeline-notes {
         background-color: #fff3c4 !important;
         position: relative;
-        margin: 0px 14px 14px 14px;
         border: 2px solid #f2de8f;
         border-radius: 5px;
 

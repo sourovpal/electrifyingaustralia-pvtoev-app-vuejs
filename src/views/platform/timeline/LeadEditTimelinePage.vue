@@ -11,7 +11,7 @@
   import TimelineToolsbar from "./sections/TimelineToolsbar.vue";
   import PipelineStages from "./sections/PipelineStages.vue";
   import TimelineHistory from "./sections/TimelineHistory.vue";
-  import RightSidebarTimeline from "./sections/RightSidebarTimeline.vue";
+  import RightSidebarTimeline from "./components/RightSidebarTimeline.vue";
   import { usePlatformStore } from "@stores";
   import { useRoute } from "vue-router";
   import LeadCertifyModal from "./modals/LeadCertifyModal.vue";

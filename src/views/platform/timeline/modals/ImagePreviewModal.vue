@@ -1,7 +1,7 @@
 <script setup>
     import { Modal } from "mdb-ui-kit";
     import { ref, onMounted } from 'vue';
-    import { leadImageTypes, handleDownloadFile, fetchImage } from '@helpers';
+    import { imageExtensions, handleDownloadFile, fetchImage } from '@helpers';
     import { useApiRequest } from '@actions';
     import {
         getMaterialFileIcon,
@@ -67,7 +67,7 @@
         var fileExt = file.filename.split('.').pop().toLowerCase();
         currentPreviewFile.value = {};
         currentPreviewFile.value = file;
-        if (leadImageTypes.includes(fileExt)) {
+        if (imageExtensions.includes(fileExt)) {
             currentFileType.value = 'image';
         } else if (fileExt == 'pdf') {
             currentFileType.value = 'pdf';

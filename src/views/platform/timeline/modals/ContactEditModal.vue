@@ -12,7 +12,8 @@
     showLead: { type: Boolean, default: false },
     contactEdit: { default: {} },
   });
-  const emits = defineEmits(["update"]);
+
+  const emits = defineEmits(["update", "close"]);
 
   // Stores
   const platformStore = usePlatformStore();
@@ -72,7 +73,7 @@
   );
 
   function hideModalHandler() {
-    leadQualifyModalRef.value.hide();
+    emits('close', false);
   }
 
   function selectSearchContactHandler(contact = null) {
@@ -342,339 +343,528 @@
 </script>
 
 <template>
-  <bootstrap-modal ref="leadQualifyModalRef"
-    size="lg"
-    :body-style="{ padding: '0px' }">
-    <div class="row mx-0">
-      <div class="col-lg-4 bg-col-left">
-        <div class="modal-header py-2 px-0">
-          <div class="d-flex justify-content-center align-items-center py-0">
-            <svg class="svg-5 me-2"
-              xmlns="http://www.w3.org/2000/svg"
-              height="18"
-              viewBox="0 -960 960 960"
-              width="18">
-              <path
-                d="M480-40q-33 0-56.5-23.5T400-120q0-33 23.5-56.5T480-200q33 0 56.5 23.5T560-120q0 33-23.5 56.5T480-40ZM240-760q-33 0-56.5-23.5T160-840q0-33 23.5-56.5T240-920q33 0 56.5 23.5T320-840q0 33-23.5 56.5T240-760Zm0 240q-33 0-56.5-23.5T160-600q0-33 23.5-56.5T240-680q33 0 56.5 23.5T320-600q0 33-23.5 56.5T240-520Zm0 240q-33 0-56.5-23.5T160-360q0-33 23.5-56.5T240-440q33 0 56.5 23.5T320-360q0 33-23.5 56.5T240-280Zm480-480q-33 0-56.5-23.5T640-840q0-33 23.5-56.5T720-920q33 0 56.5 23.5T800-840q0 33-23.5 56.5T720-760ZM480-280q-33 0-56.5-23.5T400-360q0-33 23.5-56.5T480-440q33 0 56.5 23.5T560-360q0 33-23.5 56.5T480-280Zm240 0q-33 0-56.5-23.5T640-360q0-33 23.5-56.5T720-440q33 0 56.5 23.5T800-360q0 33-23.5 56.5T720-280Zm0-240q-33 0-56.5-23.5T640-600q0-33 23.5-56.5T720-680q33 0 56.5 23.5T800-600q0 33-23.5 56.5T720-520Zm-240 0q-33 0-56.5-23.5T400-600q0-33 23.5-56.5T480-680q33 0 56.5 23.5T560-600q0 33-23.5 56.5T480-520Zm0-240q-33 0-56.5-23.5T400-840q0-33 23.5-56.5T480-920q33 0 56.5 23.5T560-840q0 33-23.5 56.5T480-760Z" />
-            </svg>
-            <span v-if="showLead"
-              class="text-hard fw-bold fs-16px">Related Deals</span>
-            <span v-else
-              class="text-hard fw-bold fs-16px">Contacts</span>
+  <modal-dialog modal
+    :visible="true"
+    pt:root:class="rounded-2"
+    pt:mask:class="backdrop-blur-sm"
+    :style="{ width: '38vw' }"
+    :breakpoints="{ '1199px': '50vw', '575px': '90vw' }">
+
+    <template #container>
+
+      <div class="row mx-0">
+
+        <div class="col-lg-4 bg-col-left pb-2">
+
+          <div class="modal-header py-2 px-0">
+
+            <div class="d-flex justify-content-center align-items-center py-0">
+
+              <svg class="svg-5 me-2"
+                xmlns="http://www.w3.org/2000/svg"
+                height="18"
+                viewBox="0 -960 960 960"
+                width="18">
+                <path
+                  d="M480-40q-33 0-56.5-23.5T400-120q0-33 23.5-56.5T480-200q33 0 56.5 23.5T560-120q0 33-23.5 56.5T480-40ZM240-760q-33 0-56.5-23.5T160-840q0-33 23.5-56.5T240-920q33 0 56.5 23.5T320-840q0 33-23.5 56.5T240-760Zm0 240q-33 0-56.5-23.5T160-600q0-33 23.5-56.5T240-680q33 0 56.5 23.5T320-600q0 33-23.5 56.5T240-520Zm0 240q-33 0-56.5-23.5T160-360q0-33 23.5-56.5T240-440q33 0 56.5 23.5T320-360q0 33-23.5 56.5T240-280Zm480-480q-33 0-56.5-23.5T640-840q0-33 23.5-56.5T720-920q33 0 56.5 23.5T800-840q0 33-23.5 56.5T720-760ZM480-280q-33 0-56.5-23.5T400-360q0-33 23.5-56.5T480-440q33 0 56.5 23.5T560-360q0 33-23.5 56.5T480-280Zm240 0q-33 0-56.5-23.5T640-360q0-33 23.5-56.5T720-440q33 0 56.5 23.5T800-360q0 33-23.5 56.5T720-280Zm0-240q-33 0-56.5-23.5T640-600q0-33 23.5-56.5T720-680q33 0 56.5 23.5T800-600q0 33-23.5 56.5T720-520Zm-240 0q-33 0-56.5-23.5T400-600q0-33 23.5-56.5T480-680q33 0 56.5 23.5T560-600q0 33-23.5 56.5T480-520Zm0-240q-33 0-56.5-23.5T400-840q0-33 23.5-56.5T480-920q33 0 56.5 23.5T560-840q0 33-23.5 56.5T480-760Z" />
+              </svg>
+
+              <span v-if="showLead"
+                class="text-hard fw-bold fs-16px">Related Deals</span>
+
+              <span v-else
+                class="text-hard fw-bold fs-16px">Contacts</span>
+
+            </div>
+
+            <div>
+
+              <button class="btn btn-light btn-sm btn-floating d-lg-none"
+                @click="hideModalHandler()">
+
+                <font-awesome-icon icon="fas fa-close"
+                  class="fs-14px text-soft" />
+
+              </button>
+
+            </div>
+
           </div>
-          <div>
-            <button class="btn btn-light btn-sm btn-floating d-lg-none"
-              @click="hideModalHandler()">
-              <font-awesome-icon icon="fas fa-close"
-                class="fs-14px text-soft" />
-            </button>
-          </div>
-        </div>
-        <div class="modal-body px-0">
-          <div v-if="showLead"
-            class="lead-details p-2 bg-white">
-            <router-link @click="hideModalHandler"
-              :to="`/platform/leads/${editLead.lead_id}`">
-              <ul class="m-0 p-0 list-unstyled">
-                <li v-if="address"
-                  class="fw-bold text-head fs-14px">
-                  {{ address }}
+
+          <div class="modal-body px-0">
+
+            <div v-if="showLead"
+              class="lead-details p-2 bg-white">
+
+              <router-link @click="hideModalHandler"
+                :to="`/platform/leads/${editLead.lead_id}`">
+
+                <ul class="m-0 p-0 list-unstyled">
+
+                  <li v-if="address"
+                    class="fw-bold text-head fs-14px">
+                    {{ address }}
+                  </li>
+
+                  <li class="fw-bold text-soft fs-12px">
+                    {{ editLead.lead_title ?? "Untitled lead's" }}
+                  </li>
+
+                  <li class="fw-bold text-soft fs-12px">
+                    ${{ editLead.estimated_value }}
+                  </li>
+
+                </ul>
+
+              </router-link>
+
+            </div>
+            <div v-else>
+
+              <ul class="contacts-list list-unstyled">
+
+                <li v-for="(item, index) in leadContacts"
+                  :key="index"
+                  @click="selectContactHandler(item)"
+                  :class="item.contact_id == editContact.contact_id ? 'active' : ''"
+                  class="list-item d-flex justify-content-start align-items-center">
+
+                  <div class="circle-avatar me-2 cursor-pointer"
+                    style="width: 40px; height: 40px; min-width: 40px">
+
+                    <img class="rounded-circle border"
+                      alt="avatar1"
+                      :src="item.avatar" />
+
+                  </div>
+
+                  <div class="contact-details">
+
+                    <span class="details-text text-head fs-16px d-block fw-bold">{{ item.full_name }}</span>
+
+                    <span class="details-text text-soft fs-14px d-block">
+                      {{ item.email ?? item.phone_number ?? "example@gmail.com" }}
+                    </span>
+
+                  </div>
+
                 </li>
-                <li class="fw-bold text-soft fs-12px">
-                  {{ editLead.lead_title ?? "Untitled lead's" }}
+
+                <li v-if="searchContacts.length"
+                  class="pb-2 text-soft">
+                  Existing Contacts
                 </li>
-                <li class="fw-bold text-soft fs-12px">
-                  ${{ editLead.estimated_value }}
+
+                <li v-for="(item, index) in searchContacts"
+                  :key="index"
+                  @click="selectSearchContactHandler(item)"
+                  class="list-item d-flex justify-content-start align-items-center">
+
+                  <div class="circle-avatar me-2 cursor-pointer"
+                    style="width: 40px; height: 40px; min-width: 40px">
+
+                    <img class="rounded-circle border"
+                      alt="avatar1"
+                      :src="item.avatar" />
+
+                  </div>
+
+                  <div class="contact-details">
+
+                    <span class="details-text text-head fs-16px d-block fw-bold">{{ item.full_name }}</span>
+
+                    <span class="details-text text-soft fs-14px d-block">
+                      {{ item.email ?? item.phone_number ?? "example@gmail.com"}}
+                    </span>
+
+                  </div>
+
                 </li>
+
               </ul>
-            </router-link>
-          </div>
-          <div v-else>
-            <ul class="contacts-list list-unstyled">
-              <li v-for="(item, index) in leadContacts"
-                :key="index"
-                @click="selectContactHandler(item)"
-                :class="
-                  item.contact_id == editContact.contact_id ? 'active' : ''
-                "
-                class="list-item d-flex justify-content-start align-items-center">
-                <div class="circle-avatar me-2 cursor-pointer"
-                  style="width: 40px; height: 40px; min-width: 40px">
-                  <img class="rounded-circle border"
-                    alt="avatar1"
-                    :src="item.avatar" />
-                </div>
-                <div class="contact-details">
-                  <span class="details-text text-head fs-16px d-block fw-bold">{{ item.full_name }}</span>
-                  <span class="details-text text-soft fs-14px d-block">{{
-                    item.email ?? item.phone_number ?? "example@gmail.com"
-                    }}</span>
-                </div>
-              </li>
-              <li v-if="searchContacts.length"
-                class="pb-2 text-soft">
-                Existing Contacts
-              </li>
-              <li v-for="(item, index) in searchContacts"
-                :key="index"
-                @click="selectSearchContactHandler(item)"
-                class="list-item d-flex justify-content-start align-items-center">
-                <div class="circle-avatar me-2 cursor-pointer"
-                  style="width: 40px; height: 40px; min-width: 40px">
-                  <img class="rounded-circle border"
-                    alt="avatar1"
-                    :src="item.avatar" />
-                </div>
-                <div class="contact-details">
-                  <span class="details-text text-head fs-16px d-block fw-bold">{{ item.full_name }}</span>
-                  <span class="details-text text-soft fs-14px d-block">{{
-                    item.email ?? item.phone_number ?? "example@gmail.com"
-                    }}</span>
-                </div>
-              </li>
-            </ul>
-            <button v-if="!isCreateNewContact"
-              @click="selectContactHandler()"
-              class="btn btn-primary w-100">
-              Add New
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-8">
-        <div class="modal-header py-2 px-0">
-          <div class="d-flex justify-content-center align-items-center py-0">
-            <svg class="svg-5 me-2"
-              xmlns="http://www.w3.org/2000/svg"
-              height="22"
-              viewBox="0 -960 960 960"
-              width="22">
-              <path
-                d="M185-80q-17 0-29.5-12.5T143-122v-105q0-90 56-159t144-88q-40 28-62 70.5T259-312v190q0 11 3 22t10 20h-87Zm147 0q-17 0-29.5-12.5T290-122v-190q0-70 49.5-119T459-480h189q70 0 119 49t49 119v64q0 70-49 119T648-80H332Zm148-484q-66 0-112-46t-46-112q0-66 46-112t112-46q66 0 112 46t46 112q0 66-46 112t-112 46Z" />
-            </svg>
-            <span v-if="!isCreateNewContact"
-              class="text-hard fw-bold fs-16px">Edit Contact</span>
-            <span v-else
-              class="text-hard fw-bold fs-16px">Add Contact</span>
-            <svg v-if="editContact?.is_primary"
-              :class="`ms-2 text-success `"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              height="24"
-              viewBox="0 -960 960 960"
-              width="24">
-              <path
-                d="m438-338 226-226-57-57-169 169-84-84-57 57 141 141Zm42 258q-139-35-229.5-159.5T160-516v-244l320-120 320 120v244q0 152-90.5 276.5T480-80Zm0-84q104-33 172-132t68-220v-189l-240-90-240 90v189q0 121 68 220t172 132Zm0-316Z" />
-            </svg>
-          </div>
-        </div>
-        <div class="modal-body px-0">
-          <div class="mb-3">
-            <label class="form-label-title">Title</label>
-            <input @click="delete errors?.title"
-              v-model="editContact.title"
-              type="text"
-              class="form-control" />
-            <span class="fs-14px text-danger py-1 w-100 d-block"
-              v-if="errors?.title?.length">{{ errors?.title[0] }}</span>
-          </div>
-          <div class="row">
-            <div class="col-lg-6">
-              <div class="mb-3">
-                <label class="form-label-title">First name</label>
-                <input @click="delete errors?.first_name"
-                  v-model="editContact.first_name"
-                  type="text"
-                  class="form-control" />
-                <span class="fs-14px text-danger py-1 w-100 d-block"
-                  v-if="errors?.first_name?.length">{{ errors?.first_name[0] }}</span>
-              </div>
+
+              <button v-if="!isCreateNewContact"
+                @click="selectContactHandler()"
+                class="btn btn-primary w-100">
+                Add New
+              </button>
+
             </div>
-            <div class="col-lg-6">
-              <div class="mb-3">
-                <label class="form-label-title">Last name</label>
-                <input @click="delete errors?.last_name"
-                  v-model="editContact.last_name"
-                  type="text"
-                  class="form-control" />
-                <span class="fs-14px text-danger py-1 w-100 d-block"
-                  v-if="errors?.last_name?.length">{{ errors?.last_name[0] }}</span>
-              </div>
-            </div>
+
           </div>
 
-          <div class="row">
-            <div class="col-lg-8 mb-3 mb-lg-0">
-              <div class="">
-                <label class="form-label-title">Phone number</label>
-                <input @click="delete errors?.phone_number"
-                  :class="{
-                    'border-error':
-                      errors?.phone_number && !editContact.phone_number,
-                  }"
-                  v-model="editContact.phone_number"
-                  type="text"
-                  class="form-control" />
-              </div>
+        </div>
+
+        <div class="col-lg-8 pb-2">
+
+          <div class="modal-header py-2 px-0">
+
+            <div class="d-flex justify-content-center align-items-center py-0">
+
+              <svg class="svg-5 me-2"
+                xmlns="http://www.w3.org/2000/svg"
+                height="22"
+                viewBox="0 -960 960 960"
+                width="22">
+                <path
+                  d="M185-80q-17 0-29.5-12.5T143-122v-105q0-90 56-159t144-88q-40 28-62 70.5T259-312v190q0 11 3 22t10 20h-87Zm147 0q-17 0-29.5-12.5T290-122v-190q0-70 49.5-119T459-480h189q70 0 119 49t49 119v64q0 70-49 119T648-80H332Zm148-484q-66 0-112-46t-46-112q0-66 46-112t112-46q66 0 112 46t46 112q0 66-46 112t-112 46Z" />
+              </svg>
+
+              <span v-if="!isCreateNewContact"
+                class="text-hard fw-bold fs-16px">
+                Edit Contact
+              </span>
+
+              <span v-else
+                class="text-hard fw-bold fs-16px">
+                Add Contact
+              </span>
+
+              <svg v-if="editContact?.is_primary"
+                :class="`ms-2 text-success `"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                height="24"
+                viewBox="0 -960 960 960"
+                width="24">
+                <path
+                  d="m438-338 226-226-57-57-169 169-84-84-57 57 141 141Zm42 258q-139-35-229.5-159.5T160-516v-244l320-120 320 120v244q0 152-90.5 276.5T480-80Zm0-84q104-33 172-132t68-220v-189l-240-90-240 90v189q0 121 68 220t172 132Zm0-316Z" />
+              </svg>
+
             </div>
-            <div class="col-lg-4 mb-3 mb-lg-0">
-              <div class="">
-                <label class="form-label-title">Intended use</label>
-                <select v-model="editContact.phone_use"
-                  class="form-control">
-                  <option value=""></option>
-                  <option v-for="(item, index) in intendedUse"
-                    :key="index"
-                    :selected="editContact.phone_use == item"
-                    :value="item">
-                    {{ item }}
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="row mt-lg-2"
-            v-for="(item, index) in another_phones"
-            :key="index">
-            <div class="col-lg-8 mb-3 mb-lg-0">
-              <div class="">
-                <label class="form-label-title d-block d-lg-none">Phone number</label>
-                <input @click="delete errors?.phone_number"
-                  :class="{
-                    'border-error': errors?.phone_number && !item.phone_number,
-                  }"
-                  :value="item.phone_number"
-                  @input="item.phone_number = $event.target.value"
-                  type="text"
-                  class="form-control" />
-              </div>
-            </div>
-            <div class="col-lg-4 mb-3 mb-lg-0">
-              <div class="">
-                <label class="form-label-title d-block d-lg-none">Intended use</label>
-                <select @change="item.phone_use = $event.target.value"
-                  class="form-control">
-                  <option value=""></option>
-                  <option v-for="(intended, index) in intendedUse"
-                    :key="index"
-                    :selected="item.phone_use == intended"
-                    :value="intended">
-                    {{ intended }}
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="row mb-1">
-            <div class="col-lg-8">
-              <span class="fs-14px text-danger py-1 w-100 d-block"
-                v-if="errors?.phone_number?.length">{{ errors?.phone_number[0] }}</span>
-            </div>
-            <div class="col-lg-4">
-              <div @click="addedAnotherPhoneHandler()"
-                class="fs-14px text-primary cursor-pointer py-1 select-none">
-                Add another phone
-              </div>
-            </div>
+
           </div>
 
-          <div class="row">
-            <div class="col-lg-8 mb-3 mb-lg-0">
-              <div class="">
-                <label class="form-label-title">Email address</label>
-                <input @click="delete errors?.email"
-                  :class="{
-                    'border-error': errors?.email && !editContact.email,
-                  }"
-                  v-model="editContact.email"
-                  type="email"
-                  class="form-control" />
-              </div>
-            </div>
-            <div class="col-lg-4 mb-3 mb-lg-0">
-              <div class="">
-                <label class="form-label-title">Intended use</label>
-                <select v-model="editContact.email_use"
-                  class="form-control">
-                  <option value=""></option>
-                  <option v-for="(item, index) in intendedUse"
-                    :key="index"
-                    :selected="editContact.email_use == item"
-                    :value="item">
-                    {{ item }}
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="row mt-lg-2"
-            v-for="(item, index) in another_emails"
-            :key="index">
-            <div class="col-lg-8 mb-3 mb-lg-0">
-              <div class="">
-                <label class="form-label-title d-block d-lg-none">Email address</label>
-                <input type="email"
-                  @click="delete errors?.email"
-                  :class="{ 'border-error': errors?.email && !item.email }"
-                  :value="item.email"
-                  @input="item.email = $event.target.value"
-                  class="form-control" />
-              </div>
-            </div>
-            <div class="col-lg-4 mb-3 mb-lg-0">
-              <div class="">
-                <label class="form-label-title d-block d-lg-none">Intended use</label>
-                <select @change="item.email_use = $event.target.value"
-                  class="form-control">
-                  <option value=""></option>
-                  <option v-for="(intended, index) in intendedUse"
-                    :key="index"
-                    :selected="item.email_use == intended"
-                    :value="intended">
-                    {{ intended }}
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-          <div class="row mb-1">
-            <div class="col-lg-8">
+          <div class="modal-body px-0">
+
+            <div class="mb-2">
+
+              <label class="mb-2 fs-14px text-head">Title</label>
+
+              <icon-field>
+                <input-icon class="pi pi-user fs-14px z-index-999" />
+                <input-text size="small" placeholder="e.g. Mr."
+                  class="w-100"
+                  @click="delete errors?.title"
+                  v-model="editContact.title" />
+              </icon-field>
+
               <span class="fs-14px text-danger py-1 w-100 d-block"
-                v-if="errors?.email?.length">{{ errors?.email[0] }}</span>
+                v-if="errors?.title?.length">
+                {{ errors?.title[0] }}
+              </span>
+
             </div>
-            <div class="col-lg-4">
-              <div @click="addedAnotherEmailHandler()"
-                class="fs-14px text-primary cursor-pointer py-1 select-none">
-                Add another email
+
+            <div class="row">
+
+              <div class="col-lg-6">
+
+                <div class="mb-2">
+
+                  <label class="mb-2 fs-14px text-head">First name</label>
+
+                  <icon-field>
+
+                    <input-icon class="pi pi-user fs-14px z-index-999" />
+
+                    <input-text size="small" class="w-100" placeholder="e.g. Example"
+                      @click="delete errors?.first_name"
+                      v-model="editContact.first_name" />
+
+                  </icon-field>
+
+                  <span class="fs-14px text-danger py-1 w-100 d-block"
+                    v-if="errors?.first_name?.length">
+                    {{ errors?.first_name[0] }}
+                  </span>
+
+                </div>
+
               </div>
+
+              <div class="col-lg-6">
+
+                <div class="mb-2">
+
+                  <label class="mb-2 fs-14px text-head">Last name</label>
+
+                  <icon-field>
+
+                    <input-icon class="pi pi-user fs-14px z-index-999" />
+
+                    <input-text size="small"
+                      class="w-100" placeholder="e.g. Example"
+                      @click="delete errors?.last_name"
+                      v-model="editContact.last_name" />
+
+                  </icon-field>
+
+                  <span class="fs-14px text-danger py-1 w-100 d-block"
+                    v-if="errors?.last_name?.length">
+                    {{ errors?.last_name[0] }}
+                  </span>
+
+                </div>
+
+              </div>
+
             </div>
+
+            <div class="row">
+
+              <div class="col-lg-8 mb-3 mb-lg-0">
+
+                <div class="">
+
+                  <label class="mb-2 fs-14px text-head">Phone number</label>
+
+                  <icon-field>
+
+                    <input-icon class="pi pi-phone fs-14px z-index-999" />
+
+                    <input-text size="small" class="w-100"
+                      @click="delete errors?.phone_number" placeholder="e.g. +1 000000000"
+                      :class="{'border-error':errors?.phone_number && !editContact.phone_number,
+                      }"
+                      v-model="editContact.phone_number" />
+
+                  </icon-field>
+
+
+                </div>
+
+              </div>
+
+              <div class="col-lg-4 mb-3 mb-lg-0">
+
+                <div class="">
+
+                  <label class="mb-2 fs-14px text-head">Intended use</label>
+
+                  <select-option filter
+                    v-model="editContact.phone_use"
+                    :options="intendedUse"
+                    class="w-100 select-option-small"
+                    panel-class="panel-option-small">
+                  </select-option>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="row mt-lg-2"
+              v-for="(item, index) in another_phones"
+              :key="index">
+
+              <div class="col-lg-8 mb-3 mb-lg-0">
+
+                <div class="">
+
+                  <label class="form-label-title d-block d-lg-none">Phone number</label>
+
+                  <icon-field>
+
+                    <input-icon class="pi pi-phone fs-14px z-index-999" />
+
+                    <input-text size="small" class="w-100"
+                      @click="delete errors?.phone_number" placeholder="e.g. +1 00000000"
+                      :class="{'border-error': errors?.phone_number && !item.phone_number}"
+                      v-model="item['phone_number']" />
+
+                  </icon-field>
+
+                </div>
+
+              </div>
+
+              <div class="col-lg-4 mb-3 mb-lg-0">
+
+                <div class="">
+
+                  <label class="form-label-title d-block d-lg-none">Intended use</label>
+
+                  <select-option filter
+                    v-model="item['phone_use']"
+                    :options="intendedUse"
+                    class="w-100 select-option-small"
+                    panel-class="panel-option-small">
+                  </select-option>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="row mb-1">
+
+              <div class="col-lg-8">
+
+                <span class="fs-14px text-danger py-1 w-100 d-block"
+                  v-if="errors?.phone_number?.length">
+                  {{ errors?.phone_number[0] }}
+                </span>
+
+              </div>
+
+              <div class="col-lg-4">
+
+                <div @click="addedAnotherPhoneHandler()"
+                  class="fs-14px text-primary cursor-pointer py-1 select-none">
+                  Add another phone
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="row">
+
+              <div class="col-lg-8 mb-3 mb-lg-0">
+
+                <div class="">
+
+                  <label class="mb-2 fs-14px text-head">Email address</label>
+                  <icon-field>
+
+                    <input-icon class="pi pi-envelope fs-14px z-index-999" />
+
+                    <input-text size="small" class="w-100" placeholder="e.g. example@gmail.com"
+                      @click="delete errors?.email"
+                      :class="{'border-error': errors?.email && !editContact.email}"
+                      v-model="editContact.email" />
+
+                  </icon-field>
+
+                </div>
+
+              </div>
+
+              <div class="col-lg-4 mb-3 mb-lg-0">
+
+                <div class="">
+
+                  <label class="mb-2 fs-14px text-head">Intended use</label>
+
+                  <select-option filter
+                    v-model="editContact.email_use"
+                    :options="intendedUse"
+                    class="w-100 select-option-small"
+                    panel-class="panel-option-small">
+                  </select-option>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="row mt-lg-2"
+              v-for="(item, index) in another_emails"
+              :key="index">
+
+              <div class="col-lg-8 mb-3 mb-lg-0">
+
+                <div class="">
+
+                  <label class="form-label-title d-block d-lg-none">Email address</label>
+
+                  <icon-field>
+
+                    <input-icon class="pi pi-envelope fs-14px z-index-999" />
+
+                    <input-text size="small" class="w-100"
+                      @click="delete errors?.email" placeholder="e.g. example@gmail.com"
+                      :class="{ 'border-error': errors?.email && !item.email }"
+                      v-model="item['email']" />
+
+                  </icon-field>
+
+
+                </div>
+
+              </div>
+
+              <div class="col-lg-4 mb-3 mb-lg-0">
+
+                <div class="">
+
+                  <label class="form-label-title d-block d-lg-none">Intended use</label>
+
+                  <select-option filter
+                    v-model="item['email_use']"
+                    :options="intendedUse"
+                    class="w-100 select-option-small"
+                    panel-class="panel-option-small">
+                  </select-option>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="row mb-1">
+
+              <div class="col-lg-8">
+
+                <span class="fs-14px text-danger py-1 w-100 d-block"
+                  v-if="errors?.email?.length">{{ errors?.email[0] }}</span>
+
+              </div>
+
+              <div class="col-lg-4">
+
+                <div @click="addedAnotherEmailHandler()"
+                  class="fs-14px text-primary cursor-pointer py-1 select-none">
+                  Add another email
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="mb-2">
+
+              <label class="mb-2 fs-14px text-head">Notes
+                <span class="text-soft fs-12px ms-1">(Optional)</span></label>
+
+              <text-area @click="delete errors?.notes" class="w-100"
+                v-model="editContact.notes"
+                rows="3"></text-area>
+
+              <span class="fs-14px text-danger py-1 w-100 d-block"
+                v-if="errors?.notes?.length">{{ errors?.notes[0] }}</span>
+
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center pt-2">
+
+              <button @click="hideModalHandler()"
+                class="btn btn-danger">
+                Close
+              </button>
+
+              <loading-button :disabled="!(editContact.first_name && editContact.last_name)"
+                :isLoading="isSubmitCreateNewContact"
+                @click="createLeadContactHandler()">
+                {{ isCreateNewContact ? "Create New" : "Update" }}
+              </loading-button>
+
+            </div>
+
           </div>
-          <div class="mb-3">
-            <label class="form-label-title">Notes
-              <span class="text-soft fs-12px ms-1">(Optional)</span></label>
-            <textarea @click="delete errors?.notes"
-              v-model="editContact.notes"
-              type="text"
-              class="form-control"
-              rows="3"></textarea>
-            <span class="fs-14px text-danger py-1 w-100 d-block"
-              v-if="errors?.notes?.length">{{ errors?.notes[0] }}</span>
-          </div>
-          <div class="d-flex justify-content-between align-items-center pt-2">
-            <button @click="hideModalHandler()"
-              class="btn btn-danger">
-              Close
-            </button>
-            <loading-button :disabled="!(editContact.first_name && editContact.last_name)"
-              :isLoading="isSubmitCreateNewContact"
-              @click="createLeadContactHandler()">
-              {{ isCreateNewContact ? "Create New" : "Update Contact" }}
-            </loading-button>
-          </div>
+
         </div>
+
       </div>
-    </div>
-  </bootstrap-modal>
+
+    </template>
+
+  </modal-dialog>
 </template>
 <style lang="scss"
   scoped>

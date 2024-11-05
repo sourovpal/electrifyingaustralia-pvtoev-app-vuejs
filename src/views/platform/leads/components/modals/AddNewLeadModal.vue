@@ -235,24 +235,39 @@
     pt:mask:class="backdrop-blur-sm"
     :style="{ width: '35vw' }"
     :breakpoints="{ '1199px': '50vw', '575px': '90vw' }">
+
     <template #container="{ closeCallback }">
+
       <div class="row m-0">
+
         <div class="col-lg-7">
+
           <div class="modal-header py-lg-2 px-0 border-bottom">
+
             <div class="d-flex justify-content-center align-items-center">
+
               <i class="pi pi-user-plus fs-18px me-2"></i>
+
               <span class="text-hard fw-bold fs-16px">Add New</span>
+
             </div>
+
             <div>
+
               <button class="btn btn-light btn-sm btn-floating d-lg-none"
                 @click="closeCallback">
                 <font-awesome-icon icon="fas fa-close"
                   class="fs-14px text-soft"></font-awesome-icon>
               </button>
+
             </div>
+
           </div>
+
           <div class="modal-body p-0 pt-3">
+
             <div class="mb-3">
+
               <label class="mb-2 fs-16px text-head">
                 Customer name
                 <span class="text-soft fs-12px ms-1">(Required)</span>
@@ -260,7 +275,7 @@
 
               <icon-field>
 
-                <input-icon class="pi pi-user z-index-999" />
+                <input-icon class="pi pi-user fs-14px z-index-999" />
                 <auto-complete class="w-100 auto-complete-small"
                   panel-class="auto-complete-option-small"
                   input-class="w-100 auto-complete-input"
@@ -274,43 +289,57 @@
                   @complete="handleSearchContact">
 
                   <template #option="slotProps">
+
                     <div class="d-block">
+
                       <div class="d-flex justify-context-start align-items-center">
+
                         <div class="circle-avatar me-2"
                           style="--height: 1.6rem; --width: 1.6rem">
+
                           <img :alt="slotProps.option?.full_name"
                             :src="slotProps.option?.avatar"
                             class="avatar" />
                         </div>
+
                         <div class="owner-name fs-12px text-hard">
+
                           <div class="">
                             {{ slotProps.option?.full_name }}
                           </div>
+
                           <div class="text-soft fs-12px">
                             {{ slotProps.option?.email }} {{ slotProps.option?.phone_number }}
                           </div>
+
                         </div>
+
                       </div>
+
                     </div>
+
                   </template>
 
                 </auto-complete>
+
               </icon-field>
 
               <span class="fs-14px text-danger py-1 w-100 d-block"
                 v-if="errors?.name?.length">
                 {{ errors?.name[0] }}
               </span>
+
             </div>
 
             <div class="mb-3">
+
               <label class="mb-2 fs-16px text-head">
                 Address
                 <span class="text-soft fs-12px ms-1">(Optional)</span>
               </label>
 
               <icon-field>
-                <input-icon class="pi pi-home z-index-999" />
+                <input-icon class="pi pi-home fs-14px z-index-999" />
                 <auto-complete class="w-100 auto-complete-small"
                   panel-class="auto-complete-option-small"
                   input-class="w-100 auto-complete-input"
@@ -332,14 +361,18 @@
                   </template>
 
                   <template #option="{option}">
+
                     <div class="flex items-center">
+
                       <div>{{ formatLeadAddress(option) }}</div>
                       <div class="d-flex justify-context-start align-items-center fs-12px text-soft">
                         <span class="me-2">{{ option.primary_contact?.full_name }}</span>
                         <span class="me-2">{{ option.primary_contact?.phone }}</span>
                         <span class="me-2">{{ option.primary_contact?.email }}</span>
                       </div>
+
                     </div>
+
                   </template>
 
                 </auto-complete>
@@ -359,7 +392,7 @@
               </label>
 
               <icon-field>
-                <input-icon class="pi pi-address-book z-index-999" />
+                <input-icon class="pi pi-address-book fs-14px z-index-999" />
                 <auto-complete class="w-100 auto-complete-small"
                   panel-class="auto-complete-option-small"
                   input-class="w-100 auto-complete-input"
@@ -373,24 +406,35 @@
                   @complete="handleSearchContact">
 
                   <template #option="slotProps">
+
                     <div class="d-block">
+
                       <div class="d-flex justify-context-start align-items-center">
+
                         <div class="circle-avatar me-2"
                           style="--height: 1.6rem; --width: 1.6rem">
+
                           <img :alt="slotProps.option?.full_name"
                             :src="slotProps.option?.avatar"
                             class="avatar" />
                         </div>
+
                         <div class="owner-name fs-12px text-hard">
+
                           <div class="">
                             {{ slotProps.option?.full_name }}
                           </div>
+
                           <div class="text-soft fs-12px">
                             {{ slotProps.option?.email }} {{ slotProps.option?.phone_number }}
                           </div>
+
                         </div>
+
                       </div>
+
                     </div>
+
                   </template>
 
                 </auto-complete>
@@ -410,7 +454,7 @@
               </label>
 
               <icon-field>
-                <input-icon class="pi pi-envelope z-index-999" />
+                <input-icon class="pi pi-envelope fs-14px z-index-999" />
                 <auto-complete class="w-100 auto-complete-small"
                   panel-class="auto-complete-option-small"
                   input-class="w-100 auto-complete-input"
@@ -474,7 +518,7 @@
               </label>
 
               <icon-field>
-                <input-icon class="pi pi-user-edit fs-16px" />
+                <input-icon class="pi pi-user-edit fs-14px" />
                 <input-text class="w-100"
                   size="small"
                   @focus="delete errors?.lead_title"

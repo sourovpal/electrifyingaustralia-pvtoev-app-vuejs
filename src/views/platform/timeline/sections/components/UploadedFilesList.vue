@@ -10,7 +10,7 @@
 
     import api from "@actions/api";
 
-    import { shortenFileName, leadImageTypes, fileNameToExtension, handleDownloadFile, fetchImage } from '@helpers';
+    import { shortenFileName, imageExtensions, fileNameToExtension, handleDownloadFile, fetchImage } from '@helpers';
     
     import { usePlatformStore } from '@stores';
 

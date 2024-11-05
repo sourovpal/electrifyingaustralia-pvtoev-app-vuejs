@@ -1,73 +1,61 @@
 <script setup>
-    import {     ref, onMounted, useAttrs } from 'vue';
-    import {
-        getMaterialFileIcon,
-        getMaterialFolderIcon,
-        getVSIFileIcon,
-        getVSIFolderIcon,
-    } from "file-extension-icon-js";
-    import { leadImageTypes, fileNameToExtension, fetchImage } from '@helpers';
+    import { ref, onMounted, useAttrs } from 'vue';
+    import { getMaterialFileIcon } from "file-extension-icon-js";
+    import { imageExtensions, fileNameToExtension, fetchImage } from '@helpers';
+    import { useIntersectionObserver } from '@vueuse/core';
+
+
     const props = defineProps({
-        src: {
-            type: String,
-            default: null,
-        },
-        filename: {
-            type: String,
-            default: null,
-        },
-        loader: {
-            type: Boolean,
-            default: false,
-        },
+        src: { type: String, default: null, },
+        loader: { type: Boolean, default: false, },
     });
-    const imageRef = ref(null);
-    const imageSrc = ref(null);
+
+    const target_image = ref(null);
+    const image_src = ref(null);
     const attrs = useAttrs();
     const isLoading = ref(false);
 
-    function loadImage() {
+
+    onMounted(() => {
+        const { stop: stopObserver } = useIntersectionObserver(
+            target_image,
+            ([{ isIntersecting }], observerElement) => {
+                if (!image_src.value && isIntersecting) loadImage(stopObserver);
+            },
+        )
+    });
+
+    async function loadImage(stopObserver) {
+        stopObserver();
+
+        isLoading.value = true;
+
         if (!props.loader) {
-            imageSrc.value = getMaterialFileIcon('img.png');
+            image_src.value = getMaterialFileIcon(props.src);
         }
-        if (leadImageTypes.includes(fileNameToExtension(props.filename))) {
-            fetchImage(props.src, (url) => {
-                if (url) {
-                    imageSrc.value = url;
-                } else {
-                    imageSrc.value = getMaterialFileIcon(props.filename);
-                }
-                isLoading.value = false;
-            });
-        } else {
+
+        await fetchImage(props.src, (url) => {
+            if (url) {
+                image_src.value = url;
+            } else {
+                image_src.value = getMaterialFileIcon(props.src);
+            }
             isLoading.value = false;
-            imageSrc.value = getMaterialFileIcon(props.filename);
-        }
+        });
     }
 
 
-    onMounted(() => {
-        const observer = new IntersectionObserver((entries) => {
-            const entry = entries[0];
-            if (entry.isIntersecting) {
-                isLoading.value = true;
-                loadImage();
-                observer.unobserve(imageRef.value);
-            }
-        }, {
-            root: null,
-            threshold: 0.1,
-        });
-        observer.observe(imageRef.value);
-    });
 
 </script>
 
 <template>
-    <svg-custom-icon v-if="isLoading && loader"
+
+    <svg-custom-icon v-if="loader && isLoading"
         icon="SpinnerIcon" />
-    <img v-show="!isLoading"
-        ref="imageRef"
+
+    <img v-show="!isLoading || !loader"
+        ref="target_image"
         v-bind="attrs"
-        :src="imageSrc">
+        :src="image_src">
+
 </template>

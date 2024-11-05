@@ -89,30 +89,7 @@
         $toast.error(error.message);
       });
   }
-
-  async function updateLeadStatusHandler(status) {
-    $toast.clear();
-
-    await useApiRequest({
-      url: `/platform/${editLeadId.value}/status`,
-      method: "PUT",
-      payload: {
-        status_id: status?.status_id,
-      },
-    })
-      .then((res) => {
-        const { success, errors, message } = res;
-
-        if (!success) return $toast.error(message.text);
-
-        platformStore.callFetchTimelineLogs();
-        platformStore.setLeadStatus(status);
-
-      })
-      .catch((error) => {
-        $toast.error(error.message);
-      });
-  }
+  
 </script>
 
 
@@ -207,61 +184,6 @@
         class="btn btn-sm btn-primary fw-bold me-3 justify-content-center align-items-center d-none d-md-flex">
         <i class="pi pi-check-circle fs-14px me-2"></i>
         certify
-      </button>
-
-      <div v-if="!isPipelineLead"
-        v-tippy="{ content: 'Change Lead Status', placement: 'top' }"
-        class="dropdown me-3 d-none d-xl-inline">
-
-        <Skeletor v-if="isFirstLoading"
-          style="width: 150px; height: 1.6rem; border-radius: 3px" />
-
-        <button v-else
-          style="min-width: 150px; max-width: 150px"
-          class="btn btn-sm btn-outline-secondary fw-400 d-flex justify-content-between align-items-center curtom-dropdown-toggler-btn"
-          data-mdb-toggle="dropdown">
-
-          <span class="fw-bold text-fs tbl-dropdown-title text-overflow-ellipsis text-head"
-            style="white-space: nowrap">{{ leadStatus?.name ?? "Lead Status" }}</span>
-
-          <div class="dropdown--icon">
-            <font-awesome-icon icon="fas fa-caret-down"
-              class="text-soft fs-16px"></font-awesome-icon>
-          </div>
-
-        </button>
-
-        <div class="dropdown-menu dropdown-menu-end shadow-md custom-dropdown-menu"
-          aria-labelledby="dropdownMenuButton">
-
-          <div style="max-height: 25rem; overflow: auto">
-
-            <span style="width: 170px"
-              v-for="(status, index) in statuses"
-              :key="index"
-              @click="updateLeadStatusHandler(status)"
-              :class="`${ status.status_id == leadStatus?.status_id ? 'selected' : '' }`"
-              class="dropdown-item d-flex justify-content-between align-items-center cursor-pointer py-1">
-
-              <span class="text-overflow-ellipsis text-head">
-                {{ status.name }}
-              </span>
-
-              <font-awesome-icon v-if="status.is_lost"
-                icon="fas fa-caret-down"
-                class="text-soft fs-16px"></font-awesome-icon>
-
-            </span>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      <button v-tippy="{ content: 'Add Project', placement: 'top' }"
-        class="toolbar-btn btn btn-light btn-sm btn-floating me-3 d-flex justify-content-center align-items-center">
-        <i class="text-soft fs-16px pi pi-folder-plus"></i>
       </button>
 
       <div class="me-3">

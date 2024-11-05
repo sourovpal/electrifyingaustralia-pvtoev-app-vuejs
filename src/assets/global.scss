@@ -103,6 +103,10 @@ html::-webkit-scrollbar {
   margin-right: auto !important;
 }
 
+.object-contain {
+  object-fit: contain;
+}
+
 .content {
   padding-left: 0rem;
   width: var(--content-body-width);
@@ -1010,19 +1014,24 @@ class="select-option-small"
   }
 }
 
-[size="small"] {
+.p-iconfield {
 
   .p-multiselect-label,
-  input {
+  .p-inputtext-sm {
     padding: var(--p-inputtext-sm-padding-y) var(--p-inputtext-sm-padding-x) !important;
     font-size: var(--p-inputtext-sm-font-size) !important;
   }
 
   &.icon {
     input {
-      padding-left: 2.5rem !important;
+      padding-left: 2.3rem !important;
     }
   }
+
+  .p-inputtext-sm {
+    padding-left: 2.3rem !important;
+  }
+
 }
 
 
@@ -1031,6 +1040,7 @@ class="select-option-small"
     padding: 0.200rem var(--p-inputtext-sm-padding-x);
     font-size: var(--p-inputtext-sm-font-size);
   }
+
   .p-multiselect-empty-message,
   .p-multiselect-option {
     padding: var(--p-inputtext-sm-padding-y) var(--p-inputtext-sm-padding-x);

@@ -6,7 +6,7 @@
     import { useDebounceFn, onClickOutside } from '@vueuse/core';
     import EmojiPicker from 'vue3-emoji-picker';
     import {
-        leadImageTypes,
+        imageExtensions,
         fileNameToExtension
     } from '@helpers';
     import { useApiRequest } from '@actions';

@@ -3,7 +3,7 @@
   import { Skeletor } from "vue-skeletor";
   import StarRating from "vue-star-rating";
   import { useApiRequest } from "@actions";
-  import { formatLeadAddress } from "@helpers";
+  import { formatLeadAddress, formatTimeAgo } from "@helpers";
   import { useClipboard } from "@vueuse/core";
   import { usePlatformStore } from "@stores";
   import { $toast } from "@config";
@@ -106,21 +106,7 @@
 </script>
 
 <template>
-  <div class="p-3 pb-0">
-
-    <div class="d-flex justify-content-between align-items-center mb-1">
-
-      <div class="fs-14px fw-bold text-head mb-0 text-uppercase">
-        lead Properties {{ isPipelineLead }}
-      </div>
-
-      <button @click="platformStore.setToggleLeadEditModal(true)"
-        class="btn btn-sm btn-light btn-md btn-lg btn-floating bg-transparent">
-        <font-awesome-icon icon="fas fa-pen"
-          class="text-soft fs-14px" />
-      </button>
-
-    </div>
+  <div class="pb-0">
 
     <div class="mb-1">
 
@@ -144,6 +130,24 @@
           <font-awesome-icon icon="fa-arrow-up-right-from-square"
             class="text-soft fs-14px" />
         </a>
+
+      </div>
+
+    </div>
+
+    <div class="mb-1">
+
+      <div class="fs-12px text-soft mb-0">Source</div>
+
+      <div class="d-flex">
+
+        <div v-if="!isFirstLoading"
+          class="fs-14px fw-bold text-head mb-0">
+          {{ editLead?.source?.title ?? " — " }}
+        </div>
+
+        <Skeletor style="width: 50%; height: 0.6rem"
+          v-else></Skeletor>
 
       </div>
 
@@ -194,48 +198,30 @@
 
     </div>
 
-    <div class="mb-1">
-
-      <div class="fs-12px text-soft mb-0">Source</div>
-
-      <div class="d-flex">
-
-        <div v-if="!isFirstLoading"
-          class="fs-14px fw-bold text-head mb-0">
-          {{ editLead?.source?.title ?? " — " }}
-        </div>
-
-        <Skeletor style="width: 50%; height: 0.6rem"
-          v-else></Skeletor>
-
-      </div>
-
+    <div class="mb-2">
+      <div class="fs-12px text-soft mb-0">Confidence</div>
+      <star-rating style="line-height: 20px"
+        :star-size="16"
+        :rounded-corners="true"
+        :border-width="2"
+        inactive-color="#F8F9F9"
+        active-color="#FF9529"
+        border-color="#AEB6BF"
+        active-border-color="#FF9529"
+        :increment="0.5"
+        v-model:rating="leadStarRating"
+        @click="confidenceUpdateHandler"
+        :show-rating="false" />
     </div>
 
-    <div class="mb-1">
+    <div class="mb-2">
+      <div class="fs-12px text-soft mb-0">Created At</div>
+      <div>{{ formatTimeAgo(editLead.created_at, 15)?.replace('a few seconds ago', 'just now')?? " — " }}</div>
+    </div>
 
-      <div class="fs-12px text-soft mb-0">Confidence</div>
-
-      <div class="d-flex">
-
-        <div class="mb-2">
-
-          <star-rating style="line-height: 20px"
-            :star-size="16"
-            :rounded-corners="true"
-            :border-width="2"
-            inactive-color="#F8F9F9"
-            active-color="#FF9529"
-            border-color="#AEB6BF"
-            active-border-color="#FF9529"
-            :increment="0.5"
-            v-model:rating="leadStarRating"
-            @click="confidenceUpdateHandler"
-            :show-rating="false" />
-        </div>
-
-      </div>
-
+    <div class="mb-2">
+      <div class="fs-12px text-soft mb-0">Last Update</div>
+      <div>{{ formatTimeAgo(editLead.updated_at)?.replace('a few seconds ago', 'just now')?? " — " }}</div>
     </div>
 
   </div>

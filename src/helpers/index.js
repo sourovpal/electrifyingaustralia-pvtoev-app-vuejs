@@ -32,6 +32,11 @@ export async function mergeTimelineLogs(oldData, newData, latest = false) {
 }
 
 export function shortenFileName(fileName, maxLength) {
+
+  if (!fileName) return;
+
+  if (fileName?.length < maxLength) return fileName;
+
   const extension = fileName.split(".").pop();
   const baseName = fileName.slice(0, -(extension.length + 1));
 
@@ -45,7 +50,7 @@ export function shortenFileName(fileName, maxLength) {
   }
 }
 
-export const leadImageTypes = [
+export const imageExtensions = [
   "png",
   "jpg",
   "jpeg",
@@ -58,11 +63,16 @@ export const leadImageTypes = [
 
 export const fileNameToExtension = (fileName) => {
   var ext = fileName.split(".").pop().toLowerCase();
-  if (ext) {
-    return ext;
-  }
+  if (ext) return ext;
   return null;
 };
+
+export function getFileObjectUrl(file) {
+  if (file instanceof File) {
+    return URL.createObjectURL(file);
+  }
+  throw new Error("Input must be a File object");
+}
 
 export const handleDownloadFile = async (url, $filename) => {
   await api({
@@ -91,6 +101,7 @@ export const fetchImage = async (url, callback = null) => {
     responseType: "blob",
   })
     .then(async (response) => {
+      console.log('response.data', response.data)
       let url = await URL.createObjectURL(response.data);
       if (callback) {
         return callback(url);
@@ -228,4 +239,21 @@ export function validateObject(payload) {
     return true;
   }
   return false;
+}
+
+
+
+export function formatFileSize(bytes) {
+  const k = 1024;
+  const dm = 2;
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  if (bytes === 0) {
+    return `0 ${sizes[0]}`;
+  }
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  const formattedSize = parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
+
+  return `${formattedSize} ${sizes[i]}`;
 }

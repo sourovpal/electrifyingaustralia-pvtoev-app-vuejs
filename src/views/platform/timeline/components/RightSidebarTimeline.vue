@@ -3,11 +3,8 @@
   import { usePlatformStore } from '@stores';
   import CustomScrollbar from "custom-vue-scrollbar";
   import RightSidebarContacts from './RightSidebarContacts.vue';
-  import RightSidebarAddress from './RightSidebarAddress.vue';
-  import RightSidebarProperties from "../properties/RightSidebarProperties.vue";
-  import LeadFilesSection from "./LeadFilesSection.vue";
-  import LeadNotes from './LeadNotes.vue';
-  import LeadTasks from './LeadTasks.vue';
+  import SectionTabs from "./SectionTabs.vue";
+
 
   const platformStore = usePlatformStore();
   const toggleRightSidebar = computed(() => platformStore.getToggleRightSidebar);
@@ -22,14 +19,11 @@
       style="width:100%;height:100%;">
 
       <right-sidebar-contacts></right-sidebar-contacts>
-      <right-sidebar-address></right-sidebar-address>
-      <right-sidebar-properties></right-sidebar-properties>
-      <lead-tasks></lead-tasks>
-      <lead-notes></lead-notes>
-      <lead-files-section></lead-files-section>
+      <section-tabs></section-tabs>
       <div style="height: 15rem"></div>
 
     </scroll-panel>
+    
   </div>
 </template>
 

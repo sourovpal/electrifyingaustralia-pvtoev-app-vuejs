@@ -239,6 +239,12 @@ export const usePlatformStore = defineStore("platform", {
         this.leadFiles = payload;
       }
     },
+    appendLeadFile(payload, top = true) {
+      if (validateObject(payload)) {
+        if (top) this.leadFiles = [payload, ...this.leadFiles];
+        if (!top) this.leadFiles = [...this.leadFiles, payload];
+      }
+    },
     setLeadTasks(payload) {
       if (Array.isArray(payload)) {
         this.leadTasks = payload;
@@ -571,15 +577,13 @@ export const usePlatformStore = defineStore("platform", {
       $callback({ loading: true });
 
       useApiRequest({
-        url: `/platform/${$leadId}/files`,
+        url: `/platform/${$leadId}/attachments`,
       })
-        .then((res) => {
+        .then((attachments) => {
 
-          const { success, files } = res;
+          if (attachments) {
 
-          if (success) {
-
-            this.setLeadFiles(files);
+            this.setLeadFiles(attachments);
 
             $callback({ loading: false, files });
 

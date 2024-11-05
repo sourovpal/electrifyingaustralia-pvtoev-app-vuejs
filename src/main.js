@@ -70,6 +70,11 @@ import InputGroup from "primevue/inputgroup";
 import InputNumber from "primevue/inputnumber";
 import ScrollPanel from 'primevue/scrollpanel';
 import DatePicker from 'primevue/datepicker';
+import ConfirmationService from 'primevue/confirmationservice';
+import ToastService from 'primevue/toastservice';
+import ConfirmDialog from 'primevue/confirmdialog';
+import OverlayBadge from 'primevue/overlaybadge';
+import Badge from 'primevue/badge';
 
 // import "primeicons/primeicons.css";
 
@@ -101,6 +106,12 @@ app.component("input-group", InputGroup);
 app.component("input-number", InputNumber);
 app.component("input-date", DatePicker);
 app.component("ScrollPanel", ScrollPanel);
+app.component("confirm-dialog", ConfirmDialog);
+app.component("overlay-badge", OverlayBadge);
+app.component("Badge", Badge);
+
+app.use(ConfirmationService);
+app.use(ToastService);
 
 app.use(PrimeVue, {
   theme: {

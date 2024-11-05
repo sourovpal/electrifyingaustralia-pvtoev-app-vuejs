@@ -8,7 +8,7 @@
     import { ref, nextTick } from 'vue';
     import ImagePreviewModal from '../modals/ImagePreviewModal.vue';
     import ShowAllFilesModal from '../modals/ShowAllFilesModal.vue';
-    import { shortenFileName, leadImageTypes } from '@helpers';
+    import { shortenFileName, imageExtensions } from '@helpers';
 
     const previewFile = ref(null);
     const showAllFilesModalRef = ref(null);
@@ -44,7 +44,7 @@
 
     function getFileIcons(file) {
         var ext = file.filename.split('.').pop();
-        if (leadImageTypes.includes(ext)) {
+        if (imageExtensions.includes(ext)) {
             return file.filepath;
         }
         return getMaterialFileIcon(ext);

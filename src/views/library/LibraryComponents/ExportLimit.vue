@@ -32,18 +32,18 @@ const sendUpdatedDetails = async () => {
     projectStore.setRecalculationLoadingState(true);
 
     const payload = { no_limit: noLimit.value, export_limit: limit.value }
-    const { res, err } = await handlePromise(axios.post(`projects/${projectId}/export-limit-update`, payload));
+    const { response, error } = await handlePromise(axios.post(`projects/${projectId}/export-limit-update`, payload));
 
-    if (res) {
-        toast.success(res?.data?.message ?? 'Success');
+    if (response) {
+        toast.success(response?.data?.message ?? 'Success');
         await projectStore.setCurrentProject(projectId);
         noLimit.value = projectStore.project.export_limit_type === 'no_limit';
         limit.value = projectStore.project.export_limit_in_kw;
     }
 
-    if (err) { 
-        toast.error(err?.response?.data?.message ?? 'Something went wrong');
-        console.log(err);
+    if (error) { 
+        toast.error(error?.response?.data?.message ?? 'Something went wrong');
+        console.log(error);
     }
 
     projectStore.setRecalculationLoadingState(false);

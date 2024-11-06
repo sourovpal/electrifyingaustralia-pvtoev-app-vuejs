@@ -134,6 +134,7 @@ import { ref, watch, computed } from 'vue';
 import axios from '../../../actions/api';
 import { useProjectStore } from '../../../stores/project';
 import { useToast } from 'vue-toast-notification';
+import { isNumeric } from '../../../helpers';
 
 const formData = ref({ post_code: '' });
 
@@ -143,13 +144,7 @@ const projectStore = useProjectStore();
 const inputValid = computed(() => {
     if (formData.value.post_code.length !== 4)
         return false;
-
-    const numberRegex = /^[0-9]*$/;
-
-    if (!numberRegex.test(formData.value.post_code)) 
-        return false
-
-    return true;
+    return isNumeric(formData.value.post_code);
 });
 
 // resetting the value on focus out

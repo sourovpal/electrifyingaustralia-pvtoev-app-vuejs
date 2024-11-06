@@ -245,7 +245,15 @@ export async function handlePromise(promise) {
     })
 
     return { 
-        res: result.res,
-        err: result.err
+        response: result.res,
+        error: result.err
     }
+}
+
+export function isNumeric(str) {
+    if (!str) 
+        return false;
+    const stringified = str.toString();
+    const numRegex = /^[0-9]*$/;
+    return numRegex.test(stringified);
 }

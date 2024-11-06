@@ -1,10 +1,11 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import Formatter from '../../../../helpers/Formatter';
 import { onClickOutside } from '@vueuse/core';
 import axios from '../../../../actions/api';
 import { useProjectStore } from '../../../../stores/project';
 import { useToast } from 'vue-toast-notification';
+import { isNumeric } from '../../../../helpers';
 
 const emit = defineEmits([
     'item-updated'
@@ -30,17 +31,9 @@ const toggleEditMode = () => {
     toggleQuantityInput.value = !toggleQuantityInput.value 
 };
 
-const inputValid = computed(() => {
-    const numberRegex = (/^-?\d+(\.\d+)?$/);
-    const userInputIsANumber = numberRegex.test(userInput.value);
-    if (!userInputIsANumber) 
-        return false;
-    return true;
-});
-
 const userInput = ref(0);
 const handleTotalInput = () => {
-    if (!inputValid.value)
+    if (!isNumeric(userInput.value))
         return toast.error('Please enter valid input values!');
     total.value = userInput.value;
     updateRecord();
@@ -86,12 +79,7 @@ onClickOutside(
 		<!-- Description -->
         <p class="col-5 col-md-3 mb-0 cursor-pointer text-info fw-bold">{{ pricing.description }}</p>
 
-		<!-- Temp -->
-		<small class="col-1 col-md-2"></small>
-		<small class="col-2 col-md-2"></small>
-		<small class="col-2 col-md-2"></small>
-
-		<small class="col-2 col-md-2 text-end">
+		<small class="offset-6 col-2 col-md-2 text-end">
             <template v-if="!toggleQuantityInput">
                 <span class="cursor-pointer" @click="toggleEditMode"> $ {{ Formatter.toIntlFormat(total) }}</span>
             </template>

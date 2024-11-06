@@ -124,10 +124,10 @@ const handleCreateClick = async () => {
         : axios.put(endpoint, payload);
 
     loading.value = true;
-    const {res: _, err} = await handlePromise(axiosCall);
+    const {response: _, error} = await handlePromise(axiosCall);
 
-    if (err) toast.error(
-        err?.response?.data?.message ?? 'Something went wrong, please check your inputs and try again'
+    if (error) toast.error(
+        error?.response?.data?.message ?? 'Something went wrong, please check your inputs and try again'
     ); 
 
     loading.value = false;

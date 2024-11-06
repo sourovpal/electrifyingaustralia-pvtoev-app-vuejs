@@ -1,13 +1,12 @@
 <script setup>
     import { ref, onMounted, useAttrs } from 'vue';
     import { getMaterialFileIcon } from "file-extension-icon-js";
-    import { imageExtensions, fileNameToExtension, fetchImage } from '@helpers';
+    import { imageExtensions, fileNameToExtension, fetchFile } from '@helpers';
     import { useIntersectionObserver } from '@vueuse/core';
 
 
     const props = defineProps({
         src: { type: String, default: null, },
-        loader: { type: Boolean, default: false, },
     });
 
     const target_image = ref(null);
@@ -29,33 +28,23 @@
         stopObserver();
 
         isLoading.value = true;
+        image_src.value = getMaterialFileIcon(props.src);
 
-        if (!props.loader) {
-            image_src.value = getMaterialFileIcon(props.src);
-        }
+        if (!imageExtensions.includes(fileNameToExtension(props.src))) return;
 
-        await fetchImage(props.src, (url) => {
+        await fetchFile(props.src, (url) => {
             if (url) {
                 image_src.value = url;
-            } else {
-                image_src.value = getMaterialFileIcon(props.src);
             }
             isLoading.value = false;
         });
+
     }
-
-
 
 </script>
 
 <template>
-
-    <svg-custom-icon v-if="loader && isLoading"
-        icon="SpinnerIcon" />
-
-    <img v-show="!isLoading || !loader"
-        ref="target_image"
+    <img ref="target_image"
         v-bind="attrs"
         :src="image_src">
-
 </template>

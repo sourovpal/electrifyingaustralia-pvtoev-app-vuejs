@@ -13,7 +13,7 @@
     import { usePlatformStore } from '@stores';
 
     const platformStore = usePlatformStore();
-    
+
     const editLeadId = computed(() => platformStore.getEditLeadId);
     const fileIsLoading = ref(false);
     const uploadedFiles = computed(() => platformStore.getLeadFiles);
@@ -21,7 +21,10 @@
 
     function fetchLeadFiles() {
         if (!uploadedFiles.value.length)
-            platformStore.callFetchFiles(editLeadId.value, ({ loading, files }) => {
+            platformStore.callFetchFiles({
+                lead_id: editLeadId.value,
+                page: 1,
+            }, ({ loading, files }) => {
                 fileIsLoading.value = loading;
             });
     }

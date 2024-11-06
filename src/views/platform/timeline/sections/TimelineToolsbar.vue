@@ -48,7 +48,7 @@
     platformStore.callFetchNewLead($leadId, true);
     platformStore.callFetchLeadStages($leadId);
     platformStore.callFetchLeadContacts($leadId);
-    platformStore.callFetchFiles($leadId);
+    platformStore.callFetchFiles({ lead_id: $leadId, page: 1 });
     platformStore.callFetchTimelineLogs(true, $leadId);
     platformStore.callFetchLeadTasks($leadId);
   }
@@ -89,7 +89,7 @@
         $toast.error(error.message);
       });
   }
-  
+
 </script>
 
 
@@ -239,7 +239,8 @@
 
   <!--  -->
 
-  <lead-re-categorise-modal v-model:visible="toggleReCategoriesModal" @close="() => (toggleReCategoriesModal = false)"
+  <lead-re-categorise-modal v-model:visible="toggleReCategoriesModal"
+    @close="() => (toggleReCategoriesModal = false)"
     v-if="toggleReCategoriesModal"></lead-re-categorise-modal>
 
 </template>

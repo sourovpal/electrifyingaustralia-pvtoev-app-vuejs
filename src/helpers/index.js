@@ -94,14 +94,13 @@ export const handleDownloadFile = async (url, $filename) => {
     });
 };
 
-export const fetchImage = async (url, callback = null) => {
+export const fetchFile = async (url, callback = null) => {
   return await api({
     url,
     method: "GET",
     responseType: "blob",
   })
     .then(async (response) => {
-      console.log('response.data', response.data)
       let url = await URL.createObjectURL(response.data);
       if (callback) {
         return callback(url);

@@ -7,7 +7,7 @@
     import { $toast } from '@config';
     import { usePlatformStore } from '@stores';
     import { useIntersectionObserver } from '@vueuse/core';
-    import AllFilesSkeletor from './AllFilesSkeletor.vue'
+    import AllFilesSkeletor from './AllFilesSkeletor.vue';
 
     import Tabs from 'primevue/tabs';
     import Tab from 'primevue/tab';
@@ -26,15 +26,15 @@
     const activeTab = ref('all');
     const originalFiles = ref([]);
     const showFiles = ref([]);
-    const previewFile = ref(null);
     const isLoading = ref(false);
     const $leadId = computed(() => platformStore.getEditLeadId);
     const $nextPage = ref(1);
     const $limit = ref(50);
     const infiniteOvserverRef = ref(null);
     const infiniteLoading = ref(false);
-    const hideDeletedFiles = ref([]);
-    const paginate = ref({});
+    const paginate = ref({ from: 0, to: 0, total: 0 });
+    const isComplete = ref(false);
+    const imagePreview = ref(null);
 
     function hideModalHandler() {
         emits('close', {});
@@ -45,13 +45,10 @@
         if (extension) {
             $nextPage.value = 1;
             activeTab.value = extension;
+            isComplete.value = false;
             isLoading.value = true;
-        } else if (!$nextPage.value) {
-            return;
-        } else {
-            infiniteLoading.value = true;
-        }
-
+        } else if (!$nextPage.value) { return; }
+        else { infiniteLoading.value = true; }
 
         await useApiRequest({
             url: `/platform/${$leadId.value}/attachments`,
@@ -63,22 +60,16 @@
         }).then(res => {
             const { pagination, attachments } = res;
 
-            if (!attachments) return;
+            $nextPage.value = pagination.next_page ?? null;
 
-            if (pagination && pagination.next_page) {
-                paginate.value = pagination;
-                $nextPage.value = pagination.next_page;
-            } else {
-                paginate.value = {};
-                $nextPage.value = null;
-                if (stopObserver) stopObserver();
-            }
+            if (pagination && Object.keys(pagination).length) paginate.value = pagination;
 
-            if (extension) {
-                originalFiles.value = attachments;
-            } else {
-                originalFiles.value = originalFiles.value.concat(attachments);
-            }
+            if (!$nextPage.value) isComplete.value = true;
+
+            if (stopObserver && !$nextPage.value) stopObserver();
+
+            if (extension) originalFiles.value = attachments;
+            else originalFiles.value = originalFiles.value.concat(attachments);
 
             showFiles.value = originalFiles.value;
 
@@ -96,25 +87,8 @@
         });
     }
 
-    function getFileIcon(file, fileName) {
-
-        if (imageExtensions.includes(fileNameToExtension(fileName))) return file.filepath;
-
-        return getMaterialFileIcon(fileName);
-    }
-
     function handlePreviewFile(file) {
-        previewFile.value = file;
-        modalInstance.hide();
-    }
-
-    function toggleImagePreview() {
-        previewFile.value = null;
-        modalInstance.show();
-    }
-
-    function removePreviewFile(file) {
-        hideDeletedFiles.value.push(file.file_id);
+        imagePreview.value.preview(file, showFiles.value);
     }
 
     onMounted(() => {
@@ -123,7 +97,9 @@
         const { stop: stopObserver } = useIntersectionObserver(
             infiniteOvserverRef,
             ([{ isIntersecting }], observerElement) => {
-                if (!isLoading.value && !infiniteLoading.value && $nextPage.value && isIntersecting) fetchLeadFiles(null, stopObserver);
+                if (!isLoading.value && !infiniteLoading.value && !isComplete.value && isIntersecting) {
+                    fetchLeadFiles(null, stopObserver);
+                }
             },
         )
     });
@@ -136,7 +112,7 @@
         pt:root:class="rounded-2"
         pt:mask:class="backdrop-blur-sm"
         :style="{ width: `47.2vw` }"
-        :breakpoints="{ '1199px': '50vw', '575px': '90vw' }">
+        :breakpoints="{ '1199px': '50vw', '575px': '70vw' }">
         >
         <template #container>
             <Tabs value="all">
@@ -145,20 +121,23 @@
                     <Tab class="py-2 text-capitalize ms-2"
                         v-for="(tab, index) in tabs"
                         :key="tab"
+                        :class="`${index != 0?'d-none':''} d-lg-block`"
                         @click="fetchLeadFiles(tab)"
                         :value="tab">{{ tab }}</Tab>
 
                     <Tab class="py-2 ms-auto border-0 d-flex justify-content-start align-items-center"
                         @click="emits('close', false)"
                         value="close">
-                        <span class="me-3">{{ paginate?.from??0 }} - {{ paginate?.to??0 }} of {{ paginate?.total??0 }}</span>
+                        <span class="me-3">
+                            {{ paginate?.from ? 1: 0 }} - {{ paginate?.to??0 }} of {{ paginate?.total??0}}</span>
                         <font-awesome-icon icon="fas fa-close"
                             class="text-soft fs-18px"></font-awesome-icon>
                     </Tab>
 
                 </TabList>
                 <scroll-panel :dt="{bar: {background: '#aaaaaa',size:'0.2rem'}}"
-                    style="width:100%;height:81vh;">
+                    style="width:100%;height:77vh;"
+                    class="pb-3 overflow-hidden">
 
                     <TabPanels class="tab-panels">
 
@@ -175,27 +154,30 @@
                                 <template v-else-if="!isLoading">
 
                                     <div class="file-item"
-                                        v-for="(item, index) in showFiles"
-                                        :key="item.file_id">
+                                        v-for="(file, index) in showFiles"
+                                        :key="file.file_id">
 
-                                        <div class="file">
-                                            <FetchImage :src="item.filepath"
-                                                :alt="item.filename" />
+                                        <div @click="handlePreviewFile(file)"
+                                            class="file">
+                                            <FetchImage :src="file.filepath"
+                                                :alt="file.filename" />
                                         </div>
 
                                         <span class="file-title fs-12px text-head text-center">
-                                            {{ shortenFileName(item?.filename, 20) }}
+                                            {{ shortenFileName(file?.filename, 20) }}
                                         </span>
 
                                     </div>
 
                                 </template>
+
                                 <template v-if="infiniteLoading">
                                     <all-files-skeletor v-for="(item, index) in 16"
                                         :key="index"></all-files-skeletor>
                                 </template>
 
                             </div>
+                            
                             <div class="w-100 py-5"
                                 ref="infiniteOvserverRef">
                             </div>
@@ -204,71 +186,20 @@
 
                     </TabPanels>
 
+                    <div v-if="!showFiles.length && isComplete"
+                        class="w-100 h-100 d-flex justify-content-center align-items-center mt-n5">
+                        No files available.
+                    </div>
+
                 </scroll-panel>
 
             </Tabs>
-            <!-- <div class="modal-body px-3 py-3">
-
-                <div v-if="isLoading"
-                    class="d-flex justify-content-center align-items-center">
-
-                    <div>
-                        <svg-custom-icon icon="SpinnerIcon" /> Loading...
-                    </div>
-
-                </div> -->
-
-
-            <!-- <div v-else-if="activeTab == 'pdf'"
-                    class="d-flex justify-content-center align-items-center w-100 h-100">
-
-                    <img width="35"
-                        :src="getMaterialFileIcon('pdf')"
-                        alt="">
-
-                    <span class="fs-16px text-soft">Pdf not found.</span>
-
-                </div>
-
-                <div v-else-if="activeTab == 'others'"
-                    class="d-flex justify-content-center align-items-center w-100 h-100">
-
-                    <img width="35"
-                        :src="getMaterialFileIcon('docx')"
-                        alt="">
-
-                    <span class="fs-16px text-soft">Document file not found.</span>
-
-                </div>
-
-                <div v-else
-                    class="d-flex justify-content-center align-items-center w-100 h-100">
-
-                    <img width="50"
-                        :src="getMaterialFileIcon('png')"
-                        alt="">
-
-                    <span class="fs-16px text-soft">File not found.</span>
-
-                </div>
-
-                <div ref="infiniteOvserverRef"
-                    class="d-flex justify-content-center align-items-center">
-                    <div class="py-5"
-                        v-if="infiniteLoading && $nextPage"><svg-custom-icon icon="SpinnerIcon" /> Loading...</div>
-                </div> -->
-
-            <!-- </div> -->
 
         </template>
     </modal-dialog>
 
 
-    <ImagePreviewModal v-if="previewFile"
-        :files="showFiles"
-        :preview="previewFile"
-        @toggle="toggleImagePreview"
-        @deleteRefresh="removePreviewFile"></ImagePreviewModal>
+    <ImagePreviewModal ref="imagePreview"></ImagePreviewModal>
 </template>
 
 <style lang="scss"

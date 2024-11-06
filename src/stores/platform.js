@@ -46,6 +46,7 @@ export const usePlatformStore = defineStore("platform", {
       timelinesRef: () => { },
       toggleTimelineRightSidebar: false,
       certifyModalAction: false,
+      leadFilesPagination: { from: 0, to: 0, total: 0, next_page: null },
     };
   },
   getters: {
@@ -130,6 +131,9 @@ export const usePlatformStore = defineStore("platform", {
     getLeadFiles(stage) {
       return stage.leadFiles;
     },
+    getLeadFilesPagination(stage) {
+      return stage.leadFilesPagination;
+    },
     getUsers(stage) {
       return stage.users;
     },
@@ -176,7 +180,7 @@ export const usePlatformStore = defineStore("platform", {
       this.editLeadId = payload;
     },
     setEditLead(payload) {
-      if (typeof payload === "object" && payload != null) {
+      if (validateObject(payload)) {
         this.editLead = payload;
       }
     },
@@ -187,27 +191,27 @@ export const usePlatformStore = defineStore("platform", {
       this.nextLeadId = payload;
     },
     setLeadPropertiesValues(payload) {
-      if (typeof payload === "object" && payload != null) {
+      if (validateObject(payload)) {
         this.leadPropertiesValues = payload;
       }
     },
     setLeadOwner(payload) {
-      if (typeof payload === "object" && payload != null) {
+      if (validateObject(payload)) {
         this.leadOwner = payload;
       }
     },
     setPrimaryContact(payload) {
-      if (typeof payload === "object" && payload != null) {
+      if (validateObject(payload)) {
         this.primaryContact = payload;
       }
     },
     setLeadSource(payload) {
-      if (typeof payload === "object" && payload != null) {
+      if (validateObject(payload)) {
         this.leadSource = payload;
       }
     },
     setLeadStatus(payload) {
-      if (typeof payload === "object" && payload != null) {
+      if (validateObject(payload)) {
         this.leadStatus = payload;
       }
     },
@@ -220,29 +224,35 @@ export const usePlatformStore = defineStore("platform", {
       this.isPipelineLead = payload;
     },
     setLeadPipeline(payload) {
-      if (typeof payload === "object" && payload != null) {
-        this.leadPipeline = payload;
-      }
+      if (validateObject(payload)) this.leadPipeline = payload;
     },
     setLeadStage(payload) {
-      if (typeof payload === "object" && payload != null) {
-        this.leadStage = payload;
-      }
+      if (validateObject(payload)) this.leadStage = payload;
     },
+
     setLeadContacts(payload) {
+      if (Array.isArray(payload)) this.leadContacts = payload;
+    },
+
+    setLeadFiles(payload, append = false) {
       if (Array.isArray(payload)) {
-        this.leadContacts = payload;
+        if (append) {
+          this.leadFiles = this.leadFiles.concat(payload);
+        } else {
+          this.leadFiles = payload;
+        }
       }
     },
-    setLeadFiles(payload) {
-      if (Array.isArray(payload)) {
-        this.leadFiles = payload;
-      }
+
+    setLeadFilesPagination(payload) {
+      if (validateObject(payload)) this.leadFilesPagination = payload;
     },
+
     appendLeadFile(payload, top = true) {
       if (validateObject(payload)) {
         if (top) this.leadFiles = [payload, ...this.leadFiles];
         if (!top) this.leadFiles = [...this.leadFiles, payload];
+        this.leadFilesPagination = { ...this.leadFilesPagination, total: this.leadFilesPagination.total + 1, to: this.leadFilesPagination.to + 1 };
       }
     },
     setLeadTasks(payload) {
@@ -572,27 +582,28 @@ export const usePlatformStore = defineStore("platform", {
 
         });
     },
-    callFetchFiles($leadId, $callback = () => { }) {
+    callFetchFiles(payload = {}, $callback = () => { }) {
 
       $callback({ loading: true });
 
       useApiRequest({
-        url: `/platform/${$leadId}/attachments`,
+        url: `/platform/${payload.lead_id}/attachments`,
+        payload: { ...payload, page: payload.page ?? 1, }
+      }).then(({ attachments, pagination }) => {
+
+        if (attachments) {
+
+          this.setLeadFiles(attachments, (payload.page && payload.page != 1));
+          this.setLeadFilesPagination(pagination);
+
+          $callback({ loading: false, files, pagination });
+
+        } else {
+
+          $callback({ loading: false, pagination });
+
+        }
       })
-        .then((attachments) => {
-
-          if (attachments) {
-
-            this.setLeadFiles(attachments);
-
-            $callback({ loading: false, files });
-
-          } else {
-
-            $callback({ loading: false });
-
-          }
-        })
         .catch((error) => {
 
           $callback({ loading: false });

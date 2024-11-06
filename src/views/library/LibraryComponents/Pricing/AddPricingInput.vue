@@ -69,6 +69,7 @@ import  axios from '../../../../actions/api.js';
 import { useRoute } from 'vue-router';
 import UnitSelector from './UnitSelector.vue';
 import { useToast } from 'vue-toast-notification';
+import { handlePromise } from '../../../../helpers/index.js';
 
 const emit = defineEmits(['created', 'cancel'])
 const props = defineProps(['pricing', 'lastPricingRecordOrder']);
@@ -78,8 +79,8 @@ const toast = useToast();
 const loading = ref(false);
 const formData = ref({
     description: props.pricing?.description ?? '',
-    quantity: props.pricing?.quantity ?? '',
-    unit_price: props.pricing?.unit_price ?? '',
+    quantity: props.pricing?.quantity ?? 0,
+    unit_price: props.pricing?.unit_price ?? 0,
     unit_id: props.pricing?.unit_id ?? null, // the 'null' serves as the id for a default placeholder record
     order: props.lastPricingRecordOrder
         ? props.lastPricingRecordOrder + 1
@@ -91,23 +92,19 @@ const formData = ref({
 const invalidInput = computed(() => {
     if (!Boolean(formData.value.description)) return true;
 
-    // not just relying on :min attribute due to firefox's incompatibility
-    if (typeof formData.value.quantity === 'number') {
-        if (formData.value.quantity < 0) return true;
-    }
+    if (typeof formData.value.quantity !== 'number') return true;
+    if (typeof formData.value.unit_price !== 'number') return true; 
 
-    if (typeof formData.value.unit_price === 'number') {
-        if (formData.value.unit_price < 0) return true;
-    }
+    // not just relying on :min attribute due to firefox's incompatibility
+    if (formData.value.quantity < 0) return true; 
+    if (formData.value.unit_price < 0) return true;
 
     return false;
 });
 
 const handleCreateClick = async () => {
-    if (!formData.value.description)
-        return;
-
-    loading.value = true;
+    if (invalidInput.value) 
+        return toast.error('Please enter valid input values!');
 
     const projectId = currentRoute.params.project_id;
     const payload = {
@@ -118,26 +115,23 @@ const handleCreateClick = async () => {
         order: formData.value.order
     }
 
-    if (!props.pricing) {
-        try {
-            await axios.post(`projects/${projectId}/pricing`, payload)
-        } catch (error) {
-            toast.error(error?.response?.data?.message ?? 'Something went wrong, please check your inputs');
-        } finally {
-            loading.value = false;
-        }
-        return emit('created');
-    }
+    const endpoint = !props.pricing 
+        ? `projects/${projectId}/pricing` 
+        : `projects/${projectId}/pricing/${props?.pricing?.id}`;
 
-    try {
-        await axios.put(`projects/${projectId}/pricing/${props.pricing.id}`, payload)
-    } catch (error) {
-        toast.error(error?.response?.data?.message ?? 'Something went wrong, please check your inputs');
-    } finally {
-        loading.value = false;
-    }
-    
-    emit('updated');
+    const axiosCall = !props.pricing 
+        ? axios.post(endpoint, payload) 
+        : axios.put(endpoint, payload);
+
+    loading.value = true;
+    const {res: _, err} = await handlePromise(axiosCall);
+
+    if (err) toast.error(
+        err?.response?.data?.message ?? 'Something went wrong, please check your inputs and try again'
+    ); 
+
+    loading.value = false;
+    emit(!props.pricing ? 'created' : 'updated');
 }
 
 const handleCancelClick = () => {

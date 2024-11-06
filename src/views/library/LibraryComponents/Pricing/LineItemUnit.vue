@@ -30,14 +30,18 @@ const toggleEditMode = () => {
     toggleQuantityInput.value = !toggleQuantityInput.value 
 };
 
-const inputValid = computed(
-    () => (/^-?\d+(\.\d+)?$/).test(userInput.value)
-);
+const inputValid = computed(() => {
+    const numberRegex = (/^-?\d+(\.\d+)?$/);
+    const userInputIsANumber = numberRegex.test(userInput.value);
+    if (!userInputIsANumber) 
+        return false;
+    return true;
+});
 
 const userInput = ref(0);
 const handleTotalInput = () => {
     if (!inputValid.value)
-        return;
+        return toast.error('Please enter valid input values!');
     total.value = userInput.value;
     updateRecord();
 }
@@ -96,7 +100,7 @@ onClickOutside(
                 v-else
                 :min="0"
                 @keyup.enter="handleTotalInput"
-                :class="`form-control text-end p-1 ${!inputValid ? 'text-danger' : ''}`"
+                class="form-control text-end p-1"
                 placeholder="Quantity"
                 ref="quantityInput"
                 v-model.number="userInput"

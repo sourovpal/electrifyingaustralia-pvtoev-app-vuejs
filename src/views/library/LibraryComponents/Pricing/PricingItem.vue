@@ -37,7 +37,7 @@
 			    :class="pricing.item_hidden ? 'opacity-50' : ''"
 			    class="col-2 col-md-2 text-end cursor-pointer"
 			    @click="toggleEditMode"
-			    >{{ pricing.quantity ?? '-' }}</small
+			    >{{ pricing.quantity ? pricing.quantity : '-' }}</small
 		    >
 
 		    <!-- Unit Price -->

@@ -1,7 +1,7 @@
 <script setup>
 import {computed, onMounted, ref} from 'vue';
 import CustomSwitch from '../../../components/forms/CustomSwitch.vue';
-import SaveableInput from '../components/SaveableInput.vue';
+import SaveableInput from '@components/forms/SaveableInput.vue';
 import { useProjectStore } from '../../../stores/project';
 import axios from '../../../actions/api';
 import Formatter from '../../../helpers/Formatter';

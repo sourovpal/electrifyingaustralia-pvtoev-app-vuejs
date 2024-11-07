@@ -149,10 +149,17 @@ onMounted(() => {
 
 const pricings = ref([]);
 const getPricings = async () => {
-    const response = await axios.get(`projects/${params.project_id}/pricing`)
-    if (!response.data.length) {
-        pricings.value = [];
-    };
+    const {response, error} = await handlePromise(axios.get(`projects/${params.project_id}/pricing`))
+
+    if (response) {
+        if (!response?.data?.length) 
+            pricings.value = [];
+    }
+
+    if (error) {
+        toast.error(error?.response?.data?.message ?? 'Something went wrong')
+        console.log(error);
+    }
 
     pricings.value = response.data;
 }

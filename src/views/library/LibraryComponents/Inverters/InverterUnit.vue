@@ -1,7 +1,7 @@
 <script setup>
 import { nextTick, onMounted, ref } from 'vue';
 import Formatter from '../../../../helpers/Formatter';
-import SaveableInput from '../../../library/components/SaveableInput.vue';
+import SaveableInput from '@components/forms/SaveableInput.vue';
 import axios from '../../../../actions/api';
 import { useProjectStore } from '../../../../stores/project';
 import { useToast } from 'vue-toast-notification';

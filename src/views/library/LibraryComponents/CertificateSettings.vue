@@ -1,7 +1,7 @@
 <script setup>
 import {ref} from 'vue';
 import CustomCheckbox from '../../../components/forms/CustomCheckbox.vue';
-import SaveableInput from '../components/SaveableInput.vue';
+import SaveableInput from '@components/forms/SaveableInput.vue';
 
 // temporary
 const stcPrice = ref('$27,990.00');

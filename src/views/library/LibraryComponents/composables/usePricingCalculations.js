@@ -23,11 +23,12 @@ function usePricingCalculations(pricings, activeTaxType) {
 	const calculatedStcDiscount = computed(
 		() => projectStore.getCalculatedStcDiscount
 	)
-	const totalAmountAfterStcDiscount = computed(
-		() =>
-			subtotal.value -
-			(subtotal.value ? calculatedStcDiscount.value : 0)
-	)
+
+	const totalAmountAfterStcDiscount = computed(() => {
+	    const valueToSubstract = subtotal.value ? calculatedStcDiscount.value : 0;
+	    const result = subtotal.value - valueToSubstract;
+	    return +result.toFixed(2);
+	});
 
 	watch(
 		() => ({

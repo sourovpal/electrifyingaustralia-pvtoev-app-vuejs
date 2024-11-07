@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import SaveableInput from '../components/SaveableInput.vue';
+import SaveableInput from '@components/forms/SaveableInput.vue';
 import axios from '../../../actions/api.js';
 import { useToast } from 'vue-toast-notification';
 import { useProjectStore } from '../../../stores/project.js';

@@ -254,5 +254,6 @@ export function isNumeric(str) {
     if (typeof str === 'number') return true;
     if (!str) return false;
     const stringified = str.toString();
-    return (/^[0-9]*$/).test(stringified);
+    // return (/^[0-9]*$/).test(stringified);
+    return (/^-?\d+(\.\d+)?$/).test(stringified);
 }

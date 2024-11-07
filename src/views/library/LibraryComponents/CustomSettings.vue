@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import SaveableInput from '../components/SaveableInput.vue';
+import SaveableInput from '@components/forms/SaveableInput.vue';
 import Formatter from '../../../helpers/Formatter';
 import updateCustomSettingsActions from './composables/useCustomSettingsActions';
 

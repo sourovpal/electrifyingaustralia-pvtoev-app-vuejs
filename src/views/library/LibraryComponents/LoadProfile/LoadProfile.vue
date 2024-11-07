@@ -79,7 +79,7 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue';
 import CustomSwitch from '../../../../components/forms/CustomSwitch.vue'
-import SaveableInput from '../../components/SaveableInput.vue';
+import SaveableInput from '@components/forms/SaveableInput.vue';
 import { useProjectStore } from '../../../../stores/project';
 import { storeToRefs } from 'pinia';
 import axios from '../../../../actions/api';

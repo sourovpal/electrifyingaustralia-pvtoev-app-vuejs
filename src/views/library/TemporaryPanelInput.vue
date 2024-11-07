@@ -1,5 +1,5 @@
 <script setup>
-import SaveableInput from './components/SaveableInput.vue'
+import SaveableInput from '@components/forms/SaveableInput.vue'
 import { computed, onMounted, ref } from 'vue'
 import {useProjectStore} from '../../stores/project'
 import axios from '../../actions/api'

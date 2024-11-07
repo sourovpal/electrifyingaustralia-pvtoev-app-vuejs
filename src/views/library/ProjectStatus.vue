@@ -1,7 +1,7 @@
 <script setup>
 import ShareModal from './ShareModal/ShareModal.vue'
 import ProjectInstallModal from './ProjectInstallModal/ProjectInstallModal.vue'
-import {ref, onMounted, watch, computed} from 'vue'
+import {ref, watch, computed} from 'vue'
 import {storeToRefs} from 'pinia'
 import {Skeletor} from 'vue-skeletor'
 import { useProjectStore } from '../../stores/project';

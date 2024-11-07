@@ -251,9 +251,8 @@ export async function handlePromise(promise) {
 }
 
 export function isNumeric(str) {
-    if (!str) 
-        return false;
+    if (typeof str === 'number') return true;
+    if (!str) return false;
     const stringified = str.toString();
-    const numRegex = /^[0-9]*$/;
-    return numRegex.test(stringified);
+    return (/^[0-9]*$/).test(stringified);
 }

@@ -71,7 +71,7 @@ const matchingPanels = computed(() => {
 			<div>
                 <input
 				    :placeholder="selectedPanel?.model ?? 'Search for available panels'"
-				    class="dropdown-toggle form-control panel-search-input"
+				    class="dropdown-toggle form-control panel-search-input text-end"
 				    id="dropdownMenuButton"
 				    data-toggle="dropdown"
 				    aria-haspopup="true"
@@ -83,7 +83,7 @@ const matchingPanels = computed(() => {
 			    <div
 				    class="dropdown-menu border panel-list"
 				    aria-labelledby="dropdownMenuButton"
-			        >
+			    >
 				    <a
 					    class="dropdown-item cursor-pointer d-flex align-items-center justify-content-between"
 					    @click="handlePanelClick(panelModel.id)"

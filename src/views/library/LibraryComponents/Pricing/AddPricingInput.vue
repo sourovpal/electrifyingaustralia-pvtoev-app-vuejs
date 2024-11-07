@@ -60,6 +60,7 @@
 			    />
             </template>
         </div>
+        <small class="text-secondary fs-12px">Enter 0 to unset values</small>
     </div>
 </template>
 
@@ -71,7 +72,7 @@ import UnitSelector from './UnitSelector.vue';
 import { useToast } from 'vue-toast-notification';
 import { handlePromise } from '../../../../helpers/index.js';
 
-const emit = defineEmits(['created', 'cancel'])
+const emit = defineEmits(['created', 'cancel', 'updated']);
 const props = defineProps(['pricing', 'lastPricingRecordOrder']);
 const currentRoute = useRoute();
 const toast = useToast();
@@ -87,7 +88,7 @@ const formData = ref({
         : props?.pricing?.order 
             ? props.pricing.order + 1 
             : 0
-})
+});
 
 const invalidInput = computed(() => {
     if (!Boolean(formData.value.description)) return true;
@@ -107,13 +108,7 @@ const handleCreateClick = async () => {
         return toast.error('Please enter valid input values!');
 
     const projectId = currentRoute.params.project_id;
-    const payload = {
-        description: formData.value.description,
-        quantity: formData.value.quantity,
-        unit_price: formData.value.unit_price,
-        unit_id: formData.value.unit_id,
-        order: formData.value.order
-    }
+    const payload = formData.value;
 
     const endpoint = !props.pricing 
         ? `projects/${projectId}/pricing` 
@@ -124,14 +119,17 @@ const handleCreateClick = async () => {
         : axios.put(endpoint, payload);
 
     loading.value = true;
-    const {response: _, error} = await handlePromise(axiosCall);
+    const {response, error} = await handlePromise(axiosCall);
 
     if (error) toast.error(
         error?.response?.data?.message ?? 'Something went wrong, please check your inputs and try again'
     ); 
 
+    if (response) emit(
+        !props.pricing ? 'created' : 'updated'
+    );
+
     loading.value = false;
-    emit(!props.pricing ? 'created' : 'updated');
 }
 
 const handleCancelClick = () => {

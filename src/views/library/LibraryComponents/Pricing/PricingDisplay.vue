@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="pricing-display position-relative" :key="pricingItemKey">
+        <div class="pricing-display position-relative">
             <!-- table header -->
             <div class="row px-4 py-2 table-header border-bottom --gx-0">
                 <small class="fw-bold col-5 col-md-3 ">Description*</small>
@@ -12,21 +12,32 @@
             </div>
 
             <!-- table rows -->
-            <vue-draggable-next
-                :class="`pricing-item-list ${loading ? 'opacity-10 pe-none' : ''}`"
-                tag="div" 
-                :list="pricings" 
-                ghost-change="dragged-on" 
-                @change="handleChange" 
-                handle=".handle"
-            >
-                <PricingItem
-                    v-for="(pricing, idx) in pricings"
-                    :key="idx"
-                    :pricing
-                    @item-updated="handleItemUpdated"
-                />
-            </vue-draggable-next>
+            <template v-if="!isUpdatingOrders">
+                <vue-draggable-next
+                    :class="`pricing-item-list`"
+                    tag="div" 
+                    :list="pricings" 
+                    ghost-change="dragged-on" 
+                    @change="handleChange" 
+                    handle=".handle"
+                >
+                    <PricingItem
+                        v-for="pricing in pricings"
+                        :pricing
+                        :key="`#${pricingItemKey}-${pricing.id}`"
+                        @item-updated="handleItemUpdated"
+                    />
+                </vue-draggable-next>
+            </template>
+
+            <template v-else>
+                <div class="opacity-30 pe-none">
+                    <PricingItem
+                        v-for="pricing in pricings"
+                        :pricing
+                    />
+                </div>
+            </template>
 
             <AddPricingInput
                 ref="addInputWrapper"
@@ -119,6 +130,7 @@ import { onMounted, ref, computed } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { useToast } from 'vue-toast-notification';
 import { useProjectStore } from '../../../../stores/project.js';
+import { handlePromise } from '../../../../helpers';
 
 const { params } = useRoute();
 const projectStore = useProjectStore();
@@ -157,18 +169,31 @@ const handleItemUpdated = async () => {
     pricingItemKey.value++;
 }
 
+const isUpdatingOrders = ref(false);
 const loading = ref(false);
-const handleChange = async () => {
-    loading.value = true;
-    const indicesMappedToOrders = pricings.value.map(({id, description}, i) => ({id, order: i, description}))
 
-    await axios.put(
+const handleChange = async () => {
+    isUpdatingOrders.value = true;
+    loading.value = true;
+
+    const indicesMappedToOrders = pricings.value.map(({id}, i) => ({id, order: i}))
+
+    const {response, error} = await handlePromise(axios.put(
         `projects/${params.project_id}/pricing/items-order-update`,
         { new_order_values: indicesMappedToOrders }
-    );
+    ));
 
-    // await getPricings();
-    pricingItemKey.value++;
+    if (response) {
+        await getPricings();
+        pricingItemKey.value++;
+    }
+
+    if (error) {
+        toast.error(error?.response?.data?.message ?? 'Something went wrong')
+        console.log(error);
+    }
+
+    isUpdatingOrders.value = false;
     loading.value = false
 };
 
@@ -194,20 +219,23 @@ const taxLoading = ref(false);
 const toast = useToast();
 const activeTaxSlug = ref('');
 
-const handleTaxTypeClick = (taxSlug) => {
+const handleTaxTypeClick = async (taxSlug) => {
     taxLoading.value = true; 
-    axios.put(`projects/${params.project_id}/tax-type-update`, {tax_type: taxSlug})
-        .then(res => {
-            activeTaxSlug.value = res?.data?.updated_tax_type;
-            projectStore.setCurrentProject(params.project_id);
-        })
-        .catch(e => {
-		    toast.error(e?.response?.data?.message ?? 'Something went wrong'); 
-            console.log(e);
-        })
-        .finally(() => {
-            taxLoading.value = false; 
-        })
+
+    const taxTypeUpdateCall = axios.put(`projects/${params.project_id}/tax-type-update`, {tax_type: taxSlug});
+    const {response: res, error: err} = await handlePromise(taxTypeUpdateCall);
+
+    if (res) {
+        activeTaxSlug.value = res?.data?.updated_tax_type;
+        projectStore.setCurrentProject(params.project_id);
+    }
+
+    if (err) {
+		toast.error(err?.response?.data?.message ?? 'Something went wrong'); 
+        console.log(err);
+    }
+
+    taxLoading.value = false; 
 };
 
 const taxTypes = ref([
@@ -221,7 +249,6 @@ const {
     total,
     calculatedStcDiscount,
     totalAmountAfterStcDiscount,
-    stcCount
 } = usePricingCalculations(pricings, activeTaxSlug);
 </script>
 
@@ -229,19 +256,6 @@ const {
 .table-header { background: rgba(0, 0, 0, 0.05); }
 
 .pricing-display { overflow-x: clip; }
-
-.pricing-value {
-    position: relative;
-
-    .pricing-action {
-        width: 4.5rem;
-
-        top: 50%;
-        transform: translateY(-50%);
-        position: absolute;
-        right: 0;
-    }
-}
 
 .tax-type-list-item {
     border-left: 2px solid #ffffff00;
@@ -251,14 +265,18 @@ const {
 
 .pricing-value {
     transition: 200ms; 
+    position: relative;
 
     & > small { transition: 200ms; }
+
     .unit-selector-loader { display: none; }
 
     &.loading {
         small, div { opacity: 0 !important; }
         .unit-selector-loader { display: inline; }
     }
+
+    &:hover .icon.handle { opacity: 1; }
 
     .icon.handle { 
         opacity: 0;
@@ -269,7 +287,12 @@ const {
         cursor: move;
     }
 
-    &:hover .icon.handle { opacity: 1; }
-
+    .pricing-action {
+        width: 4.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        position: absolute;
+        right: 0;
+    }
 }
 </style>

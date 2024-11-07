@@ -8,21 +8,16 @@
   import { useClipboard } from "@vueuse/core";
   import { $toast } from "@config";
 
-  import ConfirmPopup from 'primevue/confirmpopup';
-
-  import Toast from 'primevue/toast';
-
   import { useConfirm } from "primevue/useconfirm";
-  import { useToast } from "primevue/usetoast";
 
   const confirm = useConfirm();
-  const toast = useToast();
   const platformStore = usePlatformStore();
 
   const isFirstLoading = computed(() => platformStore.getIsFirstLoading);
   const contacts = computed(() => platformStore.getLeadContacts);
   const statuses = computed(() => platformStore.getStatuses);
   const leadStatus = computed(() => platformStore.getLeadStatus);
+  const isPipelineLead = computed(() => platformStore.getIsPipelineLead);
 
   const dropdownPopober = ref(null);
   const toggleContactEditModal = ref(false);
@@ -43,7 +38,7 @@
   const confirmDeleteContact = (event) => {
     confirm.require({
       target: event.currentTarget,
-      header: 'Confirm',
+      header: 'Delete Contact?',
       message: 'Are you sure you want to Delete?',
       icon: 'pi pi-trash fs-16px',
       rejectProps: {
@@ -137,18 +132,6 @@
 </script>
 <template>
 
-  <Toast />
-
-  <confirm-popup class="rounded-3"
-    style="--p-confirmpopup-arrow-offset:0.8rem;">
-    <template #message="slotProps">
-      <div class="d-flex justify-content-start align-items-center px-3 py-2">
-        <i :class="slotProps.message.icon"
-          class="me-2"></i>
-        <p class="text-head mb-0">{{ slotProps.message.message }}</p>
-      </div>
-    </template>
-  </confirm-popup>
 
   <div
     class="col-r-header d-flex justify-content-between align-items-center border-bottom overflow-x-auto overflow-y-hidden">
@@ -519,7 +502,8 @@
 
     </div>
 
-    <div class="py-2">
+    <div v-if="!isPipelineLead"
+      class="py-2">
       <label class="fs-16px fw-bold text-soft mb-2"
         for="">Status</label>
       <select-option :options="statuses"

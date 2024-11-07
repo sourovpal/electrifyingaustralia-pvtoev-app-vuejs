@@ -24,14 +24,16 @@
         toggle.value = !toggle.value;
     }
 
-    const handleOnUpdateNotes = useDebounceFn(() => {
+    const handleOnUpdateNotes = useDebounceFn(() => handleOnUpdateNotesFast(), 2000);
+
+    const handleOnUpdateNotesFast = (save = false) => {
 
         $toast.clear();
 
         useApiRequest({
             url: `leads/${editLeadId.value}/notes`,
             method: 'POST',
-            payload: { notes: leadNotes.value }
+            payload: { notes: leadNotes.value, save }
         }).then(res => {
 
             const { success, message, errors } = res;
@@ -44,26 +46,42 @@
             $toast.error(error.message);
         })
 
-    }, 2000);
+    };
 
 </script>
 <template>
-    <div class="mt-3">
-        <label class="fs-16px fw-bold text-soft mb-2">Notes</label>
+    <div class="mt-0">
+        <label class="fs-12px text-soft mb-0">Notes</label>
     </div>
-    <div class="lead-timeline-notes">
-        <textarea class="notes"
-            @keyup="handleOnUpdateNotes"
-            v-model="leadNotes"
-            rows="6"></textarea>
-    </div>
-    <div class="d-flex justify-content-end py-2">
-        <button class="btn btn-warning btn-warning-outlat btn-sm">Save change</button>
+    <div class="position-relative hover">
+
+        <div class="lead-timeline-notes">
+            <textarea class="notes"
+                @keyup="handleOnUpdateNotes"
+                v-model="leadNotes"
+                rows="6"></textarea>
+        </div>
+        <div class="d-flex justify-content-end py-2 save-btn">
+            <button @click="handleOnUpdateNotesFast(true)"
+                class="btn btn-warning btn-warning-outlat btn-sm">Save change</button>
+        </div>
     </div>
 </template>
 
 <style scoped
     lang="scss">
+    .hover {
+        .save-btn {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s linear;
+        }
+
+        &:hover .save-btn {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
 
     .lead-timeline-notes {
         background-color: #fff3c4 !important;
@@ -85,5 +103,11 @@
             overflow: auto;
             scrollbar-width: none;
         }
+    }
+
+    .save-btn {
+        position: absolute;
+        bottom: 0;
+        right: 8px;
     }
 </style>

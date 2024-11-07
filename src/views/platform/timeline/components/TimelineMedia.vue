@@ -1,7 +1,6 @@
 <script setup>
 
-    import { ref, computed, nextTick } from 'vue';
-    import BlockUI from 'primevue/blockui';
+    import { ref, computed, nextTick } from 'vue'; 
     import MediaUpload from './MediaUpload.vue';
     import MediaAttachment from './MediaAttachment.vue';
     import MediaAttachmentSkeletor from './Skeletor/MediaAttachmentSkeletor.vue';
@@ -81,13 +80,17 @@
             uploadInCompleteFiles.value.push(index);
         }
 
+        
         if (uploadCompleteFiles.value.length === files.value.length) {
             reset();
         }
-
+        
     }
-
+    
     function reset() {
+
+        platformStore.callFetchTimelineLogs();
+
         inputFiles.value.value = '';
 
         isDragOver.value = false;
@@ -125,8 +128,6 @@
         },
     );
 
-
-
 </script>
 
 <template>
@@ -146,7 +147,7 @@
 
             <p class="text-head fs-16px mb-0 text-center">
                 Drag & Drop files to upload <br> or
-                <span class="text-success cursor-pointer"
+                <span class="crm-text cursor-pointer"
                     @click="onInputFilesHandler">
                     Click here
                 </span>
@@ -194,33 +195,25 @@
 
     <div class="mt-3">
 
-        <div v-if="!files.length"
+        <div v-if="!files.length && uploadedFiles.length"
             class="pb-2 d-flex justify-content-between align-items-center sticky-pagination">
             <span class="">{{ pagination.from?1:0 }} - {{ pagination.to }} of {{ pagination.total }}</span>
-            <span class="cursor-pointer text-primary"
+            <span class="cursor-pointer crm-text"
                 @click="toggleShowAllFiles = true">See all</span>
         </div>
 
+
+
         <template v-for="(file, index) in uploadedFiles"
             :key="file.filepath">
-
-            <Transition>
-
-                <media-attachment @click="handlePreviewImage(file)"
-                    :file="file"></media-attachment>
-
-            </Transition>
-
+            <media-attachment @preview="handlePreviewImage(file)" :file="file"></media-attachment>
         </template>
+
 
         <template v-if="isLoading || loading">
 
-            <Transition v-for="(item, index) in (isLoading?1:10)"
-                :key="index">
-
-                <media-attachment-skeletor></media-attachment-skeletor>
-
-            </Transition>
+            <media-attachment-skeletor v-for="(item, index) in (isLoading?1:10)"
+                :key="index"></media-attachment-skeletor>
 
         </template>
 

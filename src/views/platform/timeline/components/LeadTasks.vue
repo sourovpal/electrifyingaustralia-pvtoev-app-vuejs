@@ -44,7 +44,7 @@
       });
   }
 
-  onMounted(()=>{
+  onMounted(() => {
     console.log('onMounted')
   })
 
@@ -76,25 +76,26 @@
 
       <button @click="isCreateNew = !isCreateNew"
         class="task-action-btn add-new">
+
         <font-awesome-icon icon="fas fa-plus"
-          class="text-primary fs-16px btn-icon"></font-awesome-icon>
-        <span class="ms-2 fw-bold text-primary fs-14px">New task</span>
+          class="crm-text fs-16px btn-icon"></font-awesome-icon>
+        <span class="ms-2 fw-bold crm-text fs-14px">New task</span>
+
+        <div @click.stop="toggleworkflowModal = true"
+          class="px-2 ms-auto">
+          <i class="pi pi-sitemap crm-text fs-16px btn-icon"></i>
+        </div>
+
       </button>
 
     </div>
 
-    <div class="ms-n2">
-
-      <button @click="toggleworkflowModal = true"
-        class="task-action-btn add-new">
-        <i class="pi pi-sitemap text-primary fs-16px btn-icon"></i>
-        <span class="ms-2 fw-bold text-primary fs-14px">Begin a workflow</span>
-      </button>
-
-    </div>
   </div>
+
   <workflow-modal v-if="toggleworkflowModal"
+    :visible="toggleworkflowModal"
     @close="() => (toggleworkflowModal = false)"></workflow-modal>
+
 </template>
 
 <style lang="scss"

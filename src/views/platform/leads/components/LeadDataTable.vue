@@ -1,6 +1,5 @@
 <script setup>
   import { ref, computed } from "vue";
-  import DropdownOwnerList from "../../components/dropdowns/DropdownOwnerList.vue";
   import Datatable from "@components/Datatable/Datatable.vue";
   import DatatableHeader from "@components/Datatable/DatatableHeader.vue";
   import DatatableBody from "@components/Datatable/DatatableBody.vue";
@@ -15,6 +14,7 @@
   import moment from "moment";
   import { useApiRequest } from "@actions";
   import { useClipboard } from "@vueuse/core";
+  import TeamMembersPopover from "../../components/dropdowns/TeamMembersPopover.vue";
 
   const leadsStore = useLeadsStore();
   const platformStore = usePlatformStore();
@@ -28,9 +28,12 @@
   const statuses = computed(() => platformStore.getStatuses);
   const headerAttributes = computed(() => leadsStore.getHeaders);
 
+  const teamMembersPopovarRef = ref(null);
+  const selectedOwner = ref(null);
   const isStatusUpdating = ref(null);
   const isOwnerUpdating = ref(null);
   const isLoadingUsers = ref(false);
+  const selectedEditLead = ref(null);
 
   function handleSelectRow(id) {
     leadsStore.setSelectedLeads(id);
@@ -94,29 +97,37 @@
       });
   }
 
-  function fetchUsers() {
+  function fetchUsers(event, lead) {
+
+    selectedOwner.value = lead.owner;
+
+    selectedEditLead.value = lead;
+
+    teamMembersPopovarRef.value.toggle(event);
+
     if (platformStore.getUsers.length) return;
+
     platformStore.callFetchUsers(({ loading }) => {
       isLoadingUsers.value = loading;
     });
+
   }
 
-  async function handleUpdateLeadOwner(owner, lead) {
+  async function handleUpdateLeadOwner(owner) {
     $toast.clear();
-    if (lead.owner?.user_id == owner.user_id) return;
-    isOwnerUpdating.value = lead.lead_id;
+    if (selectedEditLead.value.owner?.user_id == owner.user_id) return;
+    isOwnerUpdating.value = selectedEditLead.value.lead_id;
     await useApiRequest({
-      url: `/leads/${lead.lead_id}/owner`,
-      method: "POST",
+      url: `/platform/${selectedEditLead.value.lead_id}/owner`,
+      method: "put",
       payload: {
-        owner: owner?.user_id,
-        leads: lead.lead_id,
+        owner_id: owner?.user_id,
       },
     })
       .then((res) => {
         const { success, errors, message } = res;
         if (success) {
-          lead.owner = owner;
+          selectedEditLead.value.owner = owner;
           return;
         }
         $toast.error("You can't change the owner of this lead's");
@@ -437,33 +448,42 @@
         <div v-show="!headerAttributes.includes('owner')"
           style="width: 10rem; flex-grow: 1"
           class="tbl-td">
+
           <div class="settings-group-item owner-list-dropdown position-relative">
+
             <button class="owner-dropdown-toggler"
-              @click="fetchUsers"
-              data-mdb-toggle="dropdown"
+              @click="fetchUsers($event, lead)"
               aria-expanded="false"
               v-tippy="{
                 content: lead.owner?.name ?? 'Change Owner',
                 placement: 'top',
               }">
+
               <svg-custom-icon v-if="isOwnerUpdating == lead.lead_id"
                 icon="SpinnerIcon" />
+
               <div v-else
                 class="icon">
                 <img v-if="lead.owner?.profile_avatar"
                   :src="lead.owner?.profile_avatar ?? AvatarIcon"
                   :alt="lead.owner?.name" />
               </div>
+
             </button>
-            <DropdownOwnerList class="tbl-lead-owner-list"
-              :lead-owner="lead.owner"
-              :loading="isLoadingUsers"
-              @change="(owner) => handleUpdateLeadOwner(owner, lead)" />
+
           </div>
+
         </div>
+
       </div>
+
     </datatable-body>
   </Datatable>
+
+  <team-members-popover ref="teamMembersPopovarRef"
+    :member="selectedOwner"
+    @change="handleUpdateLeadOwner"></team-members-popover>
+
 </template>
 
 <style scoped

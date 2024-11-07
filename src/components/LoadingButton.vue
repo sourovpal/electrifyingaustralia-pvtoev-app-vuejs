@@ -52,7 +52,7 @@
 
 <template>
   <button :disabled="(disabled || isLoadingBtn)"
-    class="btn btn-primary px-3 d-flex justify-content-center align-items-center"
+    class="btn crm-btn px-3 d-flex justify-content-center align-items-center"
     :type="type"
     :class="size"
     @click="submitHandler"

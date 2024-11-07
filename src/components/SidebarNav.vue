@@ -106,13 +106,18 @@
 
 <template>
   <aside class="main-left-navbar parent-navbar d-none d-xl-block">
+
       <div class="navbar">
+
         <div class="top-navbar">
+
           <div v-for="(item, index) in topNavbarItems"
             :key="index"
             class="nav-item mb-0 d-flex flex-column justify-content-start align-items-center">
+
             <router-link :to="item.path"
               class="nav-link d-flex flex-column justify-content-center align-items-center">
+
               <span class="nav-icon"
                 v-tippy="{ content: item.label, placement: 'right' }">
                 <font-awesome-icon :style="{
@@ -121,84 +126,120 @@
                   }"
                   :icon="item.icon" />
               </span>
+
               <span class="nav-title d-block">{{ item.label }}</span>
+
             </router-link>
+
           </div>
+
         </div>
+
         <div class="bottom-navbar">
+
           <div v-for="(item, index) in bottomNavbarItems"
             :key="index"
             class="nav-item mb-0 d-flex flex-column justify-content-start align-items-center">
+
             <!-- Profile -->
             <div v-if="item.unique_id == 'nav-profile'">
               <div @click="handleToggleProfile"
                 class="nav-link d-flex flex-column justify-content-center align-items-center">
+
                 <span class="nav-icon"
                   v-tippy="{ content: item.label, placement: 'right' }">
                   <img class="profile-avatar"
                     :src="authUser.profile_avatar" />
                 </span>
+
                 <span class="nav-title d-block">{{ item.label }}</span>
+
               </div>
+
               <profile-dropdown @click-outside="handleToggleProfile"
                 v-if="toggleProfile"></profile-dropdown>
+
             </div>
 
             <!-- Notification -->
             <div v-else-if="item.unique_id == 'nav-notification'">
+
               <div @click="handleToggleNotification"
                 class="nav-link nav-notification d-flex flex-column justify-content-center align-items-center">
+
                 <span v-if="unseenNotification" class="notification-badge bg-danger">
+
                   {{ (unseenNotification < 9)?
                     unseenNotification: '9+'
                     }}
                     </span>
+
                     <span class="nav-icon"
                       v-tippy="{ content: item.label, placement: 'right' }">
                       <font-awesome-icon :style="{ height: '24px', width: '24px' }"
                         :icon="item.icon" />
                     </span>
+
                     <span class="nav-title d-block">{{ item.label }}</span>
               </div>
+
               <transition name="fade">
                 <notifications-dropdown @click-outside="handleToggleNotification"
                   class="d-none d-lg-block"
                   v-if="toggleNotification"></notifications-dropdown>
               </transition>
+
             </div>
 
             <router-link :to="item.path"
               v-else
               class="nav-link d-flex flex-column justify-content-center align-items-center">
+
               <span class="nav-icon"
                 v-tippy="{ content: item.label, placement: 'right' }">
                 <font-awesome-icon :style="{ height: '24px', width: '24px' }"
                   :icon="item.icon" />
               </span>
+
               <span class="nav-title d-block">{{ item.label }}</span>
+
             </router-link>
+
           </div>
+
         </div>
+
       </div>
+
   </aside>
+
   <bootstrap-modal v-if="authStore.getConfirmLogout"
     @close="authStore.setConfirmLogout(false)"
     size="sm">
+
     <div class="">
+
       <h6>Are you sure? Do you want to sing out!</h6>
       <br />
+
       <div class="d-flex justify-content-between align-items-center">
+
         <button class="btn btn-sm btn-danger"
           data-mdb-dismiss="modal">
           Cancel
         </button>
+
         <button class="btn btn-sm btn-primary"
           @click="authStore.callAuthLogout()">
           Sign out
         </button>
+
       </div>
+
     </div>
+
   </bootstrap-modal>
+
 </template>
 
 <style lang="scss"
@@ -278,16 +319,16 @@
         .nav-link {
           --nav-bg-color: #ffffff;
           --nav-icon-color: #6b7c92;
-          --nav-active-color: #2196f3;
+          --nav-active-color: var(--crm-color);
           --nav-border-color: transparent;
           --nav-text-color: #8094ae;
 
           &.router-link-active {
             --nav-bg-color: transparent !important;
-            --nav-active-color: #2196f3 !important;
-            --nav-icon-color: #2196f3 !important;
-            --nav-border-color: #2196f3 !important;
-            --nav-text-color: #2196f3 !important;
+            --nav-active-color: var(--crm-color) !important;
+            --nav-icon-color: var(--crm-color) !important;
+            --nav-border-color: var(--crm-color) !important;
+            --nav-text-color: var(--crm-color) !important;
             transition: all 0.3s;
           }
 

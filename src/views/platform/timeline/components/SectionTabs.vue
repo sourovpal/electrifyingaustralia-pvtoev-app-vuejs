@@ -37,29 +37,47 @@
         <TabList>
             <Tab class="py-1"
                 value="0">General</Tab>
+                
             <Tab class="py-1"
                 value="1">Tasks</Tab>
+
             <Tab @click="fetchLeadFiles"
                 class="py-1"
                 value="2">Media</Tab>
+
             <Tab class="py-1"
-                value="3">Project</Tab>
+                value="4">Project</Tab>
+
         </TabList>
         <TabPanels>
+
             <TabPanel value="0">
+
                 <RightSidebarAddress></RightSidebarAddress>
+
                 <RightSidebarProperties></RightSidebarProperties>
+
                 <LeadNotes></LeadNotes>
+
             </TabPanel>
+
             <TabPanel value="1">
+
                 <LeadTasks></LeadTasks>
+
             </TabPanel>
+
             <TabPanel value="2">
+
                 <TimelineMedia :loading="fileIsLoading"></TimelineMedia>
+
             </TabPanel>
+
             <TabPanel value="3">
+
                 <TimelineMedia></TimelineMedia>
             </TabPanel>
+
         </TabPanels>
     </Tabs>
 </template>

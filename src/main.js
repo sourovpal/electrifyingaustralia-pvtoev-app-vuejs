@@ -75,6 +75,11 @@ import ToastService from 'primevue/toastservice';
 import ConfirmDialog from 'primevue/confirmdialog';
 import OverlayBadge from 'primevue/overlaybadge';
 import Badge from 'primevue/badge';
+import Tabs from 'primevue/tabs';
+import Tab from 'primevue/tab';
+import TabList from 'primevue/tablist';
+import TabPanel from 'primevue/tabpanel';
+import TabPanels from 'primevue/tabpanels';
 
 // import "primeicons/primeicons.css";
 
@@ -109,6 +114,11 @@ app.component("ScrollPanel", ScrollPanel);
 app.component("confirm-dialog", ConfirmDialog);
 app.component("overlay-badge", OverlayBadge);
 app.component("Badge", Badge);
+app.component("Tabs", Tabs);
+app.component("Tab", Tab);
+app.component("TabList", TabList);
+app.component("TabPanel", TabPanel);
+app.component("TabPanels", TabPanels);
 
 app.use(ConfirmationService);
 app.use(ToastService);

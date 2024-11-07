@@ -181,7 +181,7 @@
 
       <button v-if="!isPipelineLead"
         @click="platformStore.setCertifyModalAction('certify')"
-        class="btn btn-sm btn-primary fw-bold me-3 justify-content-center align-items-center d-none d-md-flex">
+        class="btn btn-sm crm-btn fw-bold me-3 justify-content-center align-items-center d-none d-md-flex">
         <i class="pi pi-check-circle fs-14px me-2"></i>
         certify
       </button>
@@ -221,10 +221,6 @@
         </button>
 
         <div class="dropdown-menu dropdown-menu-end shadow-md custom-dropdown-menu three-dot">
-
-          <!-- <span v-if="!isPipelineLead"
-            @click="toggleLeadQualifiedModal = true"
-            class="dropdown-item cursor-pointer text-head d-block d-lg-none py-1">Qualify</span> -->
 
           <span @click="toggleReCategoriesModal = !toggleReCategoriesModal"
             class="dropdown-item cursor-pointer text-head py-1">Re-categorise lead</span>

@@ -11,19 +11,18 @@
 
 </script>
 <template>
-  <div id="timelineRightSidebar"
-    class="col-right"
+  <div class="col-right"
     :class="{ show: toggleRightSidebar }">
 
     <scroll-panel :dt="{bar: {background: '#aaaaaa',size:'0.2rem'}}"
-      style="width:100%;height:100%;">
+      style="width:100%;height:100vh;">
 
       <right-sidebar-contacts></right-sidebar-contacts>
       <section-tabs></section-tabs>
       <div style="height: 15rem"></div>
 
     </scroll-panel>
-    
+
   </div>
 </template>
 

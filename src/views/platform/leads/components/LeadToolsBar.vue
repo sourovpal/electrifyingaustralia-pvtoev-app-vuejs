@@ -146,11 +146,11 @@
         <right-action-bar>
             <div class="btn-group me-3"
                 v-if="Object.keys(filterQuerys).length">
-                <button class="btn btn-success btn-sm">
+                <button class="btn crm-btn btn-sm">
                     {{ Object.keys(filterQuerys).length }} active filter
                 </button>
                 <button @click="handleToggleFilter"
-                    class="btn btn-success btn-sm px-2 active d-flex justify-content-center align-items-center">
+                    class="btn crm-btn btn-sm ps-1 pe-2 active d-flex justify-content-center align-items-center">
                     <font-awesome-icon v-if="!toggleFilter"
                         icon="fas fa-filter"
                         class="fs-15px"></font-awesome-icon>
@@ -171,7 +171,7 @@
             </div>
 
             <div class="me-3 d-lg-inline d-none">
-                <button class="btn btn-sm btn-primary fw-bold d-none d-xl-block white-space-nowrap"
+                <button class="btn btn-sm crm-btn fw-bold d-none d-xl-block white-space-nowrap"
                     @click="showAddNewModal">
                     <font-awesome-icon icon="fas fa-user-plus"
                         class="fs-14px me-1"></font-awesome-icon>

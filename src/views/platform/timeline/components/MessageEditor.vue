@@ -157,24 +157,28 @@
 
 
 <template>
-    <div class="tab-content flex-grow-1 d-flex flex-column">
+    <div class="tab-content h-100 d-flex flex-column pt-2">
+
         <div ref="quillEditorRef"
-            @click="handleFetchUsers"
-            class="flex-grow-1"></div>
-        <div class="d-flex px-2 py-2">
+            @click="handleFetchUsers"></div>
+
+        <div class="d-flex px-2 pt-1">
+
             <EmojiPicker ref="toggleEmojiRef"
                 v-if="toggleEmojiBox"
                 :native="true"
                 @select="handleSelecgtedEmoji"></EmojiPicker>
+
             <button @click="handleToggleEmoji"
                 class="ms-auto me-2 toolbar-btn btn btn-light btn-sm btn-floating d-flex justify-content-center align-items-center position-relative">
                 <font-awesome-icon icon="fas fa-face-smile"
                     class="text-soft"></font-awesome-icon>
             </button>
+
             <loading-button @click="handleSubmitMessage"
                 :is-loading="isSubmitMessage"
                 loading-text="Sending..."
-                class="btn btn-sm btn-primary">Send Message</loading-button>
+                class="btn btn-sm crm-btn">Send Message</loading-button>
         </div>
     </div>
 </template>

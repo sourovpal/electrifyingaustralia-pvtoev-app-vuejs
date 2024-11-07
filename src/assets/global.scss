@@ -5,6 +5,10 @@
   --p-inputtext-sm-font-size: 0.875rem;
   --main-left-navbar-width: 4rem;
   --child-left-navbar-width: 16rem;
+  // crm color
+  --crm-color: #10b981;
+  --crm-disabled-color: #1a976d;
+  --crm-border-color: var(--crm-color);
 
   @media (max-width: 1200px) {
     --main-left-navbar-width: 0rem !important;
@@ -12,25 +16,23 @@
   }
 
   --content-body-width: calc(100% - calc(var(--main-left-navbar-width) + var(--child-left-navbar-width)));
+  --container-width: var(--content-body-width);
   --layout-border-color: rgb(144 164 174 / 25%);
-}
-
-* {
-  font-family: "Source Sans Pro", sans-serif;
-  margin: 0px;
-  padding: 0px;
-}
-
-body {
-  color: #1f2933;
-  overflow: hidden;
 }
 
 *,
 body,
 html {
+  font-family: "Source Sans Pro", sans-serif;
+  margin: 0px;
+  padding: 0px;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
+}
+
+body {
+  color: #1f2933;
+  overflow: hidden;
 }
 
 ::-webkit-scrollbar-track,
@@ -48,6 +50,34 @@ html::-webkit-scrollbar {
 
 #app {
   height: 100vh;
+}
+
+.crm-bg {
+  background: var(--crm-color) !important;
+  background-color: var(--crm-color) !important;
+}
+
+.crm-text {
+  color: var(--crm-color) !important;
+}
+
+.crm-border {
+  border-color: var(--crm-color) !important;
+}
+
+.crm-btn {
+  @extend .crm-bg;
+  // box-shadow: 0 4px 9px -4px #058f61 !important;
+  color: #ffffff !important;
+  &.disabled,
+  &[disabled] {
+    background: var(--crm-disabled-color) !important;
+  }
+}
+
+.modal .modal-dialog {
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 .z-index-1 {
@@ -96,11 +126,6 @@ html::-webkit-scrollbar {
 
 .z-index-9999 {
   z-index: 9999 !important;
-}
-
-.modal .modal-dialog {
-  margin-left: auto !important;
-  margin-right: auto !important;
 }
 
 .object-contain {

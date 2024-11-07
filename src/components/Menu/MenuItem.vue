@@ -105,14 +105,14 @@
     .nav-link {
         --nav-bg-color: #f4f6f6;
         --nav-icon-color: #6b7c92;
-        --nav-active-color: #2196F3;
+        --nav-active-color: var(--crm-color);
         --nav-text-color: #8094ae;
 
         &.is-active {
             --nav-bg-color: transparent !important;
-            --nav-active-color: #2196F3 !important;
-            --nav-icon-color: #2196F3 !important;
-            --nav-text-color: #2196F3 !important;
+            --nav-active-color: var(--crm-color) !important;
+            --nav-icon-color: var(--crm-color) !important;
+            --nav-text-color: var(--crm-color) !important;
         }
 
         transition: all 0.3s;

@@ -485,7 +485,7 @@
 
               <button v-if="!isCreateNewContact"
                 @click="selectContactHandler()"
-                class="btn btn-primary w-100">
+                class="btn crm-btn w-100">
                 Add New
               </button>
 
@@ -521,7 +521,7 @@
               </span>
 
               <svg v-if="editContact?.is_primary"
-                :class="`ms-2 text-success `"
+                :class="`ms-2 crm-text `"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
                 height="24"
@@ -908,7 +908,7 @@
 
       &:hover,
       &.active {
-        border-left-color: #3b71ca;
+        border-left-color:var(--crm-border-color);
       }
 
       .contact-details {

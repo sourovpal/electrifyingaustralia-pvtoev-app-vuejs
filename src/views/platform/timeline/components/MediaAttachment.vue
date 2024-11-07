@@ -1,17 +1,28 @@
 <script setup>
 
     import { ref, computed, watch, nextTick } from 'vue';
-    import { formatFileSize, shortenFileName, imageExtensions, fileNameToExtension, formatTimeAgo } from '@helpers';
+    import { formatFileSize, shortenFileName, imageExtensions, fileNameToExtension, formatTimeAgo, handleDownloadAttachment } from '@helpers';
     import { getMaterialFileIcon } from "file-extension-icon-js";
     import FetchImage from '@components/FetchImage.vue';
-
+    import { useConfirm } from "primevue/useconfirm";
     import { $toast } from '@config';
+    import { useApiRequest } from '@actions';
+    import { usePlatformStore } from '@stores';
+    import BlockUI from 'primevue/blockui';
 
     const props = defineProps({
         file: { type: Object },
     });
 
+    const platformStore = usePlatformStore();
+
+    const emits = defineEmits(['preview']);
+
+    const confirm = useConfirm();
+
     const upload_file = computed(() => props.file);
+
+    const is_deleted = ref(false);
 
     const file_name = ref(null);
     const file_short_name = ref(null);
@@ -37,58 +48,94 @@
     }, { deep: true, immediate: true });
 
 
+    const confirmDeleteAttachment = (event) => {
+        confirm.require({
+            header: 'Delete Attachment?',
+            message: 'Are you sure you want to Delete?',
+            icon: 'pi pi-trash fs-16px',
+            rejectProps: {
+                label: 'Cancel',
+                severity: 'secondary',
+                outlined: true,
+                style: 'height:2rem'
+            },
+            acceptProps: {
+                label: 'Delete',
+                severity: 'danger',
+                style: 'height:2rem'
+            },
+            accept: async () => {
+                await useApiRequest(
+                    { url: `/platform/delete/${props.file.file_id}/${props.file.filename}`, method: 'delete' }
+                ).then(res => {
+                    is_deleted.value = true;
+                    $toast.success(res.message.text);
+                }).catch(error => {
+                    $toast.error(error.message);
+                });
+            },
+            reject: () => { }
+        });
+    };
+
+
+
 </script>
 
 <template>
-    <div class="rounded-2 px-2 py-2 card mb-2 border rounded-2">
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="col-left">
 
-                <div class="d-flex justify-content-start align-items-center">
+    <BlockUI :blocked="is_deleted">
+        <div class="rounded-2 px-2 py-2 card mb-2 border rounded-2 cursor-pointer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div @click="emits('preview', file)"
+                    class="col-left">
+
+                    <div class="d-flex justify-content-start align-items-center">
 
 
-                    <Avatar :image="preview_file"
-                        pt:image:class="object-contain"
-                        class="me-3 file-icon">
-                        <FetchImage class="object-contain"
-                            v-if="isImage"
-                            :src="file.filepath"></FetchImage>
-                    </Avatar>
+                        <Avatar :image="preview_file"
+                            pt:image:class="object-contain"
+                            class="me-3 file-icon">
+                            <FetchImage class="object-contain"
+                                v-if="isImage"
+                                :src="file.filepath"></FetchImage>
+                        </Avatar>
 
-                    <div class="file-details w-100">
+                        <div class="file-details w-100">
 
-                        <div class="fs-14px text-head mb-2 white-space-nowrap">{{ file_short_name }}</div>
+                            <div class="fs-14px text-head mb-2 white-space-nowrap">{{ file_short_name }}</div>
 
-                        <div class="d-flex justify-content-between align-items-center w-100">
-                            <div class="w-100 fs-12px text-soft">
-                                {{ formatTimeAgo(file.created_at, 15)?.replace('a few seconds ago', 'just now') }}
-                                <span class="px-1">•</span>
-                                {{ file_size }}
+                            <div class="d-flex justify-content-between align-items-center w-100">
+                                <div class="w-100 fs-12px text-soft">
+                                    {{ formatTimeAgo(file.created_at, 15)?.replace('a few seconds ago', 'just now') }}
+                                    <span class="px-1">•</span>
+                                    {{ file_size }}
+                                </div>
                             </div>
+
                         </div>
-
                     </div>
+
+                </div>
+
+                <div class="fs-14px text-soft pe-1 actions-">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="cursor-pointer" @click="handleDownloadAttachment(`/platform/download/${file.file_id}/${file.filename}`, file.filename)">
+                            <i class="pi pi-download fs-14px text-soft"></i>
+                        </span>
+
+                        <span @click="confirmDeleteAttachment()"
+                            class="cursor-pointer ms-3">
+                            <i class="pi pi-trash fs-14px text-danger"></i>
+                        </span>
+                    </div>
+
                 </div>
 
             </div>
-
-            <div class="fs-14px text-soft pe-1 actions">
-
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="cursor-pointer">
-                        <i class="pi pi-download fs-14px text-soft"></i>
-                    </span>
-
-                    <span class="cursor-pointer ms-3">
-                        <i class="pi pi-trash fs-14px text-danger"></i>
-                    </span>
-                </div>
-
-            </div>
-
         </div>
-    </div>
-
+    </BlockUI>
 </template>
 
 <style scoped

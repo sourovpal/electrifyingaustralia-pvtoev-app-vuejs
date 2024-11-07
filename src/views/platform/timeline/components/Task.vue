@@ -5,17 +5,21 @@
   import { usePlatformStore } from "@stores";
   import { useApiRequest } from "@actions";
   import { $toast } from "@config";
-  // import DropdownOwnerList from "../../../components/dropdowns/DropdownOwnerList.vue";
   import moment from "moment";
+  import TeamMembersPopover from "../../components/dropdowns/TeamMembersPopover.vue";
+  import { useConfirm } from "primevue/useconfirm";
 
+  const confirm = useConfirm();
   const attrs = useAttrs();
   const platformStore = usePlatformStore();
+
   const props = defineProps({
     task: { type: Object, default: {} },
     isNew: { type: Boolean, default: false },
   });
 
   const emits = defineEmits(["toggleNewTask"]);
+  const teamMembersPopovarRef = ref(null);
   const isEdit = ref(false);
   const taskItemRef = ref(null);
   const isUserLoading = ref(false);
@@ -26,6 +30,30 @@
   const toggleTaskDelete = ref(false);
   const tempTitle = ref(null);
   const tempDuration = ref(null);
+
+
+  const confirmDeleteTask = (event) => {
+    confirm.require({
+      target: event.currentTarget,
+      header: 'Delete Task?',
+      message: 'Are you sure you want to Delete?',
+      icon: 'pi pi-trash fs-16px',
+      rejectProps: {
+        label: 'Cancel',
+        severity: 'secondary',
+        outlined: true,
+        style: 'height:2rem'
+      },
+      acceptProps: {
+        label: 'Delete',
+        severity: 'danger',
+        style: 'height:2rem'
+      },
+      accept: () => handleDeleteTask(),
+      reject: () => { }
+    });
+  };
+
 
   async function handleUpdateOrCreateTask() {
     $toast.clear();
@@ -207,8 +235,6 @@
         if (success) {
           platformStore.callFetchTimelineLogs();
 
-          toggleTaskDelete.value = false;
-
           platformStore.callFetchLeadTasks(
             editLeadId.value,
             function ({ loading }) { }
@@ -227,7 +253,8 @@
       });
   }
 
-  function fetchUsers() {
+  function fetchUsers(event) {
+    teamMembersPopovarRef.value.toggle(event);
     if (!users.value.length) {
       platformStore.callFetchUsers(function ({ loading }) {
         isUserLoading.value = loading;
@@ -263,91 +290,108 @@
     v-bind="attrs"
     :class="{ active: isEdit }"
     class="task-item d-flex justify-content-start align-items-center ms-n2">
+
     <div class="marker">
+
       <custom-checkbox @click="handleUpdateTaskStage"
         :checked="!!leadTask.is_complete"></custom-checkbox>
+
     </div>
+
     <div class="d-flex justify-content-start align-items-center flex-grow-1 w-100">
+
       <div @click="isEdit = true"
         class="title fs-14px fw-bold text-head py-1 px-1 flex-grow-1">
+
         <span class="title-text"
           v-if="!isEdit">{{ leadTask.title }}</span>
+
         <input v-else
           @keyup.enter="handleUpdateOrCreateTask"
           class="w-100 border-0 title-edit fw-bold"
           type="text"
           v-model="leadTask['title']" />
+
       </div>
+
       <div class="action ms-auto d-flex justify-content-between align-items-center">
+
         <div class="stop-watch me-1">
+
           <VueDatePicker v-model="tempDuration"
             @closed="handleUpdateTask">
+
             <template #trigger>
+
               <button v-tippy="leadTask.duration"
                 :class="{ visible: tempDuration }"
                 class="toolbar-btn btn btn-light btn-sm btn-floating d-flex justify-content-center align-items-center">
+
                 <font-awesome-icon icon="far fa-clock"
                   :class="{ 'clock-active': tempDuration }"
                   class="text-soft fs-16px"></font-awesome-icon>
+
               </button>
+
             </template>
+
           </VueDatePicker>
+
         </div>
+
         <div class=""
           v-tippy="leadTask.owner?.name ?? 'Change Owner'">
+
           <div @click="fetchUsers"
             data-mdb-toggle="dropdown"
             class="owner-avatar cursor-pointer me-1">
+
             <img :src="leadTask.owner?.profile_avatar ?? AvatarIcon"
               alt="" />
+
           </div>
-          <!-- <DropdownOwnerList :leadOwner="leadTask?.owner"
-            :loading="isUserLoading"
-            @change="handleUpdateOwner"></DropdownOwnerList> -->
+
+          <team-members-popover ref="teamMembersPopovarRef"
+            :member="leadTask.owner"
+            @change="handleUpdateOwner"></team-members-popover>
+
         </div>
+
         <div v-if="isLoading"
           class="d-flex justify-content-center align-items-center flex-grow-1">
+
           <svg-custom-icon icon="SpinnerIcon" />
+
         </div>
+
         <div v-else
           class="dot-menu">
+
           <button data-mdb-toggle="dropdown"
             class="toolbar-btn btn btn-light btn-sm btn-floating d-flex justify-content-center align-items-center">
+
             <font-awesome-icon icon="fas fa-ellipsis-vertical"
               class="text-soft fs-16px"></font-awesome-icon>
+
           </button>
           <div class="dropdown-menu dot-menu-items">
-            <button @click="toggleTaskDelete = true"
+
+            <button @click="confirmDeleteTask"
               :disabled="isNew"
               class="dropdown-item py-1 fs-14px fw-bold text-head">
               Delete
             </button>
+
           </div>
+
         </div>
+
       </div>
+
     </div>
+
   </div>
 
-  <bootstrap-modal v-if="toggleTaskDelete"
-    @close="() => (toggleTaskDelete = false)"
-    size="sm">
-    <h5 class="text-head text-center fw-bold">Delete this task?</h5>
-    <p class="fs-12px text-center text-danger">
-      This action cannot be undone! To confirm your intent, please click delete
-      button.
-    </p>
-    <div class="d-flex justify-content-between align-items-center">
-      <button class="btn btn-primary btn-sm"
-        data-mdb-dismiss="modal">
-        Cancel
-      </button>
-      <loading-button class="btn btn-danger btn-sm"
-        :is-loading="isLoading"
-        @click="handleDeleteTask">
-        Delete
-      </loading-button>
-    </div>
-  </bootstrap-modal>
 </template>
 
 <style scoped

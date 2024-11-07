@@ -1,15 +1,5 @@
 <script setup>
-    import EventByUser from './EventByUser.vue';
-    import LeadStatusEvent from './LeadStatusEvent.vue';
-    import LeadOwnerEvent from './LeadOwnerEvent.vue';
-    import UpdateCustomPropertie from './UpdateCustomPropertie.vue';
-    import LeadSubscriberEvent from './LeadSubscriberEvent.vue';
-    import LeadQualifyEvent from './LeadQualifyEvent.vue';
-    import AddedRatingEvent from './AddedRatingEvent.vue';
-    import LeadFilesEvent from './LeadFilesEvent.vue';
-    import LeadContactEvent from './LeadContactEvent.vue';
-    import EstimatedValueEvent from './EstimatedValueEvent.vue';
-    import MessageEvent from './MessageEvent.vue';
+    import Attachments from './Attachments.vue';
     import LeadEvent from './LeadEvent.vue';
 
     import { computed } from 'vue';
@@ -27,7 +17,12 @@
 
 <template>
 
-    <lead-event :event="message"></lead-event>
+    <Attachments v-if="message.event_type === 'attachments'"
+        :key="`${message.files}_attachments_${message.timeline_id}`"
+        :event="message"></Attachments>
+
+    <lead-event v-else
+        :event="message"></lead-event>
 
     <!-- <lead-status-event
         v-if="message.event_type == 'change-status' || message.event_type == 'assign-status' || message.event_type == 'remove-status'"
@@ -70,4 +65,5 @@
         <Events :message="childMessage"
             :user="user"></Events>
     </template>
+
 </template>

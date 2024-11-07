@@ -1,29 +1,30 @@
 <script setup>
     import { ref, onMounted } from 'vue';
-    import { imageExtensions, handleDownloadFile, fetchFile } from '@helpers';
+    import { imageExtensions, handleDownloadAttachment, fetchFile } from '@helpers';
     import { useApiRequest } from '@actions';
     import { getMaterialFileIcon } from "file-extension-icon-js";
     import FetchImage from '@components/FetchImage.vue';
-
-    const emits = defineEmits(['close']);
+    import { useConfirm } from "primevue/useconfirm";
+    import { $toast } from '@config';
+    const emits = defineEmits(['close', 'delete']);
+    const confirm = useConfirm();
 
     const attachments = ref([]);
-
     const toggleModal = ref(false);
-
     const preview_file = ref(null);
     const next_file = ref(null);
     const prev_file = ref(null);
     const current_index = ref(0);
     const file_type = ref('image'); // image, pdf, others
     const preview_pdf = ref(null);
+    const deleted_file_id = ref([]);
 
-    function preview(file = null, files = null) {
-
+    function handlePreview(file = null, files = null) {
+         
         preview_pdf.value = null;
 
         if (files) attachments.value = files;
-        
+
         if (!file) return;
 
         toggleModal.value = !!file;
@@ -57,6 +58,44 @@
         preview_pdf.value = await fetchFile(pdf);
     }
 
+    const confirmDeleteAttachment = (event) => {
+
+        confirm.require({
+            header: 'Delete Attachment?',
+            message: 'Are you sure you want to Delete?',
+            icon: 'pi pi-trash fs-16px',
+            rejectProps: {
+                label: 'Cancel',
+                severity: 'secondary',
+                outlined: true,
+                style: 'height:2rem'
+            },
+            acceptProps: {
+                label: 'Delete',
+                severity: 'danger',
+                style: 'height:2rem'
+            },
+            accept: async () => {
+                await useApiRequest(
+                    { url: `/platform/delete/${preview_file.value.file_id}/${preview_file.value.filename}`, method: 'delete' }
+                ).then(res => {
+                    emits('delete', preview_file.value);
+
+                    deleted_file_id.value.push(preview_file.value.file_id);
+
+                    if (next_file.value || prev_file.value) handlePreview(next_file.value ?? prev_file.value);
+
+                    else handleCloseModal()
+                    $toast.clear();
+                    $toast.success(res.message.text);
+
+                }).catch(error => {
+                    $toast.error(error.message);
+                });
+            },
+            reject: () => { }
+        });
+    };
 
 
     function handleCloseModal() {
@@ -94,7 +133,7 @@
     }
 
     defineExpose({
-        preview,
+        preview: handlePreview,
     });
 
 
@@ -107,7 +146,7 @@
         :visible="toggleModal"
         pt:root:class="rounded-2 border-0"
         :style="{ width: `60vw`, height:'95vh' }"
-        :breakpoints="{ '1199px': '50vw', '575px': '60vw' }">
+        :breakpoints="{ '1199px': '50vw', '575px': '65vw' }">
         <template #container>
 
             <div class="preview-contact">
@@ -116,7 +155,7 @@
                     <div class="col-12">
                         <Button icon="pi pi-arrow-left"
                             rounded
-                            @click="preview(prev_file)"
+                            @click="handlePreview(prev_file)"
                             :disabled="!prev_file"
                             severity="secondary" />
                     </div>
@@ -124,7 +163,15 @@
 
                 <div class="modal-body px-0 py-0">
 
-                    <FetchImage v-if="preview_file && file_type == 'image'"
+                    <div v-if="deleted_file_id.includes(preview_file.file_id)"
+                        class="not-found text-center flex-column">
+                        <div class="d-flex flex-column">
+                            <span class="fs-16px fw-bold text-danger">This file is currently deleted.</span>
+                        </div>
+
+                    </div>
+
+                    <FetchImage v-else-if="preview_file && file_type == 'image'"
                         :key="preview_file.file_id"
                         :src="preview_file.filepath" />
 
@@ -145,7 +192,7 @@
                     <div v-else
                         class="not-found fs-16px text-center flex-column">
                         <div class="d-flex flex-column">
-                            <img :src="getMaterialFileIcon(preview_file.extension)">
+                            <img :src="getMaterialFileIcon(preview_file?.extension??'txt')">
                         </div>
                         <div class="d-flex flex-column">
                             <span>This file is not available for preview at the moment.</span>
@@ -156,41 +203,53 @@
 
                     </div>
 
-
                 </div>
 
                 <div class="modal-right">
+
                     <div class="col-4">
+
                         <Button icon="pi pi-times"
                             rounded
                             @click="handleCloseModal"
                             severity="secondary" />
                     </div>
+
                     <div class="col-4 mt-4">
+
                         <Button icon="pi pi-arrow-right"
                             rounded
                             :disabled="!next_file"
-                            @click="preview(next_file)"
+                            @click="handlePreview(next_file)"
                             class="mt-4"
                             severity="secondary" />
                     </div>
+
                     <div class="col-4 d-flex flex-column">
+
                         <Button icon="pi pi-trash"
                             rounded
-                            :disabled="!preview_file"
+                            :disabled="!preview_file || deleted_file_id.includes(preview_file.file_id)"
                             class="mb-3"
-                            severity="secondary" />
+                            severity="secondary"
+                            @click="confirmDeleteAttachment()" />
+
                         <Button icon="pi pi-download"
                             rounded
-                            :disabled="!preview_file"
-                            severity="secondary" />
+                            :disabled="!preview_file || deleted_file_id.includes(preview_file.file_id)"
+                            severity="secondary"
+                            @click="handleDownloadAttachment(`/platform/download/${preview_file.file_id}/${preview_file.filename}`, preview_file.filename)" />
+
                     </div>
                 </div>
+
                 <div class="preview-footer">
+
                     <span class="me-2">
-                        {{ current_index + 1 }} / {{ attachments.length??1 }}
+                        {{ current_index + 1 }} / {{ attachments.length == 0? 1 : attachments.length }}
                     </span>
                     {{ preview_file.filename }}
+
                 </div>
             </div>
         </template>

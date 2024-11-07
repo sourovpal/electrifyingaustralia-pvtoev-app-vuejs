@@ -4,7 +4,10 @@
   import { usePlatformStore } from "@stores";
   import { $toast } from "@config";
   import { useApiRequest } from "@actions";
-  import WorkflowTasks from "./sections/WorkflowTasks.vue";
+  import WorkflowTasks from "../components/WorkflowTasks.vue";
+  import { Skeletor } from "vue-skeletor";
+
+  const emits = defineEmits(['close']);
 
   const platformStore = usePlatformStore();
   const workflowModalRef = ref(null);
@@ -29,35 +32,62 @@
 </script>
 
 <template>
-  <bootstrap-modal v-bind="$attrs"
-    ref="workflowModalRef"
-    :dialog-style="{'max-width':'450px'}">
-    <template #header>
-      <div class="modal-header py-2">
+  <modal-dialog modal
+    v-bind="$attrs"
+    pt:root:class="rounded-2 px-3 pt-0 pb-2"
+    pt:mask:class="backdrop-blur-sm"
+    :style="{ width: '18vw' }"
+    :breakpoints="{ '1199px': '50vw', '575px': '90vw' }">
+
+    <template #container>
+
+      <div class="py-2 d-flex justify-content-between align-items-center">
+
         <div class="d-flex justify-content-center align-items-center py-0">
-          <font-awesome-icon icon="fas fa-list-check"
-            class="text-head fs-16px me-2"></font-awesome-icon>
+
+          <i class="pi pi-sitemap text-head fs-16px me-2"></i>
+
           <span class="text-head fw-bold fs-16px">Choose workflow</span>
+
         </div>
+
         <div>
-          <button class="btn btn-light btn-sm btn-floating"
-            data-mdb-dismiss="modal">
-            <font-awesome-icon icon="fas fa-close"
-              class="text-soft fs-14px"></font-awesome-icon>
+
+          <button @click="emits('close', true)"
+            class="btn btn-light btn-sm btn-floating">
+            <i class="text-soft fs-14px pi pi-times"></i>
           </button>
+
         </div>
+
       </div>
+
+
+      <div v-if="isLoading"
+        v-for="(_, index) in 3"
+        :key="index*Math.random()"
+        class="border mb-2 py-2 px-2 ">
+
+        <Skeletor style="width:1.3rem;height:1.3rem;border-radius:3px;"
+          class="me-2"></Skeletor>
+
+        <Skeletor style="width:80%;height:1rem;border-radius:3px;"></Skeletor>
+
+      </div>
+
+      <template v-else>
+        <workflow-tasks v-for="(workflow, index) in taskWorkflows"
+          :key="index"
+          :workflow="workflow"></workflow-tasks>
+
+      </template>
     </template>
-    <div class="d-flex justify-content-center align-items-center"
-      v-if="isLoading">
-      <svg-custom-icon icon="SpinnerIcon" /> Loading...
-    </div>
-    <workflow-tasks v-else
-      v-for="(workflow, index) in taskWorkflows"
-      :key="index"
-      :workflow="workflow"></workflow-tasks>
-  </bootstrap-modal>
+
+
+  </modal-dialog>
+
 </template>
+
 <style scoped>
   .modal-body {
     max-height: 650px;

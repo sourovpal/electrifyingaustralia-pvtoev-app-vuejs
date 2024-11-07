@@ -7,17 +7,11 @@
     import { $toast } from '@config';
     import { usePlatformStore } from '@stores';
     import { useIntersectionObserver } from '@vueuse/core';
-    import AllFilesSkeletor from './AllFilesSkeletor.vue';
-
-    import Tabs from 'primevue/tabs';
-    import Tab from 'primevue/tab';
-    import TabList from 'primevue/tablist';
-    import TabPanel from 'primevue/tabpanel';
-    import TabPanels from 'primevue/tabpanels';
-
+    import AllFilesSkeletor from '../components/Skeletor/AllFilesSkeletor.vue';
 
     const props = defineProps({
-        files: { type: Array, default: [] }
+        files: { type: Array, default: [] },
+        url: { type: String, default: null }
     });
 
     const platformStore = usePlatformStore();
@@ -50,8 +44,11 @@
         } else if (!$nextPage.value) { return; }
         else { infiniteLoading.value = true; }
 
+        let url = props.url;
+        if (!url) url = `/platform/${$leadId.value}/attachments`;
+
         await useApiRequest({
-            url: `/platform/${$leadId.value}/attachments`,
+            url,
             payload: {
                 page: $nextPage.value,
                 limit: $limit.value,
@@ -109,10 +106,11 @@
 <template>
     <modal-dialog modal
         :visible="true"
+        v-bind="$attrs"
         pt:root:class="rounded-2"
         pt:mask:class="backdrop-blur-sm"
         :style="{ width: `47.2vw` }"
-        :breakpoints="{ '1199px': '50vw', '575px': '70vw' }">
+        :breakpoints="{ '1199px': '50vw', '575px': '60vw' }">
         >
         <template #container>
             <Tabs value="all">
@@ -139,7 +137,8 @@
                     style="width:100%;height:77vh;"
                     class="pb-3 overflow-hidden">
 
-                    <TabPanels class="tab-panels">
+                    <TabPanels v-if="isLoading || infiniteLoading || showFiles.length"
+                        class="tab-panels">
 
                         <TabPanel value="all"
                             class="d-block">
@@ -177,7 +176,7 @@
                                 </template>
 
                             </div>
-                            
+
                             <div class="w-100 py-5"
                                 ref="infiniteOvserverRef">
                             </div>
@@ -186,8 +185,8 @@
 
                     </TabPanels>
 
-                    <div v-if="!showFiles.length && isComplete"
-                        class="w-100 h-100 d-flex justify-content-center align-items-center mt-n5">
+                    <div v-else
+                        class="w-100 h-100 d-flex justify-content-center align-items-center">
                         No files available.
                     </div>
 

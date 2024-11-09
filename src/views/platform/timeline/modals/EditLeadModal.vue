@@ -47,7 +47,7 @@
     Object.assign(leadFormData, editLead.value);
 
     leadFormData.lead_source = editLead.value.source?.title;
-    
+
     leadFormData.estimated_value = editLead.value.estimated_value ?? 0.0;
 
   });
@@ -66,8 +66,8 @@
     };
 
     const res = await useApiRequest({
-      url: `/leads/${editLeadId.value}/update`,
-      method: "post",
+      url: `/platform/deals/${editLeadId.value}/update`,
+      method: "PUT",
       payload: data,
     })
       .then((res) => {

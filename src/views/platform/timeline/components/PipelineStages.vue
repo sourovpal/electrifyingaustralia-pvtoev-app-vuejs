@@ -18,23 +18,20 @@
   function handlePipelineStageUpdate(stage) {
     $toast.clear();
 
-    if (leadStage.value?.status == "lost" || leadStage.value?.status == "success")
+    if (leadStage.value?.status == "lost" || leadStage.value?.status == "success" || leadStage.value?.stage_id == stage.stage_id)
       return;
-
-    if (leadStage.value?.stage_id == stage.stage_id)
-      return $toast.warning("Currently stay this stage.");
 
     isLoadingStageId.value = stage.stage_id;
 
-    var data = {
-      pipeline: leadPipeline.value?.pipeline_id,
+    var attributes = {
+      pipeline_id: leadPipeline.value?.pipeline_id,
       pipeline_stage: stage.stage_id,
     };
 
     const res = useApiRequest({
-      url: `/leads/${editLeadId.value}/move-lead`,
+      url: `/platform/deals/${editLeadId.value}/move-stage`,
       method: "post",
-      payload: data,
+      payload: attributes,
     })
       .then((res) => {
 

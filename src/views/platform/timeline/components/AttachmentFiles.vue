@@ -1,7 +1,7 @@
 <script setup>
 
     import { ref, computed, watch, nextTick } from 'vue';
-    import { formatFileSize, shortenFileName, imageExtensions, fileNameToExtension, formatTimeAgo, handleDownloadAttachment } from '@helpers';
+    import { formatFileSize, shortenFileName, imageExtensions, fileNameToExtension, formatTimeAgo, handleDownloadAttachmentFiles } from '@helpers';
     import { getMaterialFileIcon } from "file-extension-icon-js";
     import FetchImage from '@components/FetchImage.vue';
     import { useConfirm } from "primevue/useconfirm";
@@ -66,7 +66,7 @@
             },
             accept: async () => {
                 await useApiRequest(
-                    { url: `/platform/delete/${props.file.file_id}/${props.file.filename}`, method: 'delete' }
+                    { url: `/platform/files/${props.file.file_id}/delete/${props.file.filename}`, method: 'delete' }
                 ).then(res => {
                     is_deleted.value = true;
                     $toast.success(res.message.text);
@@ -121,7 +121,7 @@
                 <div class="fs-14px text-soft pe-1 actions-">
 
                     <div class="d-flex justify-content-between align-items-center">
-                        <span class="cursor-pointer" @click="handleDownloadAttachment(`/platform/download/${file.file_id}/${file.filename}`, file.filename)">
+                        <span class="cursor-pointer" @click="handleDownloadAttachmentFiles(`/platform/files/${file.file_id}/download/${file.filename}`, file.filename)">
                             <i class="pi pi-download fs-14px text-soft"></i>
                         </span>
 

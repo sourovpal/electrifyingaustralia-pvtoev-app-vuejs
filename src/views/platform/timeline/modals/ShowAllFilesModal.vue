@@ -2,7 +2,7 @@
     import ImagePreviewModal from './ImagePreviewModal.vue';
     import { fileNameToExtension, imageExtensions, shortenFileName } from '@helpers';
     import { getMaterialFileIcon } from "file-extension-icon-js";
-    import { ref, onMounted, computed } from 'vue';
+    import { ref, onMounted, computed, nextTick } from 'vue';
     import { useApiRequest } from '@actions/api';
     import { $toast } from '@config';
     import { usePlatformStore } from '@stores';
@@ -45,7 +45,7 @@
         else { infiniteLoading.value = true; }
 
         let url = props.url;
-        if (!url) url = `/platform/${$leadId.value}/attachments`;
+        if (!url) url = `/platform/files/${$leadId.value}/all`;
 
         await useApiRequest({
             url,
@@ -63,7 +63,7 @@
 
             if (!$nextPage.value) isComplete.value = true;
 
-            if (stopObserver && !$nextPage.value) stopObserver();
+            // if (stopObserver && !$nextPage.value) stopObserver();
 
             if (extension) originalFiles.value = attachments;
             else originalFiles.value = originalFiles.value.concat(attachments);
@@ -88,17 +88,18 @@
         imagePreview.value.preview(file, showFiles.value);
     }
 
+    const { stop: stopObserver } = useIntersectionObserver(
+        infiniteOvserverRef,
+        ([{ isIntersecting }], observerElement) => {
+            if (!isLoading.value && !infiniteLoading.value && !isComplete.value && isIntersecting && $nextPage.value) {
+                fetchLeadFiles(null, stopObserver);
+            }
+        },
+    );
+
     onMounted(() => {
-        isLoading.value = true;
         fetchLeadFiles();
-        const { stop: stopObserver } = useIntersectionObserver(
-            infiniteOvserverRef,
-            ([{ isIntersecting }], observerElement) => {
-                if (!isLoading.value && !infiniteLoading.value && !isComplete.value && isIntersecting) {
-                    fetchLeadFiles(null, stopObserver);
-                }
-            },
-        )
+        isLoading.value = true;
     });
 
 </script>
@@ -179,6 +180,7 @@
 
                             <div class="w-100 py-5"
                                 ref="infiniteOvserverRef">
+                                &nbsp;
                             </div>
 
                         </TabPanel>

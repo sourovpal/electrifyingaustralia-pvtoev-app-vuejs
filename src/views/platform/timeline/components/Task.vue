@@ -73,7 +73,7 @@
     }
 
     await useApiRequest({
-      url: `/platform/${editLeadId.value}/tasks`,
+      url: `/platform/tasks/${editLeadId.value}/create`,
       method: "post",
       payload: {
         title: leadTask.value.title,
@@ -118,8 +118,8 @@
     isLoading.value = true;
 
     await useApiRequest({
-      url: `/platform/${editLeadId.value}/tasks/${leadTask.value.task_id}/stage`,
-      method: "post",
+      url: `/platform/tasks/${editLeadId.value}/${leadTask.value.task_id}/stage`,
+      method: "PUT",
       payload: {
         is_complete: leadTask.value.is_complete,
       },
@@ -158,8 +158,8 @@
     isLoading.value = true;
 
     await useApiRequest({
-      url: `/platform/${editLeadId.value}/tasks/${leadTask.value.task_id}/update`,
-      method: "post",
+      url: `/platform/tasks/${editLeadId.value}/${leadTask.value.task_id}/update`,
+      method: "PUT",
       payload: {
         title: leadTask.value.title,
         duration: tempDuration.value,
@@ -198,8 +198,8 @@
     }
     isLoading.value = true;
     await useApiRequest({
-      url: `/platform/${editLeadId.value}/tasks/${leadTask.value.task_id}/owner`,
-      method: "post",
+      url: `/platform/tasks/${editLeadId.value}/${leadTask.value.task_id}/owner`,
+      method: "PUT",
       payload: {
         owner_id: owner?.user_id ?? null,
       },
@@ -227,8 +227,8 @@
     if (props.isNew) return;
     isLoading.value = true;
     await useApiRequest({
-      url: `/platform/${editLeadId.value}/tasks/${leadTask.value.task_id}/delete`,
-      method: "get",
+      url: `/platform/tasks/${editLeadId.value}/${leadTask.value.task_id}/delete`,
+      method: "DELETE",
     })
       .then((res) => {
         const { success, message } = res;

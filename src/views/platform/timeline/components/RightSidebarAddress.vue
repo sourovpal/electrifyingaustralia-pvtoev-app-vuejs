@@ -7,7 +7,7 @@
   import { useClipboard } from "@vueuse/core";
   import { usePlatformStore } from "@stores";
   import { $toast } from "@config";
-  import { onClickOutside } from "@vueuse/core";
+  import { onClickOutside, useDebounceFn } from "@vueuse/core";
 
   const platformStore = usePlatformStore();
   const isFirstLoading = computed(() => platformStore.getIsFirstLoading);
@@ -31,8 +31,8 @@
   function confidenceUpdateHandler() {
 
     useApiRequest({
-      url: `/leads/${editLeadId.value}/confidence`,
-      method: "post",
+      url: `/platform/deals/${editLeadId.value}/confidence`,
+      method: "put",
       payload: {
         confidence: leadStarRating.value,
       },
@@ -64,7 +64,7 @@
     editEstimatedValue.value = editLead.value.estimated_value;
   }
 
-  function handleUpdateEstimatedValue() {
+  const handleUpdateEstimatedValue = useDebounceFn(async () => {
     isEditEstimatedValue.value = false;
 
     if (editEstimatedValue.value == editLead.value.estimated_value) {
@@ -76,8 +76,8 @@
     }
 
     useApiRequest({
-      url: `/leads/${editLeadId.value}/estimated-value`,
-      method: "post",
+      url: `/platform/deals/${editLeadId.value}/estimated-value`,
+      method: "put",
       payload: {
         estimated_value: editEstimatedValue.value,
       },
@@ -101,7 +101,7 @@
         $toast.clear();
         $toast.error(error.message);
       });
-  }
+  }, 200);
 
 </script>
 

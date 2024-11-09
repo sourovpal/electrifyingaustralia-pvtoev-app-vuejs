@@ -1,9 +1,9 @@
 <script setup>
 
     import { ref, computed, nextTick } from 'vue'; 
-    import MediaUpload from './MediaUpload.vue';
-    import MediaAttachment from './MediaAttachment.vue';
-    import MediaAttachmentSkeletor from './Skeletor/MediaAttachmentSkeletor.vue';
+    import FilesUpload from './FilesUpload.vue';
+    import AttachmentFiles from './AttachmentFiles.vue';
+    import AttachmentFilesSkeletor from './Skeletor/AttachmentFilesSkeletor.vue';
     import { usePlatformStore } from '@stores';
     import ShowAllFilesModal from '../modals/ShowAllFilesModal.vue';
     import ImagePreviewModal from '../modals/ImagePreviewModal.vue';
@@ -182,11 +182,11 @@
 
             <Transition>
 
-                <media-upload :file="file"
+                <files-upload :file="file"
                     :delay="((index + 1) * 700)"
                     @complete="(status)=>handleUploadComplete(index, status)">
 
-                </media-upload>
+                </files-upload>
 
             </Transition>
 
@@ -206,14 +206,14 @@
 
         <template v-for="(file, index) in uploadedFiles"
             :key="file.filepath">
-            <media-attachment @preview="handlePreviewImage(file)" :file="file"></media-attachment>
+            <attachment-files @preview="handlePreviewImage(file)" :file="file"></attachment-files>
         </template>
 
 
         <template v-if="isLoading || loading">
 
-            <media-attachment-skeletor v-for="(item, index) in (isLoading?1:10)"
-                :key="index"></media-attachment-skeletor>
+            <attachment-files-skeletor v-for="(item, index) in (isLoading?1:10)"
+                :key="index"></attachment-files-skeletor>
 
         </template>
 

@@ -10,7 +10,7 @@
     const platformStore = usePlatformStore();
 
     // computed life cycle
-    const teamMembers = computed(() => platformStore.getLeadSubscribers);
+    const teamMembers = computed(() => platformStore.getLeadTeamMembers);
     const editLeadId = computed(() => platformStore.getEditLeadId);
     const users = computed(() => platformStore.getUsers);
 
@@ -46,15 +46,15 @@
         return teamMembers.value?.some(item => (item.user_id == member.user_id));
     }
 
-    const onSubmitSubscribers = useDebounceFn(async () => {
+    const onSubmitTeamMembers = useDebounceFn(async () => {
 
         let members = teamMembers.value?.map(item => item.user_id);
 
         await useApiRequest({
-            url: `/leads/${editLeadId.value}/subscribers`,
-            method: 'POST',
+            url: `/platform/deals/${editLeadId.value}/team-members`,
+            method: 'put',
             payload: {
-                subscribers: members
+                members: members
             },
         }).then(res => {
 
@@ -87,11 +87,11 @@
 
         if (index > -1) {
             members = teamMembers.value?.filter((item) => item.user_id != member.user_id);
-            platformStore.setLeadSubscribers([...members]);
+            platformStore.setLeadTeamMembers([...members]);
         } else {
-            platformStore.setLeadSubscribers([...teamMembers.value.concat(member)]);
+            platformStore.setLeadTeamMembers([...teamMembers.value.concat(member)]);
         }
-        onSubmitSubscribers();
+        onSubmitTeamMembers();
     }
 
 </script>
@@ -107,7 +107,7 @@
             shape="circle"
             class="me-1"
             style="--p-avatar-width:1.8rem;--p-avatar-height:1.8rem;" />
-        
+
         <Avatar :label="othersMembers"
             class="cursor-pointer fw-bold"
             shape="circle"

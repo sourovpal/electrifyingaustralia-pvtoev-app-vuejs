@@ -25,7 +25,7 @@ export const usePlatformStore = defineStore("platform", {
       leadTasks: [],
       //
       leadPipelineProperties: [],
-      leadSubscribers: [],
+      leadTeamMembers: [],
       pipelineProperties: [],
       leadFiles: [],
       leadContacts: [],
@@ -98,8 +98,8 @@ export const usePlatformStore = defineStore("platform", {
     getLeadStage(state) {
       return state.leadStage;
     },
-    getLeadSubscribers(stage) {
-      return stage.leadSubscribers;
+    getLeadTeamMembers(stage) {
+      return stage.leadTeamMembers;
     },
     getIsPipelineLead(stage) {
       return stage.isPipelineLead;
@@ -215,9 +215,9 @@ export const usePlatformStore = defineStore("platform", {
         this.leadStatus = payload;
       }
     },
-    setLeadSubscribers(payload) {
+    setLeadTeamMembers(payload) {
       if (Array.isArray(payload)) {
-        this.leadSubscribers = payload;
+        this.leadTeamMembers = payload;
       }
     },
     setIsPipelineLead(payload) {
@@ -337,7 +337,7 @@ export const usePlatformStore = defineStore("platform", {
       this.setLeadSuccessStages([]);
       this.setLeadLostStages([]);
       this.setLeadFiles([]);
-      this.setLeadSubscribers([]);
+      this.setLeadTeamMembers([]);
       this.setLeadTasks([]);
       if (all) {
         this.setLeadProperties([]);
@@ -351,7 +351,7 @@ export const usePlatformStore = defineStore("platform", {
       this.setIsLoading($isNew);
       this.setEditLeadId($leadId);
       useApiRequest({
-        url: `/platform/${$leadId}/deals`,
+        url: `/platform/deals/${$leadId}/find`,
       })
         .then((res) => {
           const { success, lead, next_lead, prev_lead, is_pipeline } = res;
@@ -377,7 +377,7 @@ export const usePlatformStore = defineStore("platform", {
             this.setLeadStatus(status);
             this.setLeadPipeline(pipeline);
             this.setLeadStage(pipeline_stage);
-            this.setLeadSubscribers(lead_subscribers);
+            this.setLeadTeamMembers(lead_subscribers);
             //
             this.setIsLoading(false);
             this.setIsFirstLoading(false);
@@ -392,7 +392,7 @@ export const usePlatformStore = defineStore("platform", {
     callFetchLeadContacts($leadId, $callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
-        url: `/platform/${$leadId}/contacts`,
+        url: `/platform/contacts/${$leadId}/all`,
       })
         .then((contacts) => {
           if (contacts) {
@@ -411,7 +411,7 @@ export const usePlatformStore = defineStore("platform", {
     callFetchLeadStages($leadId, $callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
-        url: `/platform/leads/${$leadId}/stages`,
+        url: `/platform/deals/${$leadId}/stages`,
       })
         .then((stages) => {
 
@@ -460,7 +460,7 @@ export const usePlatformStore = defineStore("platform", {
     callFetchPipelineStages($pieplineId, $callback = () => { }) {
       $callback({ loading: true });
       useApiRequest({
-        url: `/platform/${$pieplineId}/stages`,
+        url: `/platform/pipeline/${$pieplineId}/stages`,
       })
         .then((stages) => {
 
@@ -532,7 +532,7 @@ export const usePlatformStore = defineStore("platform", {
       $callback({ loading: true });
 
       useApiRequest({
-        url: `/platform/leads/${$leadId ? $leadId + "/" : ""}properties`,
+        url: `/platform/deals/properties?lead_id=${$leadId}`,
       })
         .then((properties) => {
           if (properties) {
@@ -587,7 +587,7 @@ export const usePlatformStore = defineStore("platform", {
       $callback({ loading: true });
 
       useApiRequest({
-        url: `/platform/${payload.lead_id}/attachments`,
+        url: `/platform/files/${payload.lead_id}/all`,
         payload: { ...payload, page: payload.page ?? 1, }
       }).then(({ attachments, pagination }) => {
 
@@ -615,7 +615,7 @@ export const usePlatformStore = defineStore("platform", {
       $callback({ loading: true });
 
       useApiRequest({
-        url: `/platform/${$leadId}/tasks`,
+        url: `/platform/tasks/${$leadId}/all`,
       })
         .then((tasks) => {
 

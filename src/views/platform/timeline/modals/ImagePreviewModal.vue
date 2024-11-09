@@ -1,6 +1,6 @@
 <script setup>
     import { ref, onMounted } from 'vue';
-    import { imageExtensions, handleDownloadAttachment, fetchFile } from '@helpers';
+    import { imageExtensions, handleDownloadAttachmentFiles, fetchFile } from '@helpers';
     import { useApiRequest } from '@actions';
     import { getMaterialFileIcon } from "file-extension-icon-js";
     import FetchImage from '@components/FetchImage.vue';
@@ -20,7 +20,7 @@
     const deleted_file_id = ref([]);
 
     function handlePreview(file = null, files = null) {
-         
+
         preview_pdf.value = null;
 
         if (files) attachments.value = files;
@@ -77,7 +77,7 @@
             },
             accept: async () => {
                 await useApiRequest(
-                    { url: `/platform/delete/${preview_file.value.file_id}/${preview_file.value.filename}`, method: 'delete' }
+                    { url: `/platform/files/${preview_file.value.file_id}/delete/${preview_file.value.filename}`, method: 'delete' }
                 ).then(res => {
                     emits('delete', preview_file.value);
 
@@ -197,7 +197,9 @@
                         <div class="d-flex flex-column">
                             <span>This file is not available for preview at the moment.</span>
                             <span>
-                                Please <span class="text-primary cursor-pointer">click here</span> to download.
+                                Please <span
+                                    @click="handleDownloadAttachmentFiles(`/platform/files/${preview_file.file_id}/download/${preview_file.filename}`, preview_file.filename)"
+                                    class="text-primary cursor-pointer">click here</span> to download.
                             </span>
                         </div>
 
@@ -238,7 +240,7 @@
                             rounded
                             :disabled="!preview_file || deleted_file_id.includes(preview_file.file_id)"
                             severity="secondary"
-                            @click="handleDownloadAttachment(`/platform/download/${preview_file.file_id}/${preview_file.filename}`, preview_file.filename)" />
+                            @click="handleDownloadAttachmentFiles(`/platform/files/${preview_file.file_id}/download/${preview_file.filename}`, preview_file.filename)" />
 
                     </div>
                 </div>

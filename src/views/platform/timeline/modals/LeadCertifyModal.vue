@@ -129,8 +129,8 @@
     };
 
     await useApiRequest({
-      url: `/platform/${editLeadId.value}/${props.action}`,
-      method: "POST",
+      url: `/platform/deals/${editLeadId.value}/${props.action}`,
+      method: "post",
       payload,
     }).then((res) => {
 

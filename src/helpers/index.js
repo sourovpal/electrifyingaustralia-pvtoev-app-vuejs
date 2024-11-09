@@ -74,7 +74,7 @@ export function getFileObjectUrl(file) {
   throw new Error("Input must be a File object");
 }
 
-export const handleDownloadAttachment = async (url, $filename) => {
+export const handleDownloadAttachmentFiles = async (url, $filename) => {
   await api({
     url,
     method: "GET",

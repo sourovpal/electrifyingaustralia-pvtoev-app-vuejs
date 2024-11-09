@@ -65,7 +65,7 @@
     $toast.clear();
 
     await useApiRequest({
-      url: `/platform/${editLeadId.value}/owner`,
+      url: `/platform/owners/${editLeadId.value}/update`,
       method: "PUT",
       payload: {
         owner_id: owner?.user_id,

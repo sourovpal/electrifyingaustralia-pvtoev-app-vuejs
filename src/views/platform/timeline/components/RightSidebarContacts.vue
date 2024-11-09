@@ -107,7 +107,7 @@
     $toast.clear();
 
     await useApiRequest({
-      url: `/platform/${platformStore.editLeadId}/status`,
+      url: `/platform/status/${platformStore.editLeadId}/update`,
       method: "PUT",
       payload: {
         status_id: value?.status_id,

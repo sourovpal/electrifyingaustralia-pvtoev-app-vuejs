@@ -32,8 +32,8 @@
     };
 
     const res = await useApiRequest({
-      url: `/leads/${editLeadId.value}/propertie`,
-      method: 'post',
+      url: `/platform/deals/${editLeadId.value}/propertie`,
+      method: 'put',
       payload
     }).then(res => {
 

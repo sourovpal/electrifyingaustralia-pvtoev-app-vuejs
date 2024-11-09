@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, computed } from 'vue';
+    import { ref, computed, watch } from 'vue';
     import SlideUpDown from "vue-slide-up-down";
     import { usePlatformStore } from '@stores';
     import { useApiRequest } from '@actions';
@@ -7,42 +7,40 @@
     import { $toast } from '@config';
 
     const platformStore = usePlatformStore();
-    const toggle = ref(true);
     const editLead = computed(() => platformStore.getEditLead);
     const editLeadId = computed(() => platformStore.getEditLeadId);
 
-    const leadNotes = computed({
-        get() {
-            return platformStore.getEditLead.notes;
-        },
-        set(notes) {
-            return platformStore.getEditLead.notes = notes;
-        }
-    });
+    const lead_notes = ref(null);
 
-    function handleDropdownToggle() {
-        toggle.value = !toggle.value;
-    }
+    watch(editLead, () => {
+        lead_notes.value = editLead.value.notes;
+    });
 
     const handleOnUpdateNotes = useDebounceFn(() => handleOnUpdateNotesFast(), 2000);
 
     const handleOnUpdateNotesFast = (save = false) => {
 
+        if (lead_notes.value == editLead.value.notes) return;
+
         $toast.clear();
 
         useApiRequest({
-            url: `leads/${editLeadId.value}/notes`,
-            method: 'POST',
-            payload: { notes: leadNotes.value, save }
+            url: `/platform/deals/${editLeadId.value}/notes`,
+            method: 'PUT',
+            payload: { notes: lead_notes.value, save }
         }).then(res => {
 
             const { success, message, errors } = res;
 
-            if (!success)
-                $toast.error(message.text);
+            if (!success) return $toast.error(message.text);
+
+            if (save) {
+                platformStore.callFetchTimelineLogs();
+                $toast.success('Your notes have been saved successfully.');
+                editLead.value.notes = lead_notes;
+            }
 
         }).catch(error => {
-            $toast.clear();
             $toast.error(error.message);
         })
 
@@ -58,7 +56,7 @@
         <div class="lead-timeline-notes">
             <textarea class="notes"
                 @keyup="handleOnUpdateNotes"
-                v-model="leadNotes"
+                v-model="lead_notes"
                 rows="6"></textarea>
         </div>
         <div class="d-flex justify-content-end py-2 save-btn">

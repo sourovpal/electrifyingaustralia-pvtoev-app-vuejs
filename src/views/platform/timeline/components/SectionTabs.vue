@@ -43,7 +43,7 @@
 
             <Tab @click="fetchLeadFiles"
                 class="py-1"
-                value="2">Media</Tab>
+                value="2">Files</Tab>
 
             <Tab class="py-1"
                 value="4">Project</Tab>

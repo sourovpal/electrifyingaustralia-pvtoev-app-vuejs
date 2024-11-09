@@ -16,6 +16,7 @@
         }
         return null;
     });
+    
     const createdAt = computed(() => {
         if (props.message) {
             return props.message.created_at;

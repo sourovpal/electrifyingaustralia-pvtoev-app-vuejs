@@ -1,5 +1,5 @@
 <script setup>
-    import { ref, onMounted } from 'vue';
+    import { ref, onMounted, watch, computed } from 'vue';
     import { getMaterialFileIcon } from "file-extension-icon-js";
     import { shortenFileName, imageExtensions } from '@helpers';
     import { Skeletor } from "vue-skeletor";
@@ -12,6 +12,7 @@
             type: Object,
             default: {},
         },
+        load: { type: String, default: null }
     });
 
     const toggleShowAllFiles = ref(false);
@@ -20,10 +21,13 @@
     const pagination = ref({ total: 0 });
     const isLoading = ref(false);
 
+    const load_new = computed(() => props.load);
+
+    watch(load_new, () => fetchAttachments(), { deep: true });
+
     async function fetchAttachments() {
-        isLoading.value = true;
         await useApiRequest({
-            url: `/platform/timeline/${props.event.timeline_id}/attachments`,
+            url: `/platform/timeline/files/${props.event.timeline_id}/all`,
             payload: {
                 page: 1,
                 limit: 4,
@@ -44,6 +48,7 @@
     }
 
     onMounted(() => {
+        isLoading.value = true;
         fetchAttachments();
     });
 
@@ -160,12 +165,7 @@
         img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
         }
-    }
-
-    .grid-item img {
-        width: 100%;
-        height: auto;
     }
 </style>

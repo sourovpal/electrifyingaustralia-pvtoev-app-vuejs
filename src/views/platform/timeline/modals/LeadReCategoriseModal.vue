@@ -113,7 +113,7 @@
     };
 
     await useApiRequest({
-      url: `/leads/${leadId}/move-lead`,
+      url: `/platform/deals/${leadId}/move`,
       method: "post",
       payload: data,
     })

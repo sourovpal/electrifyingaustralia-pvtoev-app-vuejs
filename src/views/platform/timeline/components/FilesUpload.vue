@@ -48,7 +48,7 @@
 
         const random = (Math.round(Math.random() * 10) + 1);
 
-        await api.post(`/platform/${editLeadId.value}/deals/attachment`, form_data,
+        await api.post(`/platform/files/${editLeadId.value}/upload`, form_data,
             {
                 headers: {
                     "Content-Type": "multipart/form-data",

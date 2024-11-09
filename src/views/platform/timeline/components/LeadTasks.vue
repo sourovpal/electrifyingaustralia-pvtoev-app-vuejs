@@ -26,8 +26,8 @@
     var $tasks = leadTasks.value?.map((obj) => obj.task_id);
 
     await useApiRequest({
-      url: `/platform/${editLeadId.value}/tasks/position`,
-      method: "post",
+      url: `/platform/tasks/${editLeadId.value}/position`,
+      method: "PUT",
       payload: {
         tasks: $tasks,
       },

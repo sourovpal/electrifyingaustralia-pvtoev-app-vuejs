@@ -198,7 +198,7 @@
 
     </div>
 
-    <div class="mb-2">
+    <!-- <div class="mb-2">
       <div class="fs-12px text-soft mb-0">Confidence</div>
       <star-rating style="line-height: 20px"
         :star-size="16"
@@ -212,7 +212,7 @@
         v-model:rating="leadStarRating"
         @click="confidenceUpdateHandler"
         :show-rating="false" />
-    </div>
+    </div> -->
 
     <div class="mb-2">
       <div class="fs-12px text-soft mb-0">Created At</div>

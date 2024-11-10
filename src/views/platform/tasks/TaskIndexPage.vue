@@ -73,10 +73,9 @@
             url: '/platform/tasks',
             payload,
         }).then(res => {
-            const { success, message, lead_tasks, ...args } = res;
-            if (success) {
-                leadTasks.value = lead_tasks;
-                pagination.value = args.pagination;
+            if (res.lead_tasks) {
+                leadTasks.value = res.lead_tasks;
+                pagination.value = res.pagination;
                 return;
             }
             $toast.error(message.text);
@@ -92,8 +91,8 @@
     async function updateTaskStage(task) {
         task.is_complete = !task.is_complete;
         await useApiRequest({
-            url: `/platform/${task.lead?.lead_id}/tasks/${task.task_id}/stage`,
-            method: 'post',
+            url: `/platform/tasks/${task.lead?.lead_id}/${task.task_id}/stage`,
+            method: 'put',
             payload: {
                 is_complete: task.is_complete,
             },

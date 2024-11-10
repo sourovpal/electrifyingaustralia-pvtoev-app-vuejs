@@ -364,7 +364,7 @@ export const usePlatformStore = defineStore("platform", {
               status,
               pipeline,
               pipeline_stage,
-              lead_subscribers,
+              lead_team_members,
             } = lead;
             this.setEditLead(lead);
             this.setNextLeadId(next_lead);
@@ -377,7 +377,7 @@ export const usePlatformStore = defineStore("platform", {
             this.setLeadStatus(status);
             this.setLeadPipeline(pipeline);
             this.setLeadStage(pipeline_stage);
-            this.setLeadTeamMembers(lead_subscribers);
+            this.setLeadTeamMembers(lead_team_members);
             //
             this.setIsLoading(false);
             this.setIsFirstLoading(false);
@@ -648,7 +648,7 @@ export const usePlatformStore = defineStore("platform", {
       $callback({ loading: true });
 
       useApiRequest({
-        url: `/platform/${$leadId}/workflows`,
+        url: `/platform/workflows/${$leadId}/all`,
       })
         .then(async (workflows) => {
 

@@ -109,14 +109,11 @@
         </div>
     </div>
 
-
-
     <ImagePreviewModal ref="imagePreview"></ImagePreviewModal>
 
-    <show-all-files-modal :url="`/platform/timeline/${event.timeline_id}/attachments`"
+    <show-all-files-modal :url="`/platform/timeline/files/${event.timeline_id}/all`"
         v-if="toggleShowAllFiles"
         @close="toggleShowAllFiles=false"></show-all-files-modal>
-
 
 </template>
 

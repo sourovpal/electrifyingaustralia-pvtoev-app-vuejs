@@ -1,14 +1,10 @@
 <script setup>
     import Quill from 'quill';
-    import { reactive, ref, onMounted, onUnmounted, computed } from 'vue';
+    import { ref, onMounted, computed } from 'vue';
     import { usePlatformStore } from '@stores';
 
     import { useDebounceFn, onClickOutside } from '@vueuse/core';
     import EmojiPicker from 'vue3-emoji-picker';
-    import {
-        imageExtensions,
-        fileNameToExtension
-    } from '@helpers';
     import { useApiRequest } from '@actions';
     import { $toast } from '@config';
 
@@ -19,16 +15,13 @@
 
     const platformStore = usePlatformStore();
     const quillEditorRef = ref();
-    const quillDraftId = 'quill_local_draft_history_message';
-    const selectedUsers = ref([]);
     const users = computed(() => platformStore.getUsers);
     const mentions = ref([]);
-    const clipboardFiles = ref([]);
     const $leadId = computed(() => platformStore.getEditLeadId);
-    let quillEditor = null;
     const toggleEmojiBox = ref(false);
     const toggleEmojiRef = ref(null);
     const isSubmitMessage = ref(false);
+    let quillEditor = null;
 
     const quillOptions = {
         theme: 'bubble',
@@ -93,6 +86,7 @@
     }
 
     async function handleSubmitMessage() {
+        await selectedMentions();
 
         var html = quillEditor.getSemanticHTML();
         var div = document.createElement('div');
@@ -103,7 +97,7 @@
         isSubmitMessage.value = true;
 
         await useApiRequest({
-            url: `/platform/${$leadId.value}/message`,
+            url: `/platform/timeline/${$leadId.value}/message`,
             method: 'POST',
             payload: {
                 mentions: mentions.value,

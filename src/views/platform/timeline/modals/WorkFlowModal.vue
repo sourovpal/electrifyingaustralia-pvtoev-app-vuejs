@@ -3,7 +3,6 @@
   import { ref, onMounted, watch, computed, nextTick } from "vue";
   import { usePlatformStore } from "@stores";
   import { $toast } from "@config";
-  import { useApiRequest } from "@actions";
   import WorkflowTasks from "../components/WorkflowTasks.vue";
   import { Skeletor } from "vue-skeletor";
 
@@ -63,17 +62,18 @@
       </div>
 
 
-      <div v-if="isLoading"
-        v-for="(_, index) in 3"
-        :key="index*Math.random()"
-        class="border mb-2 py-2 px-2 ">
-
-        <Skeletor style="width:1.3rem;height:1.3rem;border-radius:3px;"
-          class="me-2"></Skeletor>
-
-        <Skeletor style="width:80%;height:1rem;border-radius:3px;"></Skeletor>
-
-      </div>
+      <template v-if="isLoading">
+        <div v-for="(_, index) in 3"
+          :key="index*Math.random()"
+          class="border mb-2 py-2 px-2 ">
+  
+          <Skeletor style="width:1.3rem;height:1.3rem;border-radius:3px;"
+            class="me-2"></Skeletor>
+  
+          <Skeletor style="width:80%;height:1rem;border-radius:3px;"></Skeletor>
+  
+        </div>
+      </template>
 
       <template v-else>
         <workflow-tasks v-for="(workflow, index) in taskWorkflows"

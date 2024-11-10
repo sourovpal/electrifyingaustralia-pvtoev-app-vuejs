@@ -42,8 +42,7 @@
         }
 
         await useApiRequest({
-            url: `/platform/${$leadId}/timelines`,
-            method: 'get',
+            url: `/platform/timeline/${$leadId}/history`,
             payload
         }).then(async res => {
 
@@ -71,6 +70,7 @@
             $toast[message.type](message.text);
 
         }).catch(error => {
+            complete();
             $toast.error(error.message);
         });
 
@@ -87,14 +87,14 @@
         <scroll-bottom-position ref="scrollBottomPanel"
             @infinite="fetchTimelineLogsHandler">
 
-            <template v-for="(groupLogs, createdDate) in timelineLogs"
-                :key="createdDate">
+            <template v-for="(group_logs, created_date) in timelineLogs"
+                :key="created_date">
 
                 <div class="text-center mb-1 mt-2 feed-updated-date">
-                    <span class="text-head updated-date">{{ moment(createdDate).format('DD MMM, yyyy') }}</span>
+                    <span class="text-head updated-date">{{ moment(created_date).format('DD MMM, yyyy') }}</span>
                 </div>
 
-                <log-message v-for="(message, index) in groupLogs"
+                <log-message v-for="(message) in group_logs"
                     :key="message.timeline_id"
                     :message="message"></log-message>
 

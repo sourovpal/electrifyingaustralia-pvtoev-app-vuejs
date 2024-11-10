@@ -70,8 +70,7 @@
     }
 
     await useApiRequest({
-      url: `/leads/${pipelineId.value}/stage/${pipelineStage.value?.stage_id
-        }/${generateSlug(pipelineStage.value.name)}`,
+      url: `/platform/pipeline/${pipelineId.value}/stage/${pipelineStage.value?.stage_id}-${generateSlug(pipelineStage.value.name)}/deals`,
       payload,
     })
       .then((res) => {

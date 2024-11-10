@@ -48,7 +48,7 @@
     }
 
     function loadLatest() {
-        loading();
+        // loading();
         callInfiniteLoad({ latest: true });
     }
 
@@ -120,7 +120,7 @@
 
             <span v-if="isComplete && !isLoading"
                 class="text-soft py-5 d-block">
-                No older activity to display.
+                There are no old activities to display.
             </span>
 
             <slot></slot>

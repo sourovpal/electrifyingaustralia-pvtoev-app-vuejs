@@ -347,7 +347,7 @@
     :visible="true"
     pt:root:class="rounded-2"
     pt:mask:class="backdrop-blur-sm"
-    :style="{ width: '38vw' }"
+    :style="{ width: '42vw' }"
     :breakpoints="{ '1199px': '50vw', '575px': '90vw' }">
 
     <template #container>

@@ -77,7 +77,7 @@
         isLoading.value = true;
 
         await useApiRequest({
-            url: `/platform/${$leadId.value}/workflows/${props.workflow?.workflow_id}/tasks`,
+            url: `/platform/workflows/${$leadId.value}/tasks/${props.workflow?.workflow_id}/all`,
         }).then(async res => {
 
             const { tasks, assign_tasks } = res;
@@ -103,7 +103,7 @@
     async function assignWorkflowTask(assignAll = false) {
 
         await useApiRequest({
-            url: `/platform/${$leadId.value}/workflows/${props.workflow?.workflow_id}/tasks${assignAll ? '?assing=all' : ''}`,
+            url: `/platform/workflows/${$leadId.value}/tasks/${props.workflow?.workflow_id}/assign${assignAll ? '?assing=all' : ''}`,
             method: 'post',
             payload: {
                 tasks: selectedTasks.value,

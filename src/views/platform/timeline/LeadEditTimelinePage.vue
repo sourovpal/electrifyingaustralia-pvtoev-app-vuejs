@@ -1,95 +1,92 @@
 <script setup>
-  import {
-    ref,
-    onMounted,
-    computed,
-    onUnmounted,
-    onBeforeMount,
-    watch,
-  } from "vue";
-  import SearchBar from "@components/SearchBar.vue";
-  import TimelineToolsbar from "./components/TimelineToolsbar.vue";
-  import PipelineStages from "./components/PipelineStages.vue";
-  import TimelineHistory from "./components/TimelineHistory.vue";
-  import RightSidebarTimeline from "./components/RightSidebarTimeline.vue";
-  import { usePlatformStore } from "@stores";
-  import { useRoute } from "vue-router";
-  import LeadCertifyModal from "./modals/LeadCertifyModal.vue";
-  import EditLeadModal from "./modals/EditLeadModal.vue";
+import {
+  ref,
+  onMounted,
+  computed,
+  onUnmounted,
+  onBeforeMount,
+  watch,
+} from "vue";
+import SearchBar from "@components/SearchBar.vue";
+import TimelineToolsbar from "./components/TimelineToolsbar.vue";
+import PipelineStages from "./components/PipelineStages.vue";
+import TimelineHistory from "./components/TimelineHistory.vue";
+import RightSidebarTimeline from "./components/RightSidebarTimeline.vue";
+import { usePlatformStore } from "@stores";
+import { useRoute } from "vue-router";
+import LeadCertifyModal from "./modals/LeadCertifyModal.vue";
+import EditLeadModal from "./modals/EditLeadModal.vue";
+import BlockUI from "primevue/blockui";
 
-  const route = useRoute();
-  const platformStore = usePlatformStore();
+const route = useRoute();
+const platformStore = usePlatformStore();
 
-  const isPipelineLead = computed(() => platformStore.getIsPipelineLead);
-  const pipelineStages = computed(() => platformStore.getPipelineStages);
-  const certifyModalAction = computed(() => platformStore.getCertifyModalAction);
-  const toggleEditLeadModal = computed(() => platformStore.getLeadEditModal);
+const isPipelineLead = computed(() => platformStore.getIsPipelineLead);
+const pipelineStages = computed(() => platformStore.getPipelineStages);
+const certifyModalAction = computed(() => platformStore.getCertifyModalAction);
+const toggleEditLeadModal = computed(() => platformStore.getLeadEditModal);
 
-  let $leadId = route.params.id;
+let $lead_id = ref(route.params.id);
 
-  const fetchResources = () => {
+watch(route, () => {
+  $lead_id.value = route.params.id;
+  fetchResources();
+}, { immediate: true, deep: true });
 
-    let isPipelineCheck = !!(window.location.href.indexOf("deals") > -1);
+function fetchResources() {
+  let isPipelineCheck = !!(window.location.href.indexOf("deals") > -1);
+  platformStore.callFetchUsers();
+  platformStore.setIsPipelineLead(isPipelineCheck);
+  platformStore.setEditLeadId($lead_id.value);
+  platformStore.callFetchStatuses();
+  platformStore.setIsFirstLoading(true);
+  platformStore.callFetchNewLead($lead_id.value, true);
+  platformStore.callFetchLeadContacts($lead_id.value);
+  platformStore.callFetchProperties($lead_id.value);
+  platformStore.callFetchLeadTasks($lead_id.value);
+  if (isPipelineCheck) platformStore.callFetchLeadStages($lead_id.value);
+}
 
-    platformStore.callFetchUsers();
-    platformStore.setIsPipelineLead(isPipelineCheck);
-    platformStore.setEditLeadId($leadId);
-    platformStore.callFetchStatuses();
-    platformStore.setIsFirstLoading(true);
-    platformStore.callFetchNewLead($leadId, true);
-    platformStore.callFetchLeadContacts($leadId);
-    platformStore.callFetchProperties($leadId);
-    platformStore.callFetchLeadTasks($leadId);
-    if (isPipelineCheck) platformStore.callFetchLeadStages($leadId);
-
-  }
-
-  watch(route, () => {
-    $leadId = route.params.id;
-    fetchResources();
-  }, { immediate: true });
-
-  onUnmounted(() => {
-    platformStore.setIsPipelineLead(false);
-    platformStore.resetLeadEditTimeline();
-  });
+onUnmounted(() => {
+  // platformStore.setIsPipelineLead(false);
+  platformStore.resetLeadEditTimeline();
+});
 
 </script>
 <template>
+  <BlockUI class="content-width d-flex rounded-0" :blocked="false">
+    <section class="d-flex flex-column content-width">
 
-  <section class="d-flex flex-column content-width">
+      <section class="d-block w-100">
 
-    <section class="d-block w-100">
+        <search-bar></search-bar>
 
-      <search-bar></search-bar>
+        <timeline-toolsbar></timeline-toolsbar>
 
-      <timeline-toolsbar></timeline-toolsbar>
+        <PipelineStages class="border-bottom" v-if="isPipelineLead"></PipelineStages>
 
-      <PipelineStages class="border-bottom"
-        v-if="isPipelineLead"></PipelineStages>
+      </section>
+
+      <section class="d-flex flex-row">
+
+        <timeline-history :key="`timeline_${$lead_id}`"></timeline-history>
+
+        <right-sidebar-timeline :isFirstLoading="false"></right-sidebar-timeline>
+
+      </section>
+
+      <lead-certify-modal :action="certifyModalAction" v-if="certifyModalAction"></lead-certify-modal>
+
+      <edit-lead-modal v-if="toggleEditLeadModal"></edit-lead-modal>
 
     </section>
-
-    <section class="d-flex flex-row">
-
-      <timeline-history :key="`timeline_${$leadId}`"></timeline-history>
-
-      <right-sidebar-timeline :isFirstLoading="false"></right-sidebar-timeline>
-
-    </section>
-
-    <lead-certify-modal :action="certifyModalAction"
-      v-if="certifyModalAction"></lead-certify-modal>
-
-    <edit-lead-modal v-if="toggleEditLeadModal"></edit-lead-modal>
-
-  </section>
+  </BlockUI>
 
 </template>
 
-<style scoped
-  lang="scss">
-  .content-width {
-    width: var(--container-width) !important;
-  }
+<style scoped lang="scss">
+.content-width {
+  width: var(--container-width) !important;
+  flex-grow: 1;
+}
 </style>

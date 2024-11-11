@@ -3,32 +3,34 @@
   import MultiSelect from 'primevue/multiselect';
   import { usePlatformStore } from "@stores";
   import { computed, ref, watchEffect, watch } from "vue";
-  import { useApiRequest } from "@actions";
+  import { useApiRequest } from "@actions/api";
+  import api from "@actions/api";
   import { useRoute } from "vue-router";
   import { Skeletor } from "vue-skeletor";
   import { $toast } from '@config';
+  import { delay } from '@helpers';
+  import moment from 'moment';
 
   const route = useRoute();
   const platformStore = usePlatformStore();
 
-  const leadProperties = computed(() => {
-    return platformStore.getLeadProperties.concat(platformStore.getPipelineProperties);
-  });
+  const leadProperties = computed(() => platformStore.getLeadProperties.concat(platformStore.getPipelineProperties));
 
   const propertiesValues = computed(() => platformStore.getLeadPropertiesValues);
   const isFirstLoading = computed(() => platformStore.getIsFirstLoading);
   const editLeadId = computed(() => platformStore.getEditLeadId);
 
-  async function onChangeHandler(uniqueId) {
+  async function onChangeHandler(uniqueId, type_id = null) {
 
-    if (!Object.keys(propertiesValues.value).includes(uniqueId)) {
-      return;
-    }
+    if (!Object.keys(propertiesValues.value).includes(uniqueId)) return;
+
+    let value = propertiesValues.value[uniqueId];
+
+    if (type_id == 'date' && value) value = moment(value).format("MM/DD/YYYY");
+    else if (type_id == 'date_and_time' && value) value = moment(value).format("MM/DD/YYYY HH:mm");
 
     var payload = {
-      propertie: {
-        [uniqueId]: propertiesValues.value[uniqueId],
-      },
+      propertie: { [uniqueId]: value },
     };
 
     const res = await useApiRequest({
@@ -53,6 +55,10 @@
       $toast.error(error.message);
     });
   }
+
+
+
+
 </script>
 
 <template>
@@ -83,7 +89,7 @@
         <input-text size="small"
           class="w-100 py-small rounded-1 fw-bold"
           placeholder="—"
-          @blur="onChangeHandler(propertie.unique_id)"
+          @blur="onChangeHandler(propertie.unique_id, propertie.data_type_id)"
           v-model="propertiesValues[propertie.unique_id]">
         </input-text>
 
@@ -96,7 +102,7 @@
           :name="propertie?.unique_id"
           rows="1"
           placeholder="—"
-          @blur="onChangeHandler(propertie.unique_id)"
+          @blur="onChangeHandler(propertie.unique_id, propertie.data_type_id)"
           v-model="propertiesValues[propertie.unique_id]"></text-area>
 
       </Protector>
@@ -105,7 +111,7 @@
 
         <input-number class="w-100"
           input-class="py-small rounded-1"
-          @blur="onChangeHandler(propertie.unique_id)"
+          @blur="onChangeHandler(propertie.unique_id, propertie.data_type_id)"
           v-model="propertiesValues[propertie.unique_id]"
           placeholder="—"></input-number>
 
@@ -116,7 +122,8 @@
 
         <input-date class="w-100"
           input-class="py-small rounded-1"
-          @date-select="onChangeHandler(propertie.unique_id)"
+          dateFormat="mm/dd/yy"
+          @date-select="onChangeHandler(propertie.unique_id, propertie.data_type_id)"
           v-model="propertiesValues[propertie.unique_id]"
           placeholder="—"></input-date>
 
@@ -127,8 +134,9 @@
         <input-date class="w-100"
           showTime
           hourFormat="24"
+          dateFormat="mm/dd/yy"
           input-class="py-small rounded-1"
-          @date-select="onChangeHandler(propertie.unique_id)"
+          @hide="onChangeHandler(propertie.unique_id, propertie.data_type_id)"
           v-model="propertiesValues[propertie.unique_id]"
           placeholder="—"></input-date>
 
@@ -143,7 +151,7 @@
           placeholder="—"
           class="w-100 rounded-1"
           label-class="rounded-1"
-          @change="onChangeHandler(propertie.unique_id)"
+          @hide="onChangeHandler(propertie.unique_id, propertie.data_type_id)"
           overlayClass="multi-select-overlay-small">
         </multi-select>
 
@@ -159,7 +167,7 @@
           placeholder="—"
           class="w-100 rounded-1"
           label-class="py-small rounded-1"
-          @change="onChangeHandler(propertie.unique_id)"
+          @change="onChangeHandler(propertie.unique_id, propertie.data_type_id)"
           panel-class="panel-option-small">
         </select-option>
 

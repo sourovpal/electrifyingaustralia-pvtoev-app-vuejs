@@ -47,6 +47,15 @@
         imagePreview.value?.preview(file);
     }
 
+    function filenameLength(index) {
+
+        if (pagination.value.total >= 4) return 12;
+
+        if (pagination.value.total == 3 || pagination.value.total == 1) return (index == 2 || index == 0) ? 25 : 12;
+
+        if (pagination.value.total == 2) return 12;
+    }
+
     onMounted(() => {
         isLoading.value = true;
         fetchAttachments();
@@ -92,11 +101,7 @@
                             </div>
 
                             <span class="text-center d-block fs-12px text-head">
-                                {{ shortenFileName(
-                                file.filename,
-                                ((index == 0 && pagination.total == 1) ||
-                                (index == 2 && pagination.total== 3))?25:12
-                                ) }}
+                                {{ shortenFileName(file.filename, filenameLength(index)) }}
                             </span>
 
                         </div>

@@ -67,7 +67,7 @@
         <input-icon class="pi pi-calendar fs-14px" />
 
         <input-date class="w-100 icon"
-          size="small"
+          size="small" dateFormat="mm/dd/yy"
           v-model="propertiesValues[propertie.unique_id]"
           :placeholder="propertie.label"></input-date>
 
@@ -85,7 +85,7 @@
         <input-date class="w-100 icon"
           size="small"
           showTime
-          hourFormat="24"
+          hourFormat="24" dateFormat="mm/dd/yy"
           v-model="propertiesValues[propertie.unique_id]"
           :placeholder="propertie.label"></input-date>
 

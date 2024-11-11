@@ -2,9 +2,10 @@
   import { ref, computed, onMounted, watch, reactive } from "vue";
   import { useApiRequest } from "@actions";
   import { usePlatformStore } from "@stores";
-  import LeadCustomProperties from "../properties/LeadCustomProperties.vue";
+  import LeadCustomProperties from "../components/LeadCustomProperties.vue";
   import { useToast } from "vue-toast-notification";
   import { $toast } from "@config";
+  import moment from 'moment';
 
   const leadFormData = reactive({ estimated_value: 0.0 });
   const editLead = computed(() => platformStore.getEditLead);
@@ -52,6 +53,30 @@
 
   });
 
+
+  function formatProperties() {
+
+    let properties_values = {};
+
+    let attributes = leadProperties.value?.concat(pipelineProperties.value ?? []);
+
+    for (let unique_id in propertiesValues.value ?? {}) {
+
+      let value = propertiesValues.value[unique_id];
+      
+      let attribute = attributes.find(item => item.unique_id == unique_id);
+
+      if (attribute && attribute.data_type_id == 'date' && value) value = moment(value).format("MM/DD/YYYY");
+
+      else if (attribute && attribute.data_type_id == 'date_and_time' && value) value = moment(value).format("MM/DD/YYYY HH:mm");
+
+      properties_values[unique_id] = value;
+
+    }
+    return properties_values;
+  }
+
+
   async function submitLeadFormHandler() {
 
     $toast.clear();
@@ -60,9 +85,22 @@
 
     errors.value = {};
 
+    let properties_values = {};
+
+    if (hasProperties.value) properties_values = await formatProperties();
+
     var data = {
-      ...leadFormData,
-      properties_values: { ...propertiesValues.value },
+      lead_title: leadFormData.lead_title,
+      lead_source: leadFormData.lead_source,
+      lead_source_id: leadFormData.lead_source_id,
+      estimated_value: leadFormData.estimated_value,
+      address_line_one: leadFormData.address_line_one,
+      address_line_two: leadFormData.address_line_two,
+      city: leadFormData.city,
+      state: leadFormData.state,
+      country: leadFormData.country,
+      post_code: leadFormData.post_code,
+      properties_values,
     };
 
     const res = await useApiRequest({
@@ -293,6 +331,66 @@
 
             </div>
 
+
+            <div class="row">
+              <div class="col-lg-6">
+
+                <div class="mb-3">
+
+                  <label class="mb-2 fs-14px text-head">
+                    Postcode
+                    <span class="text-soft fs-12px ms-1">(Optional)</span>
+                  </label>
+
+                  <icon-field>
+                    <input-icon class="pi pi-compass fs-14px" />
+                    <input-text class="w-100"
+                      size="small"
+                      @focus="delete errors?.post_code"
+                      v-model="leadFormData['post_code']"
+                      placeholder="Postcode"></input-text>
+                  </icon-field>
+
+                  <span class="fs-14px text-danger py-1 w-100 d-block"
+                    v-if="errors?.post_code?.length">
+                    {{ errors?.post_code[0] }}
+                  </span>
+
+                </div>
+
+              </div>
+
+              <div class="col-lg-6">
+
+                <div class="mb-3">
+
+                  <label class="mb-2 fs-14px text-head">
+                    Country
+                    <span class="text-soft fs-12px ms-1">(Optional)</span>
+                  </label>
+
+                  <icon-field>
+                    <input-icon class="pi pi-globe fs-14px" />
+                    <input-text class="w-100"
+                      size="small"
+                      @focus="delete errors?.country"
+                      v-model="leadFormData['country']"
+                      placeholder="Country"></input-text>
+                  </icon-field>
+
+                  <span class="fs-14px text-danger py-1 w-100 d-block"
+                    v-if="errors?.country?.length">
+                    {{ errors?.country[0] }}
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+
+
             <div class="row">
 
               <div class="col-lg-6">
@@ -413,7 +511,7 @@
 
     .custom-properties {
       width: 100%;
-      height: 49vh;
+      height: 57vh;
       overflow-x: hidden;
     }
   }

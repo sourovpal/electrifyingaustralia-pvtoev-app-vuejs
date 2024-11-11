@@ -107,9 +107,9 @@
     isSubmitMovePipelineOrStatus.value = true;
 
     var data = {
-      status: selectedStatus.value?.status_id ?? null,
-      pipeline: selectedPipeline.value?.pipeline_id ?? null,
-      pipeline_stage: selectedStage.value?.stage_id ?? null,
+      status_id: selectedStatus.value?.status_id ?? null,
+      pipeline_id: selectedPipeline.value?.pipeline_id ?? null,
+      pipeline_stage_id: selectedStage.value?.stage_id ?? null,
     };
 
     await useApiRequest({
@@ -160,7 +160,6 @@
 
       })
       .catch((error) => {
-        $toast.clear();
         $toast.error(error.message);
       });
 

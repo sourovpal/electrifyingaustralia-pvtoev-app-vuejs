@@ -132,7 +132,6 @@
 </script>
 <template>
 
-
   <div
     class="col-r-header d-flex justify-content-between align-items-center border-bottom overflow-x-auto overflow-y-hidden">
 
@@ -156,7 +155,7 @@
 
       <template v-else>
 
-        <Avatar v-for="(item, index) in 5"
+        <Avatar v-for="(item, index) in 2"
           :key="Math.random()"
           class="cursor-pointer fw-bold me-2"
           shape="circle"

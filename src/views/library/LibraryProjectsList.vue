@@ -1,6 +1,6 @@
 <script setup>
 import {ref, computed} from 'vue';
-import SearchBar from '../../components/SearchBar.vue';
+import CRMToolsBar from '../../components/CRMToolsBar.vue';
 import ActionBar from '../../components/ActionBar/ActionBar.vue';
 import LeftActionBar from '../../components/ActionBar/LeftActionBar.vue';
 import RightActionBar from '../../components/ActionBar/RightActionBar.vue';
@@ -28,7 +28,7 @@ const projects = computed(() => projectStore.projectList);
 
 <template>
     <section class="content lead-list">
-        <SearchBar
+        <CRMToolsBar
             placeholderText="Search for a project" 
         />
         <!-- temporary -->

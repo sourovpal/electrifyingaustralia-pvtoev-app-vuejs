@@ -1,7 +1,7 @@
 <script setup>
     // import './style.scss';
     import { ref, onMounted, computed, watch } from 'vue';
-    import SearchBar from '@components/SearchBar.vue';
+    import CRMToolsBar from '@components/CRMToolsBar.vue';
     import FilterRightSidebar from './components/FilterRightSidebar.vue';
     import PipelineStateLeadDetails from './components/PipelineStateLeadDetails.vue';
     import LoadingStateLeads from './components/LoadingStateLeads.vue';
@@ -45,7 +45,9 @@
 </script>
 <template>
     <section class="content pipline-list">
-        <search-bar></search-bar>
+        
+        <CRMToolsBar></CRMToolsBar>
+
         <pipeline-tools-bar></pipeline-tools-bar>
         <!-- <empty-page
             v-if="!isLoading && !isError && !pipelinePirimaryStages?.length && !pipelineSuccessStages?.length && !pipelineLostStages?.length"

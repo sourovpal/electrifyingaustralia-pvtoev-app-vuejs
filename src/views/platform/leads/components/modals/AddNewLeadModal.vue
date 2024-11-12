@@ -59,13 +59,13 @@
   const handleSearchAddress = useDebounceFn(async ({ query }) => {
     selectedAddress.value = null;
     await useApiRequest({
-      url: '/platform/search/leads',
+      url: '/platform/leads/search',
       method: 'post',
       payload: {
         limit: 5,
         search: query,
-        lead_columns: ['address_line_one', 'address_line_two', 'city', 'state', 'country'],
-        contact: true,
+        columns: ['address_line_one', 'address_line_two', 'city', 'state', 'country'],
+        lead: true,
       }
     }).then(leads => {
       if (!leads && !leads.length) filterAddress.value = { ...filterAddress.value, items: [] };
@@ -79,17 +79,18 @@
       filterAddress.value = { ...filterAddress.value, items: [] }
     });
 
-  }, 500);
+  }, 1000);
 
   const handleSearchContact = useDebounceFn(async ({ query }) => {
 
     await useApiRequest({
-      url: '/platform/search/leads',
+      url: '/platform/leads/search',
       method: 'post',
       payload: {
         limit: 10,
         search: query,
-        contact_columns: ['first_name', 'last_name', 'email', 'phone_number'],
+        columns: ['first_name', 'last_name', 'email', 'phone_number'],
+        contact: true,
       }
     }).then(contacts => {
 
@@ -101,7 +102,7 @@
       filterContacts.value = []
     });
 
-  }, 500);
+  }, 1000);
 
   function hideModal() {
     leadsStore.setAddNewLeadModal(false);
@@ -143,19 +144,15 @@
     })
       .then((res) => {
 
-        const { success, message, errors: isErrors } = res;
+        const { success, message, errors: validation_errors } = res;
 
         if (success) {
-
           $toast[message.type](message.text);
-
           hideModal();
-
           return emits("refresh", true);
-
         }
 
-        errors.value = isErrors;
+        errors.value = validation_errors;
 
       })
       .catch((error) => {

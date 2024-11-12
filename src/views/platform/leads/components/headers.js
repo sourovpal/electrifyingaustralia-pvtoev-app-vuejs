@@ -1,7 +1,11 @@
 export const headers = [
     {
-        unique_id:'lead',
-        title:'Lead',
+        unique_id:'client',
+        title:'Client',
+    },
+    {
+        unique_id:'lead_title',
+        title:'Lead Title',
     },
     {
         unique_id:'source',

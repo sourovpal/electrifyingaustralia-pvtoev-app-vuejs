@@ -7,7 +7,7 @@ import {
   onBeforeMount,
   watch,
 } from "vue";
-import SearchBar from "@components/SearchBar.vue";
+import CRMToolsBar from "@components/CRMToolsBar.vue";
 import TimelineToolsbar from "./components/TimelineToolsbar.vue";
 import PipelineStages from "./components/PipelineStages.vue";
 import TimelineHistory from "./components/TimelineHistory.vue";
@@ -59,7 +59,7 @@ onUnmounted(() => {
 
       <section class="d-block w-100">
 
-        <search-bar></search-bar>
+        <CRMToolsBar></CRMToolsBar>
 
         <timeline-toolsbar></timeline-toolsbar>
 

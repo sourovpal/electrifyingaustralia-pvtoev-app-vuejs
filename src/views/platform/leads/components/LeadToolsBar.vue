@@ -3,7 +3,7 @@
     import ActionBar from '@components/ActionBar/ActionBar.vue';
     import LeftActionBar from '@components/ActionBar/LeftActionBar.vue';
     import RightActionBar from '@components/ActionBar/RightActionBar.vue';
-    import HeaderPropertiesDropdown from '../../components/dropdowns/HeaderPropertiesDropdown.vue';
+    import HeaderPropertiesDropdown from './HeaderPropertiesDropdown.vue';
     import { usePlatformStore, useLeadsStore } from "@stores";
     import { useDebounceFn } from '@vueuse/core';
     import { useRouter, useRoute } from 'vue-router';
@@ -117,7 +117,7 @@
                 </button>
             </div>
 
-            <div class="search-bar w-100 d-lg-inline d-none">
+            <!-- <div class="search-bar w-100 d-lg-inline d-none">
                 <div class="position-relative ms-4 w-100">
                     <input type="text"
                         v-model="searchInput"
@@ -127,7 +127,7 @@
                     <font-awesome-icon icon="fas fa-search"
                         class="ms-3 search-icon text-soft"></font-awesome-icon>
                 </div>
-            </div>
+            </div> -->
 
             <div class="ms-4">
                 <button @click="showMultipleModal"
@@ -219,33 +219,47 @@
             </div>
 
             <div class="">
+
                 <button :disabled="!pagination?.prev_page || isLoading"
                     @click="handlePagination({ page: pagination?.prev_page })"
                     v-tippy="{ content: 'Previous', placement: 'top' }"
                     class="toolbar-btn btn btn-light btn-floating me-3">
+
                     <font-awesome-icon icon="fas fa-arrow-left"
                         class="text-head fs-16px"></font-awesome-icon>
+
                 </button>
+
                 <button :disabled="!pagination?.next_page || isLoading"
                     v-tippy="{ content: 'Next', placement: 'top' }"
                     @click="handlePagination({ page: pagination?.next_page })"
                     class="toolbar-btn btn btn-light btn-floating me-3">
+
                     <font-awesome-icon icon="fas fa-arrow-right"
                         class="text-head fs-16px"></font-awesome-icon>
+
                 </button>
+
             </div>
 
             <div class="me-3 d-lg-inline d-xl-none">
+
                 <button class="toolbar-btn btn btn-light btn-sm btn-floating"
                     data-mdb-toggle="dropdown">
+
                     <font-awesome-icon icon="fas fa-ellipsis-vertical"></font-awesome-icon>
+
                 </button>
+
                 <div class="dropdown-menu dropdown-menu-end shadow-md custom-dropdown-menu three-dot">
                     <span @click="showAddNewModal"
                         class="dropdown-item cursor-pointer text-head py-1">Add New</span>
+
                     <span class="dropdown-item cursor-pointer text-head py-1">Import</span>
+
                     <span @click="handleToggleFilter"
                         class="dropdown-item cursor-pointer text-head py-1">Filter Leads</span>
+
                 </div>
             </div>
         </right-action-bar>

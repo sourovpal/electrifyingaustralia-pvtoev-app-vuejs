@@ -113,12 +113,9 @@ export const fetchFile = async (url, callback = null) => {
     });
 };
 
-export function handleDateTimeFormat(
-  timestamp,
-  format = "YYYY-MM-DD HH:mm:ss"
-) {
+export function handleDateTimeFormat(timestamp, format = "YYYY-MM-DD HH:mm:ss") {
   if (!timestamp) return;
-  return moment(timestamp).format(format);
+  return moment(timestamp).format(format)?.toString();
 }
 
 export function formatTimeAgo(
@@ -255,4 +252,49 @@ export function formatFileSize(bytes) {
   const formattedSize = parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
 
   return `${formattedSize} ${sizes[i]}`;
+}
+
+
+export function getPropertieValue(propertie, lead) {
+
+  const { properties_values } = lead;
+
+  if (!properties_values) return "—";
+
+  let attrType = propertie.data_type_id;
+
+  let attrValue = properties_values[propertie.unique_id];
+
+  if ((attrType === "free_text" || attrType === "multiline_free_text") && attrValue) {
+
+    if (attrValue.length > 20)
+      return `<div class="text-overflow-ellipsis w-100 hover-scroll">${attrValue}</div>`;
+
+    return `<span class="text-overflow-ellipsis w-100">${attrValue}</span>`;
+
+  } else if ((attrType === "date" || attrType === "date_and_time") && attrValue) {
+
+    return attrValue;
+
+  } else if (attrType === "single_choice" && attrValue) {
+
+    return `<span class="text-overflow-ellipsis w-100">${attrValue?.value}</span>`;
+
+  } else if (attrType === "multiple_choice" && attrValue?.length && Array.isArray(attrValue)) {
+
+    return `<span class="text-overflow-ellipsis w-100">
+      ${attrValue?.map(item => item.value).join(', ')}
+    </span>`;
+
+  } else if (attrType === "yes_or_no" && attrValue) {
+
+    return `<span class="text-overflow-ellipsis w-100 text-capitalize">${attrValue}</span>`;
+
+  } else if (attrType === "real_number" && typeof attrValue != "undefined") {
+
+    return `<span class="text-overflow-ellipsis w-100 text-capitalize">${attrValue}</span>`;
+
+  }
+
+  return "—";
 }

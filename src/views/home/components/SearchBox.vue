@@ -5,7 +5,7 @@
   import api from "@actions/api";
   import { formatLeadAddress } from '@helpers';
   import { useRouter } from 'vue-router';
-  import {$toast} from '@config';
+  import { $toast } from '@config';
 
 
   const accessToken = ref(
@@ -26,7 +26,12 @@
 
     const requests = [
       axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${accessToken.value}&proximity=90.4093,23.7272&types=address&limit=5&language=en`),
-      api.get(`/leads/search?query=${query}&limit=5`)
+      api.post(`/platform/leads/search`, {
+        contact: true,
+        lead: true,
+        search: query,
+        limit: 5,
+      })
     ];
 
     try {
@@ -34,18 +39,18 @@
       const responses = await axios.all(requests);
       const results = responses.flatMap(response => response.data);
       searchResults.value = results[0]?.features;
-      searchProjects.value = results[1]?.leads;
+      searchProjects.value = results[1];
       isLoading.value = false;
-
     } catch (error) {
 
       isLoading.value = false;
+
       console.error("Error fetching locations:", error);
 
     }
   }
 
-  function handleSearchBarToggle(event) {
+  function handleCRMToolsBarToggle(event) {
 
     const query = event.target.value;
 
@@ -85,8 +90,8 @@
           <div class="search-box">
 
             <input @input="searchLocation"
-              @keyup="handleSearchBarToggle"
-              @focus="handleSearchBarToggle"
+              @keyup="handleCRMToolsBarToggle"
+              @focus="handleCRMToolsBarToggle"
               class="form-control form-control-lg"
               type="text"
               placeholder="Search for an address or existing projects" />

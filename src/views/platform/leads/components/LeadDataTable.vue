@@ -7,7 +7,7 @@
   import DataTableSkeletor from "./DataTableSkeletor.vue";
   import { AvatarIcon } from "@assets/icons";
   import { useLeadsStore, usePlatformStore } from "@stores";
-  import { handleDateTimeFormat, formatTimeAgo } from "@helpers";
+  import { handleDateTimeFormat, formatTimeAgo, getPropertieValue } from "@helpers";
   import EmptyPage from "@components/Errors/EmptyPage.vue";
   import ErrorPage from "@components/Errors/ErrorPage.vue";
   import { $toast } from "@config";
@@ -39,47 +39,11 @@
     leadsStore.setSelectedLeads(id);
   }
 
-  function getPropertieValue(propertie, lead) {
-    const { properties_values } = lead;
-    if (!properties_values) {
-      return "—";
-    }
-
-    let attrType = propertie.data_type_id;
-    let attrValue = properties_values[propertie.unique_id];
-
-    if (
-      (attrType === "free_text" || attrType === "multiline_free_text") &&
-      attrValue
-    ) {
-      if (attrValue.length > 20) {
-        return `<div class="text-overflow-ellipsis w-100 hover-scroll">${attrValue}</div>`;
-      } else {
-        return `<span class="text-overflow-ellipsis w-100">${attrValue}</span>`;
-      }
-    } else if (attrType === "date" && attrValue) {
-      return handleDateTimeFormat(attrValue, "YYYY-MM-DD");
-    } else if (attrType === "date_and_time" && attrValue) {
-      return handleDateTimeFormat(attrValue, "YYYY-MM-DD HH:MM:SS");
-    } else if (attrType === "single_choice" && attrValue) {
-      return `<span class="text-overflow-ellipsis w-100">${attrValue}</span>`;
-    } else if (attrType === "multiple_choice" && attrValue && attrValue?.length) {
-      return `<span class="text-overflow-ellipsis w-100">${attrValue.join(
-        ", "
-      )}</span>`;
-    } else if (attrType === "yes_or_no" && attrValue) {
-      return `<span class="text-overflow-ellipsis w-100 text-capitalize">${attrValue}</span>`;
-    } else if (attrType === "real_number" && typeof attrValue != "undefined") {
-      return `<span class="text-overflow-ellipsis w-100 text-capitalize">${attrValue}</span>`;
-    }
-    return "—";
-  }
-
   async function handleUpdateLeadStatus(lead, status) {
     $toast.clear();
     isStatusUpdating.value = lead.lead_id;
     await useApiRequest({
-      url: `/platform/${lead.lead_id}/status`,
+      url: `/platform/status/${lead.lead_id}/update`,
       method: "PUT",
       payload: {
         status_id: lead.status?.status_id,
@@ -118,8 +82,8 @@
     if (selectedEditLead.value.owner?.user_id == owner.user_id) return;
     isOwnerUpdating.value = selectedEditLead.value.lead_id;
     await useApiRequest({
-      url: `/platform/${selectedEditLead.value.lead_id}/owner`,
-      method: "put",
+      url: `/platform/owners/${selectedEditLead.value.lead_id}/update`,
+      method: "PUT",
       payload: {
         owner_id: owner?.user_id,
       },
@@ -133,7 +97,7 @@
         $toast.error("You can't change the owner of this lead's");
       })
       .catch((error) => {
-        $toast.error("Oops, something went wrong");
+        $toast.error(error.message);
       })
       .finally(() => {
         isOwnerUpdating.value = null;
@@ -160,10 +124,16 @@
       <div class="tbl-th"
         style="width: 3.6rem; flex-grow: 1"></div>
 
-      <div v-show="!headerAttributes.includes('lead')"
+      <div v-show="!headerAttributes.includes('client')"
+        class="tbl-th"
+        style="width: 16rem; flex-grow: 1">
+        Client
+      </div>
+
+      <div v-show="!headerAttributes.includes('lead_title')"
         class="tbl-th"
         style="width: 20rem; flex-grow: 1">
-        Lead
+        Lead Title
       </div>
 
       <div v-show="!headerAttributes.includes('source')"
@@ -213,23 +183,29 @@
       <div v-show="!headerAttributes.includes('city')"
         class="tbl-th"
         style="width: 10rem; flex-grow: 1">
+
         City
+
       </div>
 
       <div v-show="!headerAttributes.includes('state')"
         class="tbl-th"
         style="width: 10rem; flex-grow: 1">
+
         State
+
       </div>
 
       <div v-show="!headerAttributes.includes('post_code')"
         @click="leadSortedHandler('post_code')"
         class="tbl-th cursor-pointer"
         style="width: 10rem; flex-grow: 1">
+
         Postcode
         <column-sorted field="post_code"
           :column="'column'"
           :order="'order'" />
+
       </div>
 
       <div v-show="!headerAttributes.includes('country')"
@@ -245,26 +221,34 @@
         class="tbl-th"
         v-show="!headerAttributes.includes(propertie.unique_id)"
         style="width: 12rem; flex-grow: 1">
+
         <span class="text-overflow-ellipsis w-100">{{ propertie.label }}</span>
+
       </div>
 
       <div v-show="!headerAttributes.includes('last_update')"
         @click="leadSortedHandler('updated_at')"
         class="tbl-th cursor-pointer"
         style="width: 10rem; flex-grow: 1">
+
         Last Update
+
         <column-sorted field="updated_at"
           :column="'column'"
           :order="'order'" />
+
       </div>
+
       <div v-show="!headerAttributes.includes('first_create')"
         @click="leadSortedHandler('created_at')"
         class="tbl-th cursor-pointer"
         style="width: 10rem; flex-grow: 1">
+
         Created At
         <column-sorted field="created_at"
           :column="'column'"
           :order="'order'" />
+
       </div>
 
       <div v-show="!headerAttributes.includes('owner')"
@@ -272,28 +256,58 @@
         style="width: 10rem; flex-grow: 1">
         Owner
       </div>
+
     </datatable-header>
 
     <datatable-body>
+
       <data-table-skeletor v-if="isFirstLoading"></data-table-skeletor>
+
       <div v-else
         class="tbl-tr full-width"
         v-for="(lead, index) in leads"
         :key="index"
         :class="selectedLeads.includes(lead.lead_id) ? 'active' : ''">
+
         <div style="width: 3.5rem; flex-grow: 1"
           class="tbl-td full-width ps-2">
-          <custom-checkbox @click="handleSelectRow(lead.lead_id)"
+
+          <custom-checkbox
+            @click="handleSelectRow(lead.lead_id)"
             :checked="!!selectedLeads.includes(lead.lead_id)" />
+
         </div>
 
-        <div v-show="!headerAttributes.includes('lead')"
+        <div v-show="!headerAttributes.includes('client')"
+          style="width:16rem; flex-grow: 1"
+          class="tbl-td full-width">
+
+          <router-link class="d-flex text-overflow-ellipsis justify-context-start align-items-center"
+            :to="`/platform/leads/${lead.lead_id}`">
+
+            <Avatar :image="lead?.primary_contact?.avatar"
+              size="small"
+              shape="circle"
+              class="me-3"
+              style="--p-avatar-width:1.8rem;--p-avatar-height:1.8rem;min-width: var(--p-avatar-width);" />
+
+            <span>{{ lead?.primary_contact?.full_name }}</span>
+
+          </router-link>
+
+        </div>
+
+        <div v-show="!headerAttributes.includes('lead_title')"
           style="width: 20rem; flex-grow: 1"
           class="tbl-td full-width">
+
           <router-link class="text-overflow-ellipsis"
             :to="`/platform/leads/${lead.lead_id}`">
-            {{ lead.lead_title ?? lead?.primary_contact?.full_name }}
+
+            {{ lead.lead_title ?? 'Untitled lead\'s' }}
+
           </router-link>
+
         </div>
 
         <div v-show="!headerAttributes.includes('source')"
@@ -306,17 +320,18 @@
           style="width: 12rem; flex-grow: 1"
           class="tbl-td pe-0">
 
-          <select-option filter
+          <select-option pt:label:style="line-height:20px;"
+            pt:label:class="fs-16px"
+            filter
             scroll-height="20rem"
             auto-filter-focus
             :loading="isStatusUpdating == lead.lead_id"
-            label-class="py-1"
             v-model="lead['status']"
             :options="statuses"
             :filterFields="['name']"
             optionLabel="name"
             placeholder="Select a status"
-            class="w-100 select-option-small"
+            class="w-100 select-option-small rounded-1 border"
             panel-class="panel-option-small"
             @change="handleUpdateLeadStatus(lead)">
 

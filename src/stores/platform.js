@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { useApiRequest } from "@actions";
 import { validateObject } from "@helpers";
-
 import { $toast } from '@config';
 
 export const usePlatformStore = defineStore("platform", {
@@ -381,7 +380,7 @@ export const usePlatformStore = defineStore("platform", {
             //
             this.setIsLoading(false);
             this.setIsFirstLoading(false);
-            return;
+
           }
         })
         .catch((error) => {

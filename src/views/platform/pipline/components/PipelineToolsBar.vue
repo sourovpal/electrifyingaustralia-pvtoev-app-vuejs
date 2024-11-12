@@ -3,8 +3,6 @@
     import ActionBar from '@components/ActionBar/ActionBar.vue';
     import LeftActionBar from '@components/ActionBar/LeftActionBar.vue';
     import RightActionBar from '@components/ActionBar/RightActionBar.vue';
-    import DropdownOwnerList from '../../components/dropdowns/DropdownOwnerList.vue';
-    import HeaderPropertiesDropdown from '../../components/dropdowns/HeaderPropertiesDropdown.vue';
     import { Skeletor } from 'vue-skeletor';
     import { AvatarIcon } from "@assets/icons";
     import { usePlatformStore, usePipelineStore } from "@stores";

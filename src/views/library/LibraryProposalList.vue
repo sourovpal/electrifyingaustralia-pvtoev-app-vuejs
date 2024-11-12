@@ -1,5 +1,5 @@
 <script setup>
-import SearchBar from '../../components/SearchBar.vue'
+import CRMToolsBar from '../../components/CRMToolsBar.vue'
 import LibraryProposalActionBar from './LibraryProposalActionBar.vue'
 import ProjectStatus from './ProjectStatus.vue'
 import ProposalDetails from './ProposalDetails.vue'
@@ -59,7 +59,7 @@ onClickOutside(sidebar, () => {
             ref="sidebar"
             :class="toggleCustomerDetailsSidebar ? '' : 'hidden'" 
         />
-		<SearchBar :class="toggleCustomerDetailsSidebar ? 'custom-blur' : ''" placeholder-text="Search for a project" />
+		<CRMToolsBar :class="toggleCustomerDetailsSidebar ? 'custom-blur' : ''" placeholder-text="Search for a project" />
         <LibraryProposalActionBar
             class="d-none d-md-flex" 
             :class="toggleCustomerDetailsSidebar ? 'custom-blur' : ''"

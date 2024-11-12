@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import SearchBar from "@components/SearchBar.vue";
+import CRMToolsBar from "@components/CRMToolsBar.vue";
 import Datatable from "@components/Datatable/Datatable.vue";
 import DatatableHeader from "@components/Datatable/DatatableHeader.vue";
 import DatatableBody from "@components/Datatable/DatatableBody.vue";
@@ -97,20 +97,27 @@ onMounted(() => {
 
 <template>
   <section class="content contacts-list">
-    <search-bar></search-bar>
+
+    <CRMToolsBar></CRMToolsBar>
+
     <contact-tools-bar
       :pagination="contactPagination"
       :is-loading="isLoading"
       @pagination:fetch="getContacts"
       @search:update="handleSearchContacts"
     ></contact-tools-bar>
+
     <error-page v-if="isError" :css="{ icon: { width: '30%' } }"></error-page>
+
     <empty-page
       v-else-if="!isLoading && !leadContacts.length"
       :css="{ icon: { width: '30%' } }"
     ></empty-page>
+
     <Datatable v-else>
+
       <datatable-header>
+        
         <div class="tbl-th" style="width: 20rem; flex-grow: 1">Contact</div>
         <div class="tbl-th" style="width: 20rem; flex-grow: 1">
           Phone Number
@@ -120,7 +127,9 @@ onMounted(() => {
         </div>
         <div class="tbl-th" style="width: 10rem; flex-grow: 1">Last Update</div>
         <div class="tbl-th" style="width: 10rem; flex-grow: 1">Created At</div>
+
       </datatable-header>
+
       <datatable-body>
         <DataTableSkeletor v-if="isFirstLoading" />
         <div

@@ -2,7 +2,7 @@
     // import { GoogleMap, Marker, Polyline, CustomMarker } from 'vue3-google-map';
     import { ref, onMounted, reactive, watchEffect, watch } from 'vue';
     import { useRoute } from 'vue-router';
-    import SearchBar from '../../components/SearchBar.vue';
+    import CRMToolsBar from '../../components/CRMToolsBar.vue';
     import L from 'leaflet';
     import 'leaflet.gridlayer.googlemutant';
     import "leaflet/dist/leaflet.css";
@@ -98,7 +98,7 @@
 
 <template>
     <section class="map-design">
-        <SearchBar />
+        <CRMToolsBar />
         <div ref="googleMapRef"
             class="map">
         </div>

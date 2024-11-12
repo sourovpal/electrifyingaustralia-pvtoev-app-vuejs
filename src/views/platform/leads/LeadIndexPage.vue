@@ -1,6 +1,6 @@
 <script setup>
 import { watch, onMounted, computed } from "vue";
-import SearchBar from "@components/SearchBar.vue";
+import CRMToolsBar from "@components/CRMToolsBar.vue";
 import LeadToolsBar from "./components/LeadToolsBar.vue";
 import LeadDataTable from "./components/LeadDataTable.vue";
 import { useLeadsStore, usePlatformStore } from "@stores";
@@ -44,7 +44,7 @@ onMounted(() => {
 
   <section class="content">
 
-    <search-bar></search-bar>
+    <CRMToolsBar></CRMToolsBar>
 
     <lead-tools-bar></lead-tools-bar>
 

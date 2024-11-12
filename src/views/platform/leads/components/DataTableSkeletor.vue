@@ -20,7 +20,14 @@
 
         </div>
 
-        <div v-if="!headerAttributes.includes('lead')"
+        <div v-if="!headerAttributes.includes('client')"
+            style="width:16rem;flex-grow: 1;"
+            class="tbl-td full-width">
+            <Skeletor width="1.8rem" height="1.8rem" class="me-2 rounded-circle" />
+            <Skeletor width="70%" />
+        </div>
+
+        <div v-if="!headerAttributes.includes('lead_title')"
             style="width:20rem;flex-grow: 1;"
             class="tbl-td full-width">
             <Skeletor width="70%" />

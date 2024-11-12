@@ -2,7 +2,7 @@
     import { ref, watch, onMounted } from 'vue';
     import VueCountdown from '@chenfengyuan/vue-countdown';
     import moment from 'moment';
-    import SearchBar from '@components/SearchBar.vue';
+    import CRMToolsBar from '@components/CRMToolsBar.vue';
     import TaskToolsBar from './components/TaskToolsBar.vue';
     import DataTableSkeletor from './components/DataTableSkeletor.vue';
     import Datatable from '@components/Datatable/Datatable.vue';
@@ -115,30 +115,44 @@
 
 <template>
     <section class="content">
-        <search-bar />
+
+        <CRMToolsBar></CRMToolsBar>
+
         <task-tools-bar :pagination="pagination"
             :is-loading="isLoading"
             @pagination:fetch="handleFetchTasks"
             @search:update="handleSearchTasks"></task-tools-bar>
+
         <error-page v-if="isError"
             :css="{icon:{width:'30%'}}"></error-page>
+
         <empty-page v-else-if="!isLoading && !leadTasks.length"
             :css="{icon:{width:'30%'}}"></empty-page>
+
         <Datatable v-else>
+
             <DatatableHeader>
+
                 <div class="tbl-th"
                     style="width: 3.5rem;">
                     &nbsp;
                 </div>
+
                 <div v-for="(tblTh, index) in tableHeaders"
                     :key="index"
                     class="tbl-th"
                     style="width: 10rem; flex-grow: 1">
+
                     {{ tblTh }}
+
                 </div>
+
             </DatatableHeader>
+
             <datatable-body>
+
                 <DataTableSkeletor v-if="isFirstLoading"></DataTableSkeletor>
+
                 <div v-else
                     v-for="(task, index) in leadTasks"
                     :key="index"

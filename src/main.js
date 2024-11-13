@@ -34,11 +34,6 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 
 import BootstrapModal from "@components/Modals/BootstrapModal.vue";
 
-
-import Echo from "laravel-echo";
-
-import Pusher from "pusher-js";
-
 import drag from "v-drag";
 
 import { CONFIG } from "./config";
@@ -154,16 +149,3 @@ app.use(VueLazyLoad, {});
 app.use(VueTippy, CONFIG.TIPPYOPTIONS);
 
 app.mount("#app");
-
-// Pusher Configer
-// window.Pusher = Pusher;
-// window.Echo = new Echo({
-//   broadcaster: "pusher",
-//   key: CONFIG.MIX_PUSHER_APP_KEY,
-//   cluster: CONFIG.MIX_PUSHER_APP_CLUSTER,
-//   forceTLS: true,
-// });
-
-// app.config.errorHandler = (err, instance, info) => {
-//   console.log(err, instance, info);
-// }

@@ -78,7 +78,7 @@ export const useNotificationStore = defineStore('notification', {
                 return this.totalUnseen = payload;
             }
             if (seen) {
-                this.totalUnseen = this.totalUnseen - 1;
+                this.totalUnseen = Math.ceil(this.totalUnseen - 1);
                 storeUnseen.set(this.totalUnseen);
             }
         },

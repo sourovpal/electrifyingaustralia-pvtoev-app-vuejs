@@ -343,7 +343,6 @@
           v-tippy="leadTask.owner?.name ?? 'Change Owner'">
 
           <div @click="fetchUsers"
-            data-mdb-toggle="dropdown"
             class="owner-avatar cursor-pointer me-1">
 
             <img :src="leadTask.owner?.profile_avatar ?? AvatarIcon"

@@ -1,5 +1,7 @@
 <script setup>
-    import { onMounted } from 'vue';
+    import pusher, { listenNotification } from '@helpers/pusher';
+    import PusherNotificationToast from './PusherNotificationToast.vue';
+    import { onMounted, ref } from 'vue';
     import SidebarNav from '../components/SidebarNav.vue';
     import { useAppStore } from '@stores';
     import { useAuthStore, isAuthorized } from '@stores/auth';
@@ -9,11 +11,19 @@
 
     const appStore = useAppStore();
     const authStore = useAuthStore();
+    const notification = ref(null);
 
     onMounted(() => {
+
+        listenNotification((event) => {
+            notification.value = event;
+            setTimeout(() => notification.value = null, 10 * 1000);
+        });
+
         appStore.callFetchAppData();
         authStore.setUser();
         authStore.setAccessToken();
+
         if (!isAuthorized()) {
             window.location.replace('/login');
         }
@@ -27,6 +37,9 @@
     <router-view></router-view>
     <mobile-tools-bar class="d-md-none"></mobile-tools-bar>
 
+    <PusherNotificationToast @close="notification = null"
+        v-if="notification != null"
+        :notification="notification"></PusherNotificationToast>
 
     <confirm-dialog pt:content:class="pb-2"
         pt:header:class="py-2"

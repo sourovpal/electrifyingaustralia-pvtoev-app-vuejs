@@ -122,11 +122,9 @@
       }
 
       $url = router.resolve($route).href;
-      console.log($url)
       return $url ?? '';
 
     } catch (error) {
-      console.log(error)
       return '';
     }
   }
@@ -142,9 +140,6 @@
       return defaultAttributes;
     },
     template:`${props.notification.message}`,
-    // render() {
-    //     return h({template:`<div>hello</div>`, props:{title: 'Sourov Pal'}});
-    // },
   });
 
 

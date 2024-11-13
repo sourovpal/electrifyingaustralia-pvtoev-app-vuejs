@@ -12,6 +12,7 @@ const companyStorage = new Storage(CONFIG.VITE_AUTH_COMPANY);
 const permissionsStorage = new Storage(CONFIG.VITE_AUTH_PERMISSIONS);
 const statusesStorage = new Storage(CONFIG.VITE_AUTH_STATUSES);
 const pipelinesStorage = new Storage(CONFIG.VITE_AUTH_PIPELINES);
+const settingsStorage = new Storage(CONFIG.VITE_CRM_SETTINGS);
 
 export const useAppStore = defineStore("app", {
   state: () => {
@@ -22,6 +23,7 @@ export const useAppStore = defineStore("app", {
       pipelines: pipelinesStorage.get() ?? [],
       permissions: permissionsStorage.get() ?? {},
       user: userStorage.get() ?? {},
+      settings: settingsStorage.get() ?? {},
     };
   },
 
@@ -40,6 +42,9 @@ export const useAppStore = defineStore("app", {
     },
     getUser(state) {
       return state.user;
+    },
+    getSettings(state) {
+      return state.settings;
     }
   },
   actions: {
@@ -48,6 +53,12 @@ export const useAppStore = defineStore("app", {
         this.user = payload;
         userStorage.set(payload);
         useAuthStore().setUser(payload);
+      }
+    },
+    setSettings(payload) {
+      if (validateObject(payload)) {
+        this.settings = payload;
+        settingsStorage.set(payload);
       }
     },
     setPermssions(payload) {
@@ -74,6 +85,30 @@ export const useAppStore = defineStore("app", {
         pipelinesStorage.set(payload);
       }
     },
+    findSettings(key, permission = null) {
+      try {
+
+        let value = this.settings[key];
+
+        if (permission) {
+
+          let allow = this.settings[permission];
+
+          if (allow && value) return value;
+
+          return null;
+
+        }
+        if (value) return value;
+
+        return null;
+
+      } catch (error) {
+
+        return null;
+        
+      }
+    },
     callFetchAppData() {
       useApiRequest({
         url: "/app",
@@ -87,6 +122,7 @@ export const useAppStore = defineStore("app", {
             pipelines,
             permissions,
             unseen,
+            settings,
           } = res;
           if (success) {
             this.setUser(user);
@@ -94,6 +130,7 @@ export const useAppStore = defineStore("app", {
             this.setLeadStatuses(lead_statuses);
             this.setPipelines(pipelines);
             this.setPermssions(permissions);
+            this.setSettings(settings);
             useNotificationStore().setTotalUnseen(unseen);
           }
         })

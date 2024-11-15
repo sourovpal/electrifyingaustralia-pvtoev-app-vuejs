@@ -83,7 +83,7 @@ export const useProjectStore = defineStore('project', {
             return state.currentBills.total_amount * 4;
         },
         getSystemGrandTotal(state) {
-            return 8500; // this should not be a hardcoded value
+            return state.getQuotationDetails('totalAmountAfterStcDiscount');
         },
         // getUsedKWh: (state) => (state.selfConsumption ?? state.project.load_profile.self_consumption_rate / 100) * state.getAnnualProduction,
         getUsedKWh(state) {

@@ -26,10 +26,6 @@
 		<template v-else>
 			<div class="d-flex align-items-center gap-2">
                 <template v-if="inputType !== 'select'">
-					<font-awesome-icon
-						class="text-secondary cursor-pointer"
-						icon="fas fa-xmark"
-					/>
 				    <input
 					    id="saveable-input-input"
 					    type="text"

@@ -1,62 +1,60 @@
 <script setup>
-  import {   ref, watchEffect, computed } from "vue";
-  import SlideUpDown from "vue-slide-up-down";
+  import { ref, watch, computed } from "vue";
   import MakeDropdown from "./MakeDropdown.vue";
   import { usePlatformStore, useLeadsStore } from "@stores";
 
-  const props = defineProps({
-    modelValue: {}
-  });
   const platformStore = usePlatformStore();
+  const leadsStore = useLeadsStore();
+
+  const filterQuerys = computed(() => leadsStore.getFilterQuerys);
   const owners = computed(() => platformStore.getUsers);
 
-  const emits = defineEmits(["change", "update:modelValue", 'toggle']);
+  const selected_owners = ref([]);
+  const owner_list = ref([]);
 
-  const selectedIds = ref([]);
+  watch(owners, () => {
 
-  watchEffect(() => {
-    if (typeof props.modelValue == "undefined") {
-      selectedIds.value = [];
-    }
+    Object.assign(owner_list.value, [{
+      user_id: 0,
+      name: 'No Owner'
+    }].concat(owners.value));
+
   });
 
-  function toggleDropdownHandler(toggle) {
-    if (selectedIds.value?.length && !toggle) {
-      selectedIds.value = [];
-      selectOwnerHandler(-1);
-    }
-    emits("toggle", toggle);
-  }
+  function selectOwnerHandler(toggle) {
+    let owners_id = selected_owners.value.map(item => item.user_id);
 
-  function selectOwnerHandler(id) {
-    var index = selectedIds.value.indexOf(id);
-    if (index > -1) {
-      selectedIds.value.splice(index, 1);
-    } else {
-      selectedIds.value.push(id);
+    if (!owners_id.length || !toggle) {
+      selected_owners.value = [];
+      return delete filterQuerys.value['owners'];
     }
-    emits("update:modelValue", selectedIds.value);
-    emits("change", selectedIds.value);
+
+    filterQuerys.value['owners'] = owners_id;
+
   }
 
 </script>
 
 <template>
   <make-dropdown title="Owners"
-    icon="fas fa-users"
-    @toggle="toggleDropdownHandler">
-    <div @click="selectOwnerHandler(0)"
-      class="d-flex justify-content-start align-items-center py-1 check-label-propertis">
-      <custom-checkbox :checked="selectedIds.includes(0)" />
-      <span class="fs-14px ms-1">No Owner</span>
-    </div>
+    @toggle="selectOwnerHandler">
 
-    <div v-for="(owner, index) in owners"
-      :key="index"
-      @click="selectOwnerHandler(owner.user_id)"
-      class="d-flex justify-content-start align-items-center py-1 check-label-propertis">
-      <custom-checkbox :checked="selectedIds.includes(owner.user_id)" />
-      <span class="fs-14px ms-1">{{ owner.name }}</span>
-    </div>
+    <template #icon>
+      <i class="fs-16px pi pi-user"></i>
+    </template>
+
+    <MultiSelect v-model="selected_owners"
+      :options="owner_list"
+      optionLabel="name"
+      filter
+      :filterFields="['name', 'email']"
+      @change="selectOwnerHandler"
+      placeholder="Select Owners"
+      :maxSelectedLabels="1"
+      size="small"
+      class="w-100"
+      overlayClass="multi-select-overlay-small">
+    </MultiSelect>
+
   </make-dropdown>
 </template>

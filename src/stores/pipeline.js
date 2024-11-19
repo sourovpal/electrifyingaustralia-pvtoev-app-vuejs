@@ -95,17 +95,9 @@ export const usePipelineStore = defineStore('pipeline', {
         setSearchQuery(payload) {
             this.searchQuery = payload;
         },
-        setFilterQuerys(payload = {}, isNew = false, isReset = false) {
-            if (validateObject(payload) && !isNew && !isReset) {
-                this.filterQuerys = { ...this.filterQuerys, payload };
-            }
-
-            if (validateObject(payload) && isNew && !isReset) {
+        setFilterQuerys(payload = {}) {
+            if (validateObject(payload)) {
                 this.filterQuerys = payload;
-            }
-
-            if (isReset) {
-                this.filterQuerys = {};
             }
         },
         setPipelinePrimaryStages(payload) {

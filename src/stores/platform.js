@@ -6,6 +6,7 @@ import { $toast } from '@config';
 export const usePlatformStore = defineStore("platform", {
   state: () => {
     return {
+      isDisabled: false,
       isLoading: false,
       isFirstLoading: false,
       leadPrevUrl: null,
@@ -49,6 +50,9 @@ export const usePlatformStore = defineStore("platform", {
     };
   },
   getters: {
+    getDisabled(stage) {
+      return stage.isDisabled;
+    },
     getCertifyModalAction(stage) {
       return stage.certifyModalAction;
     },
@@ -159,6 +163,9 @@ export const usePlatformStore = defineStore("platform", {
     }
   },
   actions: {
+    setDisabled(payload) {
+      this.isDisabled = !!payload;
+    },
     setCertifyModalAction(payload) {
       this.certifyModalAction = payload;
     },
@@ -384,6 +391,7 @@ export const usePlatformStore = defineStore("platform", {
           }
         })
         .catch((error) => {
+          if (error.status == 403) this.setDisabled(true);
           this.setIsLoading(false);
           this.setIsFirstLoading(false);
         });

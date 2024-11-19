@@ -435,15 +435,24 @@ const routes = [
                 ]
             },
             {
-                name: "CrmIndex",
+                name: "CrmSettingsRoot",
                 path: '/settings/crm',
                 component: () => import('@views/settings/SettingsIndex.vue'),
                 beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
                 children: [
                     {
+                        name: 'LeadStatusSettingsIndex',
+                        path: 'status',
+                        component: () => import('@views/settings/crm/status/LeadStatusSettingsIndex.vue'),
+                        beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
+                        meta: {
+                            title: 'Lead Status Settings',
+                        },
+                    },
+                    {
                         name: 'LeadsIndex',
                         path: 'leads',
-                        component: () => import('@views/settings/crm/leads/LeadsOptionsIndex.vue'),
+                        component: () => import('@views/settings/crm/leads/LeadSetingsIndexPage.vue'),
                         beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
                         meta: {
                             title: 'Home Page',

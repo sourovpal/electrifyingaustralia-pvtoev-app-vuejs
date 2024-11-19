@@ -55,7 +55,7 @@
         <!-- <error-page v-else-if="!isLoading && isError" :css="{icon:{width:'30%'}}"></error-page> -->
         <!-- <section v-else> -->
         <section>
-            <!-- <filter-right-sidebar v-if="toggleFilter != 'render'"></filter-right-sidebar> -->
+            <filter-right-sidebar v-if="toggleFilter != 'render'"></filter-right-sidebar>
             <pipeline-column-view v-if="pipelineView == 'column' || isLoading"></pipeline-column-view>
             <!-- <pipeline-row-view v-else></pipeline-row-view> -->
         </section>

@@ -28,11 +28,22 @@ window.Echo = new Echo({
 const channel = window.Echo.private(`crm-channel-${authStore.getUser?.user_id}`);
 
 
+export function listenNotification(callback = null) {
+
+    if (!callback) throw new Error('Callback function required.');
+
+    channel.listen('.crm-notification', (event) => callback(event));
+
+}
 
 
-export function listenNotification($callback = null) {
-    if (!$callback) throw new Error('Callback function required.');
-    channel.listen('.crm-notification', (event) => $callback(event));
+export function listenLeadVisible(lead_id, callback = null) {
+
+    if (!callback) throw new Error('Callback function required.');
+    if (authStore.getUser?.is_owner != 1) {
+        channel.listen(`.lead-visible`, (event) => callback(event));
+    }
+
 }
 
 export default channel;

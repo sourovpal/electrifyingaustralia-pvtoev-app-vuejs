@@ -26,7 +26,7 @@
                 </div>
                 <div class="ms-1">
                     <div class="mt-2 mb-1 fs-14px descrption">
-                        {{ sender?.name }},
+                        {{ sender?.name || sender?.email }},
                         <NotificationMessage></NotificationMessage>
                     </div>
                     <div class="fs-12px text-soft">{{ 'just now' }}</div>

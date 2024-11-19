@@ -1,66 +1,85 @@
 <script setup>
-  import { ref, watchEffect,     computed } from "vue";
+  import { ref, reactive, computed } from "vue";
   import MakeDropdown from "./MakeDropdown.vue";
+  import moment from 'moment';
+  import {usePipelineStore } from "@stores";
+
+  const pipelineStore = usePipelineStore();
+
+  const filterQuerys = computed(() => pipelineStore.getFilterQuerys);
 
   const props = defineProps({
     title: {
       type: String,
       default: "date range",
     },
-    icon: {
-      type: String,
-      default: "far fa-calendar-check",
-    },
-    modelValue:{},
+    columnName: { required: true, type: String },
   });
-  const fromDate = ref(null);
-  const toDate = ref(null);
-  const emits = defineEmits(["change", "update:modelValue", "toggle"]);
-  watchEffect(() => {
-    if (typeof props.modelValue == "undefined") {
-      fromDate.value = null;
-      toDate.value = null;
+
+  const range = reactive({
+    from_date: null,
+    to_date: null,
+  });
+
+  function onChangeHandler(toggle) {
+
+    if (!toggle) {
+
+      range.from_date = null;
+      range.to_date = null;
+
+      return delete filterQuerys.value[props.columnName];
+
+    } else if (!range.from_date || !range.to_date) {
+      return;
     }
-  });
-  function toggleHandler(toggle) {
-    fromDate.value = null;
-    toDate.value = null;
-    emits("toggle", true);
+
+    let date = {
+      from_date: moment(range.from_date).format("YYYY-MM-DD"),
+      to_date: moment(range.to_date).format("YYYY-MM-DD"),
+    }
+
+    filterQuerys.value[props.columnName] = date;
+
   }
 
-  function onChangeHandler() {
-    if (fromDate.value && toDate.value) {
-      var range = { from_date: fromDate.value, to_date: toDate.value };
-      setChange(range);
-    } else {
-      emits("toggle", true);
-    }
-  }
-  function setChange(range = null) {
-    emits("update:modelValue", range);
-    emits("change", range);
-  }
 </script>
 
 <template>
-  <make-dropdown @toggle="toggleHandler"
-    :title="title"
-    :icon="icon">
+
+  <make-dropdown @toggle="onChangeHandler"
+    :title="title">
+
+    <template #icon>
+      <i class="pi pi-calendar-plus fs-16px me-3"></i>
+    </template>
+
     <div class="mb-2">
+
       <label class="fs-14px text-head"
-        for="">From date:</label>
-      <input class="form-control form-control-sm"
-        type="date"
-        @change="onChangeHandler()"
-        v-model="fromDate" />
+        for="">From Date:</label>
+
+      <input-date v-model="range.from_date"
+        size="small"
+        class="w-100"
+        dateFormat="dd-mm-yy"
+        @date-select="onChangeHandler" />
+
     </div>
+
     <div class="">
+
       <label class="fs-14px text-head"
-        for="">To date:</label>
-      <input class="form-control form-control-sm"
-        type="date"
-        @change="onChangeHandler()"
-        v-model="toDate" />
+        for="">To Date:</label>
+
+      <input-date v-model="range.to_date"
+        size="small"
+        class="w-100"
+        dateFormat="dd-mm-yy"
+        @date-select="onChangeHandler" />
+
     </div>
+
   </make-dropdown>
+
 </template>

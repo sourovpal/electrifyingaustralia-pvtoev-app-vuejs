@@ -4,6 +4,7 @@
     import { useLeadsStore } from '@stores';
     import { useApiRequest } from '@actions';
     import { $toast } from '@config';
+    import { handleDownloadAttachmentFiles } from '@helpers';
 
     const leadsStore = useLeadsStore();
     const uploadSpreadsheetModalRef = ref(null);
@@ -58,8 +59,7 @@
                                 </button>
                             </div>
                             <div>
-                                <a class="fs-14px"
-                                    href="">Download a sample format file</a>
+                                <a class="fs-14px" @click="handleDownloadAttachmentFiles('/platform/leads/spreadsheet', 'leads-spreadsheet.csv')">Download a sample format file</a>
                             </div>
                         </div>
                     </div>

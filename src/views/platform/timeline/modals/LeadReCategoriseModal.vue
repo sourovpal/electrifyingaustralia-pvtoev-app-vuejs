@@ -103,7 +103,7 @@
 
     errors.value = {};
 
-    var leadId = platformStore.getEditLeadId;
+    var lead_id = platformStore.getEditLeadId;
     isSubmitMovePipelineOrStatus.value = true;
 
     var data = {
@@ -113,7 +113,7 @@
     };
 
     await useApiRequest({
-      url: `/platform/deals/${leadId}/move`,
+      url: `/platform/deals/${lead_id}/move`,
       method: "post",
       payload: data,
     })
@@ -129,14 +129,14 @@
 
         this.platformStore.callFetchTimelineLogs();
 
-        if (data.status) {
+        if (data.status_id) {
 
           platformStore.setLeadStatus(selectedStatus.value);
           platformStore.setLeadPipeline({});
           platformStore.setLeadStage({});
           platformStore.setIsPipelineLead(false);
           platformStore.callFetchProperties(platformStore.getEditLeadId);
-          router.push({ path: `/platform/leads/${leadId}` });
+          router.push({ path: `/platform/leads/${lead_id}` });
 
         } else {
 
@@ -146,7 +146,7 @@
           platformStore.callFetchLeadStages(platformStore.getEditLeadId);
           platformStore.callFetchProperties(platformStore.getEditLeadId);
           platformStore.setIsPipelineLead(true);
-          router.push({ path: `/platform/deals/${leadId}` });
+          router.push({ path: `/platform/deals/${lead_id}` });
 
         }
 

@@ -1043,18 +1043,18 @@ class="select-option-small"
 
   .p-multiselect-label,
   .p-inputtext-sm {
-    padding: var(--p-inputtext-sm-padding-y) var(--p-inputtext-sm-padding-x) !important;
+    // padding: var(--p-inputtext-sm-padding-y) var(--p-inputtext-sm-padding-x) !important;
     font-size: var(--p-inputtext-sm-font-size) !important;
   }
 
   &.icon {
     input {
-      padding-left: 2.3rem !important;
+      // padding-left: 2.3rem !important;
     }
   }
 
-  .p-inputtext-sm {
-    padding-left: 2.3rem !important;
+  .small-size.p-inputtext-sm {
+    // padding-left: 2.3rem !important;
   }
 
 }

@@ -1,6 +1,6 @@
 <script setup>
     import pusher, { listenNotification } from '@helpers/pusher';
-    import PusherNotificationToast from './PusherNotificationToast.vue';
+    import PusherNotificationToast from './Notification/PusherNotificationToast.vue';
     import { onMounted, ref } from 'vue';
     import SidebarNav from '../components/SidebarNav.vue';
     import { useAppStore } from '@stores';

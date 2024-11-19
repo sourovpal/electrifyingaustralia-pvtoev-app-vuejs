@@ -75,6 +75,7 @@ import Tab from 'primevue/tab';
 import TabList from 'primevue/tablist';
 import TabPanel from 'primevue/tabpanel';
 import TabPanels from 'primevue/tabpanels';
+import MultiSelect from 'primevue/multiselect';
 
 // import "primeicons/primeicons.css";
 
@@ -114,6 +115,7 @@ app.component("Tab", Tab);
 app.component("TabList", TabList);
 app.component("TabPanel", TabPanel);
 app.component("TabPanels", TabPanels);
+app.component("MultiSelect", MultiSelect);
 
 app.use(ConfirmationService);
 app.use(ToastService);

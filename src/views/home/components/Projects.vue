@@ -14,12 +14,12 @@
               <div
                 class="thumbnail"
                 style="
-                  background-image: url(https://static.getpylon.com/images/designs/47L8eFc9gQ/j4y5odtd8Q/CzrY6YyKw/1689567773.jpeg);
+                  background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwii-FRPpf_aPT2jXe6o60zUFvvAapmvKfXw&s);
                 "
               ></div>
               <div class="info">
-                <h1 class="title">Unit 17 / 224 Flemington Rd</h1>
-                <p class="sub-title">New South 2257</p>
+                <h1 class="title fs-16px fw-bold">Unit 17 / 224 Flemington Rd</h1>
+                <p class="sub-title text-soft">New South 2257</p>
               </div>
             </div>
           </a>
@@ -30,12 +30,12 @@
               <div
                 class="thumbnail"
                 style="
-                  background-image: url(https://static.getpylon.com/images/designs/47L8eFc9gQ/YOStOUHf4g/MH5hSKZbw/1689572037.jpeg);
+                  background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx2yD9_Noq_qyVVBjoPZO4n1DqMHktC4NnyQ&s);
                 "
               ></div>
               <div class="info">
-                <h1 class="title">Unit 17 / 224 Flemington Rd</h1>
-                <p class="sub-title">New South 2257</p>
+                <h1 class="title fs-16px fw-bold">Unit 17 / 224 Flemington Rd</h1>
+                <p class="sub-title text-soft">New South 2257</p>
               </div>
             </div>
           </a>
@@ -46,12 +46,12 @@
               <div
                 class="thumbnail"
                 style="
-                  background-image: url(https://static.getpylon.com/images/designs/47L8eFc9gQ/nje28Lr2mQ/VW83kAlRw/1689571505.jpeg);
+                  background-image: url(https://media.istockphoto.com/id/494417257/photo/photovoltaic-panels.jpg?s=612x612&w=0&k=20&c=USdqOh0Pjuyv-jOB-ny5JPV6VQ1U5PvPo-xgBuhKPxc=);
                 "
               ></div>
               <div class="info">
-                <h1 class="title">Unit 17 / 224 Flemington Rd</h1>
-                <p class="sub-title">New South 2257</p>
+                <h1 class="title fs-16px fw-bold">Unit 17 / 224 Flemington Rd</h1>
+                <p class="sub-title text-soft">New South 2257</p>
               </div>
             </div>
           </a>
@@ -62,12 +62,12 @@
               <div
                 class="thumbnail"
                 style="
-                  background-image: url(https://static.getpylon.com/images/designs/47L8eFc9gQ/j4y5odtd8Q/CzrY6YyKw/1689567773.jpeg);
+                  background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx2yD9_Noq_qyVVBjoPZO4n1DqMHktC4NnyQ&s);
                 "
               ></div>
               <div class="info">
-                <h1 class="title">Unit 17 / 224 Flemington Rd</h1>
-                <p class="sub-title">New South 2257</p>
+                <h1 class="title fs-16px fw-bold">Unit 17 / 224 Flemington Rd</h1>
+                <p class="sub-title text-soft">New South 2257</p>
               </div>
             </div>
           </a>
@@ -78,12 +78,12 @@
               <div
                 class="thumbnail"
                 style="
-                  background-image: url(https://static.getpylon.com/images/designs/47L8eFc9gQ/cQutMGnSqQ/hFxCTa7b1g/1689564758.jpeg);
+                  background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1VtnRYWApFL04K3E3oSU8SZrWKSQfEurHjw&s);
                 "
               ></div>
               <div class="info">
-                <h1 class="title">Unit 17 / 224 Flemington Rd</h1>
-                <p class="sub-title">New South 2257</p>
+                <h1 class="title fs-16px fw-bold">Unit 17 / 224 Flemington Rd</h1>
+                <p class="sub-title text-soft">New South 2257</p>
               </div>
             </div>
           </a>
@@ -94,12 +94,12 @@
               <div
                 class="thumbnail"
                 style="
-                  background-image: url(https://static.getpylon.com/images/designs/47L8eFc9gQ/gZvsJZRQdw/uOHK07XeCQ/1689557885.jpeg);
+                  background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTx2yD9_Noq_qyVVBjoPZO4n1DqMHktC4NnyQ&s);
                 "
               ></div>
               <div class="info">
-                <h1 class="title">Unit 17 / 224 Flemington Rd</h1>
-                <p class="sub-title">New South 2257</p>
+                <h1 class="title fs-16px fw-bold">Unit 17 / 224 Flemington Rd</h1>
+                <p class="sub-title text-soft">New South 2257</p>
               </div>
             </div>
           </a>

@@ -1,22 +1,22 @@
 <script setup>
-  import { ref,     watch, computed, watchEffect } from 'vue';
+
+  import { ref, watch, computed, watchEffect } from 'vue';
   import SlideUpDown from "vue-slide-up-down";
-  import SelectLeadSource from "../../components/fields/SelectLeadSource.vue";
-  import FilterProperties from "./filters/FilterProperties.vue";
+  import FilterLeadSource from './filters/FilterLeadSource.vue';
+  import FilterLeadPostcode from './filters/FilterLeadPostcode.vue';
   import SelectMultipleOwner from "./filters/SelectMultipleOwner.vue";
   import MakeDropdown from "./filters/MakeDropdown.vue";
   import SelectDateRenge from "./filters/SelectDateRenge.vue";
-  import { usePlatformStore, usePipelineStore } from "@stores";
+  import { usePlatformStore, usePipelineStore, useLeadsStore } from "@stores";
   import { useDebounceFn } from '@vueuse/core';
   import { useRouter, useRoute } from 'vue-router';
 
   const router = useRouter();
   const route = useRoute();
-  const pipelineStore = usePipelineStore();
+  const leadsStore = useLeadsStore();
   const platformStore = usePlatformStore();
+  const pipelineStore = usePipelineStore();
   const toggleFilter = computed(() => pipelineStore.getToggleFilter);
-  const filterQuerys = computed(() => pipelineStore.getFilterQuerys);
-  const leadSources = computed(() => platformStore.getSources);
 
   function handleToggleHandle() {
     pipelineStore.setToggleFilter(!toggleFilter.value);
@@ -27,51 +27,48 @@
 <template>
   <div id="right-filter-bar"
     :class="{ show: toggleFilter }">
+
     <div class="header d-flex justify-content-between align-items-center">
+
       <div class="d-flex justify-content-start align-items-center">
+
         <font-awesome-icon style="width: 20px; height: 20px"
           class="text-head me-3"
           icon="fas fa-filter" />
+
         <h1 class="title fw-bold text-hard">Filter</h1>
+
       </div>
+
       <div class="close"
         @click="handleToggleHandle">
+
         <font-awesome-icon class="text-head"
           icon="fas fa-angle-right" />
+
       </div>
+
     </div>
+
     <div class="filter slim-scrollbar">
+
       <div class="filter-options">
+
         <!-- Owner -->
-        <select-multiple-owner @toggle="delete filterQuerys['owners']"
-          @change="(val)=>val?.length?'':delete filterQuerys['owners']"
-          v-model="filterQuerys['owners']" />
+        <select-multiple-owner></select-multiple-owner>
 
-        <make-dropdown title="Source"
-          @toggle="delete filterQuerys['source']"
-          icon="fas fa-handshake">
-          <select-lead-source :options="leadSources"
-            :small="true"
-            @change="(val)=>val?.length?'':delete filterQuerys['source']"
-            v-model="filterQuerys['source']" />
-        </make-dropdown>
+        <!-- Lead Source -->
+        <filter-lead-source></filter-lead-source>
 
-        <make-dropdown title="Postcode"
-          @toggle="delete filterQuerys['postcode']"
-          icon="fas fa-location-dot">
-          <input class="form-control form-control-sm"
-            type="text"
-            @keyup="({target:{value}})=>(()=>{if(value){filterQuerys['postcode']=value;} else {delete filterQuerys['postcode'];}})()">
-        </make-dropdown>
+        <!-- Lead Source -->
+        <filter-lead-postcode></filter-lead-postcode>
 
+        <select-date-renge title="Created At"
+          column-name="created_range"></select-date-renge>
 
-        <select-date-renge title="Create Date Range"
-          @toggle="delete filterQuerys['created_range']"
-          v-model="filterQuerys['created_range']" />
+        <select-date-renge title="Updated At"
+          column-name="updated_range"></select-date-renge>
 
-        <select-date-renge title="Update Date Range"
-          @toggle="delete filterQuerys['updated_range']"
-          v-model="filterQuerys['updated_range']" />
       </div>
     </div>
   </div>

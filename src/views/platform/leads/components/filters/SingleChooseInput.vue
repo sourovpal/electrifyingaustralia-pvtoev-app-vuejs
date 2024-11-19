@@ -4,11 +4,11 @@
         @toggle="handleChange">
 
         <template #icon>
-            <i class="fs-18px me-3"
+            <i class="fs-16px me-3"
                 :class="getCustomPropertieIcon(dataType)"></i>
         </template>
 
-        <MultiSelect filter
+        <select-option filter
             v-model="selectedOption"
             :options="options ?? []"
             :filterFields="['value', 'label']"
@@ -16,11 +16,9 @@
             @change="handleChange"
             optionLabel="value"
             :placeholder="`Select ${label}`"
-            :maxSelectedLabels="1"
-            size="small"
-            class="w-100"
-            overlayClass="multi-select-overlay-small">
-        </MultiSelect>
+            class="w-100 select-option-small"
+            panel-class="panel-option-small">
+        </select-option>
 
     </make-dropdown>
 

@@ -76,7 +76,7 @@ export async function useApiRequest(http = {}) {
         throw new Error(`${method} method doesn't exist.`)
     }
 
-    if (parseMethod == 'get' && Object.keys(payload).length) {
+    if (parseMethod == 'get' || parseMethod == 'delete' && Object.keys(payload).length) {
         const query = new URLSearchParams(payload);
         if (parseUrl.indexOf('?') > -1) {
             parseUrl += `&${query.toString()}`;

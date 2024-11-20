@@ -1,5 +1,7 @@
 <script setup>
+    import SettingsTopNavbar from '@components/SettingsTopNavbar.vue';
     import Item from './components/Item.vue';
+    import SkeletorItem from './components/SkeletorItem.vue';
     import DeleteConfirmModal from './components/DeleteConfirmModal.vue';
     import { VueDraggableNext } from 'vue-draggable-next';
     import { useApiRequest } from '@actions';
@@ -18,8 +20,16 @@
 
         useApiRequest({
             url: '/settings/statuses',
-        }).then(statuses => lead_statuses.value = statuses)
-            .catch(error => $toast.error(error.message));
+        })
+            .then(statuses => {
+                lead_statuses.value = statuses
+            })
+            .catch(error => {
+                $toast.error(error.message)
+            })
+            .finally(() => {
+                is_loading.value = false;
+            });
     }
 
 
@@ -30,7 +40,7 @@
         let statuses = lead_statuses.value.map(item => item.status_id);
 
         useApiRequest({
-            url: '/settings/statuses/positlion',
+            url: '/settings/statuses/position',
             method: 'PUT',
             payload: {
                 statuses: statuses,
@@ -81,21 +91,25 @@
 
 <template>
 
-    <div class="content content-y-100vh">
+    <section class="content content-y-100vh">
 
-        <div class="content-header">
-            <h1>Lead Statuses</h1>
-        </div>
+        <settings-top-navbar title="Statuses"></settings-top-navbar>
 
         <div class="content-body">
 
             <div class="row">
-                <div class="col-lg-2">
-
+                <div class="col-lg-3 col-12 mb-3 mb-lg-0">
+                    <div class="settings-group-header">
+                        <h2>Lead Status</h2>
+                    </div>
+                    <div class="fs-12px text-soft">
+                        Lead Status tracks the progress of potential customers through stages like New, Contacted,
+                        Qualified, or Closed, helping businesses prioritize and manage sales opportunities effectively.
+                    </div>
                 </div>
                 <div class="col-lg-4 col-12">
 
-                    <p class="mb-2 fw-bold fs-14px">Change order or name of statuses</p>
+                    <p class="mb-3 fw-bold fs-14px">Change name or order of statuses</p>
 
                     <div class="list-group">
 
@@ -104,6 +118,8 @@
                             tag="div"
                             :list="lead_statuses"
                             handle=".handle">
+
+                            <skeletor-item v-if="is_loading"></skeletor-item>
 
                             <template v-for="(status, index) in lead_statuses"
                                 :key="index">
@@ -129,7 +145,7 @@
 
         </div>
 
-    </div>
+    </section>
 
     <delete-confirm-modal :delete-status="selected_status"
         :statuses="lead_statuses"
@@ -162,8 +178,8 @@
 
         &:hover {
             color: var(--crm-color);
-            border-color: #bfdbfe;
-            background-color: rgba(239, 246, 255, 0.95) !important;
+            border-color: var(--crm-color);
+            /* background-color:var(--crm-color-2); */
         }
     }
 </style>

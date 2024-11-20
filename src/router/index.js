@@ -450,19 +450,27 @@ const routes = [
                         },
                     },
                     {
-                        name: 'LeadsIndex',
-                        path: 'leads',
-                        component: () => import('@views/settings/crm/leads/LeadSetingsIndexPage.vue'),
+                        name: 'PipelineSetingsIndexPage',
+                        path: 'pipeline',
+                        component: () => import('@views/settings/crm/pipeline/PipelineSetingsIndexPage.vue'),
                         beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
                         meta: {
                             title: 'Home Page',
                         },
                     },
-
                     {
-                        name: 'PipelineEdit',
-                        path: 'pipeline/:id?',
-                        component: () => import('@views/settings/crm/leads/PipelineEdit.vue'),
+                        name: 'PipelineAndStageCreate',
+                        path: 'pipeline/create',
+                        component: () => import('@views/settings/crm/pipeline/PipelineAndStageEditPage.vue'),
+                        beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
+                        meta: {
+                            title: 'Home Page',
+                        },
+                    },
+                    {
+                        name: 'PipelineAndStageEditPage',
+                        path: 'pipeline/:id/edit',
+                        component: () => import('@views/settings/crm/pipeline/PipelineAndStageEditPage.vue'),
                         beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
                         meta: {
                             title: 'Home Page',

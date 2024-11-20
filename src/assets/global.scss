@@ -7,13 +7,25 @@
   --child-left-navbar-width: 16rem;
   // crm color
   --crm-color: #10b981;
-  --crm-disabled-color: #1a976d;
+  --crm-color-1: #e5f9ed;
+  /* Lightest */
+  --crm-color-2: #c7f2db;
+  --crm-color-3: #a7ebc8;
+  --crm-color-4: #84e3b4;
+  --crm-color-5: #5edb9f;
+  /* Midpoint */
+  --crm-color-6: #39d387;
+  --crm-color-7: #23b16e;
+  --crm-color-8: #169355;
+  --crm-color-9: #0b6e3a;
+  /* Darkest */
+  --crm-disabled-color: var(--crm-color-8);
   --crm-border-color: var(--crm-color);
 
-  @media (max-width: 1200px) {
-    --main-left-navbar-width: 0rem !important;
-    --child-left-navbar-width: 0rem !important;
-  }
+  // @media (max-width: 1200px) {
+  //   --main-left-navbar-width: 0rem !important;
+  //   --child-left-navbar-width: 0rem !important;
+  // }
 
   --content-body-width: calc(100% - calc(var(--main-left-navbar-width) + var(--child-left-navbar-width)));
   --container-width: var(--content-body-width);
@@ -26,8 +38,8 @@ html {
   font-family: "Source Sans Pro", sans-serif;
   margin: 0px;
   padding: 0px;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
+  // -webkit-overflow-scrolling: touch;
+  // scrollbar-width: thin;
 }
 
 body {
@@ -69,6 +81,7 @@ html::-webkit-scrollbar {
   @extend .crm-bg;
   // box-shadow: 0 4px 9px -4px #058f61 !important;
   color: #ffffff !important;
+
   &.disabled,
   &[disabled] {
     background: var(--crm-disabled-color) !important;
@@ -142,7 +155,7 @@ html::-webkit-scrollbar {
   margin-left: 0px;
 
   @media (max-width: 767px) {
-    margin-top: 4rem;
+    margin-top: 3.5rem;
   }
 
   @media (min-width: 1200px) {
@@ -153,6 +166,7 @@ html::-webkit-scrollbar {
     height: 100vh !important;
     overflow-x: hidden !important;
     overflow-y: auto !important;
+    width: 100%;
   }
 }
 

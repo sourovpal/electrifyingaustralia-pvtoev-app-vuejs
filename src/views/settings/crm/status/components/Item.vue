@@ -15,7 +15,7 @@
     onMounted(() => Object.assign(initial_status, { ...props.status }));
 
     function handleUpdate(payload = {}) {
-        
+
         $toast.clear();
 
         Object.assign(props.status, { ...props.status, ...payload });
@@ -38,9 +38,7 @@
 
 <template>
 
-    <div class="list-group-item px-0 py-0 border-0"
-        :class="status?.is_lost == 1?'is-lost':null"
-        :key="status?.id">
+    <div class="list-group-item px-0 py-0 border-0">
 
         <icon-field>
 
@@ -52,16 +50,23 @@
                 @blur="handleUpdate"
                 placeholder="Name"></input-text>
 
+            <input-icon v-if="status.is_lost"
+                class="pi pi-sort-down-fill is-lost fs-14px" />
+
             <input-icon class="pi pi-ellipsis-v action-dropdow-toggler fs-14px"
                 data-mdb-toggle="dropdown" />
+
             <div class="dropdown-menu dropdown-menu-end">
 
 
                 <button v-if="!status?.is_lost"
                     @click="handleUpdate({is_lost:1})"
                     class="dropdown-item py-1 fs-14px fw-bold text-head d-flex justify-content-between align-items-center">
+
                     <span>Make a Lost</span>
+
                     <i class="pi pi-sort-down-fill fs-12px ms-auto text-soft"></i>
+
                 </button>
 
                 <button v-else
@@ -90,11 +95,16 @@
             transition: opacity 0.2s linear;
         }
 
+        .is-lost,
         .action-dropdow-toggler {
             cursor: pointer;
-            /* opacity: 0; */
+            opacity: 0;
             transition: opacity 0.2s linear;
             right: 8px;
+        }
+
+        .is-lost {
+            opacity: 1;
         }
 
         &:hover {
@@ -102,6 +112,11 @@
             .action-dropdow-toggler,
             .handle-move {
                 opacity: 1;
+            }
+
+            .is-lost {
+                opacity: 0;
+                visibility: hidden;
             }
 
         }

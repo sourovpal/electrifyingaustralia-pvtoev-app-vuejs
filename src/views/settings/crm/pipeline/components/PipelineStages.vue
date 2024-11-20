@@ -1,6 +1,6 @@
 <script setup>
     import { VueDraggableNext } from 'vue-draggable-next';
-    import {   ref } from 'vue';
+    import { ref } from 'vue';
     const colors = ref([
         { name: 'No colour', code: 'white' },
         { name: 'Sky Blue', code: 'rgb(0, 126, 229)' },
@@ -106,7 +106,7 @@
                 </vue-draggable-next>
                 <div class="list-group-item bg-light text-center add-new-lead-status"
                     @click="stages.push({...addNew})">
-                    Add New Stage
+                    Add New
                 </div>
             </div>
         </div>

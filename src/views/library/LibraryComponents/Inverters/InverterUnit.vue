@@ -53,15 +53,15 @@ onMounted(() => {
 				<p class="text-black fs-14px mb-0"> {{ inverter.model }} · {{ inverter.max_input_v }} VA </p>
                 <!-- <small class="text-secondary fs-12px">GEP 4-20KW Three Phase Series · Three-phase · PV-only Inverter · AU</small> -->
                 <!-- Temporarily keeping this input here -->
-		        <SaveableInput
-		            @update:modelValue="updateInverterSale"
-		            v-model.number="formData.quantity"
-		        />
+		        <!-- <SaveableInput -->
+		        <!--     @update:modelValue="updateInverterSale" -->
+		        <!--     v-model.number="formData.quantity" -->
+		        <!-- /> -->
 			</div>
 
 		</div>
 
-		<div  class="inverter-control position-absolute text-end d-inline-flex align-items-center gap-3">
+		<div class="inverter-control position-absolute text-end d-inline-flex align-items-center gap-3">
 		    <font-awesome-icon
 		        v-if="selectedInvertersCount > 1"
 			    class="fs-13px inverter-delete-btn text-secondary cursor-pointer"
@@ -77,11 +77,11 @@ onMounted(() => {
 		    />
 
 
-			<!-- <font-awesome-icon
+			<font-awesome-icon
 			    :class="`text-secondary fs-14px cursor-pointer ${!collapsed ? '' : 'while-collapsed'}`"
 			    icon="fas fa-chevron-up"
                 @click="collapsed = !collapsed"
-			/> -->
+			/>
 		</div>
 
         <template v-if="!collapsed">
@@ -103,28 +103,28 @@ onMounted(() => {
 		                        <span class="text-secondary">MPPT:</span> {{ inverter.mppt }}
 		                    </p>
 		                    <p class="fs-13px mb-0"> 
-		                        <span class="text-secondary">Max. input current </span> {{ inverter.max_input_v }}
+		                        <span class="text-secondary">Max. input current </span> {{ inverter.max_input_current }}
 		                    </p>
 		                    <p class="fs-13px mb-0"> 
-		                        <span class="text-secondary">DC input voltage</span> 1,100 V
+		                        <span class="text-secondary">DC input voltage</span> {{ inverter.max_input_v }} V
 		                    </p>
 		                    <p class="fs-13px mb-0"> 
-		                        <span class="text-secondary">Max DC power</span> 20000 W
+		                        <span class="text-secondary">Max DC power</span> {{ inverter.max_dc_power }}
 		                    </p>
 		                </div>
 
 		                <div class="column-2">
 		                    <p class="fs-13px mb-0"> 
-		                        <span class="text-secondary">AC apparent output:</span> 1
+		                        <span class="text-secondary">AC apparent output:</span> {{ inverter.ac_apparent_output }}
 		                    </p>
 		                    <p class="fs-13px mb-0"> 
-		                        <span class="text-secondary">Max. input current </span> 30/15
+		                        <span class="text-secondary">Max. output power </span> {{ inverter.max_output_power }}
 		                    </p>
 		                    <p class="fs-13px mb-0"> 
-		                        <span class="text-secondary">DC input voltage</span> 1,100 V
+		                        <span class="text-secondary">Phase(s): </span> {{ inverter.phase }}
 		                    </p>
 		                    <p class="fs-13px mb-0"> 
-		                        <span class="text-secondary">Max DC power</span> 20000 W
+		                        <span class="text-secondary">Max efficiency</span> {{ inverter.max_efficiency }} %
 		                    </p>
 		                </div>
 		            </div>

@@ -1,4 +1,5 @@
 <script setup>
+  import StageDeleteConfirmModal from './components/StageDeleteConfirmModal.vue';
   import SettingsTopNavbar from '@components/SettingsTopNavbar.vue';
   import { ref, onMounted, reactive } from "vue";
   import CustomScrollbar from "custom-vue-scrollbar";
@@ -36,6 +37,14 @@
   ]);
 
   const is_submit = ref(false);
+
+  const toggle_delete_modal = ref(false);
+  const delete_stage = ref(null);
+
+  function handleDeleteConfirmModal(stage) {
+    toggle_delete_modal.value = true;
+    delete_stage.value = stage;
+  }
 
   const fetchPipelineData = async () => {
 
@@ -96,13 +105,13 @@
 
         await delay(500);
 
+        fetchPipelineData();
+
         if (pipeline_id.value) return;
 
         pipeline_id.value = data.pipeline_id;
 
         Object.assign(pipeline, data);
-
-        fetchPipelineData();
 
         $router.push({ name: 'PipelineAndStageEditPage', params: { id: data.pipeline_id } });
 
@@ -148,6 +157,7 @@
           </router-link>
 
           <div class="mx-2 d-flex justify-content-center align-items-center">
+
             <svg xmlns="http://www.w3.org/2000/svg"
               width="24"
               height="24"
@@ -194,7 +204,7 @@
 
             <div class="settings-group-item mb-3">
 
-              <div class="d-flex justify-content-start align-stages-center">
+              <div class="d-flex justify-content-start align-stages-center ms-n2">
 
                 <custom-checkbox @click="pipeline.is_sales_pipeline = !pipeline.is_sales_pipeline"
                   :checked="!!pipeline.is_sales_pipeline"></custom-checkbox>
@@ -236,7 +246,8 @@
                     This will probably be most of the pipeline.'
           :stages="primary_stages"
           :demo="demo_primary_stages"
-          :add-new="{name: `New Primary Stage`,stage_id: null,status: 'primary',color: 'white',}" />
+          :add-new="{name: `New Primary Stage`,stage_id: null,status: 'primary',color: 'white',}"
+          @handleDelete="handleDeleteConfirmModal" />
         <br />
 
         <PipelineStages title="Successful stages"
@@ -244,7 +255,8 @@
                 This will probably be most of the pipeline.'
           :stages="success_stages"
           :demo="demo_success_stages"
-          :add-new="{name: `New Success Stage`, stage_id: null,status: 'success',color: 'white',}" />
+          :add-new="{name: `New Success Stage`, stage_id: null,status: 'success',color: 'white',}"
+          @handleDelete="handleDeleteConfirmModal" />
         <br />
 
         <PipelineStages title="Unsuccessful stages"
@@ -253,7 +265,8 @@
                     different types of failure."
           :stages="lost_stages"
           :demo="demo_lost_stages"
-          :add-new="{name: `New Lost Stage`, stage_id: null,status: 'lost',color: 'white',}" />
+          :add-new="{name: `New Lost Stage`, stage_id: null,status: 'lost',color: 'white',}"
+          @handleDelete="handleDeleteConfirmModal" />
 
         <div class="row">
           <div class="col-lg-12 mt-3">
@@ -269,6 +282,16 @@
       </section>
     </div>
   </div>
+
+  <stage-delete-confirm-modal v-if="toggle_delete_modal"
+    :delete-stage="delete_stage"
+    v-model:visible="toggle_delete_modal"
+    @close="toggle_delete_modal = false"
+    :stages="[...primary_stages, ...success_stages, ...lost_stages]"
+    :pipeline="pipeline"
+    @refresh="fetchPipelineData">
+  </stage-delete-confirm-modal>
+
 </template>
 
 

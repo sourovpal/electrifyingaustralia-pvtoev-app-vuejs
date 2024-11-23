@@ -28,7 +28,7 @@
         </slot>
 
     </section>
-    
+
 </template>
 
 <style scoped
@@ -40,6 +40,10 @@
         justify-content: start;
         align-items: center;
         padding: 6px 16px;
+        position: sticky;
+        top: 0;
+        z-index: 9;
+        background: #f5f7fa;
 
         .title {
             font-size: 22px;

@@ -495,9 +495,9 @@ const routes = [
                         },
                     },
                     {
-                        name: 'LeadCustomProperties',
-                        path: 'properties',
-                        component: () => import('@views/settings/crm/leads/CustomProperties.vue'),
+                        name: 'PropertieIndexPage',
+                        path: 'propertie',
+                        component: () => import('@views/settings/crm/propertie/PropertieIndexPage.vue'),
                         beforeEnter: () => isAuthorized(loginPath) && checkPermission([]),
                         meta: {
                             title: 'Home Page',

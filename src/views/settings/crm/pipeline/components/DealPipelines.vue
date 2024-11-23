@@ -7,8 +7,7 @@
         total: { type: Number, default: 0 },
     });
 
-    const emits = defineEmits(['changePosition']);
-
+    const emits = defineEmits(['changePosition', 'handleDelete']);
 
 </script>
 
@@ -43,7 +42,7 @@
 
                 <div class="">
 
-                    <span class="time">
+                    <span class="fs-14px text-soft">
                         Created {{ formatTimeAgo(pipeline.created_at, false) }} ·
                         {{ pipeline.stages_count }} stages
                     </span>
@@ -54,7 +53,7 @@
 
                     <div class="d-none d-md-flex">
 
-                        <router-link class="edit-custom-pro-btn"
+                        <router-link class="edit-custom-pro-btn text-soft fs-14px"
                             :to="pipeline.pipeline_id?`/settings/crm/properties?pipeline=${pipeline.pipeline_id}&title=${pipeline.title}`:''">
                             Edit {{ pipeline.properties_count }} properties
                         </router-link>
@@ -63,12 +62,19 @@
 
                     <div class="ms-2">
 
-                        <button
-                            class="btn btn-sm btn-transparent shadow-0 btn-floating d-flex justify-content-center align-items-center">
+                        <button data-mdb-toggle="dropdown"
+                            class="btn btn-sm btn-transparent shadow-0 btn-floating d-flex justify-content-center align-items-center me-n2">
                             <font-awesome-icon icon="fas fa-ellipsis-vertical"
                                 class="fs-14px text-soft"></font-awesome-icon>
                         </button>
+                        <div class="dropdown-menu dropdown-menu-end">
 
+                            <button class="dropdown-item py-1 fs-14px fw-bold text-head">Edit Pipeline</button>
+
+                            <button @click="emits('handleDelete')"
+                                class="mb-1 dropdown-item py-1 fs-14px fw-bold text-danger">Delete</button>
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -96,7 +102,6 @@
         </div>
 
     </div>
-
 </template>
 
 
@@ -121,6 +126,12 @@
                 .edit-pipeline-btn {
                     font-size: 10px;
                     border-width: 1px;
+                    border-color: var(--crm-color-6);
+                    color: var(--crm-color-6);
+                    &:hover{
+                        background-color: var(--crm-color-1);
+                        color: var(--crm-color-8);
+                    }
                 }
             }
 
@@ -129,15 +140,12 @@
                 padding-top: 13px;
                 padding-bottom: 13px;
 
-                .time {
-                    font-size: 14px;
-                    color: #929292;
-                }
-
                 .edit-custom-pro-btn {
-                    font-size: 14px;
                     text-decoration: underline;
-                    color: #838383;
+                    text-decoration-color:transparent;
+                    &:hover{
+                        text-decoration-color: var(--crm-color-6);
+                    }
                 }
 
                 .drop-down-action {
@@ -183,6 +191,37 @@
             cursor: pointer;
             font-size: 14px;
             background-color: #f2f2f2 !important;
+        }
+    }
+
+    .dropdown-menu.dropdown-menu-end {
+        box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px !important;
+        border-radius: 3px !important;
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: -7px;
+            right: 10px;
+            border: 7px solid #dedede;
+            border-right-color: white;
+            border-bottom-color: white;
+            transform: rotate(45deg);
+            border-bottom-color: transparent;
+            border-right-color: transparent;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            top: -6px;
+            right: 10px;
+            border: 7px solid white;
+            border-right-color: white;
+            border-bottom-color: white;
+            transform: rotate(45deg);
+            border-bottom-color: transparent;
+            border-right-color: transparent;
         }
     }
 </style>

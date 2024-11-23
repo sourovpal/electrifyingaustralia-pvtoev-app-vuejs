@@ -153,14 +153,14 @@ export const menus =[
                 icon:'',
             },
             {
-                label:'Pipelines',
+                label:'Deal Pipelines',
                 path:'/settings/crm/pipeline',
                 query:{},
                 icon:'',
             },
             {
-                label:'Custom Properties',
-                path:'/settings/crm/properties',
+                label:'Properties',
+                path:'/settings/crm/propertie',
                 query:{},
                 icon:'',
             },

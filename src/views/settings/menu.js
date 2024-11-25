@@ -159,7 +159,7 @@ export const menus =[
                 icon:'',
             },
             {
-                label:'Properties',
+                label:'Lead Properties',
                 path:'/settings/crm/propertie',
                 query:{},
                 icon:'',

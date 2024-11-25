@@ -22,12 +22,10 @@ export default [
     {
         id: 'single_choice',
         data_type: 'Single Choice',
-        options: [],
     },
     {
         id: 'multiple_choice',
         data_type: 'Multiple Choice',
-        options: [],
     },
     {
         id: 'real_number',
@@ -36,6 +34,5 @@ export default [
     {
         id: 'read_only',
         data_type: 'Read Only',
-        value: null,
     },
 ];

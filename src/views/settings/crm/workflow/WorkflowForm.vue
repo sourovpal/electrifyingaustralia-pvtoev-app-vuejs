@@ -23,14 +23,14 @@
     // temporary
 
     const getWorkflowById = () => {
-        axios.get(`/workflows/${workflowId}`)
+        axios.get(`/settings/workflows/${workflowId}`)
             .then(res => {
                 formData.value = {
                     title: res?.data?.title,
-                    id: res?.data?.id
+                    id: res?.data?.workflow_id
                 };
             })
-            .catch(e => $toast.error(e.response.data.message));
+            .catch(e => $toast.error(e.message));
     }
 
     // Store handler method
@@ -39,9 +39,9 @@
             return $toast.error('Title missing');
 
         isLoading.value = true;
-        axios.post('/workflows/create', formData.value)
+        axios.post('/settings/workflows', formData.value)
             .then(res => {
-                $toast.success(res?.data?.message ?? 'Workflow created');
+                $toast.success(res?.data?.message.text ?? 'Workflow created');
                 router.push('/settings/crm/workflows');
             })
             .catch(e => {
@@ -57,9 +57,9 @@
             return $toast.error('Title missing');
 
         isLoading.value = true;
-        axios.put(`/workflows/update/${formData.value?.id}`, formData.value)
+        axios.put(`/settings/workflows/${formData.value?.id}`, formData.value)
             .then(res => {
-                $toast.success(res?.data?.message ?? 'Workflow updated');
+                $toast.success(res?.data?.message.text ?? 'Workflow updated');
                 router.push('/settings/crm/workflows');
             })
             .catch(e => {
@@ -73,10 +73,13 @@
 
 <template>
     <div class="content content-y-100vh">
+
         <div class="content-header d-flex justify-content-start align-items-center mb-4 border-bottom pb-4">
+
             <router-link to="/settings/crm/workflows">
                 <h1 class="mb-0  text-soft">Task workflows</h1>
             </router-link>
+
             <div class="mx-2">
                 <svg xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -87,25 +90,34 @@
                         d="M0 0h24v24H0V0z"></path>
                 </svg>
             </div>
+
             <h1 class="mb-0 text-base">{{ !workflowId ? 'Create' : 'Update' }} workflow</h1>
+
         </div>
 
         <div class="content-body">
+
             <div class="title-input-wrapper">
+
                 <div class="mb-4">
+
                     <label for="worflow-title-input"
                         class="fs-6 fw-bold">Title</label>
+
                     <input @keydown.enter="() => workflowId ? handleWorkflowUpdate() : handleWorkflowCreate()"
                         v-model="formData.title"
                         id="worflow-title-input"
                         type="text"
                         class="form-control rounded"
                         placeholder="Enter title" />
+
                     <small class="text-danger"
                         v-if="errorMessage">{{errorMessage}}</small>
+
                 </div>
 
                 <template v-if="!isLoading">
+
                     <button v-if="!workflowId"
                         class="btn btn-primary"
                         @click="handleWorkflowCreate">
@@ -117,17 +129,21 @@
                         @click="handleWorkflowUpdate">
                         Update workflow
                     </button>
+
                 </template>
 
                 <div v-else
                     class="btn btn-primary">
+
                     <font-awesome-icon class="animate-spin"
                         icon="fa-solid fa-circle-notch" />
+
                 </div>
             </div>
 
             <TaskForm :workflow-id="workflowId"
                 v-if="workflowId" />
+
         </div>
     </div>
 </template>

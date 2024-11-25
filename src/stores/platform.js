@@ -539,7 +539,7 @@ export const usePlatformStore = defineStore("platform", {
       $callback({ loading: true });
 
       useApiRequest({
-        url: `/platform/deals/properties?lead_id=${$leadId}`,
+        url: `/platform/properties?lead_id=${$leadId}`,
       })
         .then((properties) => {
           if (properties) {

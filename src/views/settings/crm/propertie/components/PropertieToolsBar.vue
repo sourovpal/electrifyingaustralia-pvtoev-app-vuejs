@@ -2,6 +2,13 @@
     import ActionBar from '@components/ActionBar/ActionBar.vue';
     import LeftActionBar from '@components/ActionBar/LeftActionBar.vue';
     import RightActionBar from '@components/ActionBar/RightActionBar.vue';
+    import { useApiRequest } from '@actions';
+    import { $toast } from '@config';
+    import { useConfirm } from "primevue/useconfirm";
+    import { ref } from "vue";
+
+
+    const confirm = useConfirm();
 
     const props = defineProps({
         pagination: { type: Object, default: {} },
@@ -9,6 +16,47 @@
     });
 
     const emits = defineEmits(['checkedAll', 'fetch', 'toggleAddNew']);
+
+    const is_deleting = ref(false);
+
+    const confirmDelete = () => {
+        confirm.require({
+            target: null,
+            header: 'Delete Property?',
+            message: 'Are you sure you want to delete?',
+            icon: 'pi pi-trash fs-16px',
+            rejectProps: {
+                label: 'Cancel',
+                severity: 'secondary',
+                outlined: true,
+                style: 'height:2rem'
+            },
+            acceptProps: {
+                label: 'Delete',
+                severity: 'danger',
+                style: 'height:2rem'
+            },
+            accept: () => handleDelete(),
+            reject: () => { }
+        });
+    };
+
+    function handleDelete() {
+        is_deleting.value = true;
+        var url = '/settings/properties?properties_id=' + props.selectedProperties;
+        useApiRequest({
+            url,
+            method: 'DELETE',
+        }).then(({ message }) => {
+            emits('fetch');
+            $toast.success(message.text);
+        }).catch(error => {
+            $toast.error(error.message);
+        }).finally(_ => {
+            is_deleting.value = false;
+        });
+    }
+
 
 </script>
 
@@ -36,8 +84,7 @@
 
             <div>
 
-                <button 
-                    @click="emits('fetch', 1)"
+                <button @click="emits('fetch', 1)"
                     class="toolbar-btn btn btn-light btn-floating ms-3">
                     <svg xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -54,9 +101,10 @@
             </div>
             <div>
 
-                <!-- <button class="toolbar-btn btn btn-danger btn-sm me-3 ms-3"
-                    v-if="selectedRows.length">
-                    <span class="fs-12px">{{ selectedRows.length }} selected</span>
+                <button v-if="selectedProperties.length"
+                    class="toolbar-btn btn btn-danger btn-sm me-3 ms-3"
+                    @click="confirmDelete">
+                    <span class="fs-12px">{{ selectedProperties.length }} selected</span>
                     <span class="ms-2">
                         <svg xmlns="http://www.w3.org/2000/svg"
                             viewBox="0 0 30 30"
@@ -67,7 +115,7 @@
                                 d="M 13 3 A 1.0001 1.0001 0 0 0 11.986328 4 L 6 4 A 1.0001 1.0001 0 1 0 6 6 L 24 6 A 1.0001 1.0001 0 1 0 24 4 L 18.013672 4 A 1.0001 1.0001 0 0 0 17 3 L 13 3 z M 6 8 L 6 24 C 6 25.105 6.895 26 8 26 L 22 26 C 23.105 26 24 25.105 24 24 L 24 8 L 6 8 z" />
                         </svg>
                     </span>
-                </button> -->
+                </button>
 
             </div>
 

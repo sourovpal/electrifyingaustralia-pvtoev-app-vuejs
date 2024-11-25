@@ -54,7 +54,7 @@
                     <div class="d-none d-md-flex">
 
                         <router-link class="edit-custom-pro-btn text-soft fs-14px"
-                            :to="pipeline.pipeline_id?`/settings/crm/properties?pipeline=${pipeline.pipeline_id}&title=${pipeline.title}`:''">
+                            :to="pipeline.pipeline_id?`/settings/crm/propertie?pipeline_id=${pipeline.pipeline_id}&title=${pipeline.title}`:''">
                             Edit {{ pipeline.properties_count }} properties
                         </router-link>
 

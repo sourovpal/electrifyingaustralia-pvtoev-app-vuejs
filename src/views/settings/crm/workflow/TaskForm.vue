@@ -67,7 +67,7 @@ const handleNewTaskClick = () => {
 
 const durations = ref([]);
 const getDurations = () => {
-    axios.get('workflows/durations')
+    axios.get('/settings/workflows/durations')
         .then(res => {
             if (!res?.data?.length)
                 return $toast.error('Something went wrong'); 

@@ -1,55 +1,59 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { VueDraggableNext } from 'vue-draggable-next';
-import axios from '@actions/api';
-import { useToast } from 'vue-toast-notification';
-import { CONFIG } from '@config';
-import moment from 'moment';
-import ConfirmationModal from '@components/Modals/ConfirmationModal.vue';
+    import axios from '@actions/api';
+    import moment from 'moment';
+    import { ref, onMounted } from 'vue';
+    import ConfirmationModal from '@components/Modals/ConfirmationModal.vue';
+    import SettingsTopNavbar from '@components/SettingsTopNavbar.vue';
+    import { VueDraggableNext } from 'vue-draggable-next';
+    import { useToast } from 'vue-toast-notification';
+    import { useApiRequest } from '@actions';
+    import { $toast } from '@config';
 
-onMounted(() => {
-    getWorkFlows();
-});
-
-const items = ref([]);
-const $toast = useToast(CONFIG.TOAST);
-
-async function getWorkFlows() {
-    axios.get('workflows').then(res => {
-        items.value = res.data;
-    }).catch(() => {
-        $toast.error('Something went wrong');
+    onMounted(() => {
+        getWorkFlows();
     });
-}
 
-const openWorkflowDeleteConfirmationModal = ref(false);
-const workflowToDeleteId = ref(null);
+    const items = ref([]);
 
-function handleWorkflowDeleteConfirm() {
-    axios.delete(`/workflows/delete/${workflowToDeleteId.value}`)
-        .then((res) => {
-            $toast.success(res.data.message);
-            getWorkFlows();
-        })
-        .catch(e => {
+    async function getWorkFlows() {
+
+        useApiRequest({
+            url: '/settings/workflows',
+        }).then(workflows => {
+            items.value = workflows;
+        }).catch(error => {
             $toast.error('Something went wrong');
-            console.log(e);
-        })
-        .finally(() => {
-            openWorkflowDeleteConfirmationModal.value = false;
-            handleWorkflowDeleteCancel(); // missnamed but fits the usage here
-        })
-}
+        });
 
-const handleDeleteClick = (workflowId) => {
-    workflowToDeleteId.value = workflowId;
-    openWorkflowDeleteConfirmationModal.value = true;
-}
+    }
 
-const handleWorkflowDeleteCancel = () => {
-    openWorkflowDeleteConfirmationModal.value = false;
-    workflowToDeleteId.value = null;
-}
+    const openWorkflowDeleteConfirmationModal = ref(false);
+    const workflowToDeleteId = ref(null);
+
+    function handleWorkflowDeleteConfirm() {
+        axios.delete(`settings/workflows/${workflowToDeleteId.value}`)
+            .then((res) => {
+                $toast.success(res.data.message.text);
+                getWorkFlows();
+            })
+            .catch(e => {
+                $toast.error('Something went wrong');
+            })
+            .finally(() => {
+                openWorkflowDeleteConfirmationModal.value = false;
+                handleWorkflowDeleteCancel(); // missnamed but fits the usage here
+            })
+    }
+
+    const handleDeleteClick = (workflowId) => {
+        workflowToDeleteId.value = workflowId;
+        openWorkflowDeleteConfirmationModal.value = true;
+    }
+
+    const handleWorkflowDeleteCancel = () => {
+        openWorkflowDeleteConfirmationModal.value = false;
+        workflowToDeleteId.value = null;
+    }
 
 </script>
 
@@ -57,9 +61,7 @@ const handleWorkflowDeleteCancel = () => {
 
     <div class="content content-y-100vh">
 
-        <div class="content-header">
-            <h1>Task workflows</h1>
-        </div>
+        <settings-top-navbar title="Task workflows"></settings-top-navbar>
 
         <div class="content-body">
             <section class="">
@@ -102,7 +104,8 @@ const handleWorkflowDeleteCancel = () => {
                                             <a href=""
                                                 class="title">
                                                 <h5 class="mb-0"><router-link
-                                                        :to="`/settings/crm/workflows/${item.workflow_id}`">{{ item.title
+                                                        :to="`/settings/crm/workflows/${item.workflow_id}`">{{
+                                                        item.title
                                                         }}</router-link></h5>
                                             </a>
                                         </div>

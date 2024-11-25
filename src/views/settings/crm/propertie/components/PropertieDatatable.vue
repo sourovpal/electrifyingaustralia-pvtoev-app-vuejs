@@ -12,7 +12,7 @@
         selectedProperties: { type: Array, default: [] },
     });
 
-    const emits = defineEmits(['checked']);
+    const emits = defineEmits(['checked', 'edit-propertie']);
 
 </script>
 
@@ -34,7 +34,7 @@
                 <div class="tbl-th"
                     style="width:10rem;flex-grow: 1;">Visibility</div>
                 <div class="tbl-th"
-                    style="width:15rem;flex-grow: 1;">Use Case</div>
+                    style="width:15rem;flex-grow: 1;">Lead / Pipeline</div>
                 <div class="tbl-th"
                     style="width:10rem;">Last Update</div>
                 <div class="tbl-th"
@@ -64,10 +64,10 @@
                         <div style="width:15rem;"
                             class="tbl-td">
 
-                            <a href="#"
-                                class="text-overflow-ellipsis">
+                            <span class="text-overflow-ellipsis editable"
+                                @click="emits('edit-propertie', propertie)">
                                 {{ propertie.label }}
-                            </a>
+                            </span>
 
                         </div>
 
@@ -85,7 +85,8 @@
 
                             <span class="me-3">
 
-                                <i class="fs-16px" :class="getCustomPropertieIcon(propertie.data_type_id)"></i>
+                                <i class="fs-16px"
+                                    :class="getCustomPropertieIcon(propertie.data_type_id)"></i>
 
                             </span>
 
@@ -99,7 +100,7 @@
                             class="tbl-td d-none d-lg-flex">
 
                             <div class="ms-4">
-                                <i v-if="!propertie.visibility"
+                                <i v-if="propertie.visibility"
                                     class="pi pi-eye fs-18px"></i>
 
                                 <i v-else
@@ -112,7 +113,7 @@
                             class="tbl-td d-none d-lg-flex">
 
                             <span class="text-overflow-ellipsis btn btn-sm btn-success py-0 px-2">
-                                {{ propertie.use_case}}
+                                {{ propertie.pipeline_id?'Pipeline':'Lead'}}
                             </span>
 
                         </div>
@@ -141,5 +142,12 @@
     lang="scss">
     :deep(.tbl-custom-data-table) {
         height: calc(100vh - 105px) !important;
+    }
+    .editable{
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+        &:hover{
+            color: var(--crm-color);
+        }
     }
 </style>

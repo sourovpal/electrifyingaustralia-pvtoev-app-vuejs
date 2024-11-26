@@ -3,7 +3,7 @@
     import DatatableHeader from '@components/Datatable/DatatableHeader.vue';
     import DatatableBody from '@components/Datatable/DatatableBody.vue';
     import TeamMemberSkeletor from './TeamMemberSkeletor.vue';
-    import { ref,    } from 'vue';
+    import { ref } from 'vue';
     import { formatTimeAgo, handleDateTimeFormat } from '@helpers';
 
     const props = defineProps({
@@ -12,7 +12,7 @@
         isFirstLoading: { type: Boolean, default: false },
         isLoading: { type: Boolean, default: false },
     });
-    const emits = defineEmits(['handleSelectRows', 'handleEditMember']);
+    const emits = defineEmits(['handleSelectRows', 'edit']);
 </script>
 
 <template>
@@ -57,7 +57,7 @@
 
                 <div style="width:20rem;flex-grow:1;"
                     class="tbl-td">
-                    <div @click="emits('handleEditMember', member)"
+                    <div @click="emits('edit', member)"
                         class="d-flex justify-content-between align-items-center cursor-pointer w-100 team-member-hover">
                         <div class="avatar-group">
                             <img class="avatar rounded-circle"
@@ -65,7 +65,7 @@
                                 height="35"
                                 :src="member.profile_avatar" />
                         </div>
-                        <div class="d-flex ms-2 w-100"
+                        <div class="d-flex ms-2 w-100 editable"
                             style="flex-direction: column;line-height: 15px;">
                             <span class="fs-14px fw-bold text-overflow-ellipsis w-85">{{ member.name }}</span>
                             <span class="fs-14px fw-bold- text-overflow-ellipsis w-85">{{ member.email }}</span>
@@ -129,3 +129,9 @@
         </datatable-body>
     </Datatable>
 </template>
+<style scoped
+    lang="scss">
+    .editable:hover {
+        color: var(--crm-color);
+    }
+</style>

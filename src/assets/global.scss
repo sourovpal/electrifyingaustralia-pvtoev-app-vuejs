@@ -1088,3 +1088,7 @@ class="select-option-small"
 }
 
 // End <auto-complete/>
+.p-icon-spin {
+  -webkit-animation: p-icon-spin 1s infinite linear !important;
+  animation: p-icon-spin 1s infinite linear !important;
+}

@@ -1,179 +1,198 @@
 <script setup>
-import { ref, onMounted, reactive } from "vue";
-import { Modal } from "mdb-ui-kit";
-import CustomScrollbar from "custom-vue-scrollbar";
-import SelectObject from "@views/platform/components/fields/SelectObject.vue";
-import { useApiRequest } from "@actions";
-import { $toast } from "@config";
 
-const emits = defineEmits(["handleRefresh"]);
-const modalRef = ref(null);
-const errors = ref({});
-let attributes = reactive({
-  email: null,
-  role: null,
-  reset: 1,
-});
-const roles = ref([]);
-const isLoading = ref(false);
+  import { ref, onMounted, reactive } from "vue";
+  import { useApiRequest } from "@actions";
+  import { $toast } from "@config";
 
-async function getRoles() {
-  await useApiRequest({
-    url: "/roles?limit=100",
-  })
-    .then((res) => {
-      const { success, message, roles: rolesData } = res;
-      if (success) {
-        roles.value = rolesData;
-        return;
-      }
-      $toast.error(message.text);
-    })
-    .catch((error) => {
-      $toast.error("Oops, something went wrong");
-    })
-    .finally(() => {});
-}
+  const emits = defineEmits(["refresh", "close"]);
 
-onMounted(() => {
-  errors.value = {};
-  attributes.email = attributes.role = null;
-  attributes.reset = Math.random();
-  getRoles();
-});
-function hideModal() {
-  modalRef.value?.hide();
-}
+  const attributes = reactive({
+    email: '',
+    role: '',
+  });
 
-async function handleInvited() {
-  $toast.clear();
-  errors.value = {};
-  isLoading.value = true;
-  delete attributes["reset"];
-  await useApiRequest({
-    url: "/users/invite",
-    method: "post",
-    payload: attributes,
-  })
-    .then((res) => {
-      const { success, message, errors: apiErrors } = res;
-      if (success) {
-        emits("handleRefresh", { page: 1 });
-        $toast.success(message.text);
-        attributes.email = attributes.role = null;
-        attributes.reset = Math.random();
-        hideModal();
-      } else if (!success && apiErrors) {
-        errors.value = apiErrors;
-      } else {
-        $toast.error(message.text);
-      }
-    })
-    .catch((error) => {
-      $toast.error("Oops, something went wrong.");
-    })
-    .finally(() => {
-      isLoading.value = false;
+  const roles = ref([]);
+  const is_loading_roles = ref(false);
+  const is_submit = ref(false);
+  const errors = ref({});
+
+  function handleFetchUserRoles() {
+
+    is_loading_roles.value = true;
+
+    useApiRequest({
+      url: '/settings/roles/list',
+    }).then(_roles => {
+
+      roles.value = _roles;
+
+    }).catch(error => {
+
+      $toast.error(error.message);
+
+    }).finally(_ => {
+
+      is_loading_roles.value = false;
+
     });
-}
+
+  }
+
+  function handleSubmitInvite() {
+
+    if (!attributes.email) return errors.value = { 'email': ['Email missing.'] };
+
+    errors.value = {};
+
+    is_submit.value = true;
+
+    useApiRequest({
+      url: '/settings/users/invite',
+      method: 'POST',
+      payload: {
+        email: attributes.email,
+        role: attributes.role?.role_id
+      }
+    }).then(({ success, errors: _errors, message }) => {
+
+      if (_errors) return errors.value = _errors;
+
+      if (success) {
+        $toast.success(message.text);
+        emits('refresh');
+      }
+
+    }).catch(error => {
+
+      $toast.error(error.message);
+
+    }).finally(_ => {
+
+      is_submit.value = false;
+
+    });
+
+  }
+
+  onMounted(() => {
+    handleFetchUserRoles();
+  });
+
+
 </script>
 
 <template>
-  <bootstrap-modal v-bind="$attrs" ref="modalRef">
-    <template #header>
-      <div class="modal-header">
-        <h5 class="modal-title text-base">Member invitation</h5>
-      </div>
-    </template>
-    <p class="form-subtitle fs-14px mb-3">
-      Invite team members by their email. Team members will be able to
-      collaborate with existing projects and share designs.
-    </p>
-    <div class="row settings-group-item mb-3">
-      <div class="col-2 ms-2 d-flex justify-content-end align-items-baseline">
-        <label class="form-label-title mb-0">Email:</label>
-      </div>
-      <div
-        class="col-8 me-auto d-flex justify-content-start align-items-center flex-direction-column"
-      >
-        <input
-          @click="delete errors?.email"
-          v-model="attributes.email"
-          class="form-control"
-          type="text"
-        />
-        <span
-          class="fs-14px text-danger py-1 w-100 d-block"
-          v-if="errors?.email?.length"
-          >{{ errors?.email[0] }}</span
-        >
-      </div>
-    </div>
-    <div class="row settings-group-item mb-0">
-      <div class="col-2 ms-2 d-flex justify-content-end align-items-baseline">
-        <label class="form-label-title mb-0">Role:</label>
-      </div>
-      <div class="col-8 me-auto">
-        <select-object
-          :key="attributes.reset"
-          :options="roles"
-          label="name"
-          return-value="name"
-          v-model="attributes.role"
-          auto-selected
-        ></select-object>
-        <span
-          class="fs-14px text-danger py-1 w-100 d-block"
-          v-if="errors?.role?.length"
-          >{{ errors?.role[0] }}</span
-        >
-      </div>
-    </div>
-    <template #footer>
-      <div class="modal-footer flex-between-center border-top-0">
-        <div
-          class="mb-0 w-100 d-flex justify-content-between align-items-center"
-        >
-          <div>
-            <button
-              type="button"
-              class="btn btn-danger fw-bold btn-sm"
-              data-mdb-dismiss="modal"
-            >
-              Cancel
-            </button>
-          </div>
-          <div>
-            <loading-button
-              :is-loading="isLoading"
-              :disabled="!attributes.email"
-              @click="handleInvited"
-              class="btn-sm"
-              >Send Invitation</loading-button
-            >
-          </div>
+  <modal-dialog v-bind="$attrs"
+    style="border-radius:6px;"
+    modal
+    pt:header:class="pt-1 pb-2 ps-3 pe-2"
+    pt:content:class="pt-1 pb-2 ps-3"
+    :header="`Invite New User`"
+    :style="{ width: '30rem' }">
+
+    <section class="pt-3">
+
+      <div class="mb-3 d-flex justify-content-between align-items-center">
+
+        <div class="label-title text-end d-flex align-items-center">
+
+          <label class="mb-1 fs-16px text-head">Email:</label>
+
         </div>
+
+        <div class="flex-grow-1">
+
+          <input-text size="small"
+            placeholder="Email address"
+            v-model="attributes['email']"
+            class="w-100"
+            @click="delete errors.email"></input-text>
+
+          <span class="fs-14px text-danger py-1 w-100 d-block"
+            v-if="errors?.email?.length">
+            {{ errors.email[0] }}
+          </span>
+
+        </div>
+
       </div>
-    </template>
-  </bootstrap-modal>
+
+      <div class="mb-3 d-flex justify-content-between align-items-center">
+
+        <div class="label-title text-end d-flex align-items-center">
+
+          <label class="mb-1 fs-16px text-head">User Role:</label>
+
+        </div>
+
+        <div class="flex-grow-1">
+
+          <select-option :loading="is_loading_roles"
+            filter
+            v-model="attributes['role']"
+            :options="roles"
+            :filterFields="['name']"
+            optionLabel="name"
+            placeholder="Select a user role"
+            class="w-100 select-option-small"
+            panel-class="panel-option-small">
+
+            <template #value="slotProps">
+
+              <div v-if="slotProps.value"
+                class="flex items-center">
+                <div>{{ slotProps.value.name }}</div>
+              </div>
+
+              <span v-else>
+                {{ slotProps.placeholder }}
+              </span>
+
+            </template>
+
+            <template #option="slotProps">
+
+              <div class="flex items-center">
+                <div>{{ slotProps.option.name }}</div>
+              </div>
+
+            </template>
+
+          </select-option>
+
+          <span class="fs-14px text-danger py-1 w-100 d-block"
+            v-if="errors?.role?.length">
+            {{ errors.role[0] }}
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center pt-3">
+
+        <Button size="small"
+          type="button"
+          label="Cancel"
+          severity="secondary"
+          @click="emits('close', true)"></Button>
+
+        <Button size="small"
+          type="button"
+          :loading="is_submit"
+          severity="success"
+          @click="handleSubmitInvite"
+          label="Send Invite"></Button>
+
+      </div>
+
+    </section>
+
+  </modal-dialog>
 </template>
 <style scoped
   lang="scss">
-.custom-form-select {
-  width: 100%;
-  overflow: hidden;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-
-  .dropdown-item {
-    cursor: pointer;
+  .label-title {
+    width: 20%;
   }
-}
-
-.form-subtitle {
-  line-height: 15px;
-  font-weight: 100;
-  color: #abacb0;
-  letter-spacing: 0.2px;
-  text-align: center;
-}
 </style>

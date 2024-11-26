@@ -43,7 +43,8 @@
   .sidebar-submenu {
     top: 0;
     background-color: #f5f7fa;
-    width: var(--child-left-navbar-width);
+    min-width: var(--child-left-navbar-width);
+    max-width: var(--child-left-navbar-width);
     max-height: 100vh;
     height: 100vh;
     margin-left: var(--main-left-navbar-width);

@@ -162,8 +162,8 @@
         };
 
         useApiRequest({
-            url: `/settings/roles/${roleId.value}/update`,
-            method: 'POST',
+            url: `/settings/roles/${roleId.value}`,
+            method: 'PUT',
             payload,
         }).then(({ errors: _errors, message }) => {
 

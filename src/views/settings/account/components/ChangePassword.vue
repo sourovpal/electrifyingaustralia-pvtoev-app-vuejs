@@ -21,43 +21,54 @@
     });
 
     const changePasswordHandler = async () => {
+
         $toast.clear();
+
         attributes.errors = {};
+
         attributes.isSubmitPasswordChange = true;
+
         const payload = {
             current_password: attributes.current_password,
             new_password: attributes.new_password,
             confirm_password: attributes.confirm_password,
         };
+
         const res = await useApiRequest({
-            url: '/users/change/password',
+            url: '/settings/account/password',
             method: 'post',
             payload
         }).then(res => {
-            const { message, success, errors: resErrors } = res;
-            if (!success && resErrors) {
-                attributes.errors = resErrors;
-            } else {
-                $toast[message.type](message.text);
-                attributes.current_password = null;
-                attributes.new_password = null;
-                attributes.confirm_password = null;
-            }
+            const { message, success, errors: _errors } = res;
+
+            if (_errors) return attributes.errors = _errors;
+
+            $toast[message.type](message.text);
+            attributes.current_password = null;
+            attributes.new_password = null;
+            attributes.confirm_password = null;
+
         }).catch(error => {
-            $toast.error('Oops, something went wrong');
+
+            $toast.error(error.message.text);
+
         }).finally(() => {
+
             attributes.isSubmitPasswordChange = false;
+
         });
     };
 </script>
 
 <template>
     <div class="row">
-        <div class="col-lg-2 col-12 mb-3 mb-lg-0">
+
+        <div class="col-lg-3 col-12 mb-3 mb-lg-0">
             <div class="settings-group-header">
                 <h2>Change password</h2>
             </div>
         </div>
+
         <div class="col-lg-5 col-12">
 
             <div class="settings-group-item">

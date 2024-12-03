@@ -21,7 +21,7 @@ import '@vueup/vue-quill/dist/vue-quill.bubble.css';
                 <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>Connected email account</h2>
-                        <span class="sub-title">Sync your inbox and see your conversations in Pylon CRM.</span>
+                        <span class="sub-title">Sync your inbox and see your conversations in pvtoev CRM.</span>
                     </div>
                 </div>
 
@@ -41,7 +41,7 @@ import '@vueup/vue-quill/dist/vue-quill.bubble.css';
                 <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>SMS sending</h2>
-                        <span class="sub-title">Chat with your customers in Pylon CRM.</span>
+                        <span class="sub-title">Chat with your customers in pvtoev CRM.</span>
                     </div>
                 </div>
 
@@ -60,7 +60,7 @@ import '@vueup/vue-quill/dist/vue-quill.bubble.css';
                 <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>SMS sending</h2>
-                        <span class="sub-title">Chat with your customers in Pylon CRM.</span>
+                        <span class="sub-title">Chat with your customers in pvtoev CRM.</span>
                     </div>
                 </div>
 

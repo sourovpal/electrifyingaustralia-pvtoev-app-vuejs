@@ -18,11 +18,11 @@ import AddADestinationModal from './components/AddADestinationModal.vue';
                 <div class="col-lg-8 col-12">
                     <div class="card pt-3 pb-2 px-3 d-flex flex-row justify-content-start align-items-center shadow-0 settings__item--wide">
                         <div class="mx-3">
-                            <img src="https://static.getpylon.com/images/app/ui/onboarding_api.png" style="width:120px;height:120px;">
+                            <img src="https://static.getpvtoev.com/images/app/ui/onboarding_api.png" style="width:120px;height:120px;">
                         </div> 
                         <div>
                             <div class="title mb-2">
-                                Build on Pylon
+                                Build on pvtoev
                             </div>
                             <p class="sub-title mb-2">
                                 Using the Observer API, you can integrate with other software to speed up your business processes. Whether you're using third-party software or your own custom apps, we can help you achieve your goals.
@@ -56,7 +56,7 @@ import AddADestinationModal from './components/AddADestinationModal.vue';
                         <div class="card shadow-0 border">
                             <div class="card-body">
                                 <p class="text-muted fs-14px w-75 text-center mx-auto">
-                                    API tokens allow your own software applications and integrations to make requests to the Pylon API.
+                                    API tokens allow your own software applications and integrations to make requests to the pvtoev API.
                                     You don't have any API tokens yet!
                                 </p>
                                 <div class="text-center">
@@ -85,7 +85,7 @@ import AddADestinationModal from './components/AddADestinationModal.vue';
                         <div class="card shadow-0 border">
                             <div class="card-body">
                                 <p class="text-muted fs-14px w-75 text-center mx-auto">
-                                    Webhooks can notify your external software of changes to data in your Pylon account.
+                                    Webhooks can notify your external software of changes to data in your pvtoev account.
                                     You don't have any webhook destinations yet!
                                 </p>
                                 <div class="text-center">

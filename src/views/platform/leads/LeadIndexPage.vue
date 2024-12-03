@@ -1,5 +1,5 @@
 <script setup>
-  import { watch, onMounted, computed } from "vue";
+  import { watch, onMounted, computed, ref } from "vue";
   import CRMToolsBar from "@components/CRMToolsBar.vue";
   import LeadToolsBar from "./components/LeadToolsBar.vue";
   import LeadDataTable from "./components/LeadDataTable.vue";
@@ -15,13 +15,19 @@
   const platformStore = usePlatformStore();
   const toggleFilter = computed(() => leadsStore.getToggleFilter);
   const toggleAddNewModal = computed(() => leadsStore.getAddNewLeadModal);
+  const toggle_multiple_lead_delete = ref(false);
 
   function handleFetchLeads(payload, fetch = false, reset = false) {
-    if (reset) {
-      leadsStore.setFetchQuery("clear");
-    }
+
+    if (reset) return leadsStore.setFetchQuery("clear");
+
     leadsStore.setFetchQuery(payload, fetch);
   }
+
+  function handleToggleDeleteLead() {
+    toggle_multiple_lead_delete.value = !toggle_multiple_lead_delete.value;
+  }
+
 
   watch(route, () => {
     let payload = route.query;
@@ -34,6 +40,7 @@
     platformStore.callFetchStatuses();
     handleFetchLeads(route.query, true);
   });
+
 </script>
 
 <template>
@@ -42,7 +49,7 @@
 
     <CRMToolsBar></CRMToolsBar>
 
-    <lead-tools-bar></lead-tools-bar>
+    <lead-tools-bar @multiple-delete="handleToggleDeleteLead"></lead-tools-bar>
 
     <filter-right-sidebar v-if="!(toggleFilter === 'render')"></filter-right-sidebar>
 
@@ -54,7 +61,10 @@
     v-model:visible="toggleAddNewModal"
     @refresh="handleFetchLeads({ page: 1 }, true, true)"></add-new-lead-modal>
 
-  <multiple-lead-delete-modal @refresh="handleFetchLeads(route.query, true)"></multiple-lead-delete-modal>
+  <multiple-lead-delete-modal v-if="toggle_multiple_lead_delete"
+    v-model:visible="toggle_multiple_lead_delete"
+    @close="toggle_multiple_lead_delete = false"
+    @refresh="handleFetchLeads(route.query, true)"></multiple-lead-delete-modal>
 
   <upload-spreadsheet-modal></upload-spreadsheet-modal>
 

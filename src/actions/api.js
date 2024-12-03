@@ -1,6 +1,6 @@
 import axios from "axios";
-import { CONFIG, $toast } from "@config";
 import Storage from "@helpers/Storage";
+import { CONFIG } from "@config";
 
 const securityStorage = new Storage(CONFIG.VITE_AUTH_TOKEN);
 const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
@@ -9,6 +9,12 @@ const headers = {};
 
 if (!!securityStorage.get() && !!userStorage.get()) {
     headers['Authorization'] = 'Bearer ' + securityStorage.get();
+}
+
+function handleRemove() {
+    userStorage.remove();
+    securityStorage.remove();
+    window.location.replace('/login');
 }
 
 const instance = axios.create({
@@ -32,34 +38,33 @@ instance.interceptors.request.use((request) => {
 
 });
 
-instance.interceptors.response.use(function (response) {
+instance.interceptors.response.use(
+    function (response) {
 
+        return Promise.resolve(response);
 
-    return response;
+    }, function (error) {
 
-}, function (error) {
+        if (error?.response?.status === 401) handleRemove();
 
+        const { message, errors } = error.response?.data;
 
-    if (error?.response?.status === 401) {
+        if (message && typeof message == 'object') error['message'] = message;
 
-        userStorage.remove();
+        else if (message) error['message'] = { text: message, type: 'error' }
 
-        securityStorage.remove();
+        else error['message'] = { text: error.message, type: 'error' }
 
-        window.location.replace('/login');
+        if (errors) error['errors'] = errors;
 
-    }
+        return Promise.reject(error);
 
-    const message = error.response?.data?.message?.text || error.response?.data?.message || error.message;
-    error.message = message;
-
-    return Promise.reject(error);
-
-});
+    });
 
 
 
 export async function useApiRequest(http = {}) {
+
     const { url, method, payload, headers, ...attr } = {
         url: '/',
         method: 'get',
@@ -69,7 +74,9 @@ export async function useApiRequest(http = {}) {
     };
 
     var methods = ['get', 'post', 'put', 'patch', 'delete'];
+
     var parseUrl = url;
+
     var parseMethod = method.toLowerCase();
 
     if (!methods.includes(parseMethod)) {
@@ -77,35 +84,38 @@ export async function useApiRequest(http = {}) {
     }
 
     if (parseMethod == 'get' || parseMethod == 'delete' && Object.keys(payload).length) {
+
         const query = new URLSearchParams(payload);
-        if (parseUrl.indexOf('?') > -1) {
-            parseUrl += `&${query.toString()}`;
-        } else {
-            parseUrl += `?${query.toString()}`;
+
+        const querys = query.toString();
+
+        if (parseUrl.indexOf('?') > -1 && querys) {
+
+            parseUrl += `&${querys}`;
+
+        } else if (querys) {
+
+            parseUrl += `?${querys}`;
+
         }
     }
 
-    return new Promise((resolve, reject) => {
-        if (parseMethod == 'get') {
-            instance.get(parseUrl, {
-                headers: headers,
-                ...attr
-            }).then((res) => {
-                return resolve(res.data);
-            }).catch((error) => {
-                return reject(error);
-            });
-        } else {
-            instance[parseMethod](parseUrl, payload, {
-                headers,
-                ...attr,
-            }).then((res) => {
-                return resolve(res.data);
-            }).catch((error) => {
-                return reject(error);
-            });
-        }
-    });
+
+    if (parseMethod == 'get') {
+
+        return await instance.get(parseUrl, {
+            headers: headers,
+            ...attr
+        }).then((res) => Promise.resolve(res.data)).catch((error) => Promise.reject(error));
+
+    } else {
+
+        return await instance[parseMethod](parseUrl, payload, {
+            headers,
+            ...attr,
+        }).then((res) => Promise.resolve(res.data)).catch((error) => Promise.reject(error));
+    }
+
 }
 
 export default instance;

@@ -54,7 +54,7 @@
                 attributes.pipeline = findPipeline(props.editPropertie.pipeline_id);
 
         }).catch(error => {
-            $toast.error(error.message);
+            $toast.error(error.message.text);
         }).finally(_ => {
 
             is_pipeline_loading.value = false;
@@ -128,7 +128,7 @@
             }
 
         }).catch(error => {
-            $toast.error(error.message);
+            $toast.error(error.message.text);
         }).finally(_ => {
 
         });

@@ -34,6 +34,8 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 
 import BootstrapModal from "@components/Modals/BootstrapModal.vue";
 
+import VueApexCharts from "vue3-apexcharts";
+
 import drag from "v-drag";
 
 import { CONFIG } from "./config";
@@ -153,5 +155,6 @@ app.use(ToastPlugin, {
 app.use(VueLazyLoad, {});
 
 app.use(VueTippy, CONFIG.TIPPYOPTIONS);
+app.use(VueApexCharts);
 
 app.mount("#app");

@@ -8,47 +8,59 @@
 
   const sessions = ref([]);
   const isLoading = ref(false);
-  let intervalId = null;
+  let interval_id = null;
 
   const fetchActiveSessions = async () => {
+
     const res = await useApiRequest({
-      url: '/users/sessions',
-    }).then(res => {
-      const { success, sessions: sessionData } = res;
-      isLoading.value = false;
-      sessions.value = sessionData;
+      url: '/settings/account/sessions',
+    }).then(_sessions => {
+
+      sessions.value = _sessions;
+
     }).catch(error => {
-      $toast.error("Oops, something went wrong");
+
+      $toast.error(error.message.text);
+
     }).finally(() => {
+
       isLoading.value = false;
+
     });
   };
 
   const logoutOthersDevice = async (token_id) => {
+
     await useApiRequest({
-      url: `/users/logout?token_id=${token_id}`,
+      url: `/settings/account/logout?token_id=${token_id}`,
       method: 'post'
     }).then(res => {
+
       if (!res.success) {
         return $toast.error(res.message.text);
       }
+
       fetchActiveSessions();
+
     }).catch(error => {
-      $toast.error("Oops, something went wrong");
+
+      $toast.error(error.message.text);
+
     });
+
   };
 
   // Lifecycle hooks
   onMounted(() => {
     isLoading.value = true;
     fetchActiveSessions();
-    intervalId = setInterval(() => {
+    interval_id = setInterval(() => {
       fetchActiveSessions();
     }, 10000);
   });
 
   onBeforeUnmount(() => {
-    clearInterval(intervalId);
+    clearInterval(interval_id);
   });
 </script>
 

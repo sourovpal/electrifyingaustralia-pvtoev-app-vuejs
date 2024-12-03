@@ -5,12 +5,21 @@
   import LearnCrm from "./components/LearnCrm.vue";
   import HeaderSection from "./components/HeaderSection.vue";
   import MobileHeader from "@components/MobileHeader.vue";
+  import ContentSection from "./components/ContentSection.vue";
+  import './style.scss';
+
 </script>
 
 <template>
   <section class="content content-y-100vh">
+
     <header-section class="d-none d-md-flex"></header-section>
-    <div class="container">
+
+    <content-section>
+
+    </content-section>
+
+    <!-- <div class="container">
       <div class="home-content px-5 mx-5">
         <mobile-header class="d-md-none"></mobile-header>
         <search-box></search-box>
@@ -18,7 +27,8 @@
         <projects></projects>
         <div class="d-block d-md-none"><br><br><br><br><br></div>
       </div>
-    </div>
+    </div> -->
+
   </section>
 </template>
 

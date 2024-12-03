@@ -27,7 +27,6 @@ export const useLeadsStore = defineStore("leads", {
       selectedLeads: [],
       isAllLeadsSelected: false,
       isSomeLeadsSelected: false,
-      multipleDeleteModal: null,
       addNewLeadModal: null,
       uploadSpreadsheetModal: null,
       headers: leadHeaderStore.get() ?? [],
@@ -61,9 +60,6 @@ export const useLeadsStore = defineStore("leads", {
     },
     getError(stage) {
       return stage.isError;
-    },
-    getMultipleDeleteModal(stage) {
-      return stage.multipleDeleteModal;
     },
     getAddNewLeadModal(stage) {
       return stage.addNewLeadModal;
@@ -167,9 +163,6 @@ export const useLeadsStore = defineStore("leads", {
       if (Array.isArray(payload)) {
         this.headers = payload;
       }
-    },
-    setMultipleDeleteModal(payload) {
-      this.multipleDeleteModal = payload;
     },
     setAddNewLeadModal(payload) {
       this.addNewLeadModal = payload;

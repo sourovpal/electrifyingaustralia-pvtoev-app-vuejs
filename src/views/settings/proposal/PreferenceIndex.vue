@@ -86,7 +86,7 @@
                     
                     <div class="settings-group-item">
                         <div class="mb-3">
-                            <img style="width:64px;height:64px;" src="https://static.getpylon.com/images/companies/5tSQv83tKc5kwluVZohTp1j6tij6NSUIoT05k1Xs.png.png" alt="">
+                            <img style="width:64px;height:64px;" src="https://static.getpvtoev.com/images/companies/5tSQv83tKc5kwluVZohTp1j6tij6NSUIoT05k1Xs.png.png" alt="">
                         </div>
                         <div class="row">
                             <div class="col-md-8">

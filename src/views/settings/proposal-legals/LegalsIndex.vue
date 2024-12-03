@@ -39,8 +39,8 @@
                         <div class="list-group-item px-3 py-2">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="Automatic" id="" checked data-toggle="list-group-input-checked"/>
-                                <label class="form-check-label fw-bold" for=""> <a href="">Pylon Standard</a> Terms & Conditions </label>
-                                <p class="ps-1 commant">Include Pylon's Standard CEC Terms & Conditions.
+                                <label class="form-check-label fw-bold" for=""> <a href="">pvtoev Standard</a> Terms & Conditions </label>
+                                <p class="ps-1 commant">Include pvtoev's Standard CEC Terms & Conditions.
                                 This includes everything you need in a Standard Sales Contract. Learn more <a href="">here</a>.</p>
                                 <div class="settings-group-item" data-toggle="list-group-input-toggle">
                                     <label class="form-label-title" for="">Starting at:</label>

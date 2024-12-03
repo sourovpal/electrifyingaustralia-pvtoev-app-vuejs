@@ -13,14 +13,23 @@
     const emit = defineEmits(['fetchProfile']);
 
     const errors = ref({});
+
     const cropperRef = ref(null);
+
     const profile_avatar = ref(null);
+
     const inputProfileImage = ref(null);
+
     const profileImageFile = ref(null);
+
     const isSubmitProfileImage = ref(false);
+
     const isSubmitProfileImageRemove = ref(false);
+
     const toggleConfirmDialog = ref(false);
+
     const toggleRemoveConfirmModal = ref(false);
+
     const toggleImageCroperModal = ref(false);
 
     watch(() => authUser, (val) => {
@@ -29,17 +38,17 @@
 
 
     const formSubmitHandler = async () => {
-        if (!profileImageFile.value) {
-            errors.value['profile_picture'] = ['Please select profile photo.'];
-            return;
-        }
+
+        if (!profileImageFile.value) return errors.value['profile_picture'] = ['Please select profile photo.'];
 
         const payload = new FormData();
+
         payload.append('profile_picture', profileImageFile.value);
+
         isSubmitProfileImage.value = true;
 
         await useApiRequest({
-            url: `/users/upload/profile-pricure`,
+            url: `/settings/profile/upload-picture`,
             method: 'post',
             payload
         }).then(res => {
@@ -61,48 +70,81 @@
     };
 
     const removeProfilePictureHandler = async () => {
+
         $toast.clear();
+
         errors.value = {};
+
         isSubmitProfileImageRemove.value = true;
+
         await useApiRequest({
-            url: `/users/remove/profile-pricure`,
+            url: `/settings/profile/remove-picture`,
             method: 'post',
         }).then(res => {
+
             const { success, errors: serverErrors, message } = res;
+
             toggleConfirmDialog.value = false;
+
             $toast[message.type](message.text);
+
             if (success) {
+
                 toggleRemoveConfirmModal.value = false;
+
                 appStore.callFetchAppData();
+
             } else {
+
                 errors.value = serverErrors;
+
             }
+
         }).catch(error => {
+
             $toast.error('Oops, something went wrong');
+
         }).finally(() => {
+
             isSubmitProfileImageRemove.value = false;
+
         });
     };
 
     const selectProfileImage = async (e) => {
+
         if (e.target.files && e.target.files.length) {
+
             const file = e.target.files[0];
+
             if (file) {
+
                 toggleImageCroperModal.value = true;
+
                 inputProfileImage.value = URL.createObjectURL(file);
+
                 e.target.value = '';
+
             }
         }
     };
 
     const prifilePhotoCrop = async () => {
+
         const { coordinates, canvas } = cropperRef.value.getResult();
+
         profile_avatar.value = canvas.toDataURL();
+
         toggleImageCroperModal.value = false;
+
         inputProfileImage.value = null;
+
         const response = await fetch(canvas.toDataURL());
+
         const blob = await response.blob();
+
         profileImageFile.value = new File([blob], 'profile-image.png', { lastModified: Date.now() });
+
     };
 
 </script>
@@ -110,50 +152,68 @@
 <template>
     <div class="row">
 
-        <div class="col-lg-2 col-12 mb-3 mb-lg-0">
+        <div class="col-lg-3 col-12 mb-3 mb-lg-0">
             <div class="settings-group-header">
                 <h2>Profile photo</h2>
             </div>
         </div>
 
         <div class="col-lg-5 col-12">
+
             <div class="row">
+
                 <div class="col-lg-9 col-8 pe-2">
+
                     <div class="settings-group-item">
-                        <label class="form-label-title"
-                            for="">Upload a photo</label>
-                        <input @click="delete errors?.profile_picture"
+
+                        <label class="form-label-title">Upload a photo</label>
+
+                        <input-text @click="delete errors?.profile_picture"
                             @change="selectProfileImage"
                             accept=".jpeg, .png, .jpg, .webp"
                             type="file"
-                            class="form-control">
+                            class="form-control"
+                            size="small" />
+
                         <span class="fs-14px text-danger py-1 w-100 d-block"
                             v-if="errors?.profile_picture?.length">{{ errors?.profile_picture[0] }}</span>
                     </div>
+
                     <div class="d-flex">
+
                         <loading-button :disabled="!profileImageFile"
                             :isLoading="isSubmitProfileImage"
                             @click="formSubmitHandler()">
                             Save Settings
                         </loading-button>
 
+
                         <loading-button class="ms-auto btn-danger"
                             @click="toggleRemoveConfirmModal = true">
                             Remove
                         </loading-button>
+
                     </div>
+
                 </div>
 
                 <div class="col-lg-3 col-4 text-end mt-4">
+
                     <div class="text-center">
+
                         <img class="avatar-thumbnail"
-                            :src="profile_avatar"
-                            alt="">
+                            :src="profile_avatar">
+
                         <div class="d-block text-center text-soft mt-2">Profile Picture</div>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
     <!-- Confirm Modal -->

@@ -12,9 +12,9 @@ const {
 } = useTabs(emit);
 
 const comparisonInputValue = ref(
-	'https://app.getpylon.com/proposals/JUf91oOcWd'
+	'https://app.getpvtoev.com/proposals/JUf91oOcWd'
 )
-const webProposalValue = ref('https://app.getpylon.com/proposals/JUf91oOcWd')
+const webProposalValue = ref('https://app.getpvtoev.com/proposals/JUf91oOcWd')
 </script>
 
 <template>

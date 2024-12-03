@@ -71,7 +71,7 @@
                     is_deleted.value = true;
                     $toast.success(res.message.text);
                 }).catch(error => {
-                    $toast.error(error.message);
+                    $toast.error(error.message.text);
                 });
             },
             reject: () => { }

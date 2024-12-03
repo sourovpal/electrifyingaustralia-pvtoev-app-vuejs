@@ -32,7 +32,6 @@ export const useAuthStore = defineStore("auth", {
     return {
       user: userStorage.get() ?? {},
       access_token: securityStorage.get() ?? "",
-      toggleConfirmModal: false,
     };
   },
   getters: {
@@ -42,9 +41,7 @@ export const useAuthStore = defineStore("auth", {
     getAccessToken(state) {
       return state.access_token ?? "";
     },
-    getConfirmLogout(state) {
-      return state.toggleConfirmModal;
-    },
+
   },
   actions: {
     logoutLocalSession() {
@@ -69,21 +66,31 @@ export const useAuthStore = defineStore("auth", {
         this.access_token = payload;
       }
     },
-    setConfirmLogout(payload) {
-      this.toggleConfirmModal = payload;
-    },
-    callAuthLogout() {
+    callAuthLogout($callback = null) {
+
+      if ($callback) $callback({ loading: true });
+
       useApiRequest({
-        url: "/users/logout",
+        url: "/settings/account/logout",
         method: "post",
       })
         .then(async (res) => {
+
+          if ($callback) $callback({ loading: false });
+
           await this.logoutLocalSession();
+
           await nextTick();
+
           window.location.reload();
+
         })
         .catch((error) => {
-          $toast.error(error.message);
+
+          if ($callback) $callback({ loading: false });
+
+          $toast.error(error.message.text);
+
         });
     },
   },

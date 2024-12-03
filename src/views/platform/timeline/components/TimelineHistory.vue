@@ -71,7 +71,7 @@
 
         }).catch(error => {
             complete();
-            $toast.error(error.message);
+            $toast.error(error.message.text);
         });
 
     }

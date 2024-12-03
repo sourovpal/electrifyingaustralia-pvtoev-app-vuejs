@@ -56,7 +56,7 @@
                 <span>Send</span>
                 <!-- <img -->
                 <!--     class="me-1" -->
-                <!--     src="https://app.getpylon.com/img/gem.png" -->
+                <!--     src="https://app.getpvtoev.com/img/gem.png" -->
                 <!--     alt="gemstone"  -->
                 <!-- /> -->
                 <!-- <span class="count">0</span> -->

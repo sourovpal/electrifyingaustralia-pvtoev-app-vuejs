@@ -103,7 +103,7 @@
         if (!res?.length) errors.value = { pipeline_stage: [`Pipeline ${(props.action == 'reopen' || props.action == 'certify') ? 'primary' : props.action} stage not found.`] };
       })
       .catch((error) => {
-        $toast.error(error.message);
+        $toast.error(error.message.text);
       })
       .finally(() => {
         stagesIsLoading.value = false;
@@ -158,7 +158,7 @@
       hideModalHandler();
 
     }).catch((error) => {
-      $toast.error(error.message);
+      $toast.error(error.message.text);
     }).finally(() => {
       isSubmitConfirmQualify.value = false;
     });

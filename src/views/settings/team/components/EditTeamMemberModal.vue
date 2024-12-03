@@ -36,7 +36,7 @@
 
     }).catch(error => {
 
-      $toast.error(error.message);
+      $toast.error(error.message.text);
 
     }).finally(_ => {
 
@@ -75,7 +75,7 @@
 
     }).catch(error => {
 
-      $toast.error(error.message);
+      $toast.error(error.message.text);
 
     }).finally(_ => {
 
@@ -101,7 +101,7 @@
 
     }).catch(error => {
 
-      $toast.error(error.message);
+      $toast.error(error.message.text);
 
     }).finally(_ => {
 

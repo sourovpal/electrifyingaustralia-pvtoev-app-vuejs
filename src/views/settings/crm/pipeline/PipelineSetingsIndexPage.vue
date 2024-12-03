@@ -45,7 +45,7 @@
             },
         }).then(res => {
         }).catch(error => {
-            $toast.error(error.message);
+            $toast.error(error.message.text);
         });
 
     };
@@ -61,7 +61,7 @@
         }).then(results => {
             pipelines.value = results;
         }).catch(error => {
-            $toast.error(error.message);
+            $toast.error(error.message.text);
         }).finally(() => {
             is_first_loading.value = false;
             is_loading.value = false;

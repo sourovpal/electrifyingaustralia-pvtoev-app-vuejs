@@ -3,7 +3,7 @@
     import DatatableHeader from '@components/Datatable/DatatableHeader.vue';
     import DatatableBody from '@components/Datatable/DatatableBody.vue';
     import RolesSkeletor from './RolesSkeletor.vue';
-    import { ref,    } from 'vue';
+    import { ref } from 'vue';
     import { formatTimeAgo, handleDateTimeFormat } from '@helpers';
 
     const props = defineProps({
@@ -12,8 +12,10 @@
         isFirstLoading: { type: Boolean, default: false },
         isLoading: { type: Boolean, default: false },
     });
-    const emits = defineEmits(['handleSelectRows']);
+
+    const emits = defineEmits(['selectRows']);
 </script>
+
 
 <template>
     <Datatable>
@@ -34,15 +36,15 @@
         </datatable-header>
         <datatable-body>
             <div v-if="!isFirstLoading || roles.length"
-                :class="selectedRows.includes(role.id)?'active':''"
+                :class="selectedRows.includes(role.role_id)?'active':''"
                 class="tbl-tr full-width"
                 v-for="(role, index) in roles"
                 :key="index">
-
+                
                 <div style="width:4rem;margin-left: -7px;"
                     class="tbl-td full-width">
-                    <custom-checkbox @click="emits('handleSelectRows', role.role_id)"
-                        :checked="selectedRows.includes(role.user_id)" />
+                    <custom-checkbox @click="emits('selectRows', role.role_id)"
+                        :checked="selectedRows.includes(role.role_id)" />
                 </div>
 
                 <div style="width:15rem;flex-grow: 1;"

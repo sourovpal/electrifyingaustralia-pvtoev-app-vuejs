@@ -56,7 +56,7 @@
       pagination.value = _pagination;
 
     }).catch((error) => {
-      $toast.error(error.message);
+      $toast.error(error.message.text);
     }).finally(_ => {
       isLoading.value = false;
       isFirstLoading.value = false;

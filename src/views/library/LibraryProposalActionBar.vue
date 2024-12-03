@@ -138,7 +138,7 @@ const project = computed(() => projectStore.project);
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                         <li>
                             <a href="#" class="dropdown-item d-inline-flex align-items-center gap-2">
-				                <img class="m8-img" src="https://static.getpylon.com/images/partner/servicem8_logo_square.png" alt=""/>
+				                <img class="m8-img" src="https://static.getpvtoev.com/images/partner/servicem8_logo_square.png" alt=""/>
                                 <div class="d-flex flex-column justify-content-center">
 				                    <p class="mb-0">ServiceM8</p>
 				                    <small>Connect to M8 account</small>

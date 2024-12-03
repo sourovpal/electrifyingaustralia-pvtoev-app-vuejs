@@ -68,7 +68,7 @@ export default {
                                         </div>
 
                                         <div class="dropdown-item">
-                                            <img src="https://static.getpylon.com/images/users/t7bl698ONVEfNxwp126StFtPP5WkRxfxNJtXrS7U.jpg.png" draggable="false" alt="Susmita Chowdhury's avatar" class="project-owner__profile-photo" />
+                                            <img src="https://static.getpvtoev.com/images/users/t7bl698ONVEfNxwp126StFtPP5WkRxfxNJtXrS7U.jpg.png" draggable="false" alt="Susmita Chowdhury's avatar" class="project-owner__profile-photo" />
                                             <span class="username fs-14px">
                                                 Susmita Chowdhury
                                                 <div class="team-member-email text-muted fs-12px">
@@ -87,7 +87,7 @@ export default {
                                         </div>
 
                                         <div class="dropdown-item">
-                                            <img src="https://static.getpylon.com/images/users/t7bl698ONVEfNxwp126StFtPP5WkRxfxNJtXrS7U.jpg.png" draggable="false" alt="Susmita Chowdhury's avatar" class="project-owner__profile-photo" />
+                                            <img src="https://static.getpvtoev.com/images/users/t7bl698ONVEfNxwp126StFtPP5WkRxfxNJtXrS7U.jpg.png" draggable="false" alt="Susmita Chowdhury's avatar" class="project-owner__profile-photo" />
                                             <span class="username fs-14px">
                                                 Susmita Chowdhury
                                                 <div class="team-member-email text-muted fs-12px">
@@ -106,7 +106,7 @@ export default {
                                         </div>
 
                                         <div class="dropdown-item">
-                                            <img src="https://static.getpylon.com/images/users/t7bl698ONVEfNxwp126StFtPP5WkRxfxNJtXrS7U.jpg.png" draggable="false" alt="Susmita Chowdhury's avatar" class="project-owner__profile-photo" />
+                                            <img src="https://static.getpvtoev.com/images/users/t7bl698ONVEfNxwp126StFtPP5WkRxfxNJtXrS7U.jpg.png" draggable="false" alt="Susmita Chowdhury's avatar" class="project-owner__profile-photo" />
                                             <span class="username fs-14px">
                                                 Susmita Chowdhury
                                                 <div class="team-member-email text-muted fs-12px">
@@ -125,7 +125,7 @@ export default {
                                         </div>
 
                                         <div class="dropdown-item">
-                                            <img src="https://static.getpylon.com/images/users/t7bl698ONVEfNxwp126StFtPP5WkRxfxNJtXrS7U.jpg.png" draggable="false" alt="Susmita Chowdhury's avatar" class="project-owner__profile-photo" />
+                                            <img src="https://static.getpvtoev.com/images/users/t7bl698ONVEfNxwp126StFtPP5WkRxfxNJtXrS7U.jpg.png" draggable="false" alt="Susmita Chowdhury's avatar" class="project-owner__profile-photo" />
                                             <span class="username fs-14px">
                                                 Susmita Chowdhury
                                                 <div class="team-member-email text-muted fs-12px">
@@ -144,7 +144,7 @@ export default {
                                         </div>
 
                                         <div class="dropdown-item">
-                                            <img src="https://static.getpylon.com/images/users/t7bl698ONVEfNxwp126StFtPP5WkRxfxNJtXrS7U.jpg.png" draggable="false" alt="Susmita Chowdhury's avatar" class="project-owner__profile-photo" />
+                                            <img src="https://static.getpvtoev.com/images/users/t7bl698ONVEfNxwp126StFtPP5WkRxfxNJtXrS7U.jpg.png" draggable="false" alt="Susmita Chowdhury's avatar" class="project-owner__profile-photo" />
                                             <span class="username fs-14px">
                                                 Susmita Chowdhury
                                                 <div class="team-member-email text-muted fs-12px">
@@ -163,7 +163,7 @@ export default {
                                         </div>
 
                                         <div class="dropdown-item">
-                                            <img src="https://static.getpylon.com/images/users/t7bl698ONVEfNxwp126StFtPP5WkRxfxNJtXrS7U.jpg.png" draggable="false" alt="Susmita Chowdhury's avatar" class="project-owner__profile-photo" />
+                                            <img src="https://static.getpvtoev.com/images/users/t7bl698ONVEfNxwp126StFtPP5WkRxfxNJtXrS7U.jpg.png" draggable="false" alt="Susmita Chowdhury's avatar" class="project-owner__profile-photo" />
                                             <span class="username fs-14px">
                                                 Susmita Chowdhury
                                                 <div class="team-member-email text-muted fs-12px">

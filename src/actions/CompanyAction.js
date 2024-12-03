@@ -2,7 +2,7 @@ import api from "./api";
 
 export const FetchComapny = () => {
     return new Promise((resolve, reject) => {
-        api.get(`/company`)
+        api.get(`/settings/company`)
             .then((res) => {
                 return resolve(res.data);
             }).catch((error) => {

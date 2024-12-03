@@ -36,74 +36,100 @@
 
   // Method to send OTP
   const sendEmailOptHandler = async () => {
+
     $toast.clear();
+
     state.errors = {};
+
     state.isSubmitSendOtp = true;
-    if (state.email === authUser.value.email) {
-      state.errors.email = ["Please change your current email to proceed."];
-      return;
-    }
+
+    if (state.email === authUser.value.email)
+      return state.errors.email = ["Please change your current email to proceed."];
+
     const payload = { email: state.email };
+
     await useApiRequest({
-      url: '/users/send/email-otp',
+      url: '/settings/account/send-otp',
       method: 'post',
       payload,
     }).then(res => {
+
       const { message, success, errors } = res;
-      if (!success && errors) {
-        state.errors = errors;
-        return;
-      }
+
+      if (errors) return state.errors = errors;
+
       toggleVerificationModal.value = true;
+
     }).catch(error => {
-      $toast.error("Oops, something went wrong");
+
+      $toast.error(error.message.text);
+
     }).finally(() => {
+
       state.isSubmitSendOtp = false;
+
     });
   };
 
   const updateEmailAddress = async () => {
+
     $toast.clear();
+
     state.errors = {};
+
     state.isSubmitChangeEmail = true;
+
     const payload = {
       email: state.email,
       verification_code: state.verification_code,
       password: state.password,
     };
+
     await useApiRequest({
-      url: '/users/change/email-address',
+      url: '/settings/account/change-email',
       method: 'post',
       payload,
     }).then(res => {
       const { success, message, errors } = res;
-      if (!success && errors) {
-        state.errors = errors;
-        return;
-      } else {
-        $toast[message.type](message.text);
-        toggleVerificationModal.value = false;
-        state.verification_code = null;
-        state.password = null;
-        appStore.callFetchAppData();
-      }
+      if (errors) return state.errors = errors;
+
+      $toast[message.type](message.text);
+
+      toggleVerificationModal.value = false;
+
+      state.verification_code = null;
+
+      state.password = null;
+
+      appStore.callFetchAppData();
+
     }).catch(error => {
-      $toast.error("Oops, something went wrong");
+
+      $toast.error(error.message.text);
+      
     }).finally(() => {
+
       state.isSubmitChangeEmail = false;
+
     });
+
   };
+
 </script>
 
 
 
 <template>
   <div class="row">
-    <div class="col-lg-2 col-12 mb-3 mb-lg-0">
+
+    <div class="col-lg-3 col-12 mb-3 mb-lg-0">
+
       <div class="settings-group-header">
         <h2>Account email</h2>
       </div>
+
     </div>
+
     <div class="col-lg-5 col-12">
       <div class="settings-group-item">
         <label class="form-label-title"

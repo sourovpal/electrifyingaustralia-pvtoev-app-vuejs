@@ -3,7 +3,7 @@
         <div class="logo-container">
 		    <img
 		        class="w-100"
-		        src="https://static.getpylon.com/images/companies/75f4y39ZU4yxjAq0eqAzZxlYWKYqcVWj46tmX4Eo.png.png"
+		        src="https://static.getpvtoev.com/images/companies/75f4y39ZU4yxjAq0eqAzZxlYWKYqcVWj46tmX4Eo.png.png"
 		        alt="company logo"
 		    />
         </div>

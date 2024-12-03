@@ -90,7 +90,7 @@
                     $toast.success(res.message.text);
 
                 }).catch(error => {
-                    $toast.error(error.message);
+                    $toast.error(error.message.text);
                 });
             },
             reject: () => { }
@@ -128,7 +128,7 @@
             modalInstance.show();
             toggleDeleteFileModalRef.value = false;
             $toast.clear();
-            $toast.error(error.message);
+            $toast.error(error.message.text);
         });
     }
 

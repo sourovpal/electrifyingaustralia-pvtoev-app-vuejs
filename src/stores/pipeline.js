@@ -121,28 +121,26 @@ export const usePipelineStore = defineStore('pipeline', {
         callFetchPipeline($pipelineId) {
             this.setIsLoading(true);
             this.setError(false);
-            let url = `/pipelines/first`;
+            let url = `/platform/pipelines/find-or-first`;
             if ($pipelineId) {
                 url += `?pipeline_id=${$pipelineId}`;
             }
             useApiRequest({
                 url,
-            }).then(res => {
-                const { success, message, pipeline } = res;
+            }).then(pipeline => {
+
                 this.setIsLoading(false);
-                if (success && pipeline) {
-                    const { success_stages, primary_stages, lost_stages } = pipeline;
-                    this.setPipelineId(pipeline.pipeline_id)
-                    this.setPipeline(pipeline);
-                    this.setPipelinePrimaryStages([])
-                    this.setPipelinePrimaryStages(primary_stages)
-                    this.setPipelineSuccessStages([])
-                    this.setPipelineSuccessStages(success_stages)
-                    this.setPipelineLostStages([])
-                    this.setPipelineLostStages(lost_stages)
-                } else if (!success) {
-                    this.setError(true);
-                }
+
+                const { success_stages, primary_stages, lost_stages } = pipeline;
+                this.setPipelineId(pipeline.pipeline_id)
+                this.setPipeline(pipeline);
+                this.setPipelinePrimaryStages([])
+                this.setPipelinePrimaryStages(primary_stages)
+                this.setPipelineSuccessStages([])
+                this.setPipelineSuccessStages(success_stages)
+                this.setPipelineLostStages([])
+                this.setPipelineLostStages(lost_stages)
+
             }).catch(error => {
                 this.setError(true);
             }).finally(() => {
@@ -150,36 +148,36 @@ export const usePipelineStore = defineStore('pipeline', {
                 this.setIsLoading(false);
             });
         },
-        callFetchStageLeads($stageId, $callback = () => { }) {
-            $callback({
-                loading: true,
-            });
-            useApiRequest({
-                url: `/leads/${this.pipelineId}/pipeline/${$stageId}/stages`,
-            }).then(res => {
-                const { success, message, leads } = res;
-                if (success) {
-                    $callback({
-                        loading: false,
-                        success: true,
-                        message: message,
-                        leads: leads,
-                    });
-                } else {
-                    $callback({
-                        loading: false,
-                        message: message,
-                        success: false,
-                    });
-                }
-            }).catch(error => {
-                $callback({
-                    loading: false,
-                    error: false,
-                    message: error,
-                });
-            });
-        }
+        // callFetchStageLeads($stageId, $callback = () => { }) {
+        //     $callback({
+        //         loading: true,
+        //     });
+        //     useApiRequest({
+        //         url: `/leads/${this.pipelineId}/pipeline/${$stageId}/stages`,
+        //     }).then(res => {
+        //         const { success, message, leads } = res;
+        //         if (success) {
+        //             $callback({
+        //                 loading: false,
+        //                 success: true,
+        //                 message: message,
+        //                 leads: leads,
+        //             });
+        //         } else {
+        //             $callback({
+        //                 loading: false,
+        //                 message: message,
+        //                 success: false,
+        //             });
+        //         }
+        //     }).catch(error => {
+        //         $callback({
+        //             loading: false,
+        //             error: false,
+        //             message: error,
+        //         });
+        //     });
+        // }
     }
 
 });

@@ -102,7 +102,7 @@
       })
       .catch((error) => {
         $toast.clear();
-        $toast.error(error.message);
+        $toast.error(error.message.text);
       })
       .finally(() => {
         isLoading.value = false;
@@ -133,7 +133,7 @@
       })
       .catch((error) => {
         $toast.clear();
-        $toast.error(error.message);
+        $toast.error(error.message.text);
       })
       .finally(() => {
         isLoading.value = false;
@@ -183,7 +183,7 @@
       })
       .catch((error) => {
         $toast.clear();
-        $toast.error(error.message);
+        $toast.error(error.message.text);
       })
       .finally(() => {
         isLoading.value = false;
@@ -215,7 +215,7 @@
       })
       .catch((error) => {
         $toast.clear();
-        $toast.error(error.message);
+        $toast.error(error.message.text);
       })
       .finally(() => {
         isLoading.value = false;
@@ -246,7 +246,7 @@
       })
       .catch((error) => {
         $toast.clear();
-        $toast.error(error.message);
+        $toast.error(error.message.text);
       })
       .finally(() => {
         isLoading.value = false;

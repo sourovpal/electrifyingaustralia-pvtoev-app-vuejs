@@ -55,7 +55,7 @@
       })
       .catch((error) => {
         $toast.clear();
-        $toast.error(error.message);
+        $toast.error(error.message.text);
       });
   }
 
@@ -99,7 +99,7 @@
       })
       .catch((error) => {
         $toast.clear();
-        $toast.error(error.message);
+        $toast.error(error.message.text);
       });
   }, 200);
 

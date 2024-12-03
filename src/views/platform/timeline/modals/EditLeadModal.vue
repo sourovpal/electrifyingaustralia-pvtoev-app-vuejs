@@ -127,7 +127,7 @@
 
       })
       .catch((error) => {
-        $toast.error(error.message);
+        $toast.error(error.message.text);
         isLoading.value = false;
       });
   }

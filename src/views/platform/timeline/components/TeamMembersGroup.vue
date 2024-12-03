@@ -66,7 +66,7 @@ const onSubmitTeamMembers = async (member) => {
         platformStore.callFetchTimelineLogs();
 
     }).catch(error => {
-        $toast.error(error.message)
+        $toast.error(error.message.text)
     });
 }
 

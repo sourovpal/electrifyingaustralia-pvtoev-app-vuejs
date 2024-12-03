@@ -2,12 +2,14 @@
     import RoleToolsBar from './components/RoleToolsBar.vue';
     import Datatable from './components/Datatable.vue';
     import CreateNewRoleModal from './components/CreateNewRoleModal.vue';
+    import DeleteConfirmModal from './components/DeleteConfirmModal.vue';
     import SettingsTopNavbar from "@components/SettingsTopNavbar.vue";
     import { ref, onMounted } from 'vue';
     import { useApiRequest } from '@actions';
     import { $toast } from '@config';
 
-    const addNewRoleModalRef = ref(null);
+    const toggle_add_new_role = ref(false);
+    const toggle_delete_role = ref(false);
     const isLoading = ref(false);
     const isFirstLoading = ref(false);
     const selectedRows = ref([]);
@@ -63,7 +65,6 @@
     });
 
     const handleSelectRows = (id) => {
-
         var index = selectedRows.value.indexOf(id);
 
         if (index > -1) selectedRows.value.splice(index, 1);
@@ -75,7 +76,7 @@
 
         if (selectedRows.value.length) selectedRows.value = [];
 
-        else selectedRows.value = roles.value.map(item => item.user_id);
+        else selectedRows.value = roles.value.map(item => item.role_id);
     }
 
 </script>
@@ -92,22 +93,32 @@
                 :pagination="pagination"
                 :roles="roles"
                 :selected-rows="selectedRows"
-                @handlePagination="getAllRoles"
-                @handleSelectAllRows="handleSelectAllRows"
-                @handleAddNew="addNewRoleModalRef?.showModal()">
+                @pagination="getAllRoles"
+                @select-all-rows="handleSelectAllRows"
+                @add-new="toggle_add_new_role = true"
+                @delete="toggle_delete_role = true">
             </RoleToolsBar>
 
             <Datatable :is-first-loading="isFirstLoading"
                 :is-loading="isLoading"
                 :roles="roles"
                 :selected-rows="selectedRows"
-                @handleRefresh="getAllRoles"
-                @handleSelectRows="handleSelectRows"
-                @handleEditMember="(member) => editModalRef?.showModal(member)"></Datatable>
+                @select-rows="handleSelectRows"></Datatable>
         </div>
 
-        <create-new-role-modal ref="addNewRoleModalRef"
-            @handleRefresh="getAllRoles" />
+        <delete-confirm-modal v-if="toggle_delete_role"
+            v-model:visible="toggle_delete_role"
+            :selected-rows="selectedRows"
+            @remove-row="handleSelectRows"
+            @refresh="getAllRoles"
+            @close="toggle_delete_role = false">
+        </delete-confirm-modal>
+
+        <create-new-role-modal v-if="toggle_add_new_role"
+            v-model:visible="toggle_add_new_role"
+            @refresh="getAllRoles"
+            @close="toggle_add_new_role = false">
+        </create-new-role-modal>
 
     </section>
 </template>

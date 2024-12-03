@@ -1,14 +1,16 @@
 <script setup>
-
+    import SearchBox from './SearchBox.vue';
 </script>
 
 <template>
-    <div class="header-section px-3">
-        <div class="col-left"></div>
+    <div class="header-section px-3 border-bottom">
+        <div class="col-left">
+            <SearchBox></SearchBox>
+        </div>
         <div class="col-right">
             <div class="">
                 <button class="btn btn-sm btn-light d-flex justify-content-between align-items-center">
-                    <img src="https://static.getpylon.com/images/app/ui/gem.png"
+                    <img src="https://static.getpvtoev.com/images/app/ui/gem.png"
                         alt=""
                         height="18px"
                         class="me-1">
@@ -22,11 +24,14 @@
 <style lang="scss"
     scoped>
     .header-section {
-        margin-left: var(--main-left-navbar-width);
-        height: 3.5rem;
+        height: 4rem;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 9;
+        background-color: #ffffff;
     }
 </style>

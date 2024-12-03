@@ -28,7 +28,7 @@
 
     }).catch(error => {
 
-      $toast.error(error.message);
+      $toast.error(error.message.text);
 
     }).finally(_ => {
 
@@ -47,7 +47,7 @@
     is_submit.value = true;
 
     useApiRequest({
-      url: '/settings/users/invite',
+      url: '/settings/users',
       method: 'POST',
       payload: {
         email: attributes.email,
@@ -64,7 +64,7 @@
 
     }).catch(error => {
 
-      $toast.error(error.message);
+      $toast.error(error.message.text);
 
     }).finally(_ => {
 

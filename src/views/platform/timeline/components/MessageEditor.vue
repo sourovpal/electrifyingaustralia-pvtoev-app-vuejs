@@ -121,7 +121,7 @@
 
         }).catch(error => {
             $toast.clear();
-            $toast.error(error.message);
+            $toast.error(error.message.text);
         }).finally(() => {
             isSubmitMessage.value = false;
         });

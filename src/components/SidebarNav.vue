@@ -107,138 +107,112 @@
 <template>
   <aside class="main-left-navbar parent-navbar d-none d-xl-block">
 
-      <div class="navbar">
+    <div class="navbar">
 
-        <div class="top-navbar">
+      <div class="top-navbar">
 
-          <div v-for="(item, index) in topNavbarItems"
-            :key="index"
-            class="nav-item mb-0 d-flex flex-column justify-content-start align-items-center">
+        <div v-for="(item, index) in topNavbarItems"
+          :key="index"
+          class="nav-item mb-0 d-flex flex-column justify-content-start align-items-center">
 
-            <router-link :to="item.path"
-              class="nav-link d-flex flex-column justify-content-center align-items-center">
+          <router-link :to="item.path"
+            class="nav-link d-flex flex-column justify-content-center align-items-center">
 
-              <span class="nav-icon"
-                v-tippy="{ content: item.label, placement: 'right' }">
-                <font-awesome-icon :style="{
+            <span class="nav-icon"
+              v-tippy="{ content: item.label, placement: 'right' }">
+              <font-awesome-icon :style="{
                     height: item.icon_h ?? '24px',
                     width: item.icon_w ?? '24px',
                   }"
-                  :icon="item.icon" />
-              </span>
+                :icon="item.icon" />
+            </span>
 
-              <span class="nav-title d-block">{{ item.label }}</span>
+            <span class="nav-title d-block">{{ item.label }}</span>
 
-            </router-link>
-
-          </div>
-
-        </div>
-
-        <div class="bottom-navbar">
-
-          <div v-for="(item, index) in bottomNavbarItems"
-            :key="index"
-            class="nav-item mb-0 d-flex flex-column justify-content-start align-items-center">
-
-            <!-- Profile -->
-            <div v-if="item.unique_id == 'nav-profile'">
-              <div @click="handleToggleProfile"
-                class="nav-link d-flex flex-column justify-content-center align-items-center">
-
-                <span class="nav-icon"
-                  v-tippy="{ content: item.label, placement: 'right' }">
-                  <img class="profile-avatar"
-                    :src="authUser.profile_avatar" />
-                </span>
-
-                <span class="nav-title d-block">{{ item.label }}</span>
-
-              </div>
-
-              <profile-dropdown @click-outside="handleToggleProfile"
-                v-if="toggleProfile"></profile-dropdown>
-
-            </div>
-
-            <!-- Notification -->
-            <div v-else-if="item.unique_id == 'nav-notification'">
-
-              <div @click="handleToggleNotification"
-                class="nav-link nav-notification d-flex flex-column justify-content-center align-items-center">
-
-                <span v-if="unseenNotification" class="notification-badge bg-danger">
-
-                  {{ (unseenNotification < 9)?
-                    unseenNotification: '9+'
-                    }}
-                    </span>
-
-                    <span class="nav-icon"
-                      v-tippy="{ content: item.label, placement: 'right' }">
-                      <font-awesome-icon :style="{ height: '24px', width: '24px' }"
-                        :icon="item.icon" />
-                    </span>
-
-                    <span class="nav-title d-block">{{ item.label }}</span>
-              </div>
-
-              <transition name="fade">
-                <notifications-dropdown @click-outside="handleToggleNotification"
-                  class="d-none d-lg-block"
-                  v-if="toggleNotification"></notifications-dropdown>
-              </transition>
-
-            </div>
-
-            <router-link :to="item.path"
-              v-else
-              class="nav-link d-flex flex-column justify-content-center align-items-center">
-
-              <span class="nav-icon"
-                v-tippy="{ content: item.label, placement: 'right' }">
-                <font-awesome-icon :style="{ height: '24px', width: '24px' }"
-                  :icon="item.icon" />
-              </span>
-
-              <span class="nav-title d-block">{{ item.label }}</span>
-
-            </router-link>
-
-          </div>
+          </router-link>
 
         </div>
 
       </div>
 
-  </aside>
+      <div class="bottom-navbar">
 
-  <bootstrap-modal v-if="authStore.getConfirmLogout"
-    @close="authStore.setConfirmLogout(false)"
-    size="sm">
+        <div v-for="(item, index) in bottomNavbarItems"
+          :key="index"
+          class="nav-item mb-0 d-flex flex-column justify-content-start align-items-center">
 
-    <div class="">
+          <!-- Profile -->
+          <div v-if="item.unique_id == 'nav-profile'">
+            <div @click="handleToggleProfile"
+              class="nav-link d-flex flex-column justify-content-center align-items-center">
 
-      <h6>Are you sure? Do you want to sing out!</h6>
-      <br />
+              <span class="nav-icon"
+                v-tippy="{ content: item.label, placement: 'right' }">
+                <img class="profile-avatar"
+                  :src="authUser.profile_avatar" />
+              </span>
 
-      <div class="d-flex justify-content-between align-items-center">
+              <span class="nav-title d-block">{{ item.label }}</span>
 
-        <button class="btn btn-sm btn-danger"
-          data-mdb-dismiss="modal">
-          Cancel
-        </button>
+            </div>
 
-        <button class="btn btn-sm btn-primary"
-          @click="authStore.callAuthLogout()">
-          Sign out
-        </button>
+            <profile-dropdown @click-outside="handleToggleProfile"
+              v-if="toggleProfile"></profile-dropdown>
+
+          </div>
+
+          <!-- Notification -->
+          <div v-else-if="item.unique_id == 'nav-notification'">
+
+            <div @click="handleToggleNotification"
+              class="nav-link nav-notification d-flex flex-column justify-content-center align-items-center">
+
+              <span v-if="unseenNotification"
+                class="notification-badge bg-danger">
+
+                {{ (unseenNotification < 9)?
+                  unseenNotification: '9+'
+                  }}
+                  </span>
+
+                  <span class="nav-icon"
+                    v-tippy="{ content: item.label, placement: 'right' }">
+                    <font-awesome-icon :style="{ height: '24px', width: '24px' }"
+                      :icon="item.icon" />
+                  </span>
+
+                  <span class="nav-title d-block">{{ item.label }}</span>
+            </div>
+
+            <transition name="fade">
+              <notifications-dropdown @click-outside="handleToggleNotification"
+                class="d-none d-lg-block"
+                v-if="toggleNotification"></notifications-dropdown>
+            </transition>
+
+          </div>
+
+          <router-link :to="item.path"
+            v-else
+            class="nav-link d-flex flex-column justify-content-center align-items-center">
+
+            <span class="nav-icon"
+              v-tippy="{ content: item.label, placement: 'right' }">
+              <font-awesome-icon :style="{ height: '24px', width: '24px' }"
+                :icon="item.icon" />
+            </span>
+
+            <span class="nav-title d-block">{{ item.label }}</span>
+
+          </router-link>
+
+        </div>
 
       </div>
 
     </div>
 
-  </bootstrap-modal>
+  </aside>
 
 </template>
 

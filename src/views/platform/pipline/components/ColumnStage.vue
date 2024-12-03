@@ -48,10 +48,9 @@
   }
 
   async function fetchStageLeads({ isReset }) {
-    if (!pipelineStage.value.leads_count) {
-      isFirstLoadingLeads.value = false;
-      return true;
-    }
+
+    if (!pipelineStage.value.leads_count)
+      return isFirstLoadingLeads.value = false;
 
     isLoadingLeads.value = true;
 
@@ -59,6 +58,7 @@
       page: page.value,
       order: orderBy.value,
       column: orderColumn.value,
+      limit: 20,
     };
 
     if (searchQuery.value) {
@@ -70,34 +70,30 @@
     }
 
     await useApiRequest({
-      url: `/platform/pipeline/${pipelineId.value}/stage/${pipelineStage.value?.stage_id}-${generateSlug(pipelineStage.value.name)}/deals`,
+      url: `/platform/pipelines/${pipelineId.value}/stage/${pipelineStage.value?.stage_id}-${generateSlug(pipelineStage.value.name)}/deals`,
       payload,
     })
-      .then((res) => {
+      .then(({ leads, pagination }) => {
 
-        const { success, leads, pagination } = res;
+        if (isReset) stageLeads.value = leads;
 
-        if (success) {
+        else stageLeads.value = stageLeads.value.concat(leads);
 
-          if (isReset) {
-            stageLeads.value = leads;
-          } else {
-            stageLeads.value = stageLeads.value.concat(leads);
-          }
+        page.value = pagination.next_page;
 
-          page.value = pagination.next_page;
-
-          if (!pagination.next_page) {
-            if (observer) observer.stop();
-          }
-
-        }
+        if (!pagination.next_page && observer) observer.stop();
 
         isLoadingLeads.value = false;
 
         isFirstLoadingLeads.value = false;
+
       })
       .catch((err) => {
+
+        isLoadingLeads.value = false;
+
+      }).finally(_ => {
+
         isFirstLoadingLeads.value = false;
 
         isLoadingLeads.value = false;
@@ -155,7 +151,7 @@
           </div>
 
           <span class="ms-2 white-space-nowrap">
-            ( {{ pipelineStage?.leads_count?.toLocaleString() }} )
+            ( {{ stageLeads.length }} / {{ pipelineStage?.leads_count }} )
           </span>
 
         </h5>
@@ -173,7 +169,7 @@
 
       <div class="d-flex justify-content-between align-items-center pe-2 fs-14px">
         <span>Total</span>
-        <span>${{ pipelineStage?.total_estimated_value?.toLocaleString() }}</span>
+        <span>${{ pipelineStage?.total_estimated_value?.toLocaleString()??' 0.00' }}</span>
       </div>
 
     </div>
@@ -198,8 +194,8 @@
 
         <div ref="infiniteLoadedLeadRef">
 
-          <loading-state-leads v-if="isLoadingLeads"
-            :size="6"></loading-state-leads>
+          <loading-state-leads v-if="pipelineStage?.leads_count && page && isLoadingLeads"
+            :size="1"></loading-state-leads>
 
         </div>
 
@@ -213,13 +209,18 @@
         <ul class="list-unstyled popovar-list mb-0 py-1">
 
           <li class="dropdown-item px-3 py-1">
+
             <router-link class="dropdown-link text-soft d-block"
               :to="`/settings/crm/pipeline/${pipelineId}`">
+
               <i class="icon pi pi-pen-to-square"></i>
+
               Edit
+
             </router-link>
+
           </li>
-          
+
         </ul>
       </template>
     </Popover>

@@ -16,11 +16,8 @@
     async function getCompanyDetailsHandler() {
         try {
             state.isLoading = true;
-            const res = await FetchComapny();
-            const { success, company } = res;
-            if (success) {
-                state.company = company;
-            }
+            const company = await FetchComapny();
+            state.company = company;
         } catch (error) {
             $toast.error('Oops, something went wrong');
         } finally {

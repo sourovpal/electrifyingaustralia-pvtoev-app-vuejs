@@ -54,7 +54,7 @@
         if (!success) $toast.error(message.text);
       })
       .catch((error) => {
-        $toast.error(error.message);
+        $toast.error(error.message.text);
       })
       .finally(() => {
         isStatusUpdating.value = null;
@@ -97,7 +97,7 @@
         $toast.error("You can't change the owner of this lead's");
       })
       .catch((error) => {
-        $toast.error(error.message);
+        $toast.error(error.message.text);
       })
       .finally(() => {
         isOwnerUpdating.value = null;

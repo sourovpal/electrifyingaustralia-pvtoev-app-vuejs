@@ -89,7 +89,7 @@
 
           <div class="search-box">
 
-            <input @input="searchLocation"
+            <input-text @input="searchLocation"
               @keyup="handleCRMToolsBarToggle"
               @focus="handleCRMToolsBarToggle"
               class="form-control form-control-lg"

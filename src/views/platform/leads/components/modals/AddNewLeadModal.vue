@@ -157,7 +157,7 @@
       })
       .catch((error) => {
 
-        $toast.error(error.message);
+        $toast.error(error.message.text);
 
       })
       .finally(() => {
@@ -228,9 +228,9 @@
 <template>
   <modal-dialog modal
     v-bind="$attrs"
-    pt:root:class="rounded-3 overflow-hidden"
+    pt:root:class="overflow-hidden"
     pt:mask:class="backdrop-blur-sm"
-    :style="{ width: '35vw' }"
+    :style="{ width: '38vw' }"
     :breakpoints="{ '1199px': '50vw', '575px': '90vw' }">
 
     <template #container="{ closeCallback }">

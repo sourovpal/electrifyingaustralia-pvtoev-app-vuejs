@@ -20,7 +20,7 @@
                             <h2 class="fs-13px">Credits overview</h2>
                             <div class="d-flex justify-content-start align-items-center">
                                 <div class="d-flex justify-content-start">
-                                    <img src="https://app.getpylon.com/img/gem.png"
+                                    <img src="https://app.getpvtoev.com/img/gem.png"
                                         alt=""
                                         class="mr-1">
                                     <strong class="ms-2">700</strong>

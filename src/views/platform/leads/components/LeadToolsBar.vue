@@ -9,11 +9,12 @@
     import { useRouter, useRoute } from 'vue-router';
     import { delay } from '@helpers';
 
+    const emits = defineEmits(['multiple-delete']);
+
     const router = useRouter();
     const route = useRoute();
     const leadsStore = useLeadsStore();
     const platformStore = usePlatformStore();
-    const emits = defineEmits([]);
     const searchInput = ref(null);
 
     // Computed
@@ -23,38 +24,32 @@
     const leads = computed(() => leadsStore.getLeads);
     const isAllLeadSelected = computed(() => leadsStore.getIsAllLeadSelected);
     const isSomeLeadSelected = computed(() => leadsStore.getIsSomeLeadSelected);
-    const deleteModalInstance = computed(() => leadsStore.getMultipleDeleteModal);
     const spreadsheetModalInstance = computed(() => leadsStore.getUploadSpreadsheetModal);
     const leadSources = computed(() => platformStore.getSources);
     const leadStatuses = computed(() => platformStore.getStatuses);
     const toggleFilter = computed(() => leadsStore.getToggleFilter);
     const filterQuerys = computed(() => leadsStore.getFilterQuerys);
 
-    function showMultipleModal() {
-        deleteModalInstance.value?.show();
-    }
-
     function showSpreadsheetModal() {
         spreadsheetModalInstance.value?.show();
     }
 
     function showAddNewModal() {
-        if (!leadSources.value?.length) {
-            platformStore.callFetchSources();
-        }
-        if (!leadStatuses.value?.length) {
-            platformStore.callFetchStatuses();
-        }
+
+        if (!leadSources.value?.length) platformStore.callFetchSources();
+
+        if (!leadStatuses.value?.length) platformStore.callFetchStatuses();
+
         leadsStore.setAddNewLeadModal(true);
     }
 
     function selectAllOrNotLeads() {
-        if (isAllLeadSelected.value || isSomeLeadSelected.value) {
-            leadsStore.setSelectedLeads([]);
-        } else {
-            let leadIds = leads.value?.map(lead => lead.lead_id);
-            leadsStore.setSelectedLeads(leadIds);
-        }
+
+        if (isAllLeadSelected.value || isSomeLeadSelected.value)
+            return leadsStore.setSelectedLeads([]);
+
+        let leadIds = leads.value?.map(lead => lead.lead_id);
+        leadsStore.setSelectedLeads(leadIds);
     }
 
     function handlePagination(payload) {
@@ -74,12 +69,12 @@
     }, 500);
 
     async function handleToggleFilter() {
-        if (!platformStore.getSources?.length) {
+        if (!platformStore.getSources?.length)
             platformStore.callFetchSources();
-        }
-        if (!platformStore.getUsers?.length) {
+
+        if (!platformStore.getUsers?.length)
             platformStore.callFetchUsers();
-        }
+
         if (toggleFilter.value && Object.keys(filterQuerys.value).length) {
             leadsStore.setFilterQuerys(false, false, true);
             leadsStore.setFetchQuery({}, true);
@@ -130,7 +125,7 @@
             </div> -->
 
             <div class="ms-4">
-                <button @click="showMultipleModal"
+                <button @click="emits('multiple-delete')"
                     class="btn btn-danger btn-sm me-3 ms-3 d-flex justify-content-between align-items-center white-space-nowrap"
                     v-tippy="{ content: 'Delete Leads', placement: 'top' }"
                     v-if="selectedLeads.length">
@@ -144,73 +139,108 @@
         </left-action-bar>
 
         <right-action-bar>
+
             <div class="btn-group me-3"
                 v-if="Object.keys(filterQuerys).length">
+
                 <button class="btn crm-btn btn-sm">
                     {{ Object.keys(filterQuerys).length }} active filter
                 </button>
+
                 <button @click="handleToggleFilter"
                     class="btn crm-btn btn-sm ps-1 pe-2 active d-flex justify-content-center align-items-center">
+
                     <font-awesome-icon v-if="!toggleFilter"
                         icon="fas fa-filter"
                         class="fs-15px"></font-awesome-icon>
+
                     <font-awesome-icon v-else
                         icon="fas fa-close"
                         class="fs-15px"></font-awesome-icon>
+
                 </button>
+
             </div>
+
             <div v-else
                 class="d-lg-inline d-none">
+
                 <button
                     class="toolbar-btn btn btn-light btn-floating me-3 d-flex justify-content-center align-items-center"
                     v-tippy="{ content: 'Filter Leads', placement: 'top' }"
                     @click="handleToggleFilter">
+
                     <font-awesome-icon icon="fas fa-filter"
                         class="fs-15px text-head"></font-awesome-icon>
+
                 </button>
+
             </div>
 
             <div class="me-3 d-lg-inline d-none">
+
                 <button class="btn btn-sm crm-btn fw-bold d-none d-xl-block white-space-nowrap"
                     @click="showAddNewModal">
+
                     <font-awesome-icon icon="fas fa-user-plus"
                         class="fs-14px me-1"></font-awesome-icon>
+
                     Add new
                 </button>
+
             </div>
 
             <div class="me-3 d-none d-xl-block">
+
                 <div class="dropdown import-dropdown">
+
                     <button
                         class="btn btn-sm btn-outline-secondary dropdown-toggler-btn fw-bold d-flex align-items-center"
                         v-tippy="{ content: 'Import File', placement: 'top' }"
                         data-mdb-toggle="dropdown">
+
                         <span class="pe-4 text-head">Import</span>
+
                         <div class="dropdown--icon">
+
                             <font-awesome-icon icon="fas fa-caret-down"
                                 class="fs-14px text-head"></font-awesome-icon>
+
                         </div>
                     </button>
+
                     <ul class="dropdown-menu dropdown-menu-end">
+
                         <li class="dropdown-item cursor-pointer"
                             @click="showSpreadsheetModal">
                             Upload spreadsheet...
                         </li>
+
                         <li>
+
                             <a class="dropdown-item">Connect to lead providers</a>
+
                         </li>
+
                     </ul>
+
                 </div>
+
             </div>
 
             <div class="d-lg-inline d-none">
+
                 <button class="toolbar-btn btn btn-light btn-floating me-3 d-none d-xl-block"
                     v-tippy="{ content: 'Show/Hide Properties', placement: 'top' }"
                     data-mdb-toggle="dropdown">
+
                     <font-awesome-icon icon="fas fa-list-check"
                         class="fs-16px text-head"></font-awesome-icon>
+
                 </button>
+
                 <header-properties-dropdown></header-properties-dropdown>
+
             </div>
 
             <div class="fw-bold d-flex justify-content-center align-items-center me-2 text-overflow-ellipsis fs-16px"

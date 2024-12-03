@@ -31,7 +31,7 @@
         }).then(res => {
             $toast.success(res.message.text);
             Object.assign(initial_status, { ...props.status });
-        }).catch(error => $toast.error(error.message));
+        }).catch(error => $toast.error(error.message.text));
     }
 
 </script>

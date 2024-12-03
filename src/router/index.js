@@ -583,6 +583,18 @@ const routes = [
         beforeEnter: () => !isAuthorized('/', true),
     },
     {
+        name: "forgot",
+        path: '/forgot',
+        component: () => import('@views/auth/ForgotPasswordPage.vue'),
+        beforeEnter: () => !isAuthorized('/', true),
+    },
+    {
+        name: "reset",
+        path: '/reset',
+        component: () => import('@views/auth/ResetPasswordPage.vue'),
+        beforeEnter: () => !isAuthorized('/', true),
+    },
+    {
         name: "forbidden",
         path: '/forbidden',
         component: () => import('@views/errors/Forbidden403.vue'),

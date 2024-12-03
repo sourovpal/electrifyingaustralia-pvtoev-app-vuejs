@@ -160,7 +160,7 @@
 
       })
       .catch((error) => {
-        $toast.error(error.message);
+        $toast.error(error.message.text);
       });
 
     isSubmitMovePipelineOrStatus.value = false;

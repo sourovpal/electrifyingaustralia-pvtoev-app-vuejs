@@ -51,7 +51,7 @@
             emits('fetch');
             $toast.success(message.text);
         }).catch(error => {
-            $toast.error(error.message);
+            $toast.error(error.message.text);
         }).finally(_ => {
             is_deleting.value = false;
         });

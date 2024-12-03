@@ -7,7 +7,7 @@
 		    </div>
 	    </div>
 	    <div class="graphic d-flex flex-column align-items-center">
-	        <img src="https://static-pylon.imgix.net/images/app/ui/empty/empty_inverter.png?auto=format" alt="">
+	        <img src="https://static-pvtoev.imgix.net/images/app/ui/empty/empty_inverter.png?auto=format" alt="">
 	        <p class="text-muted mb-0">Search to add an EV Charger</p>
 	    </div>
     </div>

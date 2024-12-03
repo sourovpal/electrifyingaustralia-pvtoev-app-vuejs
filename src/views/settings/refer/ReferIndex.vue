@@ -16,14 +16,14 @@
                 <div class="col-lg-9">
                     <div class="card pt-3 pb-2 px-3 d-flex flex-row justify-content-start align-items-center shadow-0 settings__item--wide">
                         <div class="mx-3">
-                            <img src="https://app.getpylon.com/img/success-gems.png" style="width:120px;height:120px;">
+                            <img src="https://app.getpvtoev.com/img/success-gems.png" style="width:120px;height:120px;">
                         </div> 
                         <div>
                             <div class="title mb-2">
                                 Limited time referral bonus!
                             </div>
                             <p class="sub-title">Receive <strong>500 bonus credits</strong> for referring a friend... <br>
-                                Or refer <strong>5 friends</strong> to receive our brand new official Pylon t-shirt! <br>
+                                Or refer <strong>5 friends</strong> to receive our brand new official pvtoev t-shirt! <br>
                             </p>
                         </div>
                     </div>

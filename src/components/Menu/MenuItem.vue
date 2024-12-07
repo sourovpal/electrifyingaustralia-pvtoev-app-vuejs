@@ -1,8 +1,13 @@
 <script setup>
-    import {   onMounted, computed, ref, watch } from 'vue';
+    import { onMounted, computed, ref, watch, nextTick } from 'vue';
     import CustomScrollbar from 'custom-vue-scrollbar';
+    import SubMenuItem from './SubMenuItem.vue';
     import SlideUpDown from 'vue-slide-up-down';
     import { useRoute } from 'vue-router';
+
+    defineOptions({
+        inheritAttrs: false,
+    });
 
     const props = defineProps({
         item: {
@@ -27,121 +32,109 @@
         },
     });
 
+    const duration = ref(0);
+    const is_active = ref(false);
+    const is_active_index = ref(0);
     const route = useRoute();
-    const isActiveMenu = ref(false);
-    const isActiveChildMenu = ref(false);
 
-    function isActiveRoute(search = '') {
-        var routeFullPath = route.fullPath;
-        var temp = (routeFullPath.search(search) > -1) ? true : false;
-        return temp;
+    async function toggleDropdown(e) {
+        is_active.value = !is_active.value;
     }
 
-    function isActiveChildRoute(path, query = {}) {
-        var isUrl = isActiveRoute(path);
-        var query = new URLSearchParams(query);
-        var urlQuery = new URLSearchParams(route.query);
-        if (isUrl && query.toString() == urlQuery.toString()) {
-            return true;
-        }
-    }
-
-    watch(route, () => {
-        isActiveMenu.value = isActiveRoute(props.path);
-    }, {
-        deep: true
-    });
-
-
-    onMounted(() => {
-        isActiveMenu.value = isActiveRoute(props.path);
+    onMounted(async () => {
+        if (route.path === props.path) is_active.value = true;
+        await nextTick();
+        duration.value = 500;
     });
 
 </script>
 <template>
-    <div class="nav-list mx-2 px-1">
-        <router-link class="nav-link nav-toggler mb-1"
-            :class="{'is-active':isActiveMenu}"
-            @click="isActiveMenu=!isActiveMenu"
-            :to="{path:path}">
-            <span class="nav-icon">
-                <font-awesome-icon :style="{'height':'18px', 'width':'18px',}"
-                    :icon="icon" />
+    <div class="nav-item">
+        <!-- <Avatar size="small"> -->
+
+        <router-link :to="{ path }"
+            @click="toggleDropdown"
+            class="nav-header d-flex justify-content-start align-items-center py-2 px-3 text-soft">
+
+            <material-icon :name="icon"
+                size="20"
+                class="text-soft">
+            </material-icon>
+
+            <span class="nav-label fs-16px ms-2">
+                {{ label }}
             </span>
-            <span class="nav-title ms-2">{{ label }}</span>
-            <span v-if="children.length"
-                class="nav-icon ms-auto">
-                <font-awesome-icon :style="{'height':'14px', 'width':'14px',}"
-                    :icon="`fas fa-angle-down`" />
-            </span>
+
+            <material-icon v-if="children.length"
+                :name="`${is_active?'keyboard_arrow_up':'keyboard_arrow_down'}`"
+                size="24"
+                class="text-soft ms-auto">
+            </material-icon>
+
         </router-link>
-        <slide-up-down v-if="isActiveMenu"
-            :active="isActiveMenu">
-            <div class="nav-item"
-                v-for="(childMenu, index) in children"
-                :key="index">
-                <router-link class="nav-link mb-1"
-                    exact
-                    :class="{'is-active':isActiveChildRoute(childMenu.path, childMenu.query)}"
-                    :to="{path:childMenu.path, query:childMenu.query??{}}">
-                    <span class="nav-icon">
-                        <font-awesome-icon :style="{'height':'10px', 'width':'10px',}"
-                            :icon="`fas fa-circle-dot`" />
-                    </span>
-                    <span class="nav-title ms-2">{{ childMenu.label }}</span>
-                    <span class="nav-icon ms-auto"
-                        v-if="childMenu.icon">
-                        <font-awesome-icon :style="{'height':'14px', 'width':'14px',}"
-                            :icon="childMenu.icon" />
-                    </span>
-                </router-link>
+
+
+        <!-- </Avatar> -->
+        <SlideUpDown :active="is_active"
+            :duration="duration">
+
+            <div class="sub-menu">
+
+                <ul class="list-unstyled p-0 m-0">
+
+                    <li class=" py-2 ps-3"
+                        v-for="(child, index) in children"
+                        :key="index">
+
+                        <router-link :to="{path:child.path, query:child.query??{}}"
+                            custom
+                            v-slot="{ href, isActive, navigate }">
+
+                            <SubMenuItem :href="href"
+                                :query="child.query"
+                                @navigate="navigate"
+                                @active="is_active_index = index"
+                                :class="{'active-sub-menu':(isActive && is_active_index === index)}">
+
+                                <material-icon name="my_location"
+                                    size="14"
+                                    class="text-soft ms-1">
+                                </material-icon>
+
+                                <span class="nav-label fs-16px ms-1 ps-2 text-soft">
+                                    {{ child.label }}
+                                </span>
+
+                            </SubMenuItem>
+
+                        </router-link>
+
+                    </li>
+
+                </ul>
+
             </div>
-        </slide-up-down>
+        </SlideUpDown>
     </div>
+
 </template>
 
 <style scoped
     lang="scss">
-    .nav-link {
-        --nav-bg-color: #f4f6f6;
-        --nav-icon-color: #6b7c92;
-        --nav-active-color: var(--crm-color);
-        --nav-text-color: #8094ae;
-
-        &.is-active {
-            --nav-bg-color: transparent !important;
-            --nav-active-color: var(--crm-color) !important;
-            --nav-icon-color: var(--crm-color) !important;
-            --nav-text-color: var(--crm-color) !important;
+    .nav-header {
+        &:hover {
+            background: #f4f4f4;
         }
 
-        transition: all 0.3s;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        padding: 6px 8px;
-        border-radius: 8px;
-        line-height: 20px;
-
-        &:hover,
-        &.is-active {
-            background-color: #f4f6f6;
+        &.router-link-exact-active {
+            background-color:#f4f4f4;
+            color: var(--crm-color) !important;
         }
+    }
 
-        .nav-icon {
-            width: 25px;
-            height: 25px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--nav-text-color) !important;
-        }
-
-        .nav-title {
-            color: var(--nav-text-color);
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
+    .active-sub-menu {
+        .nav-label{
+            color: var(--crm-color) !important;
         }
     }
 </style>

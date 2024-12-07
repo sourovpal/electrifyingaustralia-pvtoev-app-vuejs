@@ -3,7 +3,7 @@
 
 :root {
   --p-inputtext-sm-font-size: 0.875rem;
-  --main-left-navbar-width: 4rem;
+  --main-left-navbar-width: 3.5rem;
   --child-left-navbar-width: 16rem;
   // crm color
   --crm-color: #10b981;
@@ -694,17 +694,7 @@ button[disabled],
 }
 
 .spinner {
-  animation: rotate 2s linear infinite;
-  width: 25px;
-  height: 25px;
-  margin-right: 6px;
-  margin-left: -25px;
-
-  &>.path {
-    stroke: #1f71ff;
-    stroke-linecap: round;
-    animation: dash 1.5s ease-in-out infinite;
-  }
+  animation: rotate 1s linear infinite;
 }
 
 // .add-custom-scrollbar .scrollbar__wrapper{

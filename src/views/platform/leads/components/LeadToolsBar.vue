@@ -8,6 +8,8 @@
     import { useDebounceFn } from '@vueuse/core';
     import { useRouter, useRoute } from 'vue-router';
     import { delay } from '@helpers';
+    import TablePagination from '@components/Datatable/TablePagination.vue';
+    import TableRefreshSpinner from '@components/Datatable/TableRefreshSpinner.vue';
 
     const emits = defineEmits(['multiple-delete']);
 
@@ -57,15 +59,23 @@
     }
 
     const handleSearch = useDebounceFn(() => {
+
         let page = route.query.page ?? 1;
+
         router.push({ path: '/platform/leads', query: { ...route.query, page, search: searchInput.value } });
+
     }, 1000);
 
     const handleRefresh = useDebounceFn(() => {
+
         router.push({ path: '/platform/leads' });
+
         searchInput.value = null;
+
         leadsStore.setFilterQuerys(false, false, true);
+
         leadsStore.setFetchQuery(false, true);
+
     }, 500);
 
     async function handleToggleFilter() {
@@ -76,115 +86,62 @@
             platformStore.callFetchUsers();
 
         if (toggleFilter.value && Object.keys(filterQuerys.value).length) {
+
             leadsStore.setFilterQuerys(false, false, true);
+
             leadsStore.setFetchQuery({}, true);
+
             leadsStore.setToggleFilter(false);
+
             await delay(500);
+
             leadsStore.setToggleFilter('render')
+
             await delay(200);
+
             leadsStore.setToggleFilter(false);
+
         } else {
+
             leadsStore.setToggleFilter(!toggleFilter.value);
+
         }
     }
 
 </script>
 
 <template>
+
     <action-bar>
+
         <left-action-bar>
 
-            <div class="d-flex justify-content-center align-item-start"
-                style="margin-left: 8px">
-                <custom-checkbox @click="selectAllOrNotLeads"
-                    :checked="isAllLeadSelected"
-                    :reset="isSomeLeadSelected" />
-            </div>
+            <custom-checkbox class="ms-2"
+                @click="selectAllOrNotLeads"
+                :checked="isAllLeadSelected"
+                :reset="isSomeLeadSelected">
+            </custom-checkbox>
 
-            <div class="d-lg-inline d-none">
-                <button @click="handleRefresh"
-                    class="btn btn-light btn-floating ms-2"
-                    :disabled="isLoading">
-                    <svg-custom-icon v-if="isLoading"
-                        icon="spinner-icon" />
-                    <svg-custom-icon v-else
-                        icon="loader-icon" />
-                </button>
-            </div>
+            <table-refresh-spinner @click="handleRefresh"
+                :loading="isLoading"></table-refresh-spinner>
 
-            <!-- <div class="search-bar w-100 d-lg-inline d-none">
-                <div class="position-relative ms-4 w-100">
-                    <input type="text"
-                        v-model="searchInput"
-                        class="form-control ps-5"
-                        placeholder="Search keywords..."
-                        @keyup="handleSearch()" />
-                    <font-awesome-icon icon="fas fa-search"
-                        class="ms-3 search-icon text-soft"></font-awesome-icon>
-                </div>
-            </div> -->
-
-            <div class="ms-4">
-                <button @click="emits('multiple-delete')"
-                    class="btn btn-danger btn-sm me-3 ms-3 d-flex justify-content-between align-items-center white-space-nowrap"
-                    v-tippy="{ content: 'Delete Leads', placement: 'top' }"
-                    v-if="selectedLeads.length">
-                    <span class="fs-14px d-none d-xl-inline">{{ selectedLeads.length }} selected</span>
-                    <span class="ms-xl-2">
-                        <svg-custom-icon icon="trash-icon" />
-                    </span>
-                </button>
-            </div>
+            <button v-if="selectedLeads.length"
+                v-tippy="{ content: 'Delete Leads', placement: 'top' }"
+                @click="emits('multiple-delete')"
+                class="btn btn-danger btn-sm me-3 ms-3 d-flex justify-content-between align-items-center white-space-nowrap">
+                {{ selectedLeads.length }} selected
+                <i class="ms-2 pi pi-trash fs-14px"></i>
+            </button>
 
         </left-action-bar>
 
         <right-action-bar>
 
-            <div class="btn-group me-3"
-                v-if="Object.keys(filterQuerys).length">
-
-                <button class="btn crm-btn btn-sm">
-                    {{ Object.keys(filterQuerys).length }} active filter
-                </button>
-
-                <button @click="handleToggleFilter"
-                    class="btn crm-btn btn-sm ps-1 pe-2 active d-flex justify-content-center align-items-center">
-
-                    <font-awesome-icon v-if="!toggleFilter"
-                        icon="fas fa-filter"
-                        class="fs-15px"></font-awesome-icon>
-
-                    <font-awesome-icon v-else
-                        icon="fas fa-close"
-                        class="fs-15px"></font-awesome-icon>
-
-                </button>
-
-            </div>
-
-            <div v-else
-                class="d-lg-inline d-none">
-
-                <button
-                    class="toolbar-btn btn btn-light btn-floating me-3 d-flex justify-content-center align-items-center"
-                    v-tippy="{ content: 'Filter Leads', placement: 'top' }"
-                    @click="handleToggleFilter">
-
-                    <font-awesome-icon icon="fas fa-filter"
-                        class="fs-15px text-head"></font-awesome-icon>
-
-                </button>
-
-            </div>
-
             <div class="me-3 d-lg-inline d-none">
 
-                <button class="btn btn-sm crm-btn fw-bold d-none d-xl-block white-space-nowrap"
+                <button class="btn btn-sm btn-primary d-none d-xl-flex justify-content-start align-items-center white-space-nowrap"
                     @click="showAddNewModal">
-
-                    <font-awesome-icon icon="fas fa-user-plus"
-                        class="fs-14px me-1"></font-awesome-icon>
-
+                    <material-icon name="person_add" class="me-1" size="20"></material-icon>
                     Add new
                 </button>
 
@@ -228,49 +185,51 @@
 
             </div>
 
-            <div class="d-lg-inline d-none">
+            <div class="btn-group me-3"
+                v-if="Object.keys(filterQuerys).length">
 
-                <button class="toolbar-btn btn btn-light btn-floating me-3 d-none d-xl-block"
-                    v-tippy="{ content: 'Show/Hide Properties', placement: 'top' }"
-                    data-mdb-toggle="dropdown">
+                <button class="btn crm-btn btn-sm">
+                    {{ Object.keys(filterQuerys).length }} active filter
+                </button>
 
-                    <font-awesome-icon icon="fas fa-list-check"
-                        class="fs-16px text-head"></font-awesome-icon>
+                <button @click="handleToggleFilter"
+                    class="btn crm-btn btn-sm ps-1 pe-2 active d-flex justify-content-center align-items-center">
+
+                    <i v-if="!toggleFilter"
+                        class="pi pi-filter fs-15px"></i>
+
+                    <i v-else
+                        class="pi pi-times fs-15px"></i>
 
                 </button>
+
+            </div>
+
+            <div v-else
+                class="d-lg-inline d-none me-3">
+                <circle-button @click="handleToggleFilter"
+                    v-tippy="{ content: 'Filter Leads', placement: 'top' }">
+
+                    <material-icon name="filter_alt" size="20" ></material-icon>
+
+                </circle-button>
+            </div>
+
+            <div class="d-lg-inline d-none me-3">
+
+                <circle-button data-mdb-toggle="dropdown">
+
+                    <material-icon name="playlist_add_check"
+                        size="22" type="outlined"></material-icon>
+
+                </circle-button>
 
                 <header-properties-dropdown></header-properties-dropdown>
 
             </div>
 
-            <div class="fw-bold d-flex justify-content-center align-items-center me-2 text-overflow-ellipsis fs-16px"
-                style="min-width: 5rem">
-                {{ pagination?.from ?? 0 }} - {{ pagination?.to ?? 0 }} of {{ pagination?.total?? 0 }}
-            </div>
-
-            <div class="">
-
-                <button :disabled="!pagination?.prev_page || isLoading"
-                    @click="handlePagination({ page: pagination?.prev_page })"
-                    v-tippy="{ content: 'Previous', placement: 'top' }"
-                    class="toolbar-btn btn btn-light btn-floating me-3">
-
-                    <font-awesome-icon icon="fas fa-arrow-left"
-                        class="text-head fs-16px"></font-awesome-icon>
-
-                </button>
-
-                <button :disabled="!pagination?.next_page || isLoading"
-                    v-tippy="{ content: 'Next', placement: 'top' }"
-                    @click="handlePagination({ page: pagination?.next_page })"
-                    class="toolbar-btn btn btn-light btn-floating me-3">
-
-                    <font-awesome-icon icon="fas fa-arrow-right"
-                        class="text-head fs-16px"></font-awesome-icon>
-
-                </button>
-
-            </div>
+            <table-pagination :pagination="pagination"
+                @change="(_page)=>handlePagination({page:_page})"></table-pagination>
 
             <div class="me-3 d-lg-inline d-xl-none">
 

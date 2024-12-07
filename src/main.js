@@ -7,6 +7,8 @@ import router from "./router";
 import * as mdb from "mdb-ui-kit";
 
 import LoadingButton from "./components/LoadingButton.vue";
+import CircleButton from "./components/Buttons/CircleButton.vue";
+import MaterialIcon from "./components/MaterialIcon.vue";
 
 import SvgCustomIcon from "./assets/svg/SvgCustomIcon.vue";
 
@@ -48,6 +50,7 @@ import "vue-toast-notification/dist/theme-bootstrap.css";
 import "vue-skeletor/dist/vue-skeletor.css";
 import "v-calendar/style.css";
 import "v3-infinite-loading/lib/style.css";
+import 'material-icons/iconfont/material-icons.css';
 
 import PrimeVue from "primevue/config";
 import Aura from "@primevue/themes/aura";
@@ -88,6 +91,8 @@ var app = createApp(App);
 
 app.component("FetchImage", FetchImage);
 app.component("LoadingButton", LoadingButton);
+app.component("CircleButton", CircleButton);
+app.component("MaterialIcon", MaterialIcon);
 app.component("bootstrap-modal", BootstrapModal);
 app.component("custom-checkbox", CustomCheckbox);
 app.component("font-awesome-icon", FontAwesomeIcon);

@@ -11,14 +11,20 @@
             <table class="table table-sm align-middle mb-0 bg-white">
                 <thead class="bg-light">
                     <tr>
-                        <th class="fw-bold fs-14px" width="30%">Name</th>
-                        <th class="fw-bold fs-14px" width="30%">Title</th>
-                        <th class="fw-bold fs-14px" width="15%">Status</th>
-                        <th class="fw-bold fs-14px" width="15%">Actions</th>
+                        <th class="fw-bold fs-14px"
+                            width="30%">Title</th>
+                        <th class="fw-bold fs-14px"
+                            width="15%">Owner</th>
+                        <th class="fw-bold fs-14px"
+                            width="15%">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(item, index) in 8" :key="index">
+                    <tr v-for="(item, index) in 8"
+                        :key="index">
+                        <td>
+                            <p class="fw-normal mb-1">Software engineer</p>
+                        </td>
                         <td>
                             <div class="d-flex align-items-center">
                                 <img src="https://mdbootstrap.com/img/new/avatars/8.jpg"
@@ -30,12 +36,6 @@
                                     <p class="text-muted mb-0">john.doe@gmail.com</p>
                                 </div>
                             </div>
-                        </td>
-                        <td>
-                            <p class="fw-normal mb-1">Software engineer</p>
-                        </td>
-                        <td>
-                            <span class="badge badge-success rounded-pill d-inline">Active</span>
                         </td>
                         <td>
                             <button type="button"

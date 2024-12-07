@@ -17,27 +17,27 @@
   const topNavbarItems = reactive([
     {
       unique_id: "nav-home",
-      label: "Projects",
+      label: "CRM",
       path: "/app",
-      icon: "fas fa-sitemap",
+      icon: "dashboard_customize",
     },
     {
       unique_id: "nav-platform",
       label: "Platform",
       path: "/platform",
-      icon: "fas fa-layer-group",
+      icon: "leaderboard",
     },
     {
       unique_id: "nav-map",
       label: "Map",
       path: "/map",
-      icon: "fas fa-magnifying-glass-location",
+      icon: "explore",
     },
     {
       unique_id: "nav-library",
       label: "Library",
       path: "/library",
-      icon: "fas fa-folder-open",
+      icon: "folder_copy",
     },
     // {
     //   unique_id: "nav-payments",
@@ -84,7 +84,7 @@
       unique_id: "nav-notification",
       label: "Notification",
       path: "/notification",
-      icon: "fas fa-bell",
+      icon: "notifications",
     },
     {
       unique_id: "nav-profile",
@@ -118,14 +118,14 @@
           <router-link :to="item.path"
             class="nav-link d-flex flex-column justify-content-center align-items-center">
 
-            <span class="nav-icon"
+            <Avatar style="--p-avatar-width:2.5rem;--p-avatar-height:2.5rem;"
               v-tippy="{ content: item.label, placement: 'right' }">
-              <font-awesome-icon :style="{
-                    height: item.icon_h ?? '24px',
-                    width: item.icon_w ?? '24px',
-                  }"
-                :icon="item.icon" />
-            </span>
+
+              <material-icon :name="item.icon"
+                class="text-soft"
+                size="26"></material-icon>
+
+            </Avatar>
 
             <span class="nav-title d-block">{{ item.label }}</span>
 
@@ -142,24 +142,28 @@
           class="nav-item mb-0 d-flex flex-column justify-content-start align-items-center">
 
           <!-- Profile -->
-          <div v-if="item.unique_id == 'nav-profile'">
+          <template v-if="item.unique_id == 'nav-profile'">
             <div @click="handleToggleProfile"
               class="nav-link d-flex flex-column justify-content-center align-items-center">
 
-              <span class="nav-icon"
-                v-tippy="{ content: item.label, placement: 'right' }">
-                <img class="profile-avatar"
-                  :src="authUser.profile_avatar" />
+              <Avatar style="--p-avatar-width:2.5rem;--p-avatar-height:2.5rem;"
+                :image="authUser.profile_avatar"
+                v-tippy="{ content: item.label, placement: 'right' }" />
+
+              <span class="nav-title d-block">
+                {{ item.label }}
               </span>
 
-              <span class="nav-title d-block">{{ item.label }}</span>
 
             </div>
 
             <profile-dropdown @click-outside="handleToggleProfile"
-              v-if="toggleProfile"></profile-dropdown>
+              v-if="toggleProfile">
+            </profile-dropdown>
 
-          </div>
+          </template>
+
+
 
           <!-- Notification -->
           <div v-else-if="item.unique_id == 'nav-notification'">
@@ -175,11 +179,14 @@
                   }}
                   </span>
 
-                  <span class="nav-icon"
+                  <Avatar style="--p-avatar-width:2.5rem;--p-avatar-height:2.5rem;"
                     v-tippy="{ content: item.label, placement: 'right' }">
-                    <font-awesome-icon :style="{ height: '24px', width: '24px' }"
-                      :icon="item.icon" />
-                  </span>
+
+                    <material-icon :name="item.icon"
+                      class="text-soft"
+                      size="26"></material-icon>
+
+                  </Avatar>
 
                   <span class="nav-title d-block">{{ item.label }}</span>
             </div>
@@ -309,28 +316,10 @@
           cursor: pointer;
           transform: scale(0.8);
 
-          .nav-icon {
-            width: 3rem;
-            height: 3rem;
-            background-color: var(--nav-bg-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            border: 2px solid var(--nav-border-color);
-            box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
-              rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-
-            svg {
-              color: var(--nav-icon-color);
-            }
-          }
-
           .nav-title {
             margin-top: 3px;
             line-height: 20px;
             font-size: 14px;
-            font-weight: 600;
             color: var(--nav-text-color);
             letter-spacing: 0.5px;
             text-overflow: ellipsis;

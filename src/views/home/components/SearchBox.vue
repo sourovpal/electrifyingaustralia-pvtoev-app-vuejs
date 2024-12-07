@@ -13,23 +13,23 @@
   );
 
   const router = useRouter();
-  const toggleSearchbox = ref(false);
-  const searchResults = ref([]);
-  const searchBoxRef = ref(null);
-  const searchProjects = ref([]);
-  const isLoading = ref(false);
+  const addresses = ref([]);
+  const projects = ref([]);
+  const is_loading = ref(false);
+  const search_query = ref(null);
 
   async function searchLocation(event) {
-    const query = event.target.value;
 
-    isLoading.value = true;
+    search_query.value = event.target.value;
+
+    is_loading.value = true;
 
     const requests = [
-      axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${accessToken.value}&proximity=90.4093,23.7272&types=address&limit=5&language=en`),
+      axios.get(`https://api.mapbox.com/geocoding/v5/mapbox.places/${search_query.value}.json?access_token=${accessToken.value}&proximity=90.4093,23.7272&types=address&limit=5&language=en`),
       api.post(`/platform/leads/search`, {
         contact: true,
         lead: true,
-        search: query,
+        search: search_query.value,
         limit: 5,
       })
     ];
@@ -38,31 +38,18 @@
 
       const responses = await axios.all(requests);
       const results = responses.flatMap(response => response.data);
-      searchResults.value = results[0]?.features;
-      searchProjects.value = results[1];
-      isLoading.value = false;
+      addresses.value = results[0]?.features;
+      projects.value = results[1];
+      is_loading.value = false;
     } catch (error) {
 
-      isLoading.value = false;
+      is_loading.value = false;
 
       console.error("Error fetching locations:", error);
 
     }
   }
 
-  function handleCRMToolsBarToggle(event) {
-
-    const query = event.target.value;
-
-    if (query?.length) return toggleSearchbox.value = true;
-
-    toggleSearchbox.value = false;
-
-  }
-
-  onClickOutside(searchBoxRef, () => {
-    toggleSearchbox.value = false;
-  });
 
   const handleLocationClick = async (item) => {
 
@@ -80,149 +67,60 @@
 
 </script>
 <template>
-  <div class="row d-none d-md-flex">
-    <div class="col-lg-7 mx-auto position-relative">
-      <div class="search-row">
-        <div ref="searchBoxRef"
-          class="search-area pb-0"
-          :class="{ show: toggleSearchbox }">
+  <div class="search-box">
 
-          <div class="search-box">
+    <icon-field>
 
-            <input-text @input="searchLocation"
-              @keyup="handleCRMToolsBarToggle"
-              @focus="handleCRMToolsBarToggle"
-              class="form-control form-control-lg"
-              type="text"
-              placeholder="Search for an address or existing projects" />
+      <input-icon class="pi pi-search" />
 
-            <button class="search-icon">
-              <font-awesome-icon class="fs-16px text-soft"
-                icon="fa-solid fa-search"></font-awesome-icon>
-            </button>
+      <input-text style="width:35rem;"
+        @input="searchLocation"
+        placeholder="Search new address or projects"></input-text>
 
-          </div>
+      <input-icon v-if="is_loading"
+        class="pi pi-spin pi-spinner">
 
-          <div @click.stop=""
-            class="search-output"
-            style="overflow: auto; max-height: 67vh">
-            <label class="output-label text-base mb-2">Existing projects</label>
+      </input-icon>
 
-            <div class="not-found-result soft-text"
-              v-if="!searchProjects.length || isLoading">
-              <svg-custom-icon v-if="isLoading"
-                icon="spinner-icon" />
-              <span v-else>Existing projects are not available.</span>
-            </div>
+    </icon-field>
 
-            <ul class="project-list">
-
-              <li class="list-item"
-                v-for="(project, index) in searchProjects"
-                :key="index">
-
-                <router-link :to="{path:`/platform/${project.pipeline?'deals':'leads'}/${project.lead_id}`}"
-                  class="item-link">
-                  <div class="search-result d-flex justify-content-between align-items-center">
-
-                    <div class="">
-
-                      <div class="search-item text-base">
-                        <span>
-                          {{ formatLeadAddress(project,
-                          project.lead_title??project.primary_contact?.full_name??'Address not added yet.')}}
-                        </span>
-                      </div>
-
-                      <div v-if="project.primary_contact"
-                        class="search-item-details soft-text">
-
-                        <span v-if="project.primary_contact.full_name">
-                          {{ project.primary_contact.full_name }}&nbsp;•&nbsp;
-                        </span>
-
-                        <span v-if="project.primary_contact.phone_number">
-                          {{ project.primary_contact.phone_number}}&nbsp;•&nbsp;
-                        </span>
-
-                        <span v-if="project.primary_contact.email">
-                          {{ project.primary_contact.email}}&nbsp;•&nbsp;
-                        </span>
-
-                      </div>
-
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center">
-
-                      <span class="text-overflow-ellipsis btn btn-sm py-0 px-2 shadow-0"
-                        :class="{'btn-success':(project.status.is_lost == 0), 'btn-danger':(project.status.is_lost == 1)}"
-                        v-if="project.status">{{ project.status.name }}</span>
-
-                      <span class="text-overflow-ellipsis btn btn-sm py-0 px-2 shadow-0"
-                        :class="{'btn-success':(project.pipeline_stage.status == 'success'), 'btn-danger':(project.pipeline_stage.status == 'lost') , 'btn-primary':(project.pipeline_stage.status == 'primary')}"
-                        v-if="project.pipeline && project.pipeline_stage">{{ project.pipeline.title }} / {{
-                        project.pipeline_stage.name }}</span>
-
-                      <div class="icon ms-3">
-                        <font-awesome-icon icon="fas fa-arrow-right"
-                          class="fs-16px text-soft"></font-awesome-icon>
-                      </div>
-
-                    </div>
-                  </div>
-
-                </router-link>
-
-              </li>
-
-            </ul>
-
-            <div class="not-found-result soft-text"
-              v-if="false">
-              No existing projects are available.
-            </div>
-
-            <label class="output-label text-base mb-2">Start a new project</label>
-
-            <div class="not-found-result soft-text"
-              v-if="!searchResults.length && !isLoading">
-              No location found.
-            </div>
-
-            <ul v-else
-              class="project-list">
-
-              <li class="list-item mb-1"
-                v-for="(location, index) in searchResults"
-                :key="index">
-
-                <div @click="handleLocationClick(location)"
-                  class="item-link">
-                  <!-- <router-link class="item-link"
-                  :to="{path: '/map', query: { lat: location?.center[1], lon: location?.center[0] }}"> -->
-
-                  <div class="search-result map-result d-flex justify-content-between align-items-center">
-
-                    <div class="search-item text-base">
-                      <span>{{ location.place_name }}</span>
-                    </div>
-
-                    <div class="icon map-icon">
-                      <font-awesome-icon icon="fas fa-location-dot"
-                        class="fs-16px text-soft"></font-awesome-icon>
-                    </div>
-
-                  </div>
-
-                </div>
-
-              </li>
-            </ul>
-
-          </div>
-        </div>
-      </div>
+    <div v-if="search_query"
+      :class="{'show':!!search_query}"
+      class="search-result">
+      {{ addresses }}
     </div>
+
   </div>
 </template>
+
+<style scoped
+  lang="scss">
+  .search-box {
+    position: relative;
+
+    .search-result {
+      visibility: hidden;
+      opacity: 0;
+      height: 30rem;
+      max-height: 30rem;
+      max-width: 35rem;
+      min-width: 560px;
+      top: 45px;
+      transform-origin: center top;
+      margin-top: 2px;
+      z-index: 1001;
+      position: absolute;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 5px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    &:hover .search-result,
+    .search-result.show {
+      visibility: visible !important;
+      opacity: 1;
+    }
+  }
+</style>

@@ -4,6 +4,8 @@
     import RecentLeads from './RecentLeads.vue';
     import RecentDeals from './RecentDeals.vue';
     import TodoTasks from './TodoTasks.vue';
+    import MonthlyLeadReportChart from './MonthlyLeadReportChart.vue';
+    import DelayLeadReportChart from './DelayLeadReportChart.vue';
 
 </script>
 
@@ -15,6 +17,15 @@
         </div>
 
         <card-reports></card-reports>
+
+        <div class="row mt-3">
+            <div class="col-xxl-8 col-md-8 col-12">
+                <delay-lead-report-chart></delay-lead-report-chart>
+            </div>
+            <div class="col-xxl-4 col-md-4 col-12">
+                <monthly-lead-report-chart></monthly-lead-report-chart>
+            </div>
+        </div>
 
         <div class="row mt-3">
 

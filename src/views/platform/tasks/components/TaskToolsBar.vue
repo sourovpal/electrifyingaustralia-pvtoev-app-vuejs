@@ -1,11 +1,13 @@
 <script setup>
-    import { ref,    } from 'vue';
+    import { ref, } from 'vue';
     import ActionBar from '@components/ActionBar/ActionBar.vue';
     import LeftActionBar from '@components/ActionBar/LeftActionBar.vue';
     import RightActionBar from '@components/ActionBar/RightActionBar.vue';
     import DropdownOwnerList from '../../components/dropdowns/DropdownOwnerList.vue';
     import { AvatarIcon } from "@assets/icons";
     import { usePlatformStore } from "@stores";
+    import TableRefreshSpinner from '@components/Datatable/TableRefreshSpinner.vue';
+    import TablePagination from '@components/Datatable/TablePagination.vue';
 
     const platformStore = usePlatformStore();
     const props = defineProps({
@@ -18,13 +20,13 @@
     const owner = ref(null);
 
     async function getUsers() {
-        if(!platformStore.getUsers?.length){
+        if (!platformStore.getUsers?.length) {
             platformStore.callFetchUsers(function ({ loading }) {
                 userIsLoading.value = loading;
             });
         }
     }
-    
+
     function selectOwnerHandler(user) {
         owner.value = user;
         emits('pagination:fetch', { page: 1, owner_id: user?.user_id ?? null });
@@ -35,30 +37,27 @@
 <template>
     <ActionBar>
         <LeftActionBar>
-            <div class="ms-3">
-                <button @click="emits('pagination:fetch')"
-                    :disabled="isLoading"
-                    type="button"
-                    class="toolbar-btn btn btn-sm btn-light btn-lg btn-floating">
-                    <svg-custom-icon v-if="!isLoading"
-                        icon="loader-icon" />
-                    <svg-custom-icon v-else
-                        icon="spinner-icon" />
-                </button>
-            </div>
-            <div class="search-bar w-100">
-                <div class="position-relative ms-4 w-100">
-                    <input type="text"
-                        class="form-control ps-5"
+
+            <table-refresh-spinner :loading="isLoading"
+                @click="emits('pagination:fetch')"></table-refresh-spinner>
+
+            <div class="search-bar ms-2">
+                <icon-field>
+
+                    <input-icon class="pi pi-search" />
+                    <input-text type="text"
+                        size="small"
+                        style="width:18rem;"
                         placeholder="Search keywords..."
                         v-model="searchTasks"
                         @keyup="emits('search:update', searchTasks)" />
-                    <font-awesome-icon icon="fas fa-search"
-                        class="ms-3 search-icon text-soft"></font-awesome-icon>
-                </div>
+                </icon-field>
             </div>
+
         </LeftActionBar>
         <RightActionBar>
+
+
             <div class="me-3">
                 <button @click="getUsers"
                     class="owner-dropdown-toggler"
@@ -77,25 +76,10 @@
                 <DropdownOwnerList :loading="userIsLoading"
                     @change="selectOwnerHandler" />
             </div>
-            <div class="me-3"
-                style="min-width:4rem;">
-                <span>{{ pagination?.from??0 }} - {{ pagination?.to??0 }} of {{ pagination?.total??0 }}</span>
-            </div>
-            <button :disabled="!pagination?.prev_page || isLoading"
-                @click="pagination?.prev_page && emits('pagination:fetch', { page: pagination?.prev_page })"
-                v-tippy="{ content: 'Previous', placement: 'top' }"
-                class="toolbar-btn btn btn-light btn-floating me-3">
-                <font-awesome-icon icon="fas fa-arrow-left"
-                    class="text-soft fs-16px"></font-awesome-icon>
-            </button>
 
-            <button :disabled="!pagination?.next_page || isLoading"
-                v-tippy="{ content: 'Next', placement: 'top' }"
-                @click="pagination?.next_page && emits('pagination:fetch', { page: pagination?.next_page })"
-                class="toolbar-btn btn btn-light btn-floating me-3">
-                <font-awesome-icon icon="fas fa-arrow-right"
-                    class="text-soft fs-16px"></font-awesome-icon>
-            </button>
+            <table-pagination :pagination="pagination"
+                @change="(_page)=> emits('pagination:fetch', { page: _page })"></table-pagination>
+
         </RightActionBar>
     </ActionBar>
 </template>

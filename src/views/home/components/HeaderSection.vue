@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <div class="header-section px-3 border-bottom">
+    <div class="header-section px-4 border-bottom">
         <div class="col-left">
             <SearchBox></SearchBox>
         </div>

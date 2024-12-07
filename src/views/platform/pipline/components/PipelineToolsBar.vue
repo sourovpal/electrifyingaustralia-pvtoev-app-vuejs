@@ -3,6 +3,7 @@
     import ActionBar from '@components/ActionBar/ActionBar.vue';
     import LeftActionBar from '@components/ActionBar/LeftActionBar.vue';
     import RightActionBar from '@components/ActionBar/RightActionBar.vue';
+    import TableRefreshSpinner from '@components/Datatable/TableRefreshSpinner.vue';
     import { Skeletor } from 'vue-skeletor';
     import { AvatarIcon } from "@assets/icons";
     import { usePlatformStore, usePipelineStore } from "@stores";
@@ -147,48 +148,13 @@
             <div class="pipeline-title ms-3 me-3">
 
                 <Skeletor v-if="isFirstLoading"
-                    style="width:6rem;height:1rem;"></Skeletor>
+                    style="width:4rem;height:1rem;"></Skeletor>
 
-                <h5 v-else
-                    class="fs-20px fw-bold text-head mb-0">{{ pipeline?.title }}</h5>
-
-            </div>
-            <div class="">
-
-                <button @click="handleRefresh"
-                    class="btn btn-light btn-floating ms-2"
-                    :disabled="isLoading">
-
-                    <svg-custom-icon v-if="isLoading"
-                        icon="spinner-icon" />
-                    <svg-custom-icon v-else
-                        icon="loader-icon" />
-
-                </button>
+                <h5 v-else class="fs-20px fw-bold text-soft mb-0">{{ pipeline?.title }}</h5>
 
             </div>
 
-            <div class="d-lg-flex justify-content-center align-items-center d-none">
-
-                <router-link :to="{query:{...route.query, view:'column'}}"
-                    class="btn btn-light btn-floating ms-2 d-flex justify-content-center align-items-center">
-                    <font-awesome-icon icon="fas fa-columns"
-                        class="text-head fs-16px"
-                        :class="{'text-primary':pipelineView === 'column'}"></font-awesome-icon>
-                </router-link>
-
-                <router-link :to="{query:{...route.query, view:'row'}}"
-                    class="btn btn-light btn-floating ms-2 d-flex justify-content-center align-items-center">
-
-                    <font-awesome-icon icon="fas fa-bars"
-                        class="text-head fs-16px"
-                        :class="{'text-primary':pipelineView === 'row'}"></font-awesome-icon>
-
-                </router-link>
-
-            </div>
-
-            <div class="search-bar w-100 d-lg-inline d-none">
+            <!-- <div class="search-bar w-100 d-lg-inline d-none me-4">
 
                 <div class="position-relative ms-4 w-100">
 
@@ -202,6 +168,39 @@
                         class="ms-3 search-icon text-soft"></font-awesome-icon>
 
                 </div>
+
+            </div> -->
+
+            <TableRefreshSpinner @click="handleRefresh"
+                :loading="isLoading"></TableRefreshSpinner>
+
+            <div class="d-lg-flex justify-content-center align-items-center d-none">
+
+                <router-link :to="{query:{...route.query, view:'column'}}"
+                    class="me-1">
+                    <circle-button>
+                        <material-icon name="view_column"
+                            size="22" type="outlined"
+                            :class="{
+                                'text-primary':pipelineView === 'column', 
+                                'text-soft': pipelineView != 'column'
+                            }">
+                        </material-icon>
+                    </circle-button>
+                </router-link>
+
+                <router-link :to="{query:{...route.query, view:'row'}}"
+                    class="ms-2">
+                    <circle-button>
+                        <material-icon name="table_rows"
+                            size="20" type="outlined"
+                            :class="{
+                                'text-primary':pipelineView === 'row', 
+                                'text-soft': pipelineView != 'row'
+                            }">
+                        </material-icon>
+                    </circle-button>
+                </router-link>
 
             </div>
         </left-action-bar>
@@ -232,14 +231,14 @@
             <div v-else
                 class="d-lg-inline d-none">
 
-                <button class="btn btn-light btn-floating me-3 d-flex justify-content-center align-items-center"
-                    v-tippy="{ content: 'Filter Leads', placement: 'top' }"
-                    @click="handleToggleFilter">
+                <circle-button v-tippy="{ content: 'Filter Leads', placement: 'top' }"
+                    @click="handleToggleFilter"
+                    class="btn btn-light btn-floating me-3 d-flex justify-content-center align-items-center">
 
-                    <font-awesome-icon icon="fas fa-filter"
-                        class="fs-15px text-head"></font-awesome-icon>
+                    <material-icon name="filter_alt"
+                        size="20" />
 
-                </button>
+                </circle-button>
 
             </div>
 
@@ -259,13 +258,18 @@
                     style="min-width:18rem;">
 
                     <div class="d-flex justify-content-between align-items-center px-2 py-1 mb-2">
+
                         <button class="btn btn-sm btn-outline-primary"
                             :class="{active:toggleOrder == 'DESC'}"
-                            @click="toggleOrder = 'DESC'">Descending</button>
+                            @click="toggleOrder = 'DESC'">
+                            Descending
+                        </button>
 
                         <button class="btn btn-sm btn-outline-primary"
                             :class="{active:toggleOrder == 'ASC'}"
-                            @click="toggleOrder = 'ASC'">Ascending</button>
+                            @click="toggleOrder = 'ASC'">
+                            Ascending
+                        </button>
 
                     </div>
 
@@ -273,7 +277,9 @@
                         v-for="(item, index) in toggleOrder == 'DESC'? descendingOrderList : ascendingOrderList"
                         :class="{active:(selectedOrder.column == item.column && selectedOrder.order == item.order)}"
                         @click="handleOrder(item)"
-                        :key="index">{{ item.title }}</div>
+                        :key="index">
+                        {{ item.title }}
+                    </div>
 
                     <hr class="m-0">
 

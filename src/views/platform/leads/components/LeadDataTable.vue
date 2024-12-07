@@ -119,7 +119,9 @@
   <empty-page :css="{ icon: { width: '30%' } }"
     v-else-if="!leads.length && !isLoading"></empty-page>
 
-  <Datatable v-else>
+  <Datatable v-else
+    height="calc(100vh - 97px)">
+    
     <datatable-header>
       <div class="tbl-th"
         style="width: 3.6rem; flex-grow: 1"></div>
@@ -272,8 +274,7 @@
         <div style="width: 3.5rem; flex-grow: 1"
           class="tbl-td full-width ps-2">
 
-          <custom-checkbox
-            @click="handleSelectRow(lead.lead_id)"
+          <custom-checkbox @click="handleSelectRow(lead.lead_id)"
             :checked="!!selectedLeads.includes(lead.lead_id)" />
 
         </div>

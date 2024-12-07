@@ -122,6 +122,8 @@ const iconsToUse = [
   fa.faCircleRadiation,
   fa.faHeart,
   fa.faWifi,
+  fa.faRotateRight,
+  fa.faRotate,
   // Regular
   far.faSquare,
   far.faSquareMinus,

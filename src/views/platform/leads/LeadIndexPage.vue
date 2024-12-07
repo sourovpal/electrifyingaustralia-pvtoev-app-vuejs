@@ -19,7 +19,7 @@
 
   function handleFetchLeads(payload, fetch = false, reset = false) {
 
-    if (reset) return leadsStore.setFetchQuery("clear");
+    if (reset) leadsStore.setFetchQuery("clear");
 
     leadsStore.setFetchQuery(payload, fetch);
   }

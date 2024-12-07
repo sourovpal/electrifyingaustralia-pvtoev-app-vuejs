@@ -39,7 +39,7 @@ export const menus = async () => {
                 label: 'Tasks',
                 path: '/platform/tasks',
                 query: {},
-                icon: 'fas fa-list-check',
+                icon: 'touch_app',
                 children: [
                     {
                         label: 'Today',
@@ -89,7 +89,7 @@ export const menus = async () => {
                 label: 'Leads',
                 path: '/platform/leads',
                 query: {},
-                icon: 'fas fa-users',
+                icon: 'domain',
                 children: [
                     {
                         label: 'All',
@@ -103,14 +103,14 @@ export const menus = async () => {
                 label: 'Pipelines',
                 path: '/platform/deals',
                 query: { ...getFirstPipelineStage() },
-                icon: 'fas fa-sliders',
+                icon: 'add_road',
                 children: [].concat(getPipelineStages)
             },
             {
                 label: 'Contacts',
                 path: '/platform/contacts',
                 query: {},
-                icon: 'fas fa-id-badge',
+                icon: 'add_ic_call',
                 children: [
                 ]
             },

@@ -191,8 +191,8 @@ export const useProjectStore = defineStore('project', {
             return state.ownerList;
         },
         getExportLimitDetails: (state) => ({
-            export_limit_in_kw: state.project?.export_limit_in_kw,
-            export_limit_type: state.project?.export_limit_type
+            export_limit_in_kw: state.project.export_limit_in_kw,
+            export_limit_type: state.project.export_limit_type
         })
     },
 
@@ -248,8 +248,8 @@ export const useProjectStore = defineStore('project', {
             const projects = response.data.data;
             const formatted = projects.map(project => ({
                 ...project,
-                address: project.lead?.address_line_one,
-                postcode: project.lead?.post_code
+                address: project.lead.address_line_one,
+                postcode: project.lead.post_code
             }));
             this.projectList = formatted;
             this.projectLoading = false;

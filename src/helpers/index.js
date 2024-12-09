@@ -227,8 +227,6 @@ export function validateObject(payload) {
   return false;
 }
 
-
-
 export function formatFileSize(bytes) {
   const k = 1024;
   const dm = 2;
@@ -287,4 +285,32 @@ export function getPropertieValue(propertie, lead) {
   }
 
   return "—";
+}
+
+export async function handlePromise(promise) {
+    if (!(promise instanceof Promise)) 
+        throw new Error(`Expected Promise, ${typeof promise} given`) 
+
+    const result = await Promise.allSettled([promise]).then((settledPromises) => {
+        const [ settledData ] = settledPromises; // Getting the first and the only settled object  (since only one promise is given) 
+        const { value, reason } = settledData;
+
+        return {
+            res: value,
+            err: reason
+        }
+    })
+
+    return { 
+        response: result.res,
+        error: result.err
+    }
+}
+
+export function isNumeric(str) {
+    if (!str) 
+        return false;
+    const stringified = str.toString();
+    const numRegex = /^[0-9]*$/;
+    return numRegex.test(stringified);
 }

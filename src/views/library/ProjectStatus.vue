@@ -12,6 +12,8 @@ import { RouterLink } from 'vue-router'
 const projectStore = useProjectStore();
 const { toggleSendModal } = storeToRefs(projectStore);
 
+const activeTaxSlug = computed(() => projectStore.getTaxType);
+
 watch(toggleSendModal, (newValue) => {
     if (!newValue) return; // to prevent infinite recursion
     shareModalOpen.value = newValue;
@@ -19,37 +21,14 @@ watch(toggleSendModal, (newValue) => {
 });
 
 const shareModalOpen = ref(false);
-const activeTaxSlug = computed(() => projectStore.getTaxType);
-
-const handleShareBtnClick = () => {
-	shareModalOpen.value = true
-}
-
-const handleShareModalClose = () => {
-	shareModalOpen.value = false
-}
+const handleShareModalClose = () => shareModalOpen.value = false
+// const handleShareBtnClick = () => shareModalOpen.value = true
 
 const projectInstallModalOpen = ref(false)
+// const handleInstallerBtnClick = () => projectInstallModalOpen.value = !projectInstallModalOpen.value
+const handleProjectInstallModalClose = () => projectInstallModalOpen.value = false
 
-const handleInstallerBtnClick = () => {
-	projectInstallModalOpen.value = !projectInstallModalOpen.value
-}
-
-const handleProjectInstallModalClose = () => {
-	projectInstallModalOpen.value = false
-}
-
-onMounted(() => {
-	simulateApiCall()
-})
-const isLoading = ref(false)
-
-const simulateApiCall = () => {
-	isLoading.value = true
-	setTimeout(() => {
-		isLoading.value = false
-	}, 1500)
-}
+const isLoading = computed(() => projectStore.getProjectLoadingState);
 </script>
 
 <template>
@@ -120,12 +99,17 @@ const simulateApiCall = () => {
 			<div class="proposal-info-display mt-2 rounded border">
 				<div :class="`editor-display position-relative ${isLoading ? 'opacity-0' : ''}`">
                     <!-- temporarily keeping this opacity-0 for a temporary input -->
-					<img
-						class="w-100 opacity-0"
-						style="height: 14rem;"
-						alt="Solar panel image"
-						src="https://previews.123rf.com/images/aquir/aquir1311/aquir131100316/23569861-sample-grunge-red-round-stamp.jpg"
-					/>
+
+					<!-- <img -->
+					<!-- 	class="w-100" -->
+					<!-- 	style="height: 14rem;" -->
+					<!-- 	alt="Solar panel image" -->
+					<!-- 	src="https://as2.ftcdn.net/v2/jpg/07/91/22/59/1000_F_791225926_MUEPuko0xgjKvWeAHGPdErQHY6X2ZJ1m.jpg" -->
+					<!-- /> -->
+					<div class="w-100 d-flex border-bottom justify-content-center mb-3 align-items-center" style="height: 14rem;">
+					    <span class="text-uppercase lead fw-bold opacity-50">Map Coming soon</span>
+					</div>
+
 					<TemporaryPanelInput />
 					<!-- <div -->
 					<!-- 	class="editor-display-menu d-none d-md-flex text-white position-absolute py-3 px-3 d-flex justify-content-between align-items-center" -->

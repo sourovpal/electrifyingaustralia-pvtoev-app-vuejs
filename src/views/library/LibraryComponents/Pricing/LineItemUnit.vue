@@ -1,10 +1,11 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import Formatter from '../../../../helpers/Formatter';
 import { onClickOutside } from '@vueuse/core';
 import axios from '../../../../actions/api';
 import { useProjectStore } from '../../../../stores/project';
 import { useToast } from 'vue-toast-notification';
+import { isNumeric } from '../../../../helpers';
 
 const emit = defineEmits([
     'item-updated'
@@ -18,7 +19,7 @@ const projectStore = useProjectStore();
 const toast = useToast();
 
 onMounted(() => {
-    total.value = props.pricing.solar_system_total_price;
+    total.value = props.pricing.line_item_price;
     userInput.value = total.value
 });
 
@@ -30,27 +31,23 @@ const toggleEditMode = () => {
     toggleQuantityInput.value = !toggleQuantityInput.value 
 };
 
-const inputValid = computed(
-    () => (/^-?\d+(\.\d+)?$/).test(userInput.value)
-);
-
 const userInput = ref(0);
 const handleTotalInput = () => {
-    if (!inputValid.value)
-        return;
+    if (!isNumeric(userInput.value))
+        return toast.error('Please enter valid input values!');
     total.value = userInput.value;
     updateRecord();
 }
 
 const updateRecord = () => {
 	const payload = { new_total: total.value }
-	axios.put(`projects/${projectStore.getProjectId}/pricing/${props.pricing.id}/update-solar-system-total`, payload)
+	axios.put(`projects/${projectStore.getProjectId}/pricing/${props.pricing.id}/update-line-item-price`, payload)
 	    .then((res) => {
             toast.success(res?.data?.message ?? 'Current bills updated');
             emit('item-updated');
 	    })
 	    .catch(err => {
-            toast.error(err?.res?.data?.message ?? 'Something went wrong');
+            toast.error(err?.response?.data?.message ?? 'Something went wrong');
             console.log(err);
 	    })
 	    .finally(toggleEditMode)
@@ -80,14 +77,9 @@ onClickOutside(
         </div>
 
 		<!-- Description -->
-        <p class="col-5 col-md-3 mb-0 cursor-pointer text-info fw-bold"> Solar system </p>
+        <p class="col-5 col-md-3 mb-0 cursor-pointer text-info fw-bold">{{ pricing.description }}</p>
 
-		<!-- Temp -->
-		<small class="col-1 col-md-2"></small>
-		<small class="col-2 col-md-2"></small>
-		<small class="col-2 col-md-2"></small>
-
-		<small class="col-2 col-md-2 text-end">
+		<small class="offset-6 col-2 col-md-2 text-end">
             <template v-if="!toggleQuantityInput">
                 <span class="cursor-pointer" @click="toggleEditMode"> $ {{ Formatter.toIntlFormat(total) }}</span>
             </template>
@@ -96,7 +88,7 @@ onClickOutside(
                 v-else
                 :min="0"
                 @keyup.enter="handleTotalInput"
-                :class="`form-control text-end p-1 ${!inputValid ? 'text-danger' : ''}`"
+                class="form-control text-end p-1"
                 placeholder="Quantity"
                 ref="quantityInput"
                 v-model.number="userInput"

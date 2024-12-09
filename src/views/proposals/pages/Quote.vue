@@ -80,10 +80,20 @@
 			</div>
 
 			<div class="row project-item gx-0 py-1" v-for="pricing in pricings">
-				<p class="mb-0 col-8"> {{ pricing.description }} </p>
-				<p class="mb-0 col-1"> {{ pricing.quantity ?? '-' }} </p>
-				<p class="mb-0 col-1"> {{ pricing.unit_price ? '$ ' + Formatter.toIntlFormat(pricing.unit_price) : '-' }} </p>
-				<p class="mb-0 col-2 text-end"> {{ pricing.total ? '$ ' + Formatter.toIntlFormat(pricing.total) : '-' }} </p>
+                <template v-if="!pricing.item_hidden">
+				    <p class="mb-0 col-8"> {{ pricing.description }} </p>
+				    <p class="mb-0 col-1"> {{ pricing.quantity ?? '-' }} </p>
+				    <p class="mb-0 col-1"> 
+				        <template v-if="!pricing.price_hidden">
+				            {{ pricing.unit_price ? '$ ' + Formatter.toIntlFormat(pricing.unit_price) : '-' }}
+				        </template> 
+				    </p>
+				    <p class="mb-0 col-2 text-end">
+				        <template v-if="!pricing.price_hidden">
+				            {{ pricing.total ? '$ ' + Formatter.toIntlFormat(pricing.total) : '-' }} 
+                        </template>
+				    </p>
+                </template>
 			</div>
 
 			<div class="row project-summary gx-0 py-1 mt-3 text-black fs-11px">

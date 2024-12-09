@@ -81,7 +81,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from 'vue'
+import { computed } from 'vue'
 import { useRouter } from 'vue-router';
 import { Skeletor } from 'vue-skeletor'
 import { useProjectStore } from '../../stores/project';
@@ -91,25 +91,13 @@ const props = defineProps(['project']);
 const router = useRouter();
 const projectStore = useProjectStore();
 const projectActions = useProjectActions();
-
 const projectId = computed(() => projectStore.getProjectId ?? '');
-
-const isLoading = ref(false)
-
+const isLoading = computed(() => projectStore.getProjectLoadingState);
 
 const handleMenuItemClick = () => {
     if (!props.project)
         return;
-
     router.push(`/library/proposals/${props.project.id}`); 
-}
-
-const simulateApiCall = () => {
-	isLoading.value = true
-	setTimeout(
-	    () => isLoading.value = false,
-	    1500
-	)
 }
 
 const handleArchiveClick = () => {
@@ -124,8 +112,6 @@ const handleMarkAsSoldClick = () => {
     projectActions.toggleMarkAsSoldState(props.project.id);
 }
 
-
-onMounted(simulateApiCall)
 </script>
 
 <style lang="scss" scoped>

@@ -50,7 +50,12 @@ onMounted(() => {
 				    </textarea>
 				</div>
 				<div style="width: 95%;" class="d-flex align-items-center justify-content-between pt-1 pb-3">
-				    <small class="fs-12px">{{formData.notes.length}}/{{characterLimit}}</small>
+				    <small 
+				        v-if="formData?.notes?.length" 
+				        class="fs-12px"
+				    >
+				        {{ formData?.notes?.length }}/{{ characterLimit }}
+				    </small>
 				    <button @click="updateNotes" class="btn fs-12px btn-sm btn-secondary"> 
 				        Save
 				    </button>

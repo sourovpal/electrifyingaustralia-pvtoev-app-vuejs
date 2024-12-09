@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted, computed} from 'vue'
+import { computed } from 'vue'
 import ActionBar from '../../components/ActionBar/ActionBar.vue'
 import LeftActionBar from '../../components/ActionBar/LeftActionBar.vue'
 import RightActionBar from '../../components/ActionBar/RightActionBar.vue'
@@ -13,40 +13,18 @@ import useProjectActions from './LibraryComponents/composables/userProjectAction
 const projectActions = useProjectActions();
 
 const toast = useToast();
-const owners = ref([
-	{ id: 3, name: 'beans', display_name: null, email: 'fahim@gmail.com', profile_avatar: 'https://ui-avatars.com/api/?background=48D1CC&color=fff&name=beans&bold=true&id=83', is_owner: 1, user_role: null, },
-	{ id: 4, name: 'beans', display_name: null, email: 'fahim@gmail.com', profile_avatar: 'https://ui-avatars.com/api/?background=48D1CC&color=fff&name=beans&bold=true&id=83', is_owner: 1, user_role: null, },
-	{ id: 5, name: 'beans', display_name: null, email: 'fahim@gmail.com', profile_avatar: 'https://ui-avatars.com/api/?background=48D1CC&color=fff&name=beans&bold=true&id=83', is_owner: 1, user_role: null, },
-	{ id: 6, name: 'beans', display_name: null, email: 'fahim@gmail.com', profile_avatar: 'https://ui-avatars.com/api/?background=48D1CC&color=fff&name=beans&bold=true&id=83', is_owner: 1, user_role: null, },
-	{ id: 7, name: 'beans', display_name: null, email: 'fahim@gmail.com', profile_avatar: 'https://ui-avatars.com/api/?background=48D1CC&color=fff&name=beans&bold=true&id=83', is_owner: 1, user_role: null, },
-	{ id: 8, name: 'beans', display_name: null, email: 'fahim@gmail.com', profile_avatar: 'https://ui-avatars.com/api/?background=48D1CC&color=fff&name=beans&bold=true&id=83', is_owner: 1, user_role: null, },
-])
 
 const emit = defineEmits(['link-to-crm-click', 'open-customer-details-sidebar']);
-
 const projectStore = useProjectStore();
+const isLoading = computed(() => projectStore.getProjectLoadingState);
+const owners = computed(() => projectStore.getOwnerList); // Empty for now
+const projectId = computed(() => projectStore.getProjectId);
+const project = computed(() => projectStore.project);
 
-onMounted(() => {
-    simulateApiCall();
-});
-const isLoading = ref(false);
+const handleLinkToCrmBtnClick = () => emit('link-to-crm-click');
+const handleAddressClick = () => emit('open-customer-details-sidebar');
 
-const simulateApiCall = () => {
-    isLoading.value = true;
-    setTimeout(() => {
-        isLoading.value = false;
-    }, 1500);
-}
-
-const handleLinkToCrmBtnClick = () => {
-    emit('link-to-crm-click');
-}
-
-const handleAddressClick = () => {
-    emit('open-customer-details-sidebar');
-}
-
-const handleCopyToClipboardClick = async () => {
+const handleCopyToClipboardClick = () => {
     navigator.clipboard.writeText(projectStore.project.address)
         .then(() => toast.success('Address copied to clipboard!'))
         .catch(e => {
@@ -55,8 +33,6 @@ const handleCopyToClipboardClick = async () => {
         });
 }
 
-const projectId = computed(() => projectStore.getProjectId);
-const project = computed(() => projectStore.project);
 </script>
 
 <template>
@@ -67,10 +43,10 @@ const project = computed(() => projectStore.project);
 			    <Skeletor width="65%" />
 			</div>
 			<div class="cursor-pointer" @click="handleAddressClick" v-else>
-				<p class="mb-0">
+				<div class="mb-0">
 					<!-- 185 Military Road , Dover Heights -->
 					<!-- <span class="text-secondary d-none d-lg-inline">New South Wales</span> -->
-                    {{ projectStore.project?.address }}
+                    {{ project?.address }}
 					<div class="d-inline-flex ms-2 gap-2">
                         <font-awesome-icon
 						    class="text-secondary"
@@ -82,7 +58,7 @@ const project = computed(() => projectStore.project);
 						    icon="fas fa-copy"
 						/>
                     </div>
-				</p>
+				</div>
 				<div>
 					<small class="text-secondary fs-12px">
 						Dov Frazer · 0402450222 · dovman@gmail.com ·
@@ -100,7 +76,7 @@ const project = computed(() => projectStore.project);
                 <Skeletor width="2.4375rem" height="2.4375rem" style="border-radius: 50%;" />
 			</div>
 
-            <div v-else class="d-flex align-items-center gap-2">
+            <div v-else class="d-flex align-items-center gap-2 me-4">
                 <!-- Keeping this commented for now -->
 				<!-- <font-awesome-icon
 				    v-if="!projectStore.getRecalculationLoadingState"
@@ -191,14 +167,14 @@ const project = computed(() => projectStore.project);
                         <li>
                             <a @click="projectActions.toggleMarkAsSoldState(projectId)" class="dropdown-item fs-14px d-inline-flex align-items-center gap-2 " href="#">
                                 <font-awesome-icon icon="fas fa-check" />
-                                <span>{{projectStore.project?.marked_as_sold ? 'Mark project as active' : 'Mark project as Sold'}}</span>
+                                <span>{{project?.marked_as_sold ? 'Mark project as active' : 'Mark project as Sold'}}</span>
                             </a>
                         </li>
 
                         <li @click="projectActions.toggleProjectArchivedState(projectId)">
                             <a class="dropdown-item fs-14px d-inline-flex align-items-center gap-2 " href="#">
                                 <font-awesome-icon icon="fas fa-archive" />
-                                <span>{{projectStore.project?.archived ? 'Unarchive' : 'Archive'}} project</span>
+                                <span>{{project?.archived ? 'Unarchive' : 'Archive'}} project</span>
                             </a>
                         </li>
 

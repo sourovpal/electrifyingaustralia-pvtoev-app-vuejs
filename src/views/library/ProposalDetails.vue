@@ -1,11 +1,11 @@
 <script setup>
 import Chart from 'chart.js/auto'
-import {onMounted, ref} from 'vue'
+import {onMounted, ref, computed} from 'vue'
 import {Skeletor} from 'vue-skeletor'
 
 import TabbedDisplay from './components/TabbedDisplay.vue'
 import PricingDisplay from './LibraryComponents/Pricing/PricingDisplay.vue'
-import Financing from './LibraryComponents/Financing.vue'
+// import Financing from './LibraryComponents/Financing.vue'
 // import RebateDisplay from './LibraryComponents/Rebates/RebateDisplay.vue'
 import PaymentSettings from './LibraryComponents/PaymentSettings.vue'
 
@@ -26,7 +26,10 @@ import TermSettings from './LibraryComponents/TermSettings.vue'
 
 import CustomSettings from './LibraryComponents/CustomSettings.vue'
 import Notes from './LibraryComponents/Notes.vue'
-import Wholesaler from './LibraryComponents/Wholesaler.vue'
+// import Wholesaler from './LibraryComponents/Wholesaler.vue'
+import { useProjectStore } from '../../stores/project'
+
+const projectStore = useProjectStore();
 
 const data = [
 	{ year: 'Jan', count: 13.10 },
@@ -60,18 +63,14 @@ const initChart = () => {
 	})
 }
 
-onMounted(() => {
-	simulateApiCall()
-})
-const isLoading = ref(false)
+const isLoading = computed(
+    () => projectStore.getProjectLoadingState
+);
 
-const simulateApiCall = () => {
-	isLoading.value = true
-	setTimeout(() => {
-		isLoading.value = false
-		initChart()
-	}, 1500)
-}
+onMounted(
+    initChart
+);
+
 </script>
 
 <template>

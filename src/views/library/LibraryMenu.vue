@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from 'vue';
+import { computed } from 'vue';
 import LibraryMenuItem from './LibraryMenuItem.vue';
 import { Skeletor } from 'vue-skeletor';
 import { storeToRefs } from 'pinia';
@@ -38,17 +38,7 @@ const projectStore = useProjectStore()
 const { toggleCustomerDetailsSidebar } = storeToRefs(projectStore);
 const projects = computed(() => projectStore.projectList);
 
-onMounted(() => {
-    simulateApiCall();
-});
-const isLoading = ref(false);
-
-const simulateApiCall = () => {
-    isLoading.value = true;
-    setTimeout(() => {
-        isLoading.value = false;
-    }, 1500);
-}
+const isLoading = computed(() => projectStore.getProjectLoadingState);
 
 </script>
 

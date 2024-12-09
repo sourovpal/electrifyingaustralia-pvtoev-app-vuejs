@@ -24,7 +24,7 @@ const getCurrentBillsDetails = () => {
             projectStore.setCurrentBills(res.data);
         })
         .catch(err => {
-            toast.error(err?.res?.data?.message ?? 'Something went wrong');
+            toast.error(err?.response?.data?.message ?? 'Something went wrong');
             console.log(err);
         })
         .finally(() => {
@@ -42,7 +42,7 @@ const updateCurrentBills = () => {
             toast.success(res?.data?.message ?? 'Current bills updated');
             getCurrentBillsDetails();
         }).catch(() => {
-            toast.error(err?.res?.data?.message ?? 'Something went wrong');
+            toast.error(err?.response?.data?.message ?? 'Something went wrong');
             console.log(err);
         })
         .finally(() => {

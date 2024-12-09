@@ -11,9 +11,11 @@ export const useProjectStore = defineStore('project', {
         certificateTypes: [],
         project: null,
         recalculationLoading: false,
+        projectLoading: false,
         inverterModels: [],
         panelModels: [],
         projectList: [],
+        ownerList: [],
 
         selfConsumption: 0,
         selectedPanelDetails: {
@@ -71,8 +73,9 @@ export const useProjectStore = defineStore('project', {
             const hoursOfSunlightInADay = 4;
             const systemSize = state.getSystemSize;
             const lowerSunlightDuringTheWinter = 0; // this needs to be a non zero value
+            const daysInAYear = 365;
 
-            const value = ((systemSize * hoursOfSunlightInADay) * 365) - lowerSunlightDuringTheWinter;
+            const value = ((systemSize * hoursOfSunlightInADay) * daysInAYear) - lowerSunlightDuringTheWinter;
             return Number.isInteger(value) ? value : value.toFixed(2);
         },
         getAnnualBill(state) {
@@ -181,6 +184,16 @@ export const useProjectStore = defineStore('project', {
                 return [];
             return state.project.warranties;
         },
+        getProjectLoadingState(state) {
+            return state.projectLoading
+        },
+        getOwnerList(state) {
+            return state.ownerList;
+        },
+        getExportLimitDetails: (state) => ({
+            export_limit_in_kw: state.project?.export_limit_in_kw,
+            export_limit_type: state.project?.export_limit_type
+        })
     },
 
     actions: {
@@ -230,8 +243,16 @@ export const useProjectStore = defineStore('project', {
             this.panelModels = response.data.panel_models;
         },
         async setProjectList() {
+            this.projectLoading = true;
             const response = await api.get('projects')
-            this.projectList = response.data.data;
+            const projects = response.data.data;
+            const formatted = projects.map(project => ({
+                ...project,
+                address: project.lead?.address_line_one,
+                postcode: project.lead?.post_code
+            }));
+            this.projectList = formatted;
+            this.projectLoading = false;
         },
     }
 

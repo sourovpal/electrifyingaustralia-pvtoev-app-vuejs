@@ -205,6 +205,12 @@ const projects = computed(() => projectStore.projectList);
                     </div>
                 </div>
 
+                <div class="text-center d-flex flex-column mt-5">
+                    <p class="mb-0 lead opacity-50">
+                        No projects to show
+                    </p>
+                </div>
+
                 <!-- <DataTableSkeletor v-if="isFirstLoading" /> -->
                 <!-- temp condition -->
                 <DatatableNoDataMessage v-if="false"  />

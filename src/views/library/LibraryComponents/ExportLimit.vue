@@ -1,9 +1,10 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import SaveableInput from '../components/SaveableInput.vue';
 import axios from '../../../actions/api.js';
 import { useToast } from 'vue-toast-notification';
 import { useProjectStore } from '../../../stores/project.js';
+import { handlePromise } from '../../../helpers';
 
 const emit = defineEmits([
     'switch-request'
@@ -13,29 +14,40 @@ const toast = useToast();
 const projectStore = useProjectStore();
 const projectId = projectStore.getProjectId;
 
-const noLimit = ref(projectStore.project.export_limit_type === "no_limit");
-const limit = ref(projectStore.project.export_limit_in_kw);
+const noLimit = ref(null);
+const limit = ref(null);
+
+const setValuesFromTheState = () => {
+    const exportLimitDetails = projectStore.getExportLimitDetails;
+    noLimit.value = exportLimitDetails.export_limit_type === 'no_limit';
+    limit.value = exportLimitDetails.export_limit_in_kw;
+}
+
+onMounted(setValuesFromTheState)
 
 const loading = ref(false);
 
-const sendUpdatedDetails = () => {
+const sendUpdatedDetails = async () => {
     loading.value = true;
     projectStore.setRecalculationLoadingState(true);
 
     const payload = { no_limit: noLimit.value, export_limit: limit.value }
-    axios.post(`projects/${projectId}/export-limit-update`, payload)
-        .then(res => {
-            toast.success(res?.data?.message ?? 'Success');
-            projectStore.setCurrentProject(projectId);
-        })
-        .catch((err) => {
-            toast.error(err?.res?.data?.message ?? 'Something went wrong');
-            console.log(err);
-        })
-        .finally(() => {
-            projectStore.setRecalculationLoadingState(false);
-            loading.value = false
-        });
+    const { response, error } = await handlePromise(axios.post(`projects/${projectId}/export-limit-update`, payload));
+
+    if (response) {
+        toast.success(response?.data?.message ?? 'Success');
+        await projectStore.setCurrentProject(projectId);
+        noLimit.value = projectStore.project.export_limit_type === 'no_limit';
+        limit.value = projectStore.project.export_limit_in_kw;
+    }
+
+    if (error) { 
+        toast.error(error?.response?.data?.message ?? 'Something went wrong');
+        console.log(error);
+    }
+
+    projectStore.setRecalculationLoadingState(false);
+    loading.value = false
 }
 
 const handleExportLimitTypeInputClick = (noLimitStatus) => {

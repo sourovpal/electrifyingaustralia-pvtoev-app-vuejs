@@ -53,13 +53,34 @@
 
   const handleLocationClick = async (item) => {
 
-    await api.post('/projects', { address: item.place_name_en, owner_id: 'jR' })
+    const address = item.address ?? '' + ' ' + item.text_en ?? '';
+
+    const center = item.center;
+
+    const context = item.context;
+
+    let payload = {
+      address_line_one: address,
+      state: '',
+      city: '',
+      postcode: '',
+      country: '',
+    };
+
+    context.map((row) => {
+      if (row?.id?.includes('postcode')) payload.postcode = row.text_en;
+      else if (row?.id?.includes('locality')) payload.city = row.text_en;
+      else if (row?.id?.includes('region')) payload.state = row.text_en;
+      else if (row?.id?.includes('country')) payload.country = row.text_en;
+    });
+
+    await api.post('/projects', payload)
       .then(res => {
         const projectId = res?.data?.project_id;
         router.push({ path: `/library/proposals/${projectId}` });
       })
-      .catch(e => {
-        $toast.error('Oops, something went wrong');
+      .catch(error => {
+        $toast.error(error.message.text)
       })
   }
 
@@ -87,7 +108,56 @@
     <div v-if="search_query"
       :class="{'show':!!search_query}"
       class="search-result">
-      {{ addresses }}
+      <scroll-panel :dt="{bar: {background: '#aaaaaa',size:'0.2rem'}}"
+        style="width:100%;min-height:30rem;max-height:35rem;">
+
+        <div class="address-location">
+
+          <h6 class="fw-bold fs-16px text-head px-2 py-2">Existing Projects</h6>
+
+          <ul class="list-unstyled mb-0 p-0">
+
+            <li v-for="(address, index) in addresses"
+              :key="index"
+              class="address-label py-2 px-2 fs-14px text-head d-flex justify-content-start align-items-start">
+
+              <material-icon name="solar_power"
+                size="22"
+                class="text-head me-2 location-icon"></material-icon>
+
+              {{ address.place_name_en }}
+
+            </li>
+
+          </ul>
+
+        </div>
+
+        <div class="address-location">
+
+          <h6 class="fw-bold fs-16px text-head px-2 py-2">Start a new project</h6>
+
+          <ul class="list-unstyled mb-0 p-0">
+
+            <li v-for="(address, index) in addresses"
+              :key="index"
+              @click="handleLocationClick(address)"
+              class="address-label py-2 px-2 fs-14px text-head d-flex justify-content-start align-items-start">
+
+              <material-icon name="location_on"
+                size="24"
+                class="text-head me-2 location-icon"></material-icon>
+
+              {{ address.place_name_en }}
+
+            </li>
+
+          </ul>
+
+        </div>
+
+      </scroll-panel>
+
     </div>
 
   </div>
@@ -99,10 +169,8 @@
     position: relative;
 
     .search-result {
-      visibility: hidden;
+      /* visibility: hidden; */
       opacity: 0;
-      height: 30rem;
-      max-height: 30rem;
       max-width: 35rem;
       min-width: 560px;
       top: 45px;
@@ -121,6 +189,20 @@
     .search-result.show {
       visibility: visible !important;
       opacity: 1;
+    }
+  }
+
+  .address-label {
+    line-height: 1.3rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #f3f7fa;
+      color: var(--crm-color-7) !important;
+
+      .location-icon {
+        color: var(--crm-color-7) !important;
+      }
     }
   }
 </style>

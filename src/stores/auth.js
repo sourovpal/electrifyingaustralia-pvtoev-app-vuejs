@@ -41,7 +41,6 @@ export const useAuthStore = defineStore("auth", {
     getAccessToken(state) {
       return state.access_token ?? "";
     },
-
   },
   actions: {
     logoutLocalSession() {

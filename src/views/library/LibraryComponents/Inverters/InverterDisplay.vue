@@ -37,7 +37,7 @@ const handleInverterClick = (inverterId) => {
     axios.post(`projects/${projectStore.getProjectId}/inverter-sales/add`, { inverter_id: inverterId })
         .then(getInverterSales)
         .catch(err => {
-            toast.error(err?.res?.data?.message ?? 'Something went wrong');
+            toast.error(err?.response?.data?.message ?? 'Something went wrong');
             console.log(err);
         })
         .finally(() => {
@@ -55,7 +55,7 @@ const handleInverterDelete = async (inverterId) => {
     axios.put(`projects/${projectStore.getProjectId}/inverter-sales/remove`, { inverters_to_keep })
         .then(getInverterSales)
         .catch(err => {
-            toast.error(err?.res?.data?.message ?? 'Something went wrong');
+            toast.error(err?.response?.data?.message ?? 'Something went wrong');
             console.log(err);
         })
         .finally(() => {
@@ -63,9 +63,7 @@ const handleInverterDelete = async (inverterId) => {
         })
 }
 
-onMounted(() => {
-    getInverterSales();
-})
+onMounted(getInverterSales)
 
 </script>
 
@@ -105,6 +103,11 @@ onMounted(() => {
 					</div>
 				</div>
 		    </div>
+            <div class="row align-items-center px-4 pt-1">
+		        <small class="offset-4 col-md-8 fs-13px text-secondary">
+                    *At least one inverter is required per project
+		        </small>
+	        </div>
 	    </div>
 	    <div v-if="!selectedInverters.length" class="graphic d-flex flex-column align-items-center">
 	        <img src="https://static-pvtoev.imgix.net/images/app/ui/empty/empty_inverter.png?auto=format" alt="">
@@ -116,6 +119,7 @@ onMounted(() => {
 	        v-for="inverter in selectedInverters" 
             @inverter-delete="handleInverterDelete"
 	        :inverter
+	        :selectedInvertersCount="selectedInverters.length"
 	        :key="`#${inverter.id}-${loading}`"
 	    />
 

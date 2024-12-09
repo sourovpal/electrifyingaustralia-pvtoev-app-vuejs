@@ -125,25 +125,25 @@
             <table-refresh-spinner @click="handleRefresh"
                 :loading="isLoading"></table-refresh-spinner>
 
-            <button v-if="selectedLeads.length"
-                v-tippy="{ content: 'Delete Leads', placement: 'top' }"
-                @click="emits('multiple-delete')"
-                class="btn btn-danger btn-sm me-3 ms-3 d-flex justify-content-between align-items-center white-space-nowrap">
-                {{ selectedLeads.length }} selected
-                <i class="ms-2 pi pi-trash fs-14px"></i>
-            </button>
+            <danger-button v-if="selectedLeads.length"
+                size="small"
+                @click="emits('multiple-delete')" class="d-flex justify-content-center align-items-center">
+                <material-icon class="ms-n1" name="delete"></material-icon>
+                <span class="ms-n1">{{ selectedLeads.length }} selected</span>
+            </danger-button>
 
         </left-action-bar>
 
         <right-action-bar>
 
-            <div class="me-3 d-lg-inline d-none">
+            <div class="me-3 d-lg-flex d-none">
 
-                <button class="btn btn-sm btn-primary d-none d-xl-flex justify-content-start align-items-center white-space-nowrap"
-                    @click="showAddNewModal">
-                    <material-icon name="person_add" class="me-1" size="20"></material-icon>
-                    Add new
-                </button>
+                <success-button @click="showAddNewModal"
+                    :loading="false"
+                    size="small"
+                    label="Add New"
+                    icon="pi pi-user-plus fs-18px">
+                </success-button>
 
             </div>
 
@@ -210,7 +210,8 @@
                 <circle-button @click="handleToggleFilter"
                     v-tippy="{ content: 'Filter Leads', placement: 'top' }">
 
-                    <material-icon name="filter_alt" size="20" ></material-icon>
+                    <material-icon name="filter_alt"
+                        size="20"></material-icon>
 
                 </circle-button>
             </div>
@@ -220,7 +221,8 @@
                 <circle-button data-mdb-toggle="dropdown">
 
                     <material-icon name="playlist_add_check"
-                        size="22" type="outlined"></material-icon>
+                        size="22"
+                        type="outlined"></material-icon>
 
                 </circle-button>
 

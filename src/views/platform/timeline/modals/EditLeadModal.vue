@@ -63,7 +63,7 @@
     for (let unique_id in propertiesValues.value ?? {}) {
 
       let value = propertiesValues.value[unique_id];
-      
+
       let attribute = attributes.find(item => item.unique_id == unique_id);
 
       if (attribute && attribute.data_type_id == 'date' && value) value = moment(value).format("MM/DD/YYYY");
@@ -458,12 +458,13 @@
 
               <div class="d-flex jsutify-content-between align-items-center w-100">
 
-                <button @click="platformStore.setToggleLeadEditModal()"
-                  class="btn btn-danger btn-sm">Close</button>
+                <danger-button @click="platformStore.setToggleLeadEditModal()">Close</danger-button>
 
-                <loading-button @click="submitLeadFormHandler"
-                  :is-loading="isLoading"
-                  class="btn-sm ms-auto">Save Change</loading-button>
+                <success-button @click="submitLeadFormHandler"
+                  :loading="isLoading"
+                  class="ms-auto"
+                  label="Save Change">
+                </success-button>
 
               </div>
 

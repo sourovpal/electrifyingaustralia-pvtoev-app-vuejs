@@ -90,7 +90,9 @@
         <div class="px-3">
           <input-text class="w-100"
             size="small"
-            v-model="input_number" type="number" min="1"
+            v-model="input_number"
+            type="number"
+            min="1"
             @click="delete errors['input_number']">
           </input-text>
 
@@ -102,18 +104,14 @@
         </div>
 
         <div class="d-flex justify-content-between align-items-center px-3 mx-auto mt-3">
-          <Button size="small"
-            type="button"
-            label="Cancel"
-            severity="secondary"
-            @click="emits('close', true)"></Button>
 
-          <Button size="small"
-            type="button"
-            :loading="is_loading"
-            severity="danger"
+          <danger-button label="Cancel"
+            @click="emits('close', true)"></danger-button>
+
+          <success-button :loading="is_loading"
             @click="handleLeadsDelete"
-            label="Delete"></Button>
+            label="Delete"></success-button>
+
         </div>
 
       </div>

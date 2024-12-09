@@ -5,7 +5,7 @@
 
     <Button rounded
         severity="secondary"
-        size="small"
+        size="small" class="border-0"
         variant="outlined">
         <slot></slot>
     </Button>

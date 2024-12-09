@@ -8,6 +8,9 @@ import * as mdb from "mdb-ui-kit";
 
 import LoadingButton from "./components/LoadingButton.vue";
 import CircleButton from "./components/Buttons/CircleButton.vue";
+import DangerButton from "./components/Buttons/DangerButton.vue";
+import SuccessButton from "./components/Buttons/SuccessButton.vue";
+import CircleSpinner from "./components/CircleSpinner.vue";
 import MaterialIcon from "./components/MaterialIcon.vue";
 
 import SvgCustomIcon from "./assets/svg/SvgCustomIcon.vue";
@@ -92,11 +95,16 @@ var app = createApp(App);
 app.component("FetchImage", FetchImage);
 app.component("LoadingButton", LoadingButton);
 app.component("CircleButton", CircleButton);
+app.component("DangerButton", DangerButton);
+app.component("SuccessButton", SuccessButton);
+app.component("CircleSpinner", CircleSpinner);
 app.component("MaterialIcon", MaterialIcon);
 app.component("bootstrap-modal", BootstrapModal);
 app.component("custom-checkbox", CustomCheckbox);
-app.component("font-awesome-icon", FontAwesomeIcon);
 app.component("svg-custom-icon", SvgCustomIcon);
+
+app.component("font-awesome-icon", FontAwesomeIcon);
+
 app.component("InfiniteLoading", InfiniteLoading);
 app.component("VueDatePicker", VueDatePicker);
 //

@@ -6,6 +6,7 @@
     import { useAppStore } from '@stores';
     import { useAuthStore, isAuthorized } from '@stores/auth';
     import MobileToolsBar from '@components/MobileToolsBar.vue';
+    import FullScreenLoader from '@components/FullScreenLoader.vue';
     import OfflineModal from './OfflineModal.vue';
     import ConfirmDialog from 'primevue/confirmdialog';
 
@@ -32,9 +33,15 @@
 </script>
 
 <template>
+
+    <full-screen-loader></full-screen-loader>
+
     <offline-modal></offline-modal>
+
     <sidebar-nav></sidebar-nav>
+
     <router-view></router-view>
+
     <mobile-tools-bar class="d-md-none"></mobile-tools-bar>
 
     <PusherNotificationToast @close="notification = null"

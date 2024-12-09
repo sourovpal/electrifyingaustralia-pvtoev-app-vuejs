@@ -9,6 +9,12 @@ const { isLoading, progress, start, done } = useNProgress(0.1, {
 export const useProgress = defineStore('progress', {
     state: () => {
         return {
+            full_screen_loading: true,
+        }
+    },
+    getters: {
+        getFullScreenLoader(state) {
+            return state.full_screen_loading;
         }
     },
     actions: {
@@ -18,8 +24,8 @@ export const useProgress = defineStore('progress', {
         },
         doneProgress() {
             isLoading.value = false;
+            setTimeout(() => this.full_screen_loading = false, 1000);
             return done();
         },
-
     }
 });

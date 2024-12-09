@@ -462,17 +462,16 @@
 
         <div class="d-flex justify-content-between align-items-center">
 
-          <button @click="hideModalHandler"
-            class="btn btn-danger btn-sm">
-            Close
-          </button>
+          <danger-button @click="hideModalHandler"
+            label="Close">
+          </danger-button>
 
-          <loading-button class="btn-sm"
-            :disabled="!selectedOwner || !selectedPipeline || !selectedStage"
-            :is-loading="isSubmitConfirmQualify"
-            @submit="confirmQualifyHandler">
-            Submit
-          </loading-button>
+          <success-button class="btn-sm"
+            :disabled="!selectedOwner || !selectedPipeline || !selectedStage || isSubmitConfirmQualify"
+            :loading="isSubmitConfirmQualify"
+            @click="confirmQualifyHandler"
+            label="Submit">
+          </success-button>
 
         </div>
 

@@ -228,7 +228,7 @@
 <template>
   <modal-dialog modal
     v-bind="$attrs"
-    pt:root:class="overflow-hidden"
+    pt:root:class="overflow-hidden rounded-3"
     pt:mask:class="backdrop-blur-sm"
     :style="{ width: '38vw' }"
     :breakpoints="{ '1199px': '50vw', '575px': '90vw' }">
@@ -237,16 +237,15 @@
 
       <div class="row m-0">
 
-        <div class="col-lg-7">
+        <div class="col-lg-7 ps-3">
 
-          <div class="modal-header py-lg-2 px-0 border-bottom">
+          <div class="modal-header pt-2 pb-0 px-0">
 
-            <div class="d-flex justify-content-center align-items-center">
-
-              <i class="pi pi-user-plus fs-18px me-2"></i>
-
-              <span class="text-hard fw-bold fs-16px">Add New</span>
-
+            <div class="d-flex justify-context-start align-items-center">
+              <material-icon name="person_add"
+                size="22"
+                class="text-head me-2"></material-icon>
+              <span class="text-head fw-bold fs-18px">Add New</span>
             </div>
 
             <div>
@@ -444,7 +443,7 @@
 
             </div>
 
-            <div class="mb-3">
+            <div class="mb-lg-3">
               <label class="mb-2 fs-16px text-head">
                 Email address
                 <span class="text-soft fs-12px ms-1">(Optional)</span>
@@ -498,11 +497,14 @@
           </div>
         </div>
 
-        <div class="col-lg-5 lead-details-right">
-          <div class="modal-header py-lg-2 px-0 border-bottom">
-            <div class="d-flex justify-content-center align-items-center">
-              <i class="pi pi-pen-to-square fs-16px me-2"></i>
-              <span class="text-hard fw-bold fs-16px">Deals</span>
+        <div class="col-lg-5 lead-details-right pe-3">
+
+          <div class="modal-header pt-2 pb-0 px-0 d-none d-lg-block">
+            <div class="d-lg-flex justify-context-start align-items-center">
+              <material-icon name="edit_note"
+                size="26"
+                class="text-head me-2"></material-icon>
+              <span class="text-head fw-bold fs-18px">Deals</span>
             </div>
           </div>
 
@@ -661,19 +663,24 @@
       </div>
 
       <div class="row m-0">
-        <div class="col-lg-7 py-2">
+
+        <div class="col-lg-7 py-3 ps-3">
+
           <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <button @click="hideModal"
-                class="btn btn-danger btn-sm">Close</button>
-            </div>
-            <div>
-              <loading-button class="btn-sm"
-                :disabled="!attributes.name"
-                :is-loading="isLoading"
-                @submit="handleCreateNewLead">Save Change</loading-button>
-            </div>
+
+            <danger-button @click="hideModal"
+              label="Close">
+            </danger-button>
+
+            <success-button class="btn-sm"
+              :disabled="!attributes.name || isLoading"
+              :loading="isLoading"
+              label="Save Change"
+              @click="handleCreateNewLead">
+            </success-button>
+
           </div>
+
         </div>
         <div class="col-lg-5 lead-details-right"></div>
       </div>

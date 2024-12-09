@@ -483,11 +483,11 @@
 
               </ul>
 
-              <button v-if="!isCreateNewContact"
+              <success-button v-if="!isCreateNewContact"
                 @click="selectContactHandler()"
-                class="btn crm-btn w-100">
-                Add New
-              </button>
+                class="w-100"
+                label="Add New">
+              </success-button>
 
             </div>
 
@@ -543,7 +543,8 @@
 
               <icon-field>
                 <input-icon class="pi pi-user fs-14px z-index-999" />
-                <input-text size="small" placeholder="e.g. Mr."
+                <input-text size="small"
+                  placeholder="e.g. Mr."
                   class="w-100"
                   @click="delete errors?.title"
                   v-model="editContact.title" />
@@ -568,7 +569,9 @@
 
                     <input-icon class="pi pi-user fs-14px z-index-999" />
 
-                    <input-text size="small" class="w-100" placeholder="e.g. Example"
+                    <input-text size="small"
+                      class="w-100"
+                      placeholder="e.g. Example"
                       @click="delete errors?.first_name"
                       v-model="editContact.first_name" />
 
@@ -594,7 +597,8 @@
                     <input-icon class="pi pi-user fs-14px z-index-999" />
 
                     <input-text size="small"
-                      class="w-100" placeholder="e.g. Example"
+                      class="w-100"
+                      placeholder="e.g. Example"
                       @click="delete errors?.last_name"
                       v-model="editContact.last_name" />
 
@@ -623,8 +627,10 @@
 
                     <input-icon class="pi pi-phone fs-14px z-index-999" />
 
-                    <input-text size="small" class="w-100"
-                      @click="delete errors?.phone_number" placeholder="e.g. +1 000000000"
+                    <input-text size="small"
+                      class="w-100"
+                      @click="delete errors?.phone_number"
+                      placeholder="e.g. +1 000000000"
                       :class="{'border-error':errors?.phone_number && !editContact.phone_number,
                       }"
                       v-model="editContact.phone_number" />
@@ -669,8 +675,10 @@
 
                     <input-icon class="pi pi-phone fs-14px z-index-999" />
 
-                    <input-text size="small" class="w-100"
-                      @click="delete errors?.phone_number" placeholder="e.g. +1 00000000"
+                    <input-text size="small"
+                      class="w-100"
+                      @click="delete errors?.phone_number"
+                      placeholder="e.g. +1 00000000"
                       :class="{'border-error': errors?.phone_number && !item.phone_number}"
                       v-model="item['phone_number']" />
 
@@ -732,7 +740,9 @@
 
                     <input-icon class="pi pi-envelope fs-14px z-index-999" />
 
-                    <input-text size="small" class="w-100" placeholder="e.g. example@gmail.com"
+                    <input-text size="small"
+                      class="w-100"
+                      placeholder="e.g. example@gmail.com"
                       @click="delete errors?.email"
                       :class="{'border-error': errors?.email && !editContact.email}"
                       v-model="editContact.email" />
@@ -776,8 +786,10 @@
 
                     <input-icon class="pi pi-envelope fs-14px z-index-999" />
 
-                    <input-text size="small" class="w-100"
-                      @click="delete errors?.email" placeholder="e.g. example@gmail.com"
+                    <input-text size="small"
+                      class="w-100"
+                      @click="delete errors?.email"
+                      placeholder="e.g. example@gmail.com"
                       :class="{ 'border-error': errors?.email && !item.email }"
                       v-model="item['email']" />
 
@@ -832,7 +844,8 @@
               <label class="mb-2 fs-14px text-head">Notes
                 <span class="text-soft fs-12px ms-1">(Optional)</span></label>
 
-              <text-area @click="delete errors?.notes" class="w-100"
+              <text-area @click="delete errors?.notes"
+                class="w-100"
                 v-model="editContact.notes"
                 rows="3"></text-area>
 
@@ -843,16 +856,15 @@
 
             <div class="d-flex justify-content-between align-items-center pt-2">
 
-              <button @click="hideModalHandler()"
-                class="btn btn-danger">
+              <danger-button @click="hideModalHandler()">
                 Close
-              </button>
+              </danger-button>
 
-              <loading-button :disabled="!(editContact.first_name && editContact.last_name)"
-                :isLoading="isSubmitCreateNewContact"
-                @click="createLeadContactHandler()">
-                {{ isCreateNewContact ? "Create New" : "Update" }}
-              </loading-button>
+              <success-button :disabled="!(editContact.first_name && editContact.last_name) || isSubmitCreateNewContact"
+                :loading="isSubmitCreateNewContact"
+                @click="createLeadContactHandler()"
+                :label="`${ isCreateNewContact ? 'Create New' : 'Update' }`">
+              </success-button>
 
             </div>
 
@@ -908,7 +920,7 @@
 
       &:hover,
       &.active {
-        border-left-color:var(--crm-border-color);
+        border-left-color: var(--crm-border-color);
       }
 
       .contact-details {

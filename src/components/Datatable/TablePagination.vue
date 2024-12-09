@@ -35,7 +35,7 @@
                 variant="outlined"
                 :disabled="!pagination?.prev_page || loading"
                 v-tippy="{ content: 'Previous', placement: 'top' }"
-                class="toolbar-btn btn btn-light btn-floating me-3"
+                class="toolbar-btn btn btn-light btn-floating me-3 border-0"
                 @click="emits('change', pagination?.prev_page)">
 
                 <material-icon name="west" size="20"></material-icon>
@@ -50,7 +50,7 @@
                 :disabled="!pagination?.next_page || loading"
                 v-tippy="{ content: 'Next', placement: 'top' }"
                 @click="emits('change', pagination?.next_page)"
-                class="toolbar-btn btn btn-light btn-floating me-3">
+                class="toolbar-btn btn btn-light btn-floating me-3 border-0">
 
                 <material-icon name="east" size="20"></material-icon>
 

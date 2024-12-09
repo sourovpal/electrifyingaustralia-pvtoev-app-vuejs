@@ -113,46 +113,45 @@
 
       </div>
 
-      <button @click="platformStore.setToggleLeadEditModal(true)"
-        class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-2 d-none d-md-inline"
-        style="margin-left: 14px">
+      <circle-button @click="platformStore.setToggleLeadEditModal(true)"
+        class="ms-3 border-0">
 
-        <font-awesome-icon icon="fas fa-pen"
-          class="text-soft fs-14px" />
+        <material-icon name="edit_note"
+          size="26"
+          class="text-soft" />
 
-      </button>
+      </circle-button>
 
-      <button @click="copyClipboardHandler"
-        class="hover-effice toolbar-btn btn btn-light btn-sm btn-floating me-3 d-none d-md-inline">
+      <circle-button @click="copyClipboardHandler"
+        class="ms-2 border-0">
 
-        <font-awesome-icon icon="fas fa-copy"
-          class="text-soft fs-16px"></font-awesome-icon>
+        <material-icon name="content_copy"
+          size="18"
+          class="text-soft" />
 
-      </button>
+      </circle-button>
 
     </left-action-bar>
 
     <right-action-bar>
 
-      <div class="me-3"
-        v-if="isLoading">
-
-        <svg-custom-icon icon="SpinnerIcon" />
-
+      <div v-if="isLoading">
+        <CircleSpinner class="text-dnager" :loading="isLoading"></CircleSpinner>
       </div>
 
       <router-link v-if="!isPipelineLead"
         @click="handleFetchNewLead(prevLeadId)"
         :to="`${prevLeadId ? `/platform/leads/${prevLeadId}` : ''}`">
 
-        <button v-tippy="{ content: 'Previous Lead', placement: 'top' }"
-          class="toolbar-btn btn btn-light btn-sm btn-floating me-3 d-flex justify-content-center align-items-center"
-          :disabled="!prevLeadId">
+        <circle-button class="ms-3 me-1 border-0"
+          :disabled="!prevLeadId"
+          v-tippy="{ content: 'Previous Lead', placement: 'top' }">
 
-          <font-awesome-icon icon="fas fa-arrow-left"
-            class="text-soft fs-16px"></font-awesome-icon>
+          <material-icon name="west"
+            size="20"
+            class="text-soft" />
 
-        </button>
+        </circle-button>
 
       </router-link>
 
@@ -160,14 +159,15 @@
         @click="handleFetchNewLead(nextLeadId)"
         :to="`${nextLeadId ? `/platform/leads/${nextLeadId}` : ''}`">
 
-        <button v-tippy="{ content: 'Next Lead', placement: 'top' }"
-          class="toolbar-btn btn btn-light btn-sm btn-floating me-3 d-flex justify-content-center align-items-center"
-          :disabled="!nextLeadId">
+        <circle-button class="me-3 ms-1 border-0"
+          :disabled="!nextLeadId"
+          v-tippy="{ content: 'Next Lead', placement: 'top' }">
 
-          <font-awesome-icon icon="fas fa-arrow-right"
-            class="text-soft fs-16px"></font-awesome-icon>
+          <material-icon name="east"
+            size="20"
+            class="text-soft" />
 
-        </button>
+        </circle-button>
 
       </router-link>
 
@@ -179,12 +179,13 @@
 
       </button>
 
-      <button v-if="!isPipelineLead"
+      <success-button v-if="!isPipelineLead"
         @click="platformStore.setCertifyModalAction('certify')"
-        class="btn btn-sm crm-btn fw-bold me-3 justify-content-center align-items-center d-none d-md-flex">
-        <i class="pi pi-check-circle fs-14px me-2"></i>
-        certify
-      </button>
+        size="small"
+        label="Certify"
+        icon="pi pi-check-square"
+        class="me-3">
+      </success-button>
 
       <div class="me-3">
         <team-members-group></team-members-group>
@@ -193,12 +194,7 @@
       <avatar-group>
         <Avatar @click="$refs['teamMembersPopovarRef']?.toggle"
           :image="leadOwner?.profile_avatar || AvatarIcon"
-          v-tippy="{ 
-                content: leadOwner?.name 
-                || leadOwner?.email 
-                || `Change Owner`,
-              placement: 'top'
-              }"
+          v-tippy="{ content: leadOwner?.name || leadOwner?.email || 'Change Owner', placement: 'top'}"
           size="small"
           shape="circle"
           class="me-3 cursor-pointer"
@@ -212,13 +208,16 @@
 
       <div class="me-3 position-relative">
 
-        <button class="toolbar-btn btn btn-light btn-sm btn-floating d-flex justify-content-center align-items-center"
-          data-mdb-toggle="dropdown">
+        <circle-button class="border-0"
+          :disabled="!nextLeadId"
+          data-mdb-toggle="dropdown"
+          v-tippy="{ content: 'Next Lead', placement: 'top' }">
 
-          <font-awesome-icon icon="fas fa-ellipsis-vertical"
-            class="text-soft fs-16px"></font-awesome-icon>
+          <material-icon name="more_vert"
+            size="20"
+            class="text-soft" />
 
-        </button>
+        </circle-button>
 
         <div class="dropdown-menu dropdown-menu-end shadow-md custom-dropdown-menu three-dot">
 

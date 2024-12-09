@@ -310,12 +310,15 @@
 
       <div class="d-flex justify-content-between align-items-center">
 
-        <button @click="emits('close', false)"
-          class="btn btn-danger">Close</button>
+        <danger-button @click="emits('close', false)"
+          label="Close"></danger-button>
 
-        <loading-button :disabled="!((selectedPipeline && selectedStage) || selectedStatus)"
-          :is-loading="isSubmitMovePipelineOrStatus"
-          @submit="leadMovePipelineOrStatus()">Confirm Move</loading-button>
+        <success-button
+          :disabled="!((selectedPipeline && selectedStage) || selectedStatus) || isSubmitMovePipelineOrStatus"
+          :loading="isSubmitMovePipelineOrStatus"
+          @click="leadMovePipelineOrStatus()"
+          label="Confirm Move">
+        </success-button>
 
       </div>
 

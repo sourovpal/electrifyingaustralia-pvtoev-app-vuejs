@@ -1,7 +1,7 @@
 <script setup>
     import { useApiRequest } from "@actions";
+    import Http from "@http";
     import { reactive, onMounted, ref } from "vue";
-    import Storage from "@helpers/Storage";
     import { useAppStore, useAuthStore } from "@stores";
     import { isAuthorized } from "@stores/auth";
     import { $toast } from "@config";
@@ -32,30 +32,29 @@
 
         const query = new URLSearchParams(route.query).toString();
 
-        await useApiRequest({
-            url: `/reset?${query}`,
-            method: "post",
-            payload: {
+        Http
+            .auth
+            .reset({
                 password: attributes.password,
-                confirm_password: attributes.confirm_password,
-            }
-        }).then(({ message }) => {
+                confirm_password: attributes.confirm_password
+            }, query)
+            .then(({ data: { message } }) => {
 
-            if (message && message.vidible) return error_message.value = message;
+                if (message && message.vidible) return error_message.value = message;
 
-            $toast.success(message.text);
+                $toast.success(message.text);
 
-        }).catch(({ errors: _errors, message }) => {
+            }).catch(error => {
 
-            if (_errors) return Object.assign(errors, _errors);
+                const { errors: _errors, message } = Http.error(error);
 
-            if (message && message.visible) return error_message.value = message;
+                if (_errors) return Object.assign(errors, _errors);
 
-            $toast.error(message.text);
+                if (message && message.visible) return error_message.value = message;
 
-        }).finally(_ => {
-            attributes.is_submit = false;
-        });
+                $toast.error(message.text);
+
+            }).finally(_ => attributes.is_submit = false);
 
     }
 
@@ -63,22 +62,23 @@
 
         attributes.is_disabled = true;
 
-        await useApiRequest({
-            url: "/reset",
-            payload: query
-        }).then(({ message }) => {
+        Http
+            .auth
+            .validate(query)
+            .then(({ data: { message } }) => {
 
-            if (message && message.visible) return error_message.value = message;
+                if (message && message.visible) return error_message.value = message;
 
-        }).catch(({ message }) => {
+            })
+            .catch(error => {
 
-            if (message && message.visible) return error_message.value = message;
+                const { message } = Http.error(error);
 
-            $toast.error(message.text);
+                if (message && message.visible) return error_message.value = message;
 
-        }).finally(_ => {
-            attributes.is_disabled = false;
-        });
+                $toast.error(message.text);
+
+            }).finally(_ => attributes.is_disabled = false);
     }
 
     onMounted(() => {

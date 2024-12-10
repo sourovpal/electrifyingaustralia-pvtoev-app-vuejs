@@ -1,5 +1,5 @@
 import { useApiRequest } from "@actions";
-import Storage from "@helpers/Storage";
+import Storage from "@utils/storage";
 import { defineStore } from "pinia";
 import { CONFIG } from "@config";
 import { useAuthStore } from "./auth";

@@ -1,16 +1,18 @@
 <script setup>
+  import Http from '@http';
   import { onClickOutside } from "@vueuse/core";
   import { ref, computed, onMounted, nextTick } from "vue";
   import { useAuthStore } from "@stores";
-  import { useApiRequest } from "@actions";
-
   import { useConfirm } from "primevue/useconfirm";
+
+  const emits = defineEmits(["clickOutside", "logout"]);
+
   const confirm = useConfirm();
+  const authStore = useAuthStore();
+
+  const authUser = computed(() => authStore.getUser);
 
   const profileRef = ref(null);
-  const emits = defineEmits(["clickOutside", "logout"]);
-  const authStore = useAuthStore();
-  const authUser = computed(() => authStore.getUser);
 
 
   const confirmSignout = (event) => {
@@ -29,7 +31,7 @@
         severity: 'danger',
         style: 'height:2rem',
       },
-      accept: () => authStore.callAuthLogout(),
+      accept: () => Http.auth.logout().then(_ => window.location.reload()),
       reject: () => { }
     });
 

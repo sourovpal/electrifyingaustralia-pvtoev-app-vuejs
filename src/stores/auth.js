@@ -1,4 +1,4 @@
-import Storage from "../helpers/Storage";
+import Storage from "@utils/storage";
 import { defineStore } from "pinia";
 import { CONFIG, $toast } from "@config";
 import { useApiRequest } from "@actions";

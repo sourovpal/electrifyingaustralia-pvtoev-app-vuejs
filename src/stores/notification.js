@@ -1,6 +1,6 @@
 import { useApiRequest } from "@actions";
 import { defineStore } from 'pinia';
-import Storage from "@helpers/Storage";
+import Storage from "@utils/storage";
 const storeUnseen = new Storage('unseen');
 
 export const useNotificationStore = defineStore('notification', {

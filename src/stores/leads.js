@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { useApiRequest } from "@actions";
-import Storage from "@helpers/Storage";
+import Storage from "@utils/storage";
 import { validateObject } from "@helpers";
 
 const leadHeaderStore = new Storage("header_properties");

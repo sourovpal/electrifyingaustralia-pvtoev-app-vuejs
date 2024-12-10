@@ -1,13 +1,12 @@
 <script setup>
-    import { useApiRequest } from "@actions";
+    import Http from "@http";
+    import FormInput from './components/FormInput.vue';
+    import Wrapper from './components/Wrapper.vue';
     import { reactive, onMounted, ref } from "vue";
-    import Storage from "@helpers/Storage";
     import { useAppStore, useAuthStore } from "@stores";
     import { isAuthorized } from "@stores/auth";
     import { $toast } from "@config";
     import { useRouter } from "vue-router";
-    import FormInput from './components/FormInput.vue';
-    import Wrapper from './components/Wrapper.vue';
 
     const authStore = useAuthStore();
     const appStore = useAppStore();
@@ -22,31 +21,28 @@
     const errors = reactive({});
     const error_message = ref(null);
 
-    async function submitLoginForm(e) {
+    async function submitForgotForm(e) {
 
         attributes.is_submit = true;
 
-        await useApiRequest({
-            url: "/forgot",
-            method: "post",
-            payload: {
-                username: attributes.username,
-            }
-        }).then(({ message }) => {
+        Http
+            .auth
+            .forgot({ username: attributes.username })
+            .then(({ data: { message } }) => {
 
-            if (message && message.visible) return error_message.value = message;
+                if (message && message.visible) return error_message.value = message;
 
-        }).catch(({ errors: _errors, message }) => {
+            }).catch(error => {
 
-            if (_errors) return Object.assign(errors, _errors);
+                const { errors: _errors, message } = Http.error(error);
 
-            if (message && message.visible) return error_message.value = message;
+                if (_errors) return Object.assign(errors, _errors);
 
-            $toast.error(message.text);
+                if (message && message.visible) return error_message.value = message;
 
-        }).finally(_ => {
-            attributes.is_submit = false;
-        });
+                $toast.error(message.text);
+
+            }).finally(_ => attributes.is_submit = false);
     }
 
 </script>
@@ -64,7 +60,7 @@
             type="button"
             class="w-100"
             :loading="attributes.is_submit"
-            @click="submitLoginForm"
+            @click="submitForgotForm"
             label="Submit"></Button>
 
         <div class="py-3 text-center">

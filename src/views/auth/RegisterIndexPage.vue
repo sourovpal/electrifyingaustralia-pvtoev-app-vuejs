@@ -1,13 +1,12 @@
 <script setup>
-  import { useApiRequest } from "@actions";
+  import Http from "@http";
+  import FormInput from './components/FormInput.vue';
+  import Wrapper from './components/Wrapper.vue';
   import { reactive, onMounted, ref } from "vue";
-  import Storage from "@helpers/Storage";
   import { useAppStore, useAuthStore } from "@stores";
   import { isAuthorized } from "@stores/auth";
   import { $toast } from "@config";
   import { useRouter, useRoute } from "vue-router";
-  import FormInput from './components/FormInput.vue';
-  import Wrapper from './components/Wrapper.vue';
 
   const authStore = useAuthStore();
   const appStore = useAppStore();
@@ -29,41 +28,40 @@
   const errors = reactive({});
   const error_message = ref(null);
 
-  async function submitLoginForm(e) {
+  async function submitRegisterForm(e) {
 
     attributes.is_submit = true;
     error_message.value = null;
-
-    await useApiRequest({
-      url: "/register",
-      method: "post",
-      payload: {
+    Http
+      .auth
+      .register({
         company_name: attributes.company_name,
         name: attributes.name,
         email: attributes.email,
         password: attributes.password,
         confirm_password: attributes.confirm_password,
         invite_token: attributes.invite_token,
-      }
-    }).then(({ access_token, user }) => {
+      })
+      .then(({ data: { access_token, user } }) => {
 
-      authStore.setAccessToken(access_token?.token);
+        authStore.setAccessToken(access_token?.token);
 
-      authStore.setUser(user);
+        authStore.setUser(user);
 
-      window.location.reload();
+        window.location.reload();
 
-    }).catch(({ errors: _errors, message }) => {
+      })
+      .catch(error => {
 
-      if (_errors) return Object.assign(errors, _errors);
+        const { errors: _errors, message } = Http.error(error);
 
-      if (message && message.visible) return error_message.value = message;
+        if (_errors) return Object.assign(errors, _errors);
 
-      $toast.error(message.text);
+        if (message && message.visible) return error_message.value = message;
 
-    }).finally(_ => {
-      attributes.is_submit = false;
-    });
+        $toast.error(message.text);
+
+      }).finally(_ => attributes.is_submit = false);
 
   }
 
@@ -73,26 +71,25 @@
 
     attributes.is_disabled = true;
 
-    await useApiRequest({
-      url: "/register",
-      payload: {
-        token
-      }
-    }).then(({ email, company_name }) => {
+    Http
+      .auth
+      .invited({ token })
+      .then(({ data: { email, company_name } }) => {
 
-      attributes.email = email;
+        attributes.email = email;
 
-      attributes.company_name = company_name;
+        attributes.company_name = company_name;
 
-    }).catch(({ message }) => {
+      })
+      .catch(error => {
 
-      if (message && message.visible) return error_message.value = message;
+        const { message } = Http.error(error);
 
-      $toast.error(message.text);
+        if (message && message.visible) return error_message.value = message;
 
-    }).finally(_ => {
-      attributes.is_disabled = false;
-    });
+        $toast.error(message.text);
+
+      }).finally(_ => attributes.is_disabled = false);
   }
 
   onMounted(() => {
@@ -143,7 +140,7 @@
       class="w-100"
       :disabled="attributes.is_disabled || error_message"
       :loading="attributes.is_submit"
-      @click="submitLoginForm"
+      @click="submitRegisterForm"
       label="Sign In"></Button>
 
     <div class="py-3 text-center">

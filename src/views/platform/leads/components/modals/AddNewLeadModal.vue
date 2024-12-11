@@ -2,6 +2,7 @@
   import { ref, reactive, watch, computed, onMounted, nextTick } from "vue";
   import { formatLeadAddress } from "@helpers";
   import { useApiRequest } from "@actions";
+  import Http from "@http";
   import { $toast } from "@config";
   import { useAuthStore, useLeadsStore, usePlatformStore } from "@stores";
   import { useDebounceFn } from '@vueuse/core';
@@ -57,50 +58,46 @@
   }
 
   const handleSearchAddress = useDebounceFn(async ({ query }) => {
+
     selectedAddress.value = null;
-    await useApiRequest({
-      url: '/platform/leads/search',
-      method: 'post',
-      payload: {
-        limit: 5,
-        search: query,
-        columns: ['address_line_one', 'address_line_two', 'city', 'state', 'country'],
-        lead: true,
-      }
-    }).then(leads => {
-      if (!leads && !leads.length) filterAddress.value = { ...filterAddress.value, items: [] };
 
-      filterAddress.value = {
-        ...filterAddress.value,
-        items: leads
-      };
+    Http
+      .leads
+      .search(
+        {
+          limit: 5,
+          search: query,
+          columns: ['address_line_one', 'address_line_two', 'city', 'state', 'country'],
+          lead: true,
+        }
+      ).then(({ data: leads }) => {
 
-    }).catch(error => {
-      filterAddress.value = { ...filterAddress.value, items: [] }
-    });
+        if (!leads || !leads.length) filterAddress.value = { ...filterAddress.value, items: [] };
+
+        filterAddress.value = { ...filterAddress.value, items: leads };
+
+      }).catch(error => filterAddress.value = { ...filterAddress.value, items: [] });
 
   }, 1000);
 
   const handleSearchContact = useDebounceFn(async ({ query }) => {
 
-    await useApiRequest({
-      url: '/platform/leads/search',
-      method: 'post',
-      payload: {
-        limit: 10,
-        search: query,
-        columns: ['first_name', 'last_name', 'email', 'phone_number'],
-        contact: true,
-      }
-    }).then(contacts => {
+    Http
+      .leads
+      .search(
+        {
+          limit: 10,
+          search: query,
+          columns: ['first_name', 'last_name', 'email', 'phone_number'],
+          contact: true,
+        }
+      ).then(({ data: contacts }) => {
 
-      if (!contacts && !contacts.length) filterContacts.value = [];
+        if (!contacts || !contacts.length) filterContacts.value = [];
 
-      filterContacts.value = contacts;
+        filterContacts.value = contacts;
 
-    }).catch(error => {
-      filterContacts.value = []
-    });
+      }).catch(error => filterContacts.value = []);
 
   }, 1000);
 
@@ -112,69 +109,60 @@
 
     if (platformStore.getUsers.length) return;
 
-    platformStore.callFetchUsers(({ loading }) => {
-      isLoadingUsers.value = loading;
-    });
+    platformStore.callFetchUsers(({ loading }) => isLoadingUsers.value = loading);
 
   }
 
   async function handleCreateNewLead() {
+
     errors.value = {};
+
     isLoading.value = true;
 
-    if (selectedAddress.value) {
-
+    if (selectedAddress.value)
       attributes["address"] = selectedAddress.value;
 
-    } else if (attributes.location) {
-
+    else if (attributes.location)
       attributes["address"] = { address_one: attributes.location };
-
-    }
 
     if (attributes.select_status && attributes.select_status?.status_id)
       attributes["lead_status"] = attributes.select_status?.status_id;
 
     attributes["lead_owner"] = leadOwner.value?.user_id;
 
-    await useApiRequest({
-      url: "/platform/leads",
-      method: "POST",
-      payload: attributes,
-    })
-      .then((res) => {
+    Http
+      .leads
+      .create(attributes)
+      .then(({ data: { success, message, errors: validation_errors } }) => {
 
-        const { success, message, errors: validation_errors } = res;
+        if (!success) return errors.value = validation_errors;
 
-        if (success) {
-          $toast[message.type](message.text);
-          hideModal();
-          return emits("refresh", true);
-        }
+        $toast[message.type](message.text);
 
-        errors.value = validation_errors;
+        hideModal();
+
+        return emits("refresh", true);
 
       })
       .catch((error) => {
 
-        $toast.error(error.message.text);
+        const { message } = Http.error(error);
+
+        $toast.error(message.text);
 
       })
-      .finally(() => {
-
-        isLoading.value = false;
-
-      });
+      .finally(() => isLoading.value = false);
   }
 
-  onMounted(() => {
-    leadOwner.value = authUser.value ?? {};
-  });
+  onMounted(() => leadOwner.value = authUser.value ?? {});
 
 
   function handleSelectAddress(option) {
+
     selectedAddress.value = null;
+
     attributes.location = formatLeadAddress(option.value)
+
     selectedAddress.value = {
       address_one: option.value?.address_line_one,
       address_two: option.value?.address_line_two,
@@ -182,6 +170,7 @@
       state: option.value?.state,
       post_code: option.value?.post_code,
     };
+
   }
 
   function handleSelectPhoneNumber(option) {
@@ -191,6 +180,7 @@
       if (option.value.full_name && !attributes.name) attributes.name = option.value.full_name;
 
       if (!option.value.phone_number) return attributes.phone_number = null;
+
       attributes.phone_number = option.value.phone_number;
     });
   }
@@ -203,6 +193,7 @@
       if (option.value.full_name && !attributes.name) attributes.name = option.value.full_name;
 
       if (!option.value.email) return attributes.email = null;
+
       attributes.email = option.value.email;
     });
 
@@ -221,7 +212,6 @@
 
     });
   }
-
 
 </script>
 
@@ -242,19 +232,12 @@
           <div class="modal-header pt-2 pb-0 px-0">
 
             <div class="d-flex justify-context-start align-items-center">
+
               <material-icon name="person_add"
                 size="22"
-                class="text-head me-2"></material-icon>
+                class="text-head me-2" />
+
               <span class="text-head fw-bold fs-18px">Add New</span>
-            </div>
-
-            <div>
-
-              <button class="btn btn-light btn-sm btn-floating d-lg-none"
-                @click="closeCallback">
-                <font-awesome-icon icon="fas fa-close"
-                  class="fs-14px text-soft"></font-awesome-icon>
-              </button>
 
             </div>
 

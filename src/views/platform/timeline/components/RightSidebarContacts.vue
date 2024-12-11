@@ -5,6 +5,7 @@
   import { useAppStore } from "@stores";
   import ContactEditModal from "../modals/ContactEditModal.vue";
   import { useApiRequest } from "@actions/api";
+  import Http from "@http";
   import { useClipboard } from "@vueuse/core";
   import { $toast } from "@config";
 
@@ -58,19 +59,19 @@
   };
 
   function handleContactEdit(state = false, attributes = null) {
+
     toggleContactEditModal.value = state;
+
     contactEditModal.value = attributes;
+    
   }
 
   async function deleteLeadContactHandler(id) {
 
-    await useApiRequest({
-      url: `/contacts/${id}/delete`,
-      method: "delete",
-    })
-      .then((res) => {
-
-        const { success, message } = res;
+    Http
+      .contacts
+      .delete({ id })
+      .then(({ data: { success, message } }) => {
 
         if (!success) return;
 
@@ -85,7 +86,8 @@
 
       })
       .catch((error) => {
-        $toast.error(error.message.text);
+        const { message } = Http.error(error);
+        $toast.error(message.text);
       });
   }
 
@@ -104,17 +106,20 @@
   }
 
   async function updateLeadStatusHandler({ value }) {
+
     $toast.clear();
 
-    await useApiRequest({
-      url: `/platform/status/${platformStore.editLeadId}/update`,
-      method: "PUT",
-      payload: {
-        status_id: value?.status_id,
-      },
-    })
-      .then((res) => {
-        const { success, errors, message } = res;
+    Http
+      .leads
+      .updateStatus(
+        {
+          status_id: value?.status_id,
+        },
+        {
+          lead_id: platformStore.editLeadId
+        }
+      )
+      .then(({ data: { success, errors, message } }) => {
 
         if (!success) return $toast.error(message.text);
 
@@ -123,7 +128,11 @@
 
       })
       .catch((error) => {
-        $toast.error(error.message.text);
+
+        const { message } = Http.error(error);
+
+        $toast.error(message.text);
+
       });
   }
 

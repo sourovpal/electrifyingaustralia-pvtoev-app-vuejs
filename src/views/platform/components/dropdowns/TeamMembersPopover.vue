@@ -21,13 +21,12 @@
 
   function toggle(event) {
 
-    if (!users.value?.length) {
-      platformStore.callFetchUsers();
-    }
+    if (!users.value?.length) platformStore.callFetchUsers();
 
     search.value = null;
 
     popovarRef.value.toggle(event);
+
   }
 
   const filterUsers = computed(() => {
@@ -84,7 +83,9 @@
             size="small"
             shape="circle"
             class="me-2"
-            style="--p-avatar-width:1.8rem;--p-avatar-height:1.8rem;min-width: var(--p-avatar-width);" />
+            style="--p-avatar-width:1.8rem;--p-avatar-height:1.8rem;min-width: var(--p-avatar-width);">
+            <circle-spinner v-if="loading" loading />
+          </Avatar>
 
           <div class="attributes">
             <span class="fs-14px">{{ member.name || 'Unknown name' }}</span>

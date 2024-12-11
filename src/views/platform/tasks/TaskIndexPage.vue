@@ -1,4 +1,5 @@
 <script setup>
+    import Http from '@http';
     import { ref, watch, onMounted } from 'vue';
     import VueCountdown from '@chenfengyuan/vue-countdown';
     import moment from 'moment';
@@ -8,7 +9,6 @@
     import Datatable from '@components/Datatable/Datatable.vue';
     import DatatableHeader from '@components/Datatable/DatatableHeader.vue';
     import DatatableBody from '@components/Datatable/DatatableBody.vue';
-    import { useApiRequest } from '@actions';
     import { useRoute } from 'vue-router';
     import { $toast } from '@config';
     import { useDebounceFn } from '@vueuse/core';
@@ -28,88 +28,130 @@
         to: 0,
         current_page: 1,
     });
+
     const leadTasks = ref([]);
     const searchTasks = ref();
     const isError = ref(false);
 
     watch(route, () => {
+
         handleFetchTasks({ page: 1 });
+
     }, { deep: true });
 
     onMounted(() => {
+
         isFirstLoading.value = true;
+
         handleFetchTasks();
+
     });
 
     function getTotalHours(datetime) {
+
         const start = moment(new Date());
+
         const end = moment(new Date(datetime));
+
         var diff = end.diff(start, 'miliseconds');
-        if (diff > 0) {
-            return diff;
-        }
+
+        if (diff > 0) return diff;
+
         return 0;
     }
 
     const handleSearchTasks = useDebounceFn((search) => {
+
         var payload = { search, page: 1 };
+
         if (pagination.value?.current_page && pagination.value?.current_page > 1) {
             payload['page'] = pagination.value.current_page;
         }
+
         handleFetchTasks(payload);
+
     }, 2000);
 
     async function handleFetchTasks(payload = {}) {
+
         $toast.clear();
+
         isError.value = false;
+
         const stage = route.query?.stage;
+
         if (!stages.value.includes(stage) && stage) return;
+
         payload['stage'] = stage;
+
         if (typeof payload['page'] === 'undefined') {
             payload['page'] = pagination.value?.current_page ?? 1;
         }
+
         isLoading.value = true;
-        await useApiRequest({
-            url: '/platform/tasks',
-            payload,
-        }).then(res => {
-            if (res.lead_tasks) {
-                leadTasks.value = res.lead_tasks;
-                pagination.value = res.pagination;
-                return;
-            }
-            $toast.error(message.text);
-        }).catch(error => {
-            isError.value = true;
-            $toast.error("Oops, something went wrong");
-        }).finally(() => {
-            isLoading.value = false;
-            isFirstLoading.value = false;
-        });
+
+        Http
+            .tasks
+            .all(payload)
+            .then(({
+                data: { lead_tasks, pagination: _pagination }
+            }) => {
+
+                leadTasks.value = lead_tasks;
+
+                pagination.value = _pagination;
+
+            }).catch(error => {
+
+                const { message } = Http.error(error);
+
+                isError.value = true;
+
+                $toast.error(message);
+
+            }).finally(() => {
+
+                isLoading.value = false;
+
+                isFirstLoading.value = false;
+
+            });
     }
 
     async function updateTaskStage(task) {
+
         task.is_complete = !task.is_complete;
-        await useApiRequest({
-            url: `/platform/tasks/${task.lead?.lead_id}/${task.task_id}/stage`,
-            method: 'put',
-            payload: {
-                is_complete: task.is_complete,
-            },
-        }).then(res => {
-            const { success, message, completed_at } = res;
-            if (success) {
-                if (completed_at) {
-                    task.completed_at = completed_at;
+
+        Http
+            .tasks
+            .updateStage(
+                {
+                    is_complete: task.is_complete,
+                },
+                {
+                    task_id: task.task_id,
+                    lead_id: task.lead?.lead_id,
+                })
+            .then(res => {
+
+                const { success, message, completed_at } = res;
+
+                if (success) {
+                    if (completed_at) {
+                        task.completed_at = completed_at;
+                    }
+                    return;
                 }
-                return;
-            }
-            $toast.error(message.text);
-        }).catch(error => {
-            $toast.error("Oops, something went wrong");
-        }).finally(() => {
-            isLoading.value = false;
-        });
+
+                $toast.error(message.text);
+
+            }).catch(error => {
+
+                const { message } = Http.error(error);
+
+                $toast.error(message);
+
+            }).finally(_ => isLoading.value = false);
     }
 </script>
 
@@ -159,54 +201,89 @@
                     class="tbl-tr full-width">
                     <div style="width: 4rem; margin-left: -7px;"
                         class="tbl-td full-width">
+
                         <custom-checkbox @click="updateTaskStage(task)"
                             :checked="!!task.is_complete" />
+
                     </div>
+
                     <div class="tbl-td"
                         style="width: 10rem; flex-grow: 1">
+
                         <span class="overflow-ellipsis">{{ task.title }}</span>
+
                     </div>
+
                     <div class="tbl-td"
                         style="width: 10rem; flex-grow: 1">
+
                         <router-link class="overflow-ellipsis"
                             :to="`/platform/leads/${task.lead?.lead_id}`">
+
                             {{ task.lead?.lead_title??'Untitled lead\'s' }}
+
                         </router-link>
+
                     </div>
+
                     <div class="tbl-td"
                         style="width: 10rem; flex-grow: 1">
+                        
                         <span v-if="task.duration">
                             {{ task.duration }}
                         </span>
+
                         <span v-else
-                            class="badge bg-warning">Unscheduled Task</span>
+                            class="badge bg-warning">
+                            Unscheduled Task
+                        </span>
+
                     </div>
+
                     <div class="tbl-td"
                         style="width: 10rem; flex-grow: 1">
+
                         <span v-tippy="task.completed_at"
                             v-if="task.is_complete"
-                            class="badge bg-success cursor-pointer">Complete</span>
+                            class="badge bg-success cursor-pointer">
+                            Complete
+                        </span>
+
                         <vue-countdown v-else
                             :time="getTotalHours(task.duration)"
                             :interval="100"
                             v-slot="{ days, hours, minutes, seconds, milliseconds }">
+
                             <span class="badge"
                                 :class="`${milliseconds ? 'bg-success' : 'bg-danger'}`">
+
                                 {{ days }} Days - {{ hours }}:{{ minutes }}:{{ seconds }}
+
                             </span>
+
                         </vue-countdown>
+
                     </div>
+
                     <div class="tbl-td"
                         style="width: 10rem; flex-grow: 1">
+
                         <span class="owner-avatar">
-                            <img :src="task.owner?.profile_avatar"
-                                alt="">
+
+                            <img :src="task.owner?.profile_avatar">
+
                         </span>
+
                     </div>
+
                 </div>
+
             </datatable-body>
+
         </Datatable>
+
     </section>
+    
 </template>
 
 <style lang="scss"

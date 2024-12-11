@@ -1,5 +1,6 @@
 <script setup>
   import { ref, computed } from "vue";
+  import Http from '@http';
   import Datatable from "@components/Datatable/Datatable.vue";
   import DatatableHeader from "@components/Datatable/DatatableHeader.vue";
   import DatatableBody from "@components/Datatable/DatatableBody.vue";
@@ -12,7 +13,6 @@
   import ErrorPage from "@components/Errors/ErrorPage.vue";
   import { $toast } from "@config";
   import moment from "moment";
-  import { useApiRequest } from "@actions";
   import { useClipboard } from "@vueuse/core";
   import TeamMembersPopover from "../../components/dropdowns/TeamMembersPopover.vue";
 
@@ -40,25 +40,29 @@
   }
 
   async function handleUpdateLeadStatus(lead, status) {
+
     $toast.clear();
+
     isStatusUpdating.value = lead.lead_id;
-    await useApiRequest({
-      url: `/platform/status/${lead.lead_id}/update`,
-      method: "PUT",
-      payload: {
-        status_id: lead.status?.status_id,
-      },
-    })
-      .then((res) => {
-        const { success, errors, message } = res;
-        if (!success) $toast.error(message.text);
-      })
+
+    Http
+      .leads
+      .updateStatus(
+        {
+          status_id: lead.status?.status_id,
+        },
+        {
+          lead_id: lead.lead_id
+        }
+      )
+      .then(() => { })
       .catch((error) => {
-        $toast.error(error.message.text);
-      })
-      .finally(() => {
-        isStatusUpdating.value = null;
-      });
+
+        const { message } = Http.error(error);
+
+        $toast.error(message.text);
+
+      }).finally(() => isStatusUpdating.value = null);
   }
 
   function fetchUsers(event, lead) {
@@ -71,57 +75,69 @@
 
     if (platformStore.getUsers.length) return;
 
-    platformStore.callFetchUsers(({ loading }) => {
-      isLoadingUsers.value = loading;
-    });
+    platformStore.callFetchUsers(({ loading }) => isLoadingUsers.value = loading);
 
   }
 
   async function handleUpdateLeadOwner(owner) {
+
     $toast.clear();
+
     if (selectedEditLead.value.owner?.user_id == owner.user_id) return;
+
     isOwnerUpdating.value = selectedEditLead.value.lead_id;
-    await useApiRequest({
-      url: `/platform/owners/${selectedEditLead.value.lead_id}/update`,
-      method: "PUT",
-      payload: {
-        owner_id: owner?.user_id,
-      },
-    })
-      .then((res) => {
-        const { success, errors, message } = res;
-        if (success) {
-          selectedEditLead.value.owner = owner;
-          return;
+
+    Http
+      .leads
+      .updateOwner(
+        {
+          owner_id: owner?.user_id
+        },
+        {
+          lead_id: selectedEditLead.value.lead_id
         }
+      )
+      .then(({ data: { success, message } }) => {
+
+        if (success) return selectedEditLead.value.owner = owner;
+
         $toast.error("You can't change the owner of this lead's");
+
       })
       .catch((error) => {
-        $toast.error(error.message.text);
+
+        const { message } = Http.error(error);
+
+        $toast.error(message.text);
+
       })
-      .finally(() => {
-        isOwnerUpdating.value = null;
-      });
+      .finally(() => isOwnerUpdating.value = null);
   }
 
   function copyClipboardHandler(source) {
+
     if (!source) return;
+
     const { copy, copied } = useClipboard();
+
     copy(source);
+
     $toast.success(`Copied to clipboard`);
+
   }
 </script>
 
 <template>
+
   <error-page :css="{ icon: { width: '30%' } }"
-    v-if="isError && !isLoading"></error-page>
+    v-if="isError && !isLoading" />
 
   <empty-page :css="{ icon: { width: '30%' } }"
-    v-else-if="!leads.length && !isLoading"></empty-page>
+    v-else-if="!leads.length && !isLoading" />
 
   <Datatable v-else
     height="calc(100vh - 97px)">
-    
+
     <datatable-header>
       <div class="tbl-th"
         style="width: 3.6rem; flex-grow: 1"></div>
@@ -498,7 +514,7 @@
 
   <team-members-popover ref="teamMembersPopovarRef"
     :member="selectedOwner"
-    @change="handleUpdateLeadOwner"></team-members-popover>
+    @change="handleUpdateLeadOwner" />
 
 </template>
 

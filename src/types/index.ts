@@ -1,3 +1,3 @@
 
 
-export interface HttpPlyload { [key: string]: string | number }
+export interface HttpPayload { [key: string]: string | number }

@@ -1,4 +1,5 @@
 <script setup>
+  import Http from '@http';
   import { ref, computed } from "vue";
   import { Skeletor } from "vue-skeletor";
   import { usePlatformStore } from "@stores";
@@ -8,7 +9,6 @@
   import TeamMembersPopover from "../../components/dropdowns/TeamMembersPopover.vue";
   import { AvatarIcon } from "@assets/icons";
   import LeadReCategoriseModal from "../modals/LeadReCategoriseModal.vue";
-  import { useApiRequest } from "@actions";
   import { $toast } from "@config";
   import { useClipboard } from "@vueuse/core";
   import TeamMembersGroup from '@views/platform/timeline/components/TeamMembersGroup.vue';
@@ -29,6 +29,7 @@
   const users = computed(() => platformStore.getUsers);
   const isLoadingFetchUsers = ref(false);
   const toggleReCategoriesModal = ref(false);
+  const is_updating_owner = ref(false);
 
   function copyClipboardHandler() {
     var source = ` Title : ${editLead.value.lead_title ?? null}\n Owner : ${leadOwner.value.name ?? null
@@ -36,9 +37,13 @@
       }\n Person : ${primaryContact.value.full_name ?? null}\n Email : ${primaryContact.value.email ?? null
       }\n Phone : ${primaryContact.value.phone_number ?? null}\n Link : ${window.location.href
       }`;
+
     const { copy, copied } = useClipboard();
+
     copy(source);
+
     $toast.success(`Copied to clipboard`);
+
   }
 
   function handleFetchNewLead($leadId) {
@@ -63,31 +68,29 @@
 
   async function updateLeadOwnerHandler(owner = null) {
     $toast.clear();
+    is_updating_owner.value = true;
 
-    await useApiRequest({
-      url: `/platform/owners/${editLeadId.value}/update`,
-      method: "PUT",
-      payload: {
-        owner_id: owner?.user_id,
-      },
-    })
-      .then((res) => {
-        const { success, errors, message } = res;
+    Http
+      .leads
+      .updateOwner(
+        { owner_id: owner?.user_id },
+        { lead_id: editLeadId.value }
+      )
+      .then(({ data: { success, errors, message } }) => {
 
-        if (success) {
-          platformStore.setLeadOwner(owner);
+        if (!success) return $toast.error(message.text);
 
-          platformStore.callFetchTimelineLogs();
+        platformStore.setLeadOwner(owner);
 
-          return;
-        }
-
-        $toast.error(message.text);
+        platformStore.callFetchTimelineLogs();
       })
       .catch((error) => {
-        $toast.clear();
-        $toast.error(error.message.text);
-      });
+
+        const { message } = Http.error(error);
+
+        $toast.error(message.text);
+
+      }).finally(() => is_updating_owner.value = false);
   }
 
 </script>
@@ -136,7 +139,8 @@
     <right-action-bar>
 
       <div v-if="isLoading">
-        <CircleSpinner class="text-dnager" :loading="isLoading"></CircleSpinner>
+        <CircleSpinner class="text-dnager"
+          :loading="isLoading"></CircleSpinner>
       </div>
 
       <router-link v-if="!isPipelineLead"
@@ -201,8 +205,9 @@
           style="--p-avatar-width:1.8rem;--p-avatar-height:1.8rem;" />
 
         <team-members-popover ref="teamMembersPopovarRef"
+          :loading="is_updating_owner"
           :member="leadOwner"
-          @change="updateLeadOwnerHandler"></team-members-popover>
+          @change="updateLeadOwnerHandler" />
 
       </avatar-group>
 
@@ -222,7 +227,9 @@
         <div class="dropdown-menu dropdown-menu-end shadow-md custom-dropdown-menu three-dot">
 
           <span @click="toggleReCategoriesModal = !toggleReCategoriesModal"
-            class="dropdown-item cursor-pointer text-head py-1">Re-categorise lead</span>
+            class="dropdown-item cursor-pointer text-head py-1">
+            Re-categorise lead
+          </span>
 
         </div>
 
@@ -232,11 +239,9 @@
 
   </action-bar>
 
-  <!--  -->
-
   <lead-re-categorise-modal v-model:visible="toggleReCategoriesModal"
     @close="() => (toggleReCategoriesModal = false)"
-    v-if="toggleReCategoriesModal"></lead-re-categorise-modal>
+    v-if="toggleReCategoriesModal" />
 
 </template>
 

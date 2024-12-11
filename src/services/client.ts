@@ -1,10 +1,16 @@
-import type { HttpPlyload } from '@/types';
+import type { HttpPayload } from '@/types';
 import axios from 'axios';
 import Storage from "@utils/storage";
 import { CONFIG } from "@config";
 
 const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
 const tokenStorage = new Storage(CONFIG.VITE_AUTH_TOKEN);
+
+export function handleRemove() {
+    userStorage.remove();
+    tokenStorage.remove();
+    window.location.replace('/login');
+}
 
 const client = axios.create({
     baseURL: `${CONFIG.VITE_API_BASE_URL}`,
@@ -25,35 +31,33 @@ export const setAuthorizationHeader = (): void => {
 
 setAuthorizationHeader();
 
-export function handleRemove() {
-    userStorage.remove();
-    tokenStorage.remove();
-    window.location.replace('/login');
-}
-
+client.interceptors.response.use(
+    function (response) { return response; },
+    function (error) { if (error?.status === 401) handleRemove(); else return error; }
+);
 
 export default class Http {
 
     static async get(
         url: string,
         params?: object,
-        headers?: HttpPlyload
+        headers?: HttpPayload
     ) {
         return await client.get(url, { params, headers });
     }
 
     static async post(
         url: string,
-        payload?: HttpPlyload,
-        headers?: HttpPlyload
+        payload?: HttpPayload,
+        headers?: HttpPayload
     ) {
         return await client.post(url, payload, { headers });
     }
 
     static async put(
         url: string,
-        payload?: HttpPlyload,
-        headers?: HttpPlyload
+        payload?: HttpPayload,
+        headers?: HttpPayload
     ) {
         return await client.put(url, payload, { headers });
 
@@ -61,19 +65,17 @@ export default class Http {
 
     static async delete(
         url: string,
-        params?: HttpPlyload,
-        headers?: HttpPlyload
+        params?: HttpPayload,
+        headers?: HttpPayload
     ) {
         return await client.delete(url, { params, headers });
     }
 
-    static error(error: { [key: string]: any }): any {
+    static error(error: { [key: string]: any }): object {
 
         const { response, status, message } = error;
 
         const { errors, message: error_message, success } = response?.data;
-
-        if (status == 401) return handleRemove();
 
         return {
             status,

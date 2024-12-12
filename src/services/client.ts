@@ -41,48 +41,53 @@ export default class Http {
     static async get(
         url: string,
         params?: object,
-        headers?: HttpPayload
     ) {
-        return await client.get(url, { params, headers });
+        return await client.get(url, { params });
     }
 
     static async post(
         url: string,
         payload?: HttpPayload,
-        headers?: HttpPayload
+        options?: object
     ) {
-        return await client.post(url, payload, { headers });
+        return await client.post(url, payload, options);
     }
 
     static async put(
         url: string,
         payload?: HttpPayload,
-        headers?: HttpPayload
+        options?: object
     ) {
-        return await client.put(url, payload, { headers });
+        return await client.put(url, payload, options);
 
     }
 
     static async delete(
         url: string,
         params?: HttpPayload,
-        headers?: HttpPayload
     ) {
-        return await client.delete(url, { params, headers });
+        return await client.delete(url, { params });
     }
 
     static error(error: { [key: string]: any }): object {
 
-        const { response, status, message } = error;
+        try {
+            const { response, status, message } = error;
+            const { errors, message: error_message, success } = response?.data;
+            return {
+                status,
+                success: success ?? false,
+                message: error_message || { type: 'error', text: message },
+                errors,
+            };
 
-        const { errors, message: error_message, success } = response?.data;
-
-        return {
-            status,
-            success: success ?? false,
-            message: error_message || { type: 'error', text: message },
-            errors,
-        };
+        } catch (error) {
+            return {
+                status: 500,
+                success: false,
+                message: { type: 'error', text: 'Oops! Something went wrong.' },
+            };
+        }
 
     }
 

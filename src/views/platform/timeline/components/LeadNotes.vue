@@ -2,19 +2,19 @@
     import { ref, computed, watch } from 'vue';
     import SlideUpDown from "vue-slide-up-down";
     import { usePlatformStore } from '@stores';
-    import { useApiRequest } from '@actions';
+    import Http from '@http';
     import { useDebounceFn } from '@vueuse/core';
     import { $toast } from '@config';
 
     const platformStore = usePlatformStore();
+
     const editLead = computed(() => platformStore.getEditLead);
+
     const editLeadId = computed(() => platformStore.getEditLeadId);
 
     const lead_notes = ref(null);
 
-    watch(editLead, () => {
-        lead_notes.value = editLead.value.notes;
-    });
+    watch(editLead, () => lead_notes.value = editLead.value.notes);
 
     const handleOnUpdateNotes = useDebounceFn(() => handleOnUpdateNotesFast(), 2000);
 
@@ -24,26 +24,33 @@
 
         $toast.clear();
 
-        useApiRequest({
-            url: `/platform/deals/${editLeadId.value}/notes`,
-            method: 'PUT',
-            payload: { notes: lead_notes.value, save }
-        }).then(res => {
+        Http
+            .leads
+            .updateNote(
+                {
+                    notes: lead_notes.value,
+                    save: save
+                },
+                {
+                    lead_id: editLeadId.value
 
-            const { success, message, errors } = res;
+                }
+            ).then(({ data: { success, message } }) => {
 
-            if (!success) return $toast.error(message.text);
+                if (!success) return $toast.error(message.text);
 
-            if (save) {
+                if (!save) return;
+
                 platformStore.callFetchTimelineLogs();
                 $toast.success('Your notes have been saved successfully.');
                 editLead.value.notes = lead_notes;
-            }
 
-        }).catch(error => {
-            $toast.error(error.message.text);
-        })
+            }).catch(error => {
 
+                const { message } = Http.error(error);
+                $toast.error(message.text);
+
+            });
     };
 
 </script>

@@ -34,7 +34,7 @@
   const selectedWorkflow = ref(null);
   const selectedStage = ref(null);
   const isSubmitConfirmQualify = ref(false);
-  const pipelineStages = computed(() => platformStore.getPipelineStages);
+  const pipelineStages = ref([]);
 
   const pipelineIsLoading = ref(false);
   const stagesIsLoading = ref(false);
@@ -87,20 +87,28 @@
 
     stagesIsLoading.value = true;
     selectedStage.value = null;
-    platformStore.setPipelineStages([]);
+    pipelineStages.value = [];
 
-    let url = `/stages/${selectedPipeline.value.pipeline_id}`
+    let url = `/platform/stages/${selectedPipeline.value.pipeline_id}`
 
     if (props.action == 'lost') url += '/lost';
     else if (props.action == 'success') url += '/success';
-    else url += '/primary';
+    else url += '/all';
 
     await useApiRequest({
       url,
     })
       .then((res) => {
-        platformStore.setPipelineStages(res);
-        if (!res?.length) errors.value = { pipeline_stage: [`Pipeline ${(props.action == 'reopen' || props.action == 'certify') ? 'primary' : props.action} stage not found.`] };
+
+        pipelineStages.value = res;
+
+        if (res?.length) return;
+
+        errors.value = {
+          pipeline_stage: [`Pipeline ${(props.action == 'reopen' || props.action == 'certify') ?
+            'primary' : props.action} stage not found.`]
+        };
+
       })
       .catch((error) => {
         $toast.error(error.message.text);

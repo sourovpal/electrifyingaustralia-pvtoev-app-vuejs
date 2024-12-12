@@ -24,7 +24,7 @@
   const selectedStatus = ref(null);
   const selectedPipeline = ref(null);
   const selectedStage = ref(null);
-  const isSubmitMovePipelineOrStatus = ref(false);
+  const is_submit = ref(false);
 
   const pipelines = computed(() => platformStore.getPipelines);
   const statuses = computed(() => platformStore.getStatuses);
@@ -74,10 +74,8 @@
 
         stagesIsLoading.value = loading;
 
-        if (!loading && stages && !stages?.length) {
-
+        if (!loading && stages && !stages?.length)
           errors.value = { pipeline_stage: ["Pipeline stage not found."] };
-        }
 
       }
 
@@ -104,7 +102,7 @@
     errors.value = {};
 
     var lead_id = platformStore.getEditLeadId;
-    isSubmitMovePipelineOrStatus.value = true;
+    is_submit.value = true;
 
     var data = {
       status_id: selectedStatus.value?.status_id ?? null,
@@ -120,12 +118,9 @@
       .then((res) => {
         const { success, message, ...args } = res;
 
-        isSubmitMovePipelineOrStatus.value = false;
+        is_submit.value = false;
 
-        if (!success && args.errors) {
-          errors.value = args.errors;
-          return;
-        }
+        if (!success && args.errors) return errors.value = args.errors;
 
         this.platformStore.callFetchTimelineLogs();
 
@@ -150,7 +145,7 @@
 
         }
 
-        isSubmitMovePipelineOrStatus.value = false;
+        is_submit.value = false;
         selectedStatus.value = null;
         selectedPipeline.value = null;
         selectedStage.value = null;
@@ -163,7 +158,7 @@
         $toast.error(error.message.text);
       });
 
-    isSubmitMovePipelineOrStatus.value = false;
+    is_submit.value = false;
   }
 </script>
 
@@ -314,8 +309,8 @@
           label="Close"></danger-button>
 
         <success-button
-          :disabled="!((selectedPipeline && selectedStage) || selectedStatus) || isSubmitMovePipelineOrStatus"
-          :loading="isSubmitMovePipelineOrStatus"
+          :disabled="!((selectedPipeline && selectedStage) || selectedStatus) || is_submit"
+          :loading="is_submit"
           @click="leadMovePipelineOrStatus()"
           label="Confirm Move">
         </success-button>

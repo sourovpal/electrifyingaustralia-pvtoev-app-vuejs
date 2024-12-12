@@ -30,11 +30,8 @@
             selectedTasks.value = workflowTasks.value?.reduce((acc, task) => {
 
                 if (!assignTasks.value.includes(task.task_id)) {
-
                     acc.push(task.task_id);
-
                 }
-
                 return acc;
 
             }, []);
@@ -164,14 +161,14 @@
             <div class="workflow-body ps-4">
 
                 <div v-if="isLoading"
-                    v-for="(_, index) in 1"
+                    v-for="(_, index) in workflow.tasks_count"
                     :key="index*Math.random()"
                     class="task py-2 px-2">
 
-                    <Skeletor style="width:1.3rem;height:1.3rem;border-radius:3px;"
-                        class="me-2"></Skeletor>
+                    <Skeletor class="me-2"
+                        style="width:1.3rem;height:1.3rem;border-radius:3px;" />
 
-                    <Skeletor style="width:80%;height:1rem;border-radius:3px;"></Skeletor>
+                    <Skeletor style="width:80%;height:1rem;border-radius:3px;"/>
 
                 </div>
 

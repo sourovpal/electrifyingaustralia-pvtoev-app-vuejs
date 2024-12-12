@@ -294,7 +294,12 @@
     <div class="marker">
 
       <custom-checkbox @click="handleUpdateTaskStage"
-        :checked="!!leadTask.is_complete"></custom-checkbox>
+        :checked="!!leadTask.is_complete">
+        
+        <circle-spinner v-if="isLoading"
+          :loading="isLoading" />
+
+      </custom-checkbox>
 
     </div>
 
@@ -356,15 +361,7 @@
 
         </div>
 
-        <div v-if="isLoading"
-          class="d-flex justify-content-center align-items-center flex-grow-1">
-
-          <svg-custom-icon icon="SpinnerIcon" />
-
-        </div>
-
-        <div v-else
-          class="dot-menu">
+        <div class="dot-menu">
 
           <button data-mdb-toggle="dropdown"
             class="toolbar-btn btn btn-light btn-sm btn-floating d-flex justify-content-center align-items-center">

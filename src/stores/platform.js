@@ -465,9 +465,11 @@ export const usePlatformStore = defineStore("platform", {
         });
     },
     callFetchPipelineStages($pieplineId, $callback = () => { }) {
+
       $callback({ loading: true });
+      
       useApiRequest({
-        url: `/platform/pipeline/${$pieplineId}/stages`,
+        url: `/platform/stages/${$pieplineId}/all`,
       })
         .then((stages) => {
 

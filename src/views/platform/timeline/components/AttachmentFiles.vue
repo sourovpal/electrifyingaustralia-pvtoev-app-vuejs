@@ -1,14 +1,21 @@
 <script setup>
 
     import { ref, computed, watch, nextTick } from 'vue';
-    import { formatFileSize, shortenFileName, imageExtensions, fileNameToExtension, formatTimeAgo, handleDownloadAttachmentFiles } from '@helpers';
-    import { getMaterialFileIcon } from "file-extension-icon-js";
     import FetchImage from '@components/FetchImage.vue';
-    import { useConfirm } from "primevue/useconfirm";
     import { $toast } from '@config';
-    import { useApiRequest } from '@actions';
+    import Http from '@http';
+    import { getMaterialFileIcon } from "file-extension-icon-js";
+    import { useConfirm } from "primevue/useconfirm";
     import { usePlatformStore } from '@stores';
     import BlockUI from 'primevue/blockui';
+    import {
+        formatFileSize,
+        shortenFileName,
+        imageExtensions,
+        fileNameToExtension,
+        formatTimeAgo,
+        handleDownloadAttachmentFiles
+    } from '@helpers';
 
     const props = defineProps({
         file: { type: Object },
@@ -49,6 +56,7 @@
 
 
     const confirmDeleteAttachment = (event) => {
+
         confirm.require({
             header: 'Delete Attachment?',
             message: 'Are you sure you want to Delete?',
@@ -65,33 +73,44 @@
                 style: 'height:2rem'
             },
             accept: async () => {
-                await useApiRequest(
-                    { url: `/platform/files/${props.file.file_id}/delete/${props.file.filename}`, method: 'delete' }
-                ).then(res => {
-                    is_deleted.value = true;
-                    $toast.success(res.message.text);
-                }).catch(error => {
-                    $toast.error(error.message.text);
-                });
+
+                const { file_id, filename } = props.file;
+
+                Http
+                    .leads
+                    .deleteFile({ file_id, filename })
+                    .then(({ data: { message } }) => {
+
+                        is_deleted.value = true;
+
+                        $toast.success(message.text);
+
+                    }).catch(error => {
+
+                        const { message } = Http.error(error);
+
+                        $toast.error(message.text);
+
+                    });
             },
             reject: () => { }
         });
     };
-
-
 
 </script>
 
 <template>
 
     <BlockUI :blocked="is_deleted">
+
         <div class="rounded-2 px-2 py-2 card mb-2 border rounded-2 cursor-pointer">
+
             <div class="d-flex justify-content-between align-items-center">
+
                 <div @click="emits('preview', file)"
                     class="col-left">
 
                     <div class="d-flex justify-content-start align-items-center">
-
 
                         <Avatar :image="preview_file"
                             pt:image:class="object-contain"
@@ -107,9 +126,13 @@
 
                             <div class="d-flex justify-content-between align-items-center w-100">
                                 <div class="w-100 fs-12px text-soft">
+
                                     {{ formatTimeAgo(file.created_at, 15)?.replace('a few seconds ago', 'just now') }}
+
                                     <span class="px-1">•</span>
+
                                     {{ file_size }}
+
                                 </div>
                             </div>
 
@@ -121,7 +144,8 @@
                 <div class="fs-14px text-soft pe-1 actions-">
 
                     <div class="d-flex justify-content-between align-items-center">
-                        <span class="cursor-pointer" @click="handleDownloadAttachmentFiles(`/platform/files/${file.file_id}/download/${file.filename}`, file.filename)">
+                        <span class="cursor-pointer"
+                            @click="handleDownloadAttachmentFiles(`/platform/files/${file.file_id}/download/${file.filename}`, file.filename)">
                             <i class="pi pi-download fs-14px text-soft"></i>
                         </span>
 

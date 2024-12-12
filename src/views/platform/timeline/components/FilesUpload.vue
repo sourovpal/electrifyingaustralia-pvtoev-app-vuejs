@@ -2,11 +2,17 @@
 
     import ProgressBar from 'primevue/progressbar';
     import { ref, computed, watch, nextTick } from 'vue';
-    import { formatFileSize, shortenFileName, imageExtensions, fileNameToExtension, getFileObjectUrl } from '@helpers';
     import { useDebounceFn } from '@vueuse/core';
     import { usePlatformStore } from '@stores';
     import { getMaterialFileIcon } from "file-extension-icon-js";
-    import api from "@actions/api";
+    import Http from "@http";
+    import {
+        formatFileSize,
+        shortenFileName,
+        imageExtensions,
+        fileNameToExtension,
+        getFileObjectUrl
+    } from '@helpers';
 
     import { $toast } from '@config';
 
@@ -48,24 +54,37 @@
 
         const random = (Math.round(Math.random() * 10) + 1);
 
-        await api.post(`/platform/files/${editLeadId.value}/upload`, form_data,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data",
+        Http
+            .leads
+            .uploadFile(
+                form_data,
+                {
+                    lead_id: editLeadId.value
                 },
-                onUploadProgress: (progressEvent) => {
-                    progress.value = Math.abs((Math.round((progressEvent.loaded * 100) / progressEvent.total) - random));
-                },
-            }
-        ).then(res => {
-            platformStore.appendLeadFile(res.data);
-            progress.value = 100;
-            isComplete.value = true;
-        }).catch(error => {
-            isError.value = true;
-        });
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                    onUploadProgress: (progressEvent) => {
+                        progress.value = Math.abs((Math.round((progressEvent.loaded * 100) / progressEvent.total) - random));
+                    },
+                }
+            )
+            .then(({ data }) => {
 
-        (useDebounceFn(() => emits('complete', isComplete.value ?? false), 100))();
+                platformStore.appendLeadFile(data);
+
+                progress.value = 100;
+
+                isComplete.value = true;
+
+                emits('complete', true);
+
+            }).catch(error => {
+
+                isError.value = true;
+
+            });
 
     };
 

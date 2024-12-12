@@ -1,72 +1,62 @@
 <script setup>
-    import { ref,    } from 'vue';
+    import { ref, } from 'vue';
+    import TableRefreshSpinner from '@components/Datatable/TableRefreshSpinner.vue';
+    import TablePagination from '@components/Datatable/TablePagination.vue';
     import ActionBar from '@components/ActionBar/ActionBar.vue';
     import LeftActionBar from '@components/ActionBar/LeftActionBar.vue';
     import RightActionBar from '@components/ActionBar/RightActionBar.vue';
     import { usePlatformStore } from "@stores";
 
     const platformStore = usePlatformStore();
+
     const props = defineProps({
         pagination: { type: Object },
         isLoading: { type: Boolean, default: false }
     });
+
     const emits = defineEmits(['search:update', 'pagination:fetch']);
+
     const searchTasks = ref(null);
     const userIsLoading = ref(false);
-    function selectOwnerHandler(user) {
-        owner.value = user;
-        emits('pagination:fetch', { page: 1, owner_id: user?.user_id ?? null });
+
+    function handleFetch(payload = {}) {
+        emits('pagination:fetch', { page: 1, ...payload });
     }
 
 </script>
 
 <template>
     <ActionBar>
-        <LeftActionBar>
-            <div class="ms-3">
-                <button @click="emits('pagination:fetch')"
-                    :disabled="isLoading"
-                    type="button"
-                    class="toolbar-btn btn btn-sm btn-light btn-lg btn-floating">
-                    <svg-custom-icon v-if="!isLoading"
-                        icon="loader-icon" />
-                    <svg-custom-icon v-else
-                        icon="spinner-icon" />
-                </button>
-            </div>
+        <left-action-bar>
+
+            <table-refresh-spinner @click="handleFetch()"
+                :loading="isLoading"/>
+
             <div class="search-bar w-100">
+
                 <div class="position-relative ms-4 w-100">
+
                     <input type="text"
                         class="form-control ps-5"
                         placeholder="Search keywords..."
                         v-model="searchTasks"
                         @keyup="emits('search:update', searchTasks)" />
-                    <font-awesome-icon icon="fas fa-search"
-                        class="ms-3 search-icon text-soft"></font-awesome-icon>
-                </div>
-            </div>
-        </LeftActionBar>
-        <RightActionBar>
-            <div class="me-3"
-                style="min-width:4rem;">
-                <span>{{ pagination?.from??0 }} - {{ pagination?.to??0 }} of {{ pagination?.total??0 }}</span>
-            </div>
-            <button :disabled="!pagination?.prev_page || isLoading"
-                @click="pagination?.prev_page && emits('pagination:fetch', { page: pagination?.prev_page })"
-                v-tippy="{ content: 'Previous', placement: 'top' }"
-                class="toolbar-btn btn btn-light btn-floating me-3">
-                <font-awesome-icon icon="fas fa-arrow-left"
-                    class="text-soft fs-16px"></font-awesome-icon>
-            </button>
 
-            <button :disabled="!pagination?.next_page || isLoading"
-                v-tippy="{ content: 'Next', placement: 'top' }"
-                @click="pagination?.next_page && emits('pagination:fetch', { page: pagination?.next_page })"
-                class="toolbar-btn btn btn-light btn-floating me-3">
-                <font-awesome-icon icon="fas fa-arrow-right"
-                    class="text-soft fs-16px"></font-awesome-icon>
-            </button>
-        </RightActionBar>
+                    <font-awesome-icon icon="fas fa-search"
+                        class="ms-3 search-icon text-soft" />
+
+                </div>
+
+            </div>
+
+        </left-action-bar>
+
+        <right-action-bar>
+
+            <table-pagination :pagination="pagination"
+                @change="page => handleFetch({page})"/>
+
+        </right-action-bar>
     </ActionBar>
 </template>
 <style scoped

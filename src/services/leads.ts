@@ -4,7 +4,7 @@ import Http from "./client";
 
 export default <Model>{
 
-    find: async (payload: HttpPayload) => await Http.get('/', payload),
+    find: async (query: HttpPayload) => await Http.get(`/platform/deals/${query.lead_id}/find`),
 
     all: async (payload: HttpPayload) => await Http.get("/platform/leads", payload),
 
@@ -15,7 +15,7 @@ export default <Model>{
     uploadFile: async (payload: HttpPayload, query: HttpPayload, options: object) => await Http.post(`/platform/files/${query.lead_id}/upload`, payload, options),
 
     updateOwner: async (payload: HttpPayload, query: HttpPayload) => await Http.put(`/platform/owners/${query.lead_id}/update`, payload),
-    
+
     updateNote: async (payload: HttpPayload, query: HttpPayload) => await Http.put(`/platform/deals/${query.lead_id}/notes`, payload),
 
     updateStatus: async (payload: HttpPayload, query: HttpPayload) => await Http.put(`/platform/status/${query.lead_id}/update`, payload),

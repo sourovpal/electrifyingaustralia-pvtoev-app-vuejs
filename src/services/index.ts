@@ -4,6 +4,7 @@ import tasks from "./tasks";
 import Http from './client';
 import leads from "./leads";
 import contacts from "./contacts";
+import notification from "./notification";
 
 export default {
     auth,
@@ -11,5 +12,6 @@ export default {
     leads,
     contacts,
     users,
+    notification,
     error: Http.error,
 }

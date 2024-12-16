@@ -295,7 +295,7 @@
 
       <custom-checkbox @click="handleUpdateTaskStage"
         :checked="!!leadTask.is_complete">
-        
+
         <circle-spinner v-if="isLoading"
           :loading="isLoading" />
 
@@ -309,6 +309,7 @@
         class="title fs-14px fw-bold text-head py-1 px-1 flex-grow-1">
 
         <span class="title-text"
+          :class="{'text-decoration-line-through':!!leadTask.is_complete}"
           v-if="!isEdit">{{ leadTask.title }}</span>
 
         <input v-else

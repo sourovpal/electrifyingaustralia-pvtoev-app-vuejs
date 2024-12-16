@@ -20,38 +20,48 @@
       if (isIntersecting && !isLoading.value) {
         notificationStore.callFetchNotifications();
       }
-    },
-    {
-      rootMargin: "0px 0px 500px 0px",
-    }
-  );
+    }, { rootMargin: "0px 0px 500px 0px" });
+
 </script>
 
 <template>
   <div class="alert-body"
     v-if="isLoading && !notifications?.length">
+
     <notification-skeletor v-for="(_, index) in 6"
-      :key="Math.random()"></notification-skeletor>
+      :key="Math.random()" />
+
   </div>
+
   <scroll-panel v-else
     :dt="{bar: {background: '#aaaaaa',size:'0.2rem'}}"
     class="scroll-panel">
+
     <div v-if="!hideAll"
       class="alert-body">
+
       <notification-item v-for="(notification, index) in notifications"
         :key="index"
-        :notification="notification"></notification-item>
+        :notification="notification" />
+
       <div ref="infiniteLoadRef"
         class="loading-notification">
+
         <notification-skeletor v-if="!isComplete"
           v-for="(_, index) in 2"
-          :key="Math.random()"></notification-skeletor>
+          :key="Math.random()" />
+
       </div>
+
       <div v-if="!isLoading"
         class="py-5"></div>
+
     </div>
+
   </scroll-panel>
+
 </template>
+
 <style scoped
   lang="scss">
   .scroll-panel,

@@ -1,9 +1,9 @@
 <script setup>
+  import Http from "@http";
   import { formatTimeAgo } from "@helpers";
   import { ref, reactive, watch, computed, onMounted, toRefs, createApp, defineComponent, h } from "vue";
   import { useIntersectionObserver, useDebounceFn } from "@vueuse/core";
   import { useAppStore, useAuthStore, useNotificationStore } from '@stores';
-  import { useApiRequest } from '@actions';
   import { useRouter } from 'vue-router';
 
   const props = defineProps({
@@ -23,9 +23,10 @@
 
   const router = useRouter();
   const company = computed(() => appStore.getCompany);
-  const alertItemRef = ref(null);
-  const isLoading = ref(false);
-  const isSeenProcessing = ref(false);
+  const alert_item_ref = ref(null);
+  const is_loading = ref(false);
+  const is_seen_processing = ref(false);
+
   const defaultAttributes = reactive({
     company_name: null,
     model: {},
@@ -37,9 +38,7 @@
   }
 
   watch(() => props.model, (newModel) => {
-    if (newModel) {
-      assignAttributes({ model: { ...newModel } });
-    }
+    if (newModel) assignAttributes({ model: { ...newModel } });
   }, { immediate: true });
 
   onMounted(() => {
@@ -48,47 +47,83 @@
   });
 
   const handleSeenNotification = async ({ stop }) => {
-    await useApiRequest({
-      url: `/notifications/${props.notification.notification_id}/seen`,
-    }).then(res => {
-      setTimeout(() => {
-        stop();
-        Object.assign(props.receiver, { ...props.receiver, seen_at: new Date() });
-        notificationStore.setTotalUnseen(null, true);
-      }, 5000);
-    }).catch(error => { });
+
+    Http
+      .notification
+      .seen({
+        id: props.notification.notification_id
+      })
+      .then(res => {
+
+        setTimeout(() => {
+
+          stop();
+
+          Object.assign(props.receiver, { ...props.receiver, seen_at: new Date() });
+
+          notificationStore.setTotalUnseen(null, true);
+
+        }, 5000);
+
+      }).catch(error => { });
+
   };
 
   const handleMarkNotification = async () => {
-    isLoading.value = true;
-    await useApiRequest({
-      url: `/notifications/${props.notification.notification_id}/mark`,
-    }).then(res => {
-      Object.assign(props.notification, { ...props.notification, highlight: !props.notification?.highlight });
-    }).catch(() => { }).finally(() => { isLoading.value = false; });
+
+    is_loading.value = true;
+
+    Http
+      .notification
+      .mark({
+        id: props.notification.notification_id
+      })
+      .then(res => {
+        Object.assign(props.notification, { ...props.notification, highlight: !props.notification?.highlight });
+      })
+      .catch(_ => { })
+      .finally(_ => is_loading.value = false);
+
   };
 
   const handleHideNotification = async () => {
-    isLoading.value = true;
-    await useApiRequest({
-      url: `/notifications/${props.notification.notification_id}/hide`,
-    }).then(res => {
-      Object.assign(props.receiver, { ...props.receiver, hide_at: new Date() });
-    }).catch(() => { }).finally(() => { isLoading.value = false; });
+
+    is_loading.value = true;
+
+    Http
+      .notification
+      .hide({
+        id: props.notification.notification_id
+      })
+      .then(res => {
+        Object.assign(props.receiver, { ...props.receiver, hide_at: new Date() });
+      })
+      .catch(() => { })
+      .finally(_ => is_loading.value = false);
+
   };
 
   const { stop } = useIntersectionObserver(
-    alertItemRef,
+
+    alert_item_ref,
+
     ([{ isIntersecting }], observerElement) => {
-      if (isIntersecting && !isSeenProcessing.value && !props.receiver?.seen_at) {
-        isSeenProcessing.value = true;
+
+      if (
+        isIntersecting &&
+        !is_seen_processing.value &&
+        !props.receiver?.seen_at
+      ) {
+
+        is_seen_processing.value = true;
         handleSeenNotification({ stop });
+
       }
-    }, {
-    rootMargin: "0px 0px -180px 0px",
-  });
+
+    }, { rootMargin: "0px 0px -180px 0px" });
 
   function redireectRoute(name, params = {}, query = {}) {
+
     try {
 
       let routeName = props.notification.route_name;
@@ -122,6 +157,7 @@
       }
 
       $url = router.resolve($route).href;
+
       return $url ?? '';
 
     } catch (error) {
@@ -130,20 +166,21 @@
   }
 
   function userNameFormat(user) {
+
     if (user && user.user_id === authUser.value?.user_id) return 'You ';
+
     if (user && user.name) return user.name;
+
     return 'Unknown name';
+
   }
 
   const NotificationMessage = defineComponent({
     setup() {
       return defaultAttributes;
     },
-    template:`${props.notification.message}`,
+    template: `${props.notification.message}`,
   });
-
-
-
 
 </script>
 
@@ -152,7 +189,7 @@
     :to="redireectRoute(notification.route_name, notification.route_params, notification.route_querys)"
     class="d-block cursor-pointer">
 
-    <div ref="alertItemRef"
+    <div ref="alert_item_ref"
       :class="{ 
       'is-not-seen':(!notification.highlight && !receiver?.seen_at && !seenAll), 
       'alert-warning':(notification.highlight && alert_type == 'normal'), 
@@ -169,7 +206,7 @@
         class="alert-icon d-flex justify-content-center align-items-center"
         :class="`alert-${alert_type}`">
         <font-awesome-icon :icon="alert_icon||'fas fa-bell'"
-          :class="`text-${alert_type} fs-25px`"></font-awesome-icon>
+          :class="`text-${alert_type} fs-25px`" />
       </div>
       <!-- Alert Icon End -->
 
@@ -203,14 +240,18 @@
       <div class="dot-menu">
 
         <div class="dropdown ms-2 position-relative">
+
           <button
             class="toolbar-btn dropdown-toggler me-n1 btn btn-light btn-sm btn-floating d-flex justify-content-center align-items-center"
             data-mdb-toggle="dropdown">
-            <svg-custom-icon v-if="isLoading"
-              icon="spinner-icon" />
+
+            <circle-spinner v-if="is_loading"
+              :loading="is_loading" />
+
             <font-awesome-icon v-else
               icon="fas fa-ellipsis-vertical"
-              class="text-soft fs-16px"></font-awesome-icon>
+              class="text-soft fs-16px" />
+
           </button>
 
           <div class="dropdown-menu custom-dropdown-menu dropdown-menu-end me-n3">
@@ -218,7 +259,7 @@
               class="dropdown-item cursor-pointer fw-bold">
               <span class="icon">
                 <font-awesome-icon icon="fas fa-check"
-                  class="text-head fs-16px"></font-awesome-icon>
+                  class="text-head fs-16px" />
               </span>
               Make as {{ notification.highlight?'unmark':'mark' }}
             </div>
@@ -227,7 +268,7 @@
               class="dropdown-item cursor-pointer fw-bold">
               <span class="icon">
                 <font-awesome-icon icon="fas fa-eye-slash"
-                  class="text-head fs-14px"></font-awesome-icon>
+                  class="text-head fs-14px" />
               </span>
               Hide
             </div>

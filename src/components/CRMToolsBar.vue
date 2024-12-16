@@ -1,6 +1,6 @@
 <script setup>
+  import Http from "@http";
   import { ref, watch, nextTick } from "vue";
-  import { useApiRequest } from "@actions";
   import { formatLeadAddress } from "@helpers";
   import { useDebounceFn, onClickOutside } from "@vueuse/core";
   import { useRouter } from "vue-router";
@@ -9,49 +9,50 @@
 
   const autocompleteRef = ref(null);
   const searchInput = ref(null);
-  const searchQuery = ref(null);
-  const isLoading = ref(false);
+  const search_query = ref(null);
+  const is_loading = ref(false);
   const results = ref([]);
 
   const handleToggle = () => {
+
     if (results.value.length) autocompleteRef.value.show();
+
   }
 
   const searchLeadsOrDeals = useDebounceFn(async ({ query }) => {
-    searchQuery.value = query;
+
+    search_query.value = query;
+
     if (!query) {
-      isLoading.value = false;
+      is_loading.value = false;
       return results.value = [];
     }
 
-    isLoading.value = true;
+    is_loading.value = true;
 
-    await useApiRequest({
-      url: `/platform/leads/search`,
-      method: 'post',
-      payload: {
+    Http
+      .leads
+      .search({
         lead: true,
         contact: true,
         limit: 12,
         search: query,
-      }
-    }).then((leads) => results.value = leads)
-      .catch((error) => { });
-
-    isLoading.value = false;
+      })
+      .then(({ data }) => results.value = data)
+      .catch((error) => { })
+      .finally(_ => is_loading.value = false);
 
   }, 1000);
 
   function handleOptionSelect({ value }) {
-    nextTick(() => searchInput.value = searchQuery.value);
+
+    nextTick(() => searchInput.value = search_query.value);
 
     if (value.pipeline) return router.push({ name: 'timeline-deal-edit', params: { id: value.lead_id } });
 
     return router.push({ name: 'timeline-lead-edit', params: { id: value.lead_id } });
 
   }
-
-
 
 </script>
 
@@ -70,7 +71,7 @@
           pt:overlay:style="max-height:30rem;max-width:35rem;"
           pt:listContainer:style="max-height:30rem;"
           :completeOnFocus="false"
-          :loading="isLoading"
+          :loading="is_loading"
           placeholder="Search lead's or deal's"
           v-model="searchInput"
           :suggestions="results"
@@ -155,8 +156,9 @@
   scoped>
   :deep(.search-input-text) {
     padding-left: 2.5rem;
-    &:not(:focus){
-      border-color:var(--layout-border-color);
+
+    &:not(:focus) {
+      border-color: var(--layout-border-color);
     }
   }
 

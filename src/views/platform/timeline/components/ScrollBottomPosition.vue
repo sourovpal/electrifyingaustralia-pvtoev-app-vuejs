@@ -15,8 +15,8 @@
     });
 
     const emits = defineEmits(['infinite']);
-    const isLoading = ref(false);
-    const isComplete = ref(false);
+    const is_loading = ref(true);
+    const is_complete = ref(false);
 
     const scrollpanel = ref(null)
 
@@ -29,22 +29,21 @@
     const { stop: stopObserver } = useIntersectionObserver(
         targetLoader,
         ([{ isIntersecting }], observerElement) => {
-            if (isIntersecting && !isLoading.value && !isComplete.value) {
-                isLoading.value = true;
+            if (isIntersecting && !is_loading.value && !is_complete.value) {
+                is_loading.value = true;
                 callInfiniteLoad();
             }
         },
     )
 
     async function complete() {
-        console.log('complete')
-        isComplete.value = true;
-        isLoading.value = false;
+        is_complete.value = true;
+        is_loading.value = false;
         stopObserver();
     }
 
     async function loading() {
-        isLoading.value = true;
+        is_loading.value = true;
     }
 
     function loadLatest() {
@@ -61,7 +60,7 @@
 
         prevHeight.value = height;
 
-        isLoading.value = false;
+        is_loading.value = false;
     }
 
     async function scrollPosition() {
@@ -78,7 +77,7 @@
             prevHeight.value = scrollpanel.value.scrollHeight;
         });
 
-        isLoading.value = false;
+        is_loading.value = false;
     }
 
     async function callInfiniteLoad(payload = {}) {
@@ -86,7 +85,7 @@
     }
 
     onMounted(() => {
-        isLoading.value = true;
+        is_loading.value = true;
         scrollpanel.value = targetScrollPanel.value?.$el.querySelector('.p-scrollpanel-content');
         callInfiniteLoad();
     });
@@ -110,15 +109,16 @@
         <div class="text-center">
             &nbsp;
 
-            <div ref="targetLoader">
-                <span v-if="isLoading && !isComplete"
-                    class="text-soft py-5 d-block">
-                    <svg-custom-icon icon="SpinnerIcon"></svg-custom-icon>
+            <div ref="targetLoader"
+                class="text-center">
+                <span v-if="is_loading && !is_complete"
+                    class="text-soft py-5 d-flex justify-content-center align-items-center">
+                    <circle-spinner :loading="is_loading" />
                     Loading...
                 </span>
             </div>
 
-            <span v-if="isComplete && !isLoading"
+            <span v-if="is_complete && !is_loading"
                 class="text-soft py-5 d-block">
                 There are no old activities to display.
             </span>

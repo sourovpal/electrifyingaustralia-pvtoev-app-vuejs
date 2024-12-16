@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { useApiRequest } from "@actions";
+import Http from "@http";
 import { validateObject } from "@helpers";
 import { $toast } from '@config';
 
@@ -354,54 +355,65 @@ export const usePlatformStore = defineStore("platform", {
       }
     },
     callFetchNewLead($leadId, $isNew = false) {
-      this.setIsLoading($isNew);
-      this.setEditLeadId($leadId);
-      useApiRequest({
-        url: `/platform/deals/${$leadId}/find`,
-      })
-        .then((res) => {
-          const { success, lead, next_lead, prev_lead, is_pipeline } = res;
-          if (success && lead) {
-            const {
-              primary_contact,
-              owner,
-              properties_values,
-              source,
-              status,
-              pipeline,
-              pipeline_stage,
-              lead_team_members,
-            } = lead;
-            this.setEditLead(lead);
-            this.setNextLeadId(next_lead);
-            this.setPrevLeadId(prev_lead);
-            this.setPrimaryContact(primary_contact);
-            this.setLeadOwner(owner);
-            this.setIsPipelineLead(is_pipeline);
-            this.setLeadPropertiesValues(properties_values);
-            this.setLeadSource(source);
-            this.setLeadStatus(status);
-            this.setLeadPipeline(pipeline);
-            this.setLeadStage(pipeline_stage);
-            this.setLeadTeamMembers(lead_team_members);
-            //
-            this.setIsLoading(false);
-            this.setIsFirstLoading(false);
 
-          }
-        })
-        .catch((error) => {
-          if (error.status == 403) this.setDisabled(true);
+      this.setIsLoading($isNew);
+
+      this.setEditLeadId($leadId);
+
+      Http
+        .leads
+        .find({ lead_id: $leadId })
+        .then(({ data: { success, lead, next_lead, prev_lead, is_pipeline } }) => {
+
+          const {
+            primary_contact,
+            owner,
+            properties_values,
+            source,
+            status,
+            pipeline,
+            pipeline_stage,
+            lead_team_members,
+          } = lead;
+
+          this.setEditLead(lead);
+          this.setNextLeadId(next_lead);
+          this.setPrevLeadId(prev_lead);
+          this.setPrimaryContact(primary_contact);
+          this.setLeadOwner(owner);
+          this.setIsPipelineLead(is_pipeline);
+          this.setLeadPropertiesValues(properties_values);
+          this.setLeadSource(source);
+          this.setLeadStatus(status);
+          this.setLeadPipeline(pipeline);
+          this.setLeadStage(pipeline_stage);
+          this.setLeadTeamMembers(lead_team_members);
+          //
           this.setIsLoading(false);
           this.setIsFirstLoading(false);
+
+        })
+        .catch((error) => {
+
+          const { status } = Http.error(error);
+
+          if (status == 403) this.setDisabled(true);
+
+          this.setIsLoading(false);
+
+          this.setIsFirstLoading(false);
+
         });
     },
     callFetchLeadContacts($leadId, $callback = () => { }) {
+
       $callback({ loading: true });
+
       useApiRequest({
         url: `/platform/contacts/${$leadId}/all`,
       })
         .then((contacts) => {
+
           if (contacts) {
 
             this.setLeadContacts(contacts);
@@ -410,13 +422,14 @@ export const usePlatformStore = defineStore("platform", {
           }
 
           $callback({ loading: false });
+
         })
-        .catch((error) => {
-          $callback({ loading: false });
-        });
+        .catch((error) => $callback({ loading: false }));
     },
     callFetchLeadStages($leadId, $callback = () => { }) {
+
       $callback({ loading: true });
+
       useApiRequest({
         url: `/platform/deals/${$leadId}/stages`,
       })
@@ -438,11 +451,7 @@ export const usePlatformStore = defineStore("platform", {
 
           $callback({ loading: false });
         })
-        .catch((error) => {
-
-          $callback({ loading: false });
-
-        });
+        .catch((error) => $callback({ loading: false }));
     },
     callFetchPipeline($callback = () => { }) {
 
@@ -467,7 +476,7 @@ export const usePlatformStore = defineStore("platform", {
     callFetchPipelineStages($pieplineId, $callback = () => { }) {
 
       $callback({ loading: true });
-      
+
       useApiRequest({
         url: `/platform/stages/${$pieplineId}/all`,
       })

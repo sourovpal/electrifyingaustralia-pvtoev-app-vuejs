@@ -18,7 +18,9 @@
   function handlePipelineStageUpdate(stage) {
     $toast.clear();
 
-    if (leadStage.value?.status == "lost" || leadStage.value?.status == "success" || leadStage.value?.stage_id == stage.stage_id)
+    if (leadStage.value?.status == "lost" ||
+      leadStage.value?.status == "success" ||
+      leadStage.value?.stage_id == stage.stage_id)
       return;
 
     isLoadingStageId.value = stage.stage_id;
@@ -120,9 +122,10 @@
               <span class="d-flex justify-content-center align-items-center"
                 v-if="isLoadingStageId == stage?.stage_id">
 
-                <svg-custom-icon style="width: 1rem; height: 1rem"
-                  class="me-2"
-                  icon="SpinnerIcon" />
+                <circle-spinner v-if="true"
+                  class="p-0 circle-spinner"
+                  :loading="true" />
+
                 Processing...
 
               </span>
@@ -187,8 +190,8 @@
 
     <div v-else>
 
-      <Skeletor style="width: 100px; height: 0.6rem" /> :
-      <Skeletor style="width: 50px; height: 0.6rem" />
+      <Skeletor style="width: 100px; height: 1.5rem" /> :
+      <Skeletor style="width: 50px; height: 1.5rem" />
 
     </div>
 
@@ -199,6 +202,15 @@
 
 <style scoped
   lang="scss">
+  .circle-spinner {
+    min-width: 1.5rem !important;
+    min-height: 1.5rem !important;
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+    margin-right: 0.5rem;
+    color: #161823 !important;
+  }
+
   .btn-stage-list {
     width: auto;
   }

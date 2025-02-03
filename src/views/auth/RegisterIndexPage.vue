@@ -102,11 +102,10 @@
 <template>
   <Wrapper title="Register"
     :error-message="error_message">
-
     <form-input label="Company Name"
       v-model="attributes.company_name"
       :errors="errors"
-      :readonly="attributes.invite_token"
+      :readonly="!!attributes.invite_token"
       error-label="company_name">
     </form-input>
 
@@ -119,7 +118,7 @@
     <form-input label="Email Address"
       v-model="attributes.email"
       :errors="errors"
-      :readonly="attributes.invite_token"
+      :readonly="!!attributes.invite_token"
       error-label="email">
     </form-input>
 

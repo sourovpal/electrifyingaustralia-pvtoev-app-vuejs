@@ -191,8 +191,8 @@ export const useProjectStore = defineStore('project', {
             return state.ownerList;
         },
         getExportLimitDetails: (state) => ({
-            export_limit_in_kw: state.project.export_limit_in_kw,
-            export_limit_type: state.project.export_limit_type
+            export_limit_in_kw: state.project?.export_limit_in_kw,
+            export_limit_type: state.project?.export_limit_type
         })
     },
 
@@ -222,7 +222,9 @@ export const useProjectStore = defineStore('project', {
             this.currentBills = newCurrentBillsAmount;
         },
         async setCurrentProject(project_id) {
+            console.log(project_id)
             const response = await api.get(`/projects/${project_id}`);
+            console.log(response)
             this.project = response.data;
 
             this.setSelectedPanel({

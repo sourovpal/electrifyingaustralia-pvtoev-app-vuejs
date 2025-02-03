@@ -13,7 +13,7 @@ export const FetchComapny = () => {
 
 export const UpdateContactInformation = (payload) => {
     return new Promise((resolve, reject) => {
-        api.post(`/company/contact-information`, payload)
+        api.post(`/settings/company/contact-information`, payload)
             .then((res) => {
                 return resolve(res.data);
             }).catch((error) => {

@@ -32,8 +32,15 @@ export const setAuthorizationHeader = (): void => {
 setAuthorizationHeader();
 
 client.interceptors.response.use(
-    function (response) { return response; },
-    function (error) { if (error?.status === 401) handleRemove(); else return error; }
+    function (response) {
+        return response;
+    },
+    function (error) {
+
+        if (error?.status === 401) return handleRemove();
+        
+        throw error;
+    }
 );
 
 export default class Http {

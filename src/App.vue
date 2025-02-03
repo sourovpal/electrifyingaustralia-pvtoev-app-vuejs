@@ -5,4 +5,3 @@ import '@assets/global.scss';
 <template>
   <router-view></router-view>
 </template>
-

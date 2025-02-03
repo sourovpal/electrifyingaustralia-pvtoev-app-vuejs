@@ -25,7 +25,7 @@
     const errors = reactive({});
     const error_message = ref(null);
 
-    async function submitLoginForm(e) {
+    async function submitResetForm(e) {
 
         error_message.value = null;
         attributes.is_submit = true;
@@ -43,6 +43,8 @@
                 if (message && message.vidible) return error_message.value = message;
 
                 $toast.success(message.text);
+                
+                setTimeout(() => router.push({ name: 'login' }), 2000);
 
             }).catch(error => {
 
@@ -109,7 +111,7 @@
             class="w-100"
             :disabled="attributes.is_disabled || !!error_message"
             :loading="attributes.is_submit"
-            @click="submitLoginForm"
+            @click="submitResetForm"
             label="Reset">
         </Button>
 

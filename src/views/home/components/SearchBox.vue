@@ -52,15 +52,14 @@
 
 
   const handleLocationClick = async (item) => {
-
-    const address = item.address ?? '' + ' ' + item.text_en ?? '';
+    let line_one = `${item.address ?? ''} ${item.text_en ?? ''}`;
 
     const center = item.center;
 
     const context = item.context;
 
     let payload = {
-      address_line_one: address,
+      address_line_one: line_one,
       state: '',
       city: '',
       postcode: '',
@@ -75,13 +74,16 @@
     });
 
     await api.post('/projects', payload)
-      .then(res => {
-        const projectId = res?.data?.project_id;
-        router.push({ path: `/library/proposals/${projectId}` });
+      .then(({ data }) => {
+
+        const { errors, message } = data;
+
+        if (errors) return $toast.error(message.text);
+
+        router.push({ path: `/library/proposals/${data.project_id}` });
+
       })
-      .catch(error => {
-        $toast.error(error.message.text)
-      })
+      .catch(error => $toast.error(error.message.text))
   }
 
 

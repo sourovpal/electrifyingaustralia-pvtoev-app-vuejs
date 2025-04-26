@@ -1,12 +1,4 @@
-<script>
-export default {
-  name:'ProfileIndex',
-    data() {
-      return{
-      }
-    },
-  }
-  
+<script setup>
 </script>
 
 <template>
@@ -47,8 +39,8 @@ export default {
                         <div class="list-group-item px-3 py-2">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="Automatic" id="" checked data-toggle="list-group-input-checked"/>
-                                <label class="form-check-label fw-bold" for=""> <a href="">Pylon Standard</a> Terms & Conditions </label>
-                                <p class="ps-1 commant">Include Pylon's Standard CEC Terms & Conditions.
+                                <label class="form-check-label fw-bold" for=""> <a href="">pvtoev Standard</a> Terms & Conditions </label>
+                                <p class="ps-1 commant">Include pvtoev's Standard CEC Terms & Conditions.
                                 This includes everything you need in a Standard Sales Contract. Learn more <a href="">here</a>.</p>
                                 <div class="settings-group-item" data-toggle="list-group-input-toggle">
                                     <label class="form-label-title" for="">Starting at:</label>
@@ -64,7 +56,7 @@ export default {
                                 <a href="/settings/proposal-legals/warranty" class="fw-bold py-3 ps-1 d-flex">
                                     <span>Edit Terms & Conditions</span>
                                     <div class="icon icon--18 icon--brand-primary">
-                                        <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                                        <svg   xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
                                             <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
                                             <path d="M0 0h24v24H0z" fill="none"></path>
                                         </svg>
@@ -141,7 +133,7 @@ export default {
                         <router-link to="/settings/proposal-legals/warranty" class="fw-bold py-3 d-flex">
                             <span>Edit warranty</span>
                             <div class="icon icon--18 icon--brand-primary">
-                                <svg class="svg-5" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                                <svg   xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
                                     <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
                                     <path d="M0 0h24v24H0z" fill="none"></path>
                                 </svg>

@@ -1,71 +1,96 @@
-import Storage from "../helpers/Storage";
-import { defineStore } from 'pinia';
-import { CONFIG } from "../config";
+import Storage from "@utils/storage";
+import { defineStore } from "pinia";
+import { CONFIG, $toast } from "@config";
+import { useApiRequest } from "@actions";
+import { nextTick } from "vue";
+import { validateObject } from "@helpers";
 
 const userStorage = new Storage(CONFIG.VITE_AUTH_USER);
 const securityStorage = new Storage(CONFIG.VITE_AUTH_TOKEN);
+const appStorage = new Storage(CONFIG.VITE_AUTH_APP);
+const companyStorage = new Storage(CONFIG.VITE_AUTH_COMPANY);
+const permissionsStorage = new Storage(CONFIG.VITE_AUTH_PERMISSIONS);
+const statusesStorage = new Storage(CONFIG.VITE_AUTH_STATUSES);
+const pipelinesStorage = new Storage(CONFIG.VITE_AUTH_PIPELINES);
 
+export const isAuthorized = (path = null, state = false) => {
+  var auth = !!securityStorage.get() && !!userStorage.get();
 
-export const isAuthorized = (path=null, state=false)=>{
-    
-    var auth = !!securityStorage.get() && !!userStorage.get();
+  if (auth === state && path) {
+    window.location.replace(path);
+  }
 
-    if(auth === state && path){
-        window.location.replace(path);
-    }
-
-    return auth;
-} 
-
-export const checkPermission = (permissions)=>{
-    return true;
+  return auth;
 };
 
-export const useAuthStore = defineStore('auth', {
-    state: () => {
-        return {
-            user:userStorage.get(),
-            access_token:securityStorage.get(),
-        }
+export const checkPermission = (permissions) => {
+  return true;
+};
+
+export const useAuthStore = defineStore("auth", {
+  state: () => {
+    return {
+      user: userStorage.get() ?? {},
+      access_token: securityStorage.get() ?? "",
+    };
+  },
+  getters: {
+    getUser(state) {
+      return state.user ?? userStorage.get();
     },
-    getters:{
-        getUser(state){
-            return state.user;
-        },
-        getAccessToken(state){
-            return state.access_token;
-        }
+    getAccessToken(state) {
+      return state.access_token ?? "";
     },
-    actions:{
-        setUser(payload=null){
-            var user = null;
-            if(payload){
-                userStorage.remove();
-                userStorage.set(payload);
-                user = payload;
-            }else{
-                user = userStorage.get();
-            }
-            if(user){
-                this.user = user;
-            }else{
-                return;
-            }
-        },
-        setAccessToken(payload=null){
-            var access_token = null;
-            if(payload){
-                securityStorage.remove();
-                securityStorage.set(payload);
-                access_token = payload;
-            }else{
-                access_token = securityStorage.get();
-            }
-            if(access_token){
-                this.access_token = access_token;
-            }else{
-                return;
-            }
-        }
-    }
+  },
+  actions: {
+    logoutLocalSession() {
+      userStorage.remove();
+      securityStorage.remove();
+      appStorage.remove();
+      companyStorage.remove();
+      permissionsStorage.remove();
+      statusesStorage.remove();
+      pipelinesStorage.remove();
+    },
+    setUser(payload) {
+      if (validateObject(payload)) {
+        this.user = payload;
+        userStorage.set(payload);
+      }
+    },
+    setAccessToken(payload = null) {
+      if (payload) {
+        securityStorage.remove();
+        securityStorage.set(payload);
+        this.access_token = payload;
+      }
+    },
+    callAuthLogout($callback = null) {
+
+      if ($callback) $callback({ loading: true });
+
+      useApiRequest({
+        url: "/settings/account/logout",
+        method: "post",
+      })
+        .then(async (res) => {
+
+          if ($callback) $callback({ loading: false });
+
+          await this.logoutLocalSession();
+
+          await nextTick();
+
+          window.location.reload();
+
+        })
+        .catch((error) => {
+
+          if ($callback) $callback({ loading: false });
+
+          $toast.error(error.message.text);
+
+        });
+    },
+  },
 });

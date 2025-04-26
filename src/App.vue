@@ -1,14 +1,5 @@
-<script>
-import './asset/global.scss';
-
-export default {
-  components:{
-  },
-  data(){
-    return {
-    }
-  },
-}
+<script setup>
+import '@assets/global.scss';
 </script>
 
 <template>

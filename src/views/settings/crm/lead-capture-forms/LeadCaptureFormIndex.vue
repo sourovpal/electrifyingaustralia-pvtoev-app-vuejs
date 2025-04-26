@@ -34,7 +34,7 @@ export default {
                         <tbody>
                             <tr>
                                 <td>Sign Up</td>
-                                <td><a class="fs-13px" href="">https://app.getpylon.com/lead-form/xD59yNqQ</a></td>
+                                <td><a class="fs-13px" href="">https://app.getpvtoev.com/lead-form/xD59yNqQ</a></td>
                                 <td>a month ago</td>
                                 <td class="text-end">
                                     <a class="me-1 btn btn-info btn-sm px-2" href="">
@@ -47,7 +47,7 @@ export default {
                             </tr>
                             <tr>
                                 <td>Sign In</td>
-                                <td><a class="fs-13px" href="">https://app.getpylon.com/lead-form/xD59yNqQ</a></td>
+                                <td><a class="fs-13px" href="">https://app.getpvtoev.com/lead-form/xD59yNqQ</a></td>
                                 <td>a month ago</td>
                                 <td class="text-end">
                                     <a class="me-1 btn btn-info btn-sm px-2" href="">
@@ -60,7 +60,7 @@ export default {
                             </tr>
                             <tr>
                                 <td>Contact Us</td>
-                                <td><a class="fs-13px" href="">https://app.getpylon.com/lead-form/xD59yNqQ</a></td>
+                                <td><a class="fs-13px" href="">https://app.getpvtoev.com/lead-form/xD59yNqQ</a></td>
                                 <td>a month ago</td>
                                 <td class="text-end">
                                     <a class="me-1 btn btn-info btn-sm px-2" href="">

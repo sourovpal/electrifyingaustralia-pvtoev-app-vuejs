@@ -1,12 +1,5 @@
-<script>
-export default {
-  name:'AccountIndex',
-    data() {
-      return{
-      }
-    },
-  }
-  
+<script setup>
+
 </script>
 
 <template>
@@ -30,7 +23,7 @@ export default {
                     <a href="">
                         <div class="card soft-shadow brand-card">
                             <div class="card-body">
-                                <img class="card-img" src="https://app.getpylon.com/img/integrations/solarquotes.png" alt="">
+                                <img class="card-img" src="https://app.getpvtoev.com/img/integrations/solarquotes.png" alt="">
                                 <div class="integrations-status">
                                     <span class="badge badge-dark">
                                         Not connected
@@ -44,7 +37,7 @@ export default {
                     <a href="">
                         <div class="card soft-shadow brand-card">
                             <div class="card-body">
-                                <img class="card-img" src="https://app.getpylon.com/img/integrations/solarchoice.png" alt="">
+                                <img class="card-img" src="https://app.getpvtoev.com/img/integrations/solarchoice.png" alt="">
                                 <div class="integrations-status">
                                     <span class="badge bg-success">
                                         Active
@@ -58,7 +51,7 @@ export default {
                     <a href="">
                         <div class="card soft-shadow brand-card">
                             <div class="card-body">
-                                <img class="card-img" src="https://app.getpylon.com/img/integrations/facebook.png" alt="">
+                                <img class="card-img" src="https://app.getpvtoev.com/img/integrations/facebook.png" alt="">
                                 <div class="integrations-status">
                                     <span class="badge badge-dark">
                                         Not connected
@@ -82,7 +75,7 @@ export default {
                     <a href="">
                         <div class="card soft-shadow brand-card">
                             <div class="card-body">
-                                <img class="card-img" src="https://static.getpylon.com/images/partner/brighte_logo.png" alt="">
+                                <img class="card-img" src="https://static.getpvtoev.com/images/partner/brighte_logo.png" alt="">
                                 <div class="integrations-status">
                                     <span class="badge bg-success">
                                         Active
@@ -106,7 +99,7 @@ export default {
                     <a href="">
                         <div class="card soft-shadow brand-card">
                             <div class="card-body">
-                                <img class="card-img" src="https://app.getpylon.com/img/integrations/xero_logo.png" alt="">
+                                <img class="card-img" src="https://app.getpvtoev.com/img/integrations/xero_logo.png" alt="">
                                 <div class="integrations-status">
                                     <span class="badge bg-success">
                                         Active
@@ -130,7 +123,7 @@ export default {
                     <a href="">
                         <div class="card soft-shadow brand-card">
                             <div class="card-body">
-                                <img class="card-img" src="https://app.getpylon.com/img/integrations/xero_logo.png" alt="">
+                                <img class="card-img" src="https://app.getpvtoev.com/img/integrations/xero_logo.png" alt="">
                                 <div class="integrations-status">
                                     <span class="badge bg-success">
                                         Active
@@ -154,7 +147,7 @@ export default {
                     <a href="">
                         <div class="card soft-shadow brand-card">
                             <div class="card-body">
-                                <img class="card-img" src="https://app.getpylon.com/img/integrations/solaranalytics.png" alt="">
+                                <img class="card-img" src="https://app.getpvtoev.com/img/integrations/solaranalytics.png" alt="">
                                 <div class="integrations-status">
                                     <span class="badge bg-success">
                                         Active
@@ -192,7 +185,7 @@ export default {
                     <a href="">
                         <div class="card soft-shadow brand-card">
                             <div class="card-body">
-                                <img class="card-img" src="https://app.getpylon.com/img/integrations/webhooks.png" alt="">
+                                <img class="card-img" src="https://app.getpvtoev.com/img/integrations/webhooks.png" alt="">
                                 <div class="integrations-status">
                                     <span class="badge bg-success">
                                         Active

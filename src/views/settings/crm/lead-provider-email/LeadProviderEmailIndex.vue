@@ -32,7 +32,7 @@ export default {
                     </div>
                 </div>
                 <div class="col-lg-6 col-12">
-                    <p class="">leads-N7Ly5Vu5BQ@bots.getpylon.com</p>
+                    <p class="">leads-N7Ly5Vu5BQ@bots.getpvtoev.com</p>
                 </div>
             </div>
 

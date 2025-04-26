@@ -1,12 +1,4 @@
-<script>
-export default {
-  name:'ProfileIndex',
-    data() {
-      return{
-      }
-    },
-  }
-  
+<script setup>
 </script>
 
 <template>
@@ -94,7 +86,7 @@ export default {
                     
                     <div class="settings-group-item">
                         <div class="mb-3">
-                            <img style="width:64px;height:64px;" src="https://static.getpylon.com/images/companies/5tSQv83tKc5kwluVZohTp1j6tij6NSUIoT05k1Xs.png.png" alt="">
+                            <img style="width:64px;height:64px;" src="https://static.getpvtoev.com/images/companies/5tSQv83tKc5kwluVZohTp1j6tij6NSUIoT05k1Xs.png.png" alt="">
                         </div>
                         <div class="row">
                             <div class="col-md-8">
@@ -735,7 +727,7 @@ export default {
             border: 3px solid transparent;
             cursor: pointer;
             transition:all 0.3s;
-            border-color:#007ee5; // remove this
+            border-color:#007ee5;
             &.active,
             &:hover{
                 border-color:#007ee5;
@@ -745,8 +737,7 @@ export default {
             }
             .page__check{
                 transition: .3s;
-                fill: #0aa312!important; // remove this
-                // fill: #99a5b1;
+                fill: #0aa312!important;
                 width: 32px;
                 height: 32px;
                 position: absolute;

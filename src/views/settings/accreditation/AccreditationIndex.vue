@@ -1,14 +1,4 @@
-<script>
-export default {
-  name:'ProfileIndex',
-    data() {
-      return{
-      }
-    },
-    components:{
-    }
-  }
-  
+<script setup>
 </script>
 
 <template>
@@ -46,7 +36,7 @@ export default {
                                     <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </div>
                                 <div class="w-100 ms-3">
-                                    <img class="img-101 img-disabled" src="https://static.getpylon.com/images/accreditations/CEC-AccreditedInstaller_RGB_small.jpg" alt="">
+                                    <img class="img-101 img-disabled" src="https://static.getpvtoev.com/images/accreditations/CEC-AccreditedInstaller_RGB_small.jpg" alt="">
                                 </div>
                             </div>
                             <br>
@@ -76,7 +66,7 @@ export default {
                                     <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </div>
                                 <div class="w-100 ms-3">
-                                    <img class="img-101 img-disabled-" src="https://static.getpylon.com/images/accreditations/CEC-AccreditedInstaller_RGB_small.jpg" alt="">
+                                    <img class="img-101 img-disabled-" src="https://static.getpvtoev.com/images/accreditations/CEC-AccreditedInstaller_RGB_small.jpg" alt="">
                                 </div>
                             </div>
                             <br>
@@ -102,7 +92,7 @@ export default {
                                     <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </div>
                                 <div class="w-100 ms-3">
-                                    <img class="img-101 img-disabled-" src="https://static.getpylon.com/images/accreditations/CEC_Member_RGB_small.jpg" alt="">
+                                    <img class="img-101 img-disabled-" src="https://static.getpvtoev.com/images/accreditations/CEC_Member_RGB_small.jpg" alt="">
                                 </div>
                             </div>
                         </div>
@@ -123,7 +113,7 @@ export default {
                                     <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </div>
                                 <div class="w-100 ms-3">
-                                    <img class="img-101 img-disabled-" src="https://static.getpylon.com/images/accreditations/au/netcc-approved-seller.png" alt="">
+                                    <img class="img-101 img-disabled-" src="https://static.getpvtoev.com/images/accreditations/au/netcc-approved-seller.png" alt="">
                                 </div>
                             </div>
                         </div>
@@ -144,7 +134,7 @@ export default {
                                     <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </div>
                                 <div class="w-100 ms-3">
-                                    <img class="img-101 img-disabled-" src="https://static.getpylon.com/images/accreditations/SEC_MasterInstaller_new.jpg" alt="">
+                                    <img class="img-101 img-disabled-" src="https://static.getpvtoev.com/images/accreditations/SEC_MasterInstaller_new.jpg" alt="">
                                 </div>
                             </div>
                         </div>
@@ -165,7 +155,7 @@ export default {
                                     <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </div>
                                 <div class="w-100 ms-3">
-                                    <img class="img-101 img-disabled-" src="https://static.getpylon.com/images/accreditations/SEC_smallbusinessmember.jpg" alt="">
+                                    <img class="img-101 img-disabled-" src="https://static.getpvtoev.com/images/accreditations/SEC_smallbusinessmember.jpg" alt="">
                                 </div>
                             </div>
                         </div>
@@ -186,7 +176,7 @@ export default {
                                     <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </div>
                                 <div class="w-100 ms-3">
-                                    <img class="img-101 img-disabled-" src="https://static.getpylon.com/images/accreditations/au/solarcutters_member.jpg" alt="">
+                                    <img class="img-101 img-disabled-" src="https://static.getpvtoev.com/images/accreditations/au/solarcutters_member.jpg" alt="">
                                 </div>
                             </div>
                             <br>
@@ -215,7 +205,7 @@ export default {
                                     <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </div>
                                 <div class="w-100 ms-3">
-                                    <img class="img-101 img-disabled-" src="https://static.getpylon.com/images/accreditations/accredited_master_electrician.jpg" alt="">
+                                    <img class="img-101 img-disabled-" src="https://static.getpvtoev.com/images/accreditations/accredited_master_electrician.jpg" alt="">
                                 </div>
                             </div>
                         </div>
@@ -235,7 +225,7 @@ export default {
                                     <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </div>
                                 <div class="w-100 ms-3">
-                                    <img class="img-101 img-disabled-" src="https://static.getpylon.com/images/accreditations/master_electricians_member.jpg" alt="">
+                                    <img class="img-101 img-disabled-" src="https://static.getpvtoev.com/images/accreditations/master_electricians_member.jpg" alt="">
                                 </div>
                             </div>
                         </div>
@@ -255,7 +245,7 @@ export default {
                                     <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </div>
                                 <div class="w-100 ms-3">
-                                    <img class="img-101 img-disabled-" src="https://static.getpylon.com/images/accreditations/bronze_master_electrician.png" alt="">
+                                    <img class="img-101 img-disabled-" src="https://static.getpvtoev.com/images/accreditations/bronze_master_electrician.png" alt="">
                                 </div>
                             </div>
                         </div>
@@ -275,7 +265,7 @@ export default {
                                     <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </div>
                                 <div class="w-100 ms-3">
-                                    <img class="img-101 img-disabled-" src="https://static.getpylon.com/images/accreditations/silver_master_electrician.png" alt="">
+                                    <img class="img-101 img-disabled-" src="https://static.getpvtoev.com/images/accreditations/silver_master_electrician.png" alt="">
                                 </div>
                             </div>
                         </div>
@@ -295,7 +285,7 @@ export default {
                                     <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </div>
                                 <div class="w-100 ms-3">
-                                    <img class="img-101 img-disabled-" src="https://static.getpylon.com/images/accreditations/gold_master_electrician.png" alt="">
+                                    <img class="img-101 img-disabled-" src="https://static.getpvtoev.com/images/accreditations/gold_master_electrician.png" alt="">
                                 </div>
                             </div>
                         </div>
@@ -315,7 +305,7 @@ export default {
                                     <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </div>
                                 <div class="w-100 ms-3">
-                                    <img class="img-101 img-disabled-" src="https://static.getpylon.com/images/accreditations/engineers_australia.jpg" alt="">
+                                    <img class="img-101 img-disabled-" src="https://static.getpvtoev.com/images/accreditations/engineers_australia.jpg" alt="">
                                 </div>
                             </div>
                         </div>
@@ -335,7 +325,7 @@ export default {
                                     <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </div>
                                 <div class="w-100 ms-3">
-                                    <img class="img-101 img-disabled-" src="https://static.getpylon.com/images/accreditations/neca_member.jpg" alt="">
+                                    <img class="img-101 img-disabled-" src="https://static.getpvtoev.com/images/accreditations/neca_member.jpg" alt="">
                                 </div>
                             </div>
                         </div>
@@ -355,7 +345,7 @@ export default {
                                     <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </div>
                                 <div class="w-100 ms-3">
-                                    <img class="img-101 img-disabled-" src="https://static.getpylon.com/images/accreditations/trea-logo-64h.jpg" alt="">
+                                    <img class="img-101 img-disabled-" src="https://static.getpvtoev.com/images/accreditations/trea-logo-64h.jpg" alt="">
                                 </div>
                             </div>
                         </div>
@@ -375,7 +365,7 @@ export default {
                                     <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </div>
                                 <div class="w-100 ms-3">
-                                    <img class="img-101 img-disabled-" src="https://static.getpylon.com/images/accreditations/australian_owned.jpg" alt="">
+                                    <img class="img-101 img-disabled-" src="https://static.getpvtoev.com/images/accreditations/australian_owned.jpg" alt="">
                                 </div>
                             </div>
                             <br>
@@ -421,7 +411,7 @@ export default {
                                     <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." />
                                 </div>
                                 <div class="w-100 ms-3">
-                                    <img class="img-101 img-disabled" src="https://static.getpylon.com/images/accreditations/selectronic_accredited_integrator.jpg" alt="">
+                                    <img class="img-101 img-disabled" src="https://static.getpvtoev.com/images/accreditations/selectronic_accredited_integrator.jpg" alt="">
                                 </div>
                             </div>
                         </div>

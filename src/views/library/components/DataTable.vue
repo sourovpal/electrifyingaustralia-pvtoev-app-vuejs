@@ -1,16 +1,16 @@
 <script>
 
-import SearchBar from '../../../components/SearchBar.vue';
-import ActionBar from '../../../components/ActionBar/ActionBar.vue';
-import LeftActionBar from '../../../components/ActionBar/LeftActionBar.vue';
-import RightActionBar from '../../../components/ActionBar/RightActionBar.vue';
-import Datatable from '../../../components/Datatable/Datatable.vue';
-import DatatableHeader from '../../../components/Datatable/DatatableHeader.vue';
-import DatatableBody from '../../../components/Datatable/DatatableBody.vue';
+import CRMToolsBar from '@components/CRMToolsBar.vue';
+import ActionBar from '@components/ActionBar/ActionBar.vue';
+import LeftActionBar from '@components/ActionBar/LeftActionBar.vue';
+import RightActionBar from '@components/ActionBar/RightActionBar.vue';
+import Datatable from '@components/Datatable/Datatable.vue';
+import DatatableHeader from '@components/Datatable/DatatableHeader.vue';
+import DatatableBody from '@components/Datatable/DatatableBody.vue';
 
 export default {
   components: {
-    SearchBar,
+    CRMToolsBar,
     ActionBar,
     LeftActionBar,
     RightActionBar,
@@ -41,7 +41,7 @@ export default {
 
   <section class="content library-list">
 
-    <search-bar></search-bar>
+    <CRMToolsBar></CRMToolsBar>
 
     <action-bar>
 

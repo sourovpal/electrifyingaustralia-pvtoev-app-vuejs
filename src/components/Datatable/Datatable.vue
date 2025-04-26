@@ -1,32 +1,28 @@
-<script>
-export default {
-  components: {
-  },
-  data() {
-    return {
-    }
-  },
-  methods: {
-    scrollHanle(evt) {
-      // console.log(evt)
-    }
-  }
-}
+<script setup>
+  const props = defineProps({
+    height: { type: String, default: '100vh' }
+  });
 </script>
 
 <template>
-        <div class="tbl-custom-data-table">
-          <slot></slot>
-          <br><br><br><br>
-        </div>
+
+  <div :style="{ height: height }"
+    class="tbl-custom-data-table">
+
+    <slot></slot>
+
+    <br><br><br><br>
+
+  </div>
+
 </template>
 
-<style>
-.tbl-custom-data-table{
-  width:100%;
-  overflow: auto;
-  height: calc(100vh - 100px);
-  display: flex;
-  flex-direction: column;
-}
+<style scoped
+  lang="scss">
+  .tbl-custom-data-table {
+    width: 100%;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+  }
 </style>

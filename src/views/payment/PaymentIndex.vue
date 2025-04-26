@@ -1,14 +1,4 @@
-<script>
-export default {
-    name:'PaymentIndex',
-    data(){
-        return {
-            status:false,
-        }
-    },
-    methods:{
-    }
-}
+<script setup>
 </script>
 
 <template>
@@ -41,7 +31,7 @@ export default {
                     </div>
 
                     <div class="d-none d-md-flex">
-                        <button class="btn px-1 fw-bold shadow-none" style=""><img class="me-1" src="https://app.getpylon.com/img/gem.png" alt=""> Credits: 412</button>
+                        <button class="btn px-1 fw-bold shadow-none" style=""><img class="me-1" src="https://app.getpvtoev.com/img/gem.png" alt=""> Credits: 412</button>
                     </div>
 
                 </div>
@@ -60,14 +50,14 @@ export default {
                                 Register my team
                             </a>
                             <p  class="splash__small">
-                                By registering your team, you agree to our <a  href="https://observer.getpylon.com/terms" target="_blank">Terms of Use</a> and the <a  href="https://stripe.com/au/connect-account/legal" target="_blank">Stripe Connected Account Agreement</a>.
+                                By registering your team, you agree to our <a  href="https://observer.getpvtoev.com/terms" target="_blank">Terms of Use</a> and the <a  href="https://stripe.com/au/connect-account/legal" target="_blank">Stripe Connected Account Agreement</a>.
                             </p>
                         </div>
                     </div>
                     <div class="col-right">
                         <div class="card shadow-1">
                             <div class="video-thumbnail">
-                                <img src="https://static.getpylon.com/images/video/payment-gateway-thumbnail.jpg" class="w-100"> 
+                                <img src="https://static.getpvtoev.com/images/video/payment-gateway-thumbnail.jpg" class="w-100"> 
                                 <div class="duration">0:17</div>
                                 <div class="video-thumbnail__overlay">
                                     <div class="video-thumbnail__icon">

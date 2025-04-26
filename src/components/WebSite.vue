@@ -4,7 +4,5 @@
 </template>
 
 <script setup>
-import MultipleSelectVue from './forms/MultipleSelect.vue';
-import SingleSelect from './forms/SingleSelect.vue';
 
 </script>

@@ -1,21 +1,129 @@
-<script>
-export default{
-    name:'MapIndex',
-}
+<script setup>
+    // import { GoogleMap, Marker, Polyline, CustomMarker } from 'vue3-google-map';
+    import { ref, onMounted, reactive, watchEffect, watch } from 'vue';
+    import { useRoute } from 'vue-router';
+    import CRMToolsBar from '../../components/CRMToolsBar.vue';
+    import L from 'leaflet';
+    import 'leaflet.gridlayer.googlemutant';
+    import "leaflet/dist/leaflet.css";
+    import Hello from './Hello.vue';
+
+    const route = useRoute();
+
+    const map = ref();
+    const googleMapRef = ref();
+    const zoom = ref(10);
+    const center = ref({ lat: 0, lon: 0 });
+    const location = ref();
+
+    function setLocation() {
+        try {
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        center.value = {
+                            lat: position.coords.latitude,
+                            lon: position.coords.longitude
+                        }
+                    },
+                    (error) => {
+                        console.error('Error getting geolocation:', error);
+                    }
+                );
+            } else {
+                console.error('Geolocation is not supported by this browser.');
+            }
+        } catch (error) {
+        }
+    }
+
+    var moveMarkerDevIcon = L.divIcon({
+        className: 'marker',
+        html:`
+        <div style="width: 50px;height: 50px;background: rgb(255 255 255 / 30%);border-radius: 50%;display:flex;justify-content:center;align-items:center;">
+            <svg xmlns="http://www.w3.org/2000/svg" height="35px" viewBox="0 -960 960 960" width="35px" fill="#ffffff"><path d="M480-80 310-250l57-57 73 73v-166h80v165l72-73 58 58L480-80ZM250-310 80-480l169-169 57 57-72 72h166v80H235l73 72-58 58Zm460 0-57-57 73-73H560v-80h165l-73-72 58-58 170 170-170 170ZM440-560v-166l-73 73-57-57 170-170 170 170-57 57-73-73v166h-80Z"/></svg>
+        </div>
+        `,
+    });
+
+    function initializeGoogleMap() {
+        map.value = L.map(googleMapRef.value, {
+            center: [center.value.lat, center.value.lon],
+            zoom: zoom.value,
+            zoomControl: false,
+            attributionControl: false
+        });
+
+        L.gridLayer.googleMutant({ type: 'hybrid' }).addTo(map.value);
+        L.control.zoom({ position: 'bottomleft' }).addTo(map.value);
+
+        var moveMarker = L.marker([center.value.lat, center.value.lon], { icon: moveMarkerDevIcon, draggable: true }).addTo(map.value);
+
+        watch(
+            () => center.value,
+            (position) => {
+                var bounds = [[position.lat, position.lon], [position.lat-2, position.lon+2]];
+                // L.rectangle(bounds, { color: "#ff7800", weight: 1, draggable:true }).addTo(map.value);
+                // map.value.fitBounds(bounds);
+                map.value.setView([position.lat, position.lon], map.value.getZoom());
+                moveMarker.setLatLng([position.lat, position.lon]).update()
+            },
+            { deep: true }
+        );
+
+    }
+
+
+
+
+    onMounted(() => {
+        try {
+            const { lat, lon } = route.query;
+            if (lat && lon) {
+                center.value = {
+                    lat: Number(lat),
+                    lon: Number(lon)
+                }
+                zoom.value = 19;
+            } else {
+                setLocation();
+            }
+        } catch (error) {
+        }
+        initializeGoogleMap();
+    });
+
 </script>
 
 <template>
-<section class="map">
-
-    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d579.4542453260605!2d120.96262496097803!3d14.687714819878153!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0000000000000000%3A0x827322d8f7559441!2sTriune+Electronics+Systems!5e1!3m2!1sen!2sph!4v1436755310929" frameborder="0" style="border:0;width:100%;height:100vh;padding-left:4rem;"></iframe>
-
-</section>
+    <section class="map-design">
+        <CRMToolsBar />
+        <div ref="googleMapRef"
+            class="map">
+        </div>
+    </section>
 </template>
 
-<style>
-.map{
-    height: 100vh;
-    width:100%;
-    background:rgb(255, 255, 255);
-}
+<style lang="scss"
+    scoped>
+    .map-design {
+        height: 100vh;
+        background: rgb(255, 255, 255);
+        margin-left:var(--main-left-navbar-width);
+        display: flex;
+        flex-direction: column;
+
+        &:deep(.map) {
+            width: 100%;
+            flex-grow: 1;
+
+            .leaflet-control-attribution,
+            img[alt="Google"],
+            .gmnoprint,
+            .gm-style-cc {
+                display: none !important;
+            }
+        }
+    }
 </style>

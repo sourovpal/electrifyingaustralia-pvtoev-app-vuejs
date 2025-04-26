@@ -1,36 +1,26 @@
-<script>
-
-import MobileHeader from '../../components/MobileHeader.vue';
-import Menu from '../../components/Menu/Menu.vue';
-import {title, menus} from './menu';
-import SettingsMenuGroup from '../../components/Menu/SettingsMenuGroup.vue';
-import './style.scss';
-export default {
-  name:'SettingsIndex',
-    data() {
-      return{
-        title,
-        menus,
-      }
-    },
-    components:{
-    MobileHeader,
-    Menu,
-    SettingsMenuGroup
-},
-  }
-  
+<script setup>
+  import MobileHeader from '@components/MobileHeader.vue';
+  import Menu from '@components/Menu/Menu.vue';
+  import { title, menus } from './menu';
+  import SettingsMenuGroup from '@components/Menu/SettingsMenuGroup.vue';
+  import './style.scss';
 </script>
 
 <template>
-
-  <MobileHeader/>
+  <mobile-header class="d-md-none"></mobile-header>
   <section class="d-flex flex-row">
-    <SettingsMenuGroup :menus="menus" :title="title" />
+    <SettingsMenuGroup :menus="menus"
+      :title="title" />
     <router-view></router-view>
   </section>
+  <br><br><br><br>
 </template>
 
-<style>
-
+<style scoped
+  lang="scss">
+  :deep() {
+    .content-body {
+      margin-bottom: 5rem !important;
+    }
+  }
 </style>

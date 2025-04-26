@@ -1,19 +1,6 @@
-<script>
+<script setup>
 import { SmartTagz } from "smart-tagz";
 import "smart-tagz/dist/smart-tagz.css";
-
-export default {
-  name:'ProfileIndex',
-    data() {
-      return{
-        sources:{}
-      }
-    },
-    components:{
-        SmartTagz
-    }
-  }
-  
 </script>
 
 <template>

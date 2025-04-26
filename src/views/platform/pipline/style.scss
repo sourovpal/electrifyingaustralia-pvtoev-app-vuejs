@@ -1,37 +1,44 @@
-.toolbar-btn{
-    width:35px !important;
+.toolbar-btn {
+    width: 35px !important;
     height: 35px !important;
 }
-.value-bar{
+
+.value-bar {
     background-color: #e5f4ff;
     border-bottom: 1px solid #80c6ff;
     border-top: 1px solid #80c6ff;
 }
-.piplien-body{
+
+.piplien-body {
     background-color: #f5f7fa;
 }
-.pipline-scrollbar{
+
+.pipline-scrollbar {
     display: flex;
     flex-direction: row;
     height: 100%;
 }
-.piplien-state{
-    width:272px;
-    max-width:300px;
-    .pip-header{
+
+.piplien-state {
+    width: 272px;
+    max-width: 300px;
+
+    .pip-header {
         background-color: #ffffff;
         position: relative;
-        .pip-header-arrow{
+
+        .pip-header-arrow {
             position: absolute;
-            right:-8px;
-            top:0;
+            right: -8px;
+            top: 0;
             z-index: 1;
             height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color:transparent;
-            &::after{
+            background-color: transparent;
+
+            &::after {
                 content: "";
                 position: absolute;
                 top: 0;
@@ -39,8 +46,9 @@
                 border-top: 29px solid transparent;
                 border-left: 8px solid #ffffff;
                 transform: rotate(2deg);
-            }        
-            &::before{
+            }
+
+            &::before {
                 content: "";
                 position: absolute;
                 bottom: 0;
@@ -48,92 +56,105 @@
                 border-bottom: 29px solid transparent;
                 border-left: 8px solid #ffffff;
                 transform: rotate(-2deg);
-            }        
-            svg{
-                fill:#c8c8c8;
             }
-        }      
+
+            svg {
+                fill: #c8c8c8;
+            }
+        }
     }
 
-    &.won{
+    &.won {
         background-color: #e8ebef;
-        .pip-header{
+
+        .pip-header {
             background-color: #c6f7e2;
-            .pip-header-arrow{
+
+            .pip-header-arrow {
+
                 &::after,
-                &::before{
-                    border-left-color:#c6f7e2;
+                &::before {
+                    border-left-color: #c6f7e2;
                 }
             }
         }
     }
-    &.lost{
-        .pip-header{
+
+    &.lost {
+        .pip-header {
             background-color: #ffe3e3;
-            .pip-header-arrow{
+
+            .pip-header-arrow {
+
                 &::after,
-                &::before{
-                    border-left-color:#ffe3e3;
+                &::before {
+                    border-left-color: #ffe3e3;
                 }
             }
         }
     }
 
 
-    .pip-body{
-        width:100%;
-        height:100%;
-        padding-bottom: 20px;      
-    } 
+    .pip-body {
+        width: 100%;
+        height: 100%;
+        padding-bottom: 20px;
+    }
 }
-.text-overflow-ellipsis{
+
+.text-overflow-ellipsis {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
 }
-.line-height-15px{
+
+.line-height-15px {
     line-height: 15px;
 }
 
-.owner-dropdown-toggler{
+.owner-dropdown-toggler {
     cursor: pointer;
-    width: auto!important;
-    border:none;
+    width: auto !important;
+    border: none;
     outline: none;
-    padding:3px 25px 3px 0px;
+    padding: 3px 25px 3px 0px;
     background-color: transparent;
     position: relative;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    &::before{
+
+    &::before {
         content: '';
         position: absolute;
-        right:5px;
-        top:45%;
+        right: 5px;
+        top: 45%;
         transform: translateY(-50%) rotate(45deg);
-        border:0.25rem solid transparent;
+        border: 0.25rem solid transparent;
         border-bottom-color: rgb(164, 164, 164);
         border-right-color: rgb(164, 164, 164);
     }
-    .icon{
+
+    .icon {
         width: 1.5rem;
         height: 1.5rem;
         border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
-        img{
+
+        img {
             border-radius: 50%;
-            width:100%;
-            height:100%;
+            width: 100%;
+            height: 100%;
 
         }
     }
 }
-.owner-list-dropdown{
-    .dropdown-menu{
+
+.owner-list-dropdown {
+    .dropdown-menu {
         z-index: 1000;
         max-width: 19rem;
         width: 16rem;
@@ -146,7 +167,8 @@
         background-clip: padding-box;
         border-radius: 0.25rem;
         box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-        &::before{
+
+        &::before {
             content: "";
             position: absolute;
             top: -7px;
@@ -158,7 +180,8 @@
             border-bottom-color: transparent;
             border-right-color: transparent;
         }
-        &::after{
+
+        &::after {
             content: "";
             position: absolute;
             top: -6px;
@@ -170,14 +193,17 @@
             border-bottom-color: transparent;
             border-right-color: transparent;
         }
+
         @media screen and (max-width: 766px) {
+
             &::after,
-            &::before{
-                left:30px;
-                right:auto !important;
+            &::before {
+                left: 30px;
+                right: auto !important;
             }
         }
-        .dropdown-header{
+
+        .dropdown-header {
             font-size: .75rem;
             padding: 0 0.5rem;
             font-weight: 700;
@@ -185,49 +211,57 @@
             margin-bottom: 0;
             padding-top: 0.5rem;
         }
-        .dropdown-item.noselect{
+
+        .dropdown-item.noselect {
             display: flex;
             justify-content: flex-start;
             align-items: center;
             margin-right: 10px;
             user-select: none;
             border-bottom: 1px solid #dddddd;
-            img{
+
+            img {
                 width: 1.5rem;
                 height: 1.5rem;
                 border-radius: 50%;
-                margin-right:10px;
+                margin-right: 10px;
             }
-            span{
+
+            span {
                 display: inline-block;
                 line-height: 18px;
             }
         }
-        .project-owner-team-members{
-            max-width:19rem;
-            max-height:350px;
-            .dropdown-item{
+
+        .project-owner-team-members {
+            max-width: 19rem;
+            max-height: 350px;
+
+            .dropdown-item {
                 display: flex;
                 justify-content: flex-start;
                 align-items: center;
                 cursor: pointer;
                 user-select: none;
-                img{
+
+                img {
                     width: 1.5rem;
                     height: 1.5rem;
                     border-radius: 50%;
-                    margin-right:10px;
+                    margin-right: 10px;
                 }
-                span{
+
+                span {
                     display: inline-block;
                     line-height: 18px;
                 }
             }
         }
     }
-    .dropdown-body{
-        .dropdown-input{
-            .project-owner-filter{
+
+    .dropdown-body {
+        .dropdown-input {
+            .project-owner-filter {
                 background: #f5f7fa;
                 font-size: .875rem;
                 padding: 0.5rem 1rem;
@@ -237,10 +271,12 @@
         }
     }
 }
-.dropdown-sorted{
+
+.dropdown-sorted {
     position: relative;
-    .dropdown-sorted-list{
-        width:calc(100% + 2rem);
+
+    .dropdown-sorted-list {
+        width: calc(100% + 2rem);
         box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
         border-radius: 4px;
 
@@ -256,6 +292,7 @@
             border-bottom-color: transparent;
             border-right-color: transparent;
         }
+
         &::after {
             content: "";
             position: absolute;
@@ -268,10 +305,12 @@
             border-bottom-color: transparent;
             border-right-color: transparent;
         }
-        .ascending-menu, 
-        .descending-menu{
-            li.active{
+
+        .ascending-menu,
+        .descending-menu {
+            li.active {
                 position: relative;
+
                 &::after {
                     content: "";
                     position: absolute;

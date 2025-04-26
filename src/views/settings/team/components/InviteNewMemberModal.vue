@@ -1,178 +1,198 @@
-<script>
-import { Modal } from "mdb-ui-kit";
-import {InviteMember} from '../../../../actions/UserAction';
-import {FetchRoles} from '../../../../actions/RoleAction';
-import CustomScrollbar from 'custom-vue-scrollbar';
-export default{
-  props:['fetchMemberDataHandler'],
-  data() {
-    return {
-      errors:{},
-      modalInstance:null,
-      email:null,
-      access_role:null,
-      isSubmitInviteMember:false,
-      isLoading:false,
-      roles:[],
-    }
-  },
-  components:{
-    CustomScrollbar
-  },
-  mounted() {
-    this.modalInstance = new Modal(this.$refs.InviteNewMemberModal);
-  },
-  methods: {
-    showModalHandler(){
-      this.fetchAllRoles();
-      this.email = null;
-      this.access_role = null;
-      this.errors = {};
-      this.modalInstance.show();
-    },
-    hideModalHandler(){
-      this.modalInstance.hide();
-    },
-    async fetchAllRoles(){
-      try{
-        this.isLoading = true;
-        const res = await FetchRoles();
-        this.isLoading = false;
-        try{
-          const {roles} = res;
-          this.roles = roles;
-        }catch(error){}
-      }catch(error){
-        try{
-          var message = error.response.data.message;
-          this.$toast[message.type](message.text);
-        }catch(e){
-          this.$toast.error('Oops, something went wrong');
-        }
-      }finally{
-        this.isLoading = false;
+<script setup>
+
+  import { ref, onMounted, reactive } from "vue";
+  import { useApiRequest } from "@actions";
+  import { $toast } from "@config";
+
+  const emits = defineEmits(["refresh", "close"]);
+
+  const attributes = reactive({
+    email: '',
+    role: '',
+  });
+
+  const roles = ref([]);
+  const is_loading_roles = ref(false);
+  const is_submit = ref(false);
+  const errors = ref({});
+
+  function handleFetchUserRoles() {
+
+    is_loading_roles.value = true;
+
+    useApiRequest({
+      url: '/settings/roles/list',
+    }).then(_roles => {
+
+      roles.value = _roles;
+
+    }).catch(error => {
+
+      $toast.error(error.message.text);
+
+    }).finally(_ => {
+
+      is_loading_roles.value = false;
+
+    });
+
+  }
+
+  function handleSubmitInvite() {
+
+    if (!attributes.email) return errors.value = { 'email': ['Email missing.'] };
+
+    errors.value = {};
+
+    is_submit.value = true;
+
+    useApiRequest({
+      url: '/settings/users',
+      method: 'POST',
+      payload: {
+        email: attributes.email,
+        role: attributes.role?.role_id
       }
-    },
-    async sendInviteMemberMail(){
-      try{
-        this.$toast.clear();
-        this.isSubmitInviteMember = true;
-        const data = {
-          email:this.email,
-          access_role:this.access_role,
-        };
-        
-        const res = await InviteMember(data);
-        this.isSubmitInviteMember = false;
-        try{
-          this.fetchMemberDataHandler();
-          var message = res.message;
-          this.$toast[message.type](message.text);
-        }catch(error){}
+    }).then(({ success, errors: _errors, message }) => {
 
-      }catch(error){
+      if (_errors) return errors.value = _errors;
 
-        try{
-          this.errors = error.response.data.errors;
-        }catch(error){}
-
-        try{
-          var message = error.response.data.message;
-          this.$toast[message.type](message.text);
-        }catch(e){
-          this.$toast.error('Oops, something went wrong');
-        }
-
-      }finally{
-        this.isSubmitInviteMember = false;
+      if (success) {
+        $toast.success(message.text);
+        emits('refresh');
       }
-    }
-  },
-}
+
+    }).catch(error => {
+
+      $toast.error(error.message.text);
+
+    }).finally(_ => {
+
+      is_submit.value = false;
+
+    });
+
+  }
+
+  onMounted(() => {
+    handleFetchUserRoles();
+  });
+
+
 </script>
 
 <template>
+  <modal-dialog v-bind="$attrs"
+    style="border-radius:6px;"
+    modal
+    pt:header:class="pt-1 pb-2 ps-3 pe-2"
+    pt:content:class="pt-1 pb-2 ps-3"
+    :header="`Invite New User`"
+    :style="{ width: '30rem' }">
 
-<div class="modal fade" ref="InviteNewMemberModal" id="InviteNewMemberModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title text-base">Member invitation</h5>
+    <section class="pt-3">
+
+      <div class="mb-3 d-flex justify-content-between align-items-center">
+
+        <div class="label-title text-end d-flex align-items-center">
+
+          <label class="mb-1 fs-16px text-head">Email:</label>
+
+        </div>
+
+        <div class="flex-grow-1">
+
+          <input-text size="small"
+            placeholder="Email address"
+            v-model="attributes['email']"
+            class="w-100"
+            @click="delete errors.email"></input-text>
+
+          <span class="fs-14px text-danger py-1 w-100 d-block"
+            v-if="errors?.email?.length">
+            {{ errors.email[0] }}
+          </span>
+
+        </div>
+
       </div>
 
-      <div class="modal-body">
-        <p class="form-subtitle">Invite team members by their email. Team members will be able to collaborate with existing projects and share designs.</p>
-        <div class="row settings-group-item mb-3">
-            <div class="col-2 ms-2 d-flex justify-content-end align-items-baseline">
-                <label class="form-label-title mb-0">Email:</label>
-            </div>
-            <div class="col-8 me-auto d-flex justify-content-start align-items-center flex-direction-column">
-                <input @click="delete errors?.email" v-model="email" class="form-control" type="text">
-                <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.email?.length">{{ errors?.email[0] }}</span>
-            </div>
+      <div class="mb-3 d-flex justify-content-between align-items-center">
+
+        <div class="label-title text-end d-flex align-items-center">
+
+          <label class="mb-1 fs-16px text-head">User Role:</label>
+
         </div>
-        <div class="row settings-group-item mb-0">
-          <div class="col-2 ms-2 d-flex justify-content-end align-items-baseline">
-              <label class="form-label-title mb-0">Role:</label>
-          </div>
-          <div class="col-8 me-auto d-flex justify-content-start align-items-center flex-direction-column position-relative">
-              <div class="w-100 position-relative">
-                <input readonly="true" v-model="access_role" class="form-control cursor-pointer" type="text" data-mdb-toggle="dropdown">
-                <div class="dropdown-menu custom-form-select roles overflow-auto" style="max-height:7.5rem;">
-                  <ul class="list-unstyled mb-0">
-                      <li 
-                      @click="access_role=item.name"
-                      v-for="(item, index) in roles" 
-                      :key="index"
-                      v-show="access_role != item.name"
-                      :class="`dropdown-item text-hard fw-bold fs-14px d-flex py-1`">
-                      {{ item.name }}
-                      </li>
-                  </ul>
-                </div>
+
+        <div class="flex-grow-1">
+
+          <select-option :loading="is_loading_roles"
+            filter
+            v-model="attributes['role']"
+            :options="roles"
+            :filterFields="['name']"
+            optionLabel="name"
+            placeholder="Select a user role"
+            class="w-100 select-option-small"
+            panel-class="panel-option-small">
+
+            <template #value="slotProps">
+
+              <div v-if="slotProps.value"
+                class="flex items-center">
+                <div>{{ slotProps.value.name }}</div>
               </div>
-              <span class="fs-14px text-danger py-1 w-100 d-block" v-if="errors?.access_role?.length">{{ errors?.access_role[0] }}</span>
-          </div>
-        </div>
-      </div>
 
-      <div class="modal-footer flex-between-center border-top-0">
-        <div class="row settings-group-item mb-0 w-100">
-          <div class="col-6">
-            <button type="button" class="btn btn-danger fw-bold" data-mdb-dismiss="modal">Cancel</button>
-          </div>
-          <div class="col-6">
-            <button :disabled="isSubmitInviteMember" @click="sendInviteMemberMail" type="submit" class="ms-auto btn btn-primary submit px-3 d-flex justify-content-center align-items-center">
-              <div v-if="isSubmitInviteMember">
-                  <svg class="spinner" viewBox="0 0 50 50" style="width:20px;height:20px;margin-left:0px;">
-                      <circle style="stroke: #ffffff;" class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
-                  </svg>
-                  <span>Submitting...</span>
+              <span v-else>
+                {{ slotProps.placeholder }}
+              </span>
+
+            </template>
+
+            <template #option="slotProps">
+
+              <div class="flex items-center">
+                <div>{{ slotProps.option.name }}</div>
               </div>
-              <span v-if="!isSubmitInviteMember">Invite member</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
+            </template>
+
+          </select-option>
+
+          <span class="fs-14px text-danger py-1 w-100 d-block"
+            v-if="errors?.role?.length">
+            {{ errors.role[0] }}
+          </span>
+
+        </div>
+
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center pt-3">
+
+        <Button size="small"
+          type="button"
+          label="Cancel"
+          severity="secondary"
+          @click="emits('close', true)"></Button>
+
+        <Button size="small"
+          type="button"
+          :loading="is_submit"
+          severity="success"
+          @click="handleSubmitInvite"
+          label="Send Invite"></Button>
+
+      </div>
+
+    </section>
+
+  </modal-dialog>
 </template>
-<style scoped lang="scss">
-.custom-form-select{
-  width:100%;
-  overflow: hidden;
-  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
-  .dropdown-item{
-    cursor: pointer;
+<style scoped
+  lang="scss">
+  .label-title {
+    width: 20%;
   }
-}
-.form-subtitle{
-    line-height: 15px;
-    font-size: 12px;
-    font-weight: 100;
-    color: #abacb0;
-    letter-spacing: 0.2px;
-}
 </style>

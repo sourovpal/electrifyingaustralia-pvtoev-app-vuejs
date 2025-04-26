@@ -1,23 +1,8 @@
-<script>
+<script setup>
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import '@vueup/vue-quill/dist/vue-quill.bubble.css';
 
-
-export default {
-  name:'ProfileIndex',
-    data() {
-      return{
-        content: '<h2>I am Example</h2>',
-        editorOption:{
-        }
-      }
-    },
-    components:{
-        QuillEditor
-    }
-  }
-  
 </script>
 
 <template>
@@ -36,7 +21,7 @@ export default {
                 <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>Connected email account</h2>
-                        <span class="sub-title">Sync your inbox and see your conversations in Pylon CRM.</span>
+                        <span class="sub-title">Sync your inbox and see your conversations in pvtoev CRM.</span>
                     </div>
                 </div>
 
@@ -56,7 +41,7 @@ export default {
                 <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>SMS sending</h2>
-                        <span class="sub-title">Chat with your customers in Pylon CRM.</span>
+                        <span class="sub-title">Chat with your customers in pvtoev CRM.</span>
                     </div>
                 </div>
 
@@ -75,7 +60,7 @@ export default {
                 <div class="col-lg-2 col-12 mb-3 mb-lg-0">
                     <div class="settings-group-header">
                         <h2>SMS sending</h2>
-                        <span class="sub-title">Chat with your customers in Pylon CRM.</span>
+                        <span class="sub-title">Chat with your customers in pvtoev CRM.</span>
                     </div>
                 </div>
 
